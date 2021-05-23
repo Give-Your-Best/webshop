@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/Give-Your-Best/webshop/issues"
   },
-  "homepage": "https://webshop-template.herokuapp.com/",
+  "homepage": "https://give-your-best-webshop.herokuapp.com/",
   "dependencies": {
     "body-parser": "^1.19.0",
     "concurrently": "^6.0.2",
