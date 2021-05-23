@@ -1,0 +1,37 @@
+{
+  "name": "webshop-template",
+  "version": "1.0.0",
+  "description": "a template for a webshop app",
+  "main": "server.js",
+  "scripts": {
+    "build": "cd client && npm i && npm run build",
+    "start:prod": "NODE_ENV=production node server.js",
+    "start:dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "nodemon server.js",
+    "start:client": "cd client && npm start",
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Give-Your-Best/webshop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Give-Your-Best/webshop/issues"
+  },
+  "homepage": "https://webshop-template.herokuapp.com/",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.0.2",
+    "express": "4.17.1",
+    "prettier": "2.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.23.2",
+    "nodemon": "^2.0.7"
+  }
+}
