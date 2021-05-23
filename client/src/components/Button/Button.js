@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 export const Button = styled.button`
   ${({ theme, primary, round }) => css`
+    font-size: 1rem;
     cursor: pointer;
     background: transparent;
     border-radius: 0.1rem;
