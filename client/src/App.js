@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { AppHeading, Button, Box } from './components';
 import { theme } from './theme';
+import logo from './gyb_logo.png';
 
 const App = () => {
   const [message, setMessage] = React.useState('');
@@ -32,7 +33,7 @@ const App = () => {
             <Box display="inline-block" mr={1}>
               <img
                 alt="give-your-best-logo"
-                src="https://le-cdn.website-editor.net/d2225289b8824285a45b94181e06cee3/dms3rep/multi/opt/LOGO1+square-320w.png"
+                src={logo}
                 height="50px"
                 width="50px"
               />
