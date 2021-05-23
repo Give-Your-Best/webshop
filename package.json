@@ -10,7 +10,7 @@
     "start:server": "nodemon server.js",
     "start:client": "cd client && npm start",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:client": "cd client && npm run test"
   },
   "repository": {
     "type": "git",
