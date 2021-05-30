@@ -1,7 +1,7 @@
 {
-  "name": "webshop-template",
+  "name": "give-your-best-webshop",
   "version": "1.0.0",
-  "description": "a template for a webshop app",
+  "description": "The webshop app of Give Your Best that enables users to 'shop' for free",
   "main": "server.js",
   "scripts": {
     "build": "cd client && npm i && npm run build",
