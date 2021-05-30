@@ -30,7 +30,7 @@ const App = () => {
                 width="50px"
               />
             </Box>
-            <span style={{ verticalAlign: 'super' }}>
+            <span style={{ verticalAlign: 'middle' }}>
               Give Your Best webshop
             </span>
           </AppHeading>
