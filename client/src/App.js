@@ -36,20 +36,12 @@ const App = () => {
           </AppHeading>
         </Box>
         <Container>
-          <Box
-            style={{
-              backgroundColor: '#db709330',
-              height: '10rem',
-              borderRadius: '1rem',
-              padding: '1rem',
-              textAlign: 'center',
-            }}
-          >
+          <FrontPanel>
             <span>Panel with latest items/hot right now/big sizes/other</span>
-          </Box>
-          <Box mt={1}>
-            <span>See our available items below~</span>
-          </Box>
+          </FrontPanel>
+          <FiltersWrapper mt={1}>
+            <span>Filters panel (by size, colour, etc)</span>
+          </FiltersWrapper>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
             {items.map((item) => (
               <ItemCard key={item.id} item={item} />
@@ -68,5 +60,26 @@ const ItemsWrapper = styled(Box)`
     justify-content: space-between;
     margin-left: -0.4rem;
     margin-right: -0.4rem;
+  }
+`;
+
+const FrontPanel = styled.div`
+  background-color: ${({ theme }) => theme.colorMappings.frontPanelBackground};
+  height: 10rem;
+  padding: 1rem;
+  text-align: center;
+
+  &:hover {
+    box-shadow: 0px 4px 12px -2px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const FiltersWrapper = styled(Box)`
+  border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  height: 3rem;
+  padding: 0.6rem 1rem;
+
+  &:hover {
+    box-shadow: 0px 4px 12px -2px rgba(0, 0, 0, 0.1);
   }
 `;

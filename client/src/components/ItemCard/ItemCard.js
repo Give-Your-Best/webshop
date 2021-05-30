@@ -20,7 +20,6 @@ const Card = styled(AntCard)`
   max-width: 13rem;
   min-width: 13rem;
   margin: 1rem;
-  border-radius: 0.4rem;
 
   @media (max-width: 768px) {
     margin: 0.5rem 0.3rem;

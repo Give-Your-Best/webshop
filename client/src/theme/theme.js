@@ -3,6 +3,7 @@ const colors = {
     500: '#BA1B1A',
   },
   pink: {
+    100: '#db709312',
     500: '#F9D5DE',
   },
   yellow: {
@@ -14,6 +15,9 @@ const colors = {
   black: {
     400: '#454545',
     500: '#000000',
+  },
+  grey: {
+    100: '#f0f0f0',
   },
 };
 
@@ -33,5 +37,8 @@ export const theme = {
     secondary: colors.pink[500],
     white: colors.white[500],
     black: colors.black[500],
+
+    borders: colors.grey[100],
+    frontPanelBackground: colors.pink[100],
   },
 };
