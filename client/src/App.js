@@ -52,7 +52,7 @@ const App = () => {
           </Box>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
             {items.map((item) => (
-              <ItemCard key={item.id}>{item.name}</ItemCard>
+              <ItemCard key={item.id} item={item} />
             ))}
           </ItemsWrapper>
         </Container>

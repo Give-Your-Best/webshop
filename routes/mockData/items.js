@@ -37,7 +37,7 @@ module.exports = {
       id: '3',
       name: 'skirt',
       size: {
-        UK: '',
+        UK: '10',
         EU: '40',
       },
       photos: {

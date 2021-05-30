@@ -1,19 +1,37 @@
+import * as React from 'react';
 import styled from 'styled-components';
+import { Card as AntCard } from 'antd';
 
-export const ItemCard = styled.div`
+const { Meta } = AntCard;
+
+export const ItemCard = ({ item }) => (
+  <Card
+    hoverable
+    cover={
+      item.photos.front ? <img alt={item.name} src={item.photos.front} /> : null
+    }
+  >
+    <Meta title={item.name} description={`UK size: ${item.size?.UK || '-'}`} />
+  </Card>
+);
+
+const Card = styled(AntCard)`
   flex: 1;
-  background-color: #59a88a4a;
-  height: 11rem;
-  max-width: 11rem;
-  min-width: 11rem;
+  max-width: 13rem;
+  min-width: 13rem;
   margin: 1rem;
-  padding: 1rem;
   border-radius: 0.4rem;
 
   @media (max-width: 768px) {
     margin: 0.5rem 0.3rem;
-    height: 7rem;
-    max-width: 7rem;
-    min-width: 7rem;
+    max-width: 9rem;
+    min-width: 9rem;
+
+    .ant-card-meta-title {
+      font-size: 14px;
+    }
+    .ant-card-meta-description {
+      font-size: 10px;
+    }
   }
 `;
