@@ -7,12 +7,9 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// API calls
-app.get('/api', (req, res) => {
-  res.send({
-    message: 'The Express backend is connected to React!',
-  });
-});
+// API routes
+// anything beginning with "/api" will go into this
+app.use('/api', require('./routes/api'));
 
 if (process.env.NODE_ENV === 'production') {
   // serve static files
