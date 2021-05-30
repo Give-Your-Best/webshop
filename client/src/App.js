@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import { AppHeading, Box, ItemCard, Container } from './components';
 import { theme } from './theme';
@@ -49,12 +50,11 @@ const App = () => {
           <Box mt={1}>
             <span>See our available items below~</span>
           </Box>
-          <Box my={1} mx={-1} display="flex" style={{ overflowX: 'auto' }}>
-            {/* TODO: show in grid */}
+          <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
             {items.map((item) => (
               <ItemCard>{item.name}</ItemCard>
             ))}
-          </Box>
+          </ItemsWrapper>
         </Container>
       </Box>
     </ThemeProvider>
@@ -62,3 +62,11 @@ const App = () => {
 };
 
 export default App;
+
+const ItemsWrapper = styled(Box)`
+  @media (max-width: 480px) {
+    justify-content: space-between;
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+  }
+`;

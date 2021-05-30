@@ -5,6 +5,8 @@ export const Box = styled.div`
     display,
     flex,
     flexDirection,
+    flexWrap,
+    justifyContent,
     m,
     mb,
     mt,
@@ -20,6 +22,8 @@ export const Box = styled.div`
     ${display && `display: ${display}`};
     ${flex && `flex: ${flex}`};
     ${flexDirection && `flex-direction: ${flexDirection}`};
+    ${flexWrap && `flex-wrap: ${flexWrap}`};
+    ${justifyContent && `justify-content: ${justifyContent}`};
     ${m && `margin: ${m}rem`};
     ${mb && `margin-bottom: ${mb}rem`};
     ${mt && `margin-top: ${mt}rem`};

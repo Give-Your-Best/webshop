@@ -9,4 +9,11 @@ export const ItemCard = styled.div`
   margin: 1rem;
   padding: 1rem;
   border-radius: 0.4rem;
+
+  @media (max-width: 768px) {
+    margin: 0.5rem 0.3rem;
+    height: 7rem;
+    max-width: 7rem;
+    min-width: 7rem;
+  }
 `;
