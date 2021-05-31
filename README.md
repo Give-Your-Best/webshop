@@ -4,7 +4,7 @@ Welcome to our webshop app!
 
 Visit our webshop here: https://give-your-best-webshop.herokuapp.com/
 
-And visit our webpage here: giveyourbest.uk/
+And visit our webpage here: https://www.giveyourbest.uk/
 
 ## Getting started
 
