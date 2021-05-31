@@ -1,6 +1,7 @@
 const itemOne = {
   id: '1',
   name: 'pants',
+  description: '',
   size: {
     UK: '6',
     EU: '34',
@@ -12,6 +13,7 @@ const itemOne = {
   },
   color: ['blue'],
   status: 'open',
+  country: 'UK', // in the future GYB may expand in other countries
 };
 
 module.exports = {
@@ -21,6 +23,7 @@ module.exports = {
     {
       id: '2',
       name: 'summer dress',
+      description: '',
       size: {
         UK: '',
         EU: '36',
@@ -32,10 +35,12 @@ module.exports = {
       },
       color: ['red'],
       status: 'open',
+      country: 'UK',
     },
     {
       id: '3',
       name: 'skirt',
+      description: '',
       size: {
         UK: '10',
         EU: '40',
@@ -46,6 +51,7 @@ module.exports = {
       },
       color: ['black'],
       status: 'open',
+      country: 'UK',
     },
   ],
 };
