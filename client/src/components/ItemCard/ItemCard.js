@@ -4,16 +4,27 @@ import { Card as AntCard } from 'antd';
 
 const { Meta } = AntCard;
 
-export const ItemCard = ({ item }) => (
-  <Card
-    hoverable
-    cover={
-      item.photos.front ? <img alt={item.name} src={item.photos.front} /> : null
-    }
-  >
-    <Meta title={item.name} description={`UK size: ${item.size?.UK || '-'}`} />
-  </Card>
-);
+export const ItemCard = ({ item }) => {
+  const frontPhoto =
+    item.photos.length > 0 &&
+    item.photos.find((photo) => (photo.front ? photo : null));
+
+  return (
+    <Card
+      hoverable
+      cover={
+        frontPhoto ? (
+          <img alt={`front of ${item.name}`} src={frontPhoto.src} />
+        ) : null
+      }
+    >
+      <Meta
+        title={item.name}
+        description={`UK size: ${item.size?.UK || '-'}`}
+      />
+    </Card>
+  );
+};
 
 const Card = styled(AntCard)`
   flex: 1;
