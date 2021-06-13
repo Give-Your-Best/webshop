@@ -1,12 +1,18 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { ThemeProvider } from 'styled-components';
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from 'react-router-dom';
+import styled, { ThemeProvider } from 'styled-components';
 import { AppHeading, Box, ItemCard, Container } from './components';
 import { theme } from './theme';
 import logo from './gyb_logo.png';
 import { getItems } from './services/items';
 
-const App = () => {
+const Home = () => {
   const [items, setItems] = React.useState([]);
 
   React.useEffect(() => {
@@ -18,37 +24,74 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box m={2}>
-        <Box>
-          <AppHeading>
-            <Box display="inline-block" mr={1}>
-              <img
-                alt="give-your-best-logo"
-                src={logo}
-                height="50px"
-                width="50px"
-              />
-            </Box>
-            <span style={{ verticalAlign: 'middle' }}>
-              Give Your Best webshop
-            </span>
-          </AppHeading>
-        </Box>
-        <Container>
-          <FrontPanel>
-            <span>Panel with latest items/hot right now/big sizes/other</span>
-          </FrontPanel>
-          <FiltersWrapper mt={1}>
-            <span>Filters panel (by size, colour, etc)</span>
-          </FiltersWrapper>
-          <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
-            {items.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
-          </ItemsWrapper>
-        </Container>
+    <Box m={2}>
+      <Box>
+        <AppHeading>
+          <Box display="inline-block" mr={1}>
+            <img
+              alt="give-your-best-logo"
+              src={logo}
+              height="50px"
+              width="50px"
+            />
+          </Box>
+          <span style={{ verticalAlign: 'middle' }}>
+            Give Your Best webshop
+          </span>
+        </AppHeading>
       </Box>
+      <Container>
+        <FrontPanel>
+          <span>Panel with latest items/hot right now/big sizes/other</span>
+        </FrontPanel>
+        <FiltersWrapper mt={1}>
+          <span>Filters panel (by size, colour, etc)</span>
+        </FiltersWrapper>
+        <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
+          {items.map((item) => (
+            <ItemCard key={item.id} item={item} />
+          ))}
+        </ItemsWrapper>
+      </Container>
+    </Box>
+  );
+};
+
+const Users = () => (
+  <div>
+    <h1>users</h1>
+    <Link to="/about">go to about</Link>
+  </div>
+);
+
+const User = () => {
+  let { userId } = useParams();
+  return (
+    <div>
+      <h1>{`user!!! ${userId}`}</h1>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/about">
+            <div> about</div>
+          </Route>
+          <Route path={`/user/:userId`}>
+            <User />
+          </Route>
+          <Route path="/user">
+            <Users />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </ThemeProvider>
   );
 };
