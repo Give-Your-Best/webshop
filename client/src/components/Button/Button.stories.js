@@ -24,17 +24,20 @@ Secondary.args = {
 export const Round = Template.bind({});
 Round.args = {
   round: true,
+  primary: false,
   label: 'Round Button',
 };
 
-// export const Large = Template.bind({});
-// Large.args = {
-//   size: 'large',
-//   label: 'Button',
-// };
+export const Large = Template.bind({});
+Large.args = {
+  large: true,
+  primary: false,
+  label: 'Large Button',
+};
 
-// export const Small = Template.bind({});
-// Small.args = {
-//   size: 'small',
-//   label: 'Button',
-// };
+export const Small = Template.bind({});
+Small.args = {
+  small: true,
+  primary: false,
+  label: 'Small Button',
+};
