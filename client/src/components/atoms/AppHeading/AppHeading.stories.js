@@ -11,7 +11,7 @@ const Template = ({ label, ...args }) => (
   <AppHeading {...args}>{label}</AppHeading>
 );
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Default = Template.bind({});
+Default.args = {
   label: 'This is the app heading',
 };
