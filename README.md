@@ -49,3 +49,18 @@ npm run start:client
 ```
 
 Open the code in an editor of your choice, and you're ready to go!
+
+## Run storybook
+
+[Storybook](https://storybook.js.org/) is configured for this app.
+
+To run Storybook, head to the client: `cd client`
+and run: `npm run storybook`.
+
+Alternatively, you can run storybook from the root directory, with:
+
+```
+npm run start:storybook
+```
+
+Storybook will run on port 6006.
