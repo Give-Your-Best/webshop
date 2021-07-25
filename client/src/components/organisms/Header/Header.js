@@ -5,7 +5,7 @@ import { HeaderWrapper, LogoWrapper } from './Header.styles';
 
 export const Header = () => {
   return (
-    <HeaderWrapper>
+    <HeaderWrapper data-testid="Header">
       <AppHeading>
         <LogoWrapper>
           <img alt="give-your-best-logo" src={logo} />

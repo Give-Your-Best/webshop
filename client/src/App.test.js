@@ -1,7 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from './config/test-utils';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  expect(screen.getByText(/Give Your Best webshop/i)).toBeInTheDocument();
+describe('<App />', () => {
+  describe('when on / route', () => {
+    it('renders the home page', () => {
+      render(<App />);
+      expect(screen.getByTestId('HomeRoute')).toBeInTheDocument();
+    });
+  });
 });

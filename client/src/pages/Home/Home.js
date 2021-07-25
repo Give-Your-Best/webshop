@@ -15,7 +15,7 @@ export const Home = () => {
   }, []);
 
   return (
-    <AppWrapper>
+    <AppWrapper data-testid="HomeRoute">
       <Header />
       <Container>
         <FiltersWrapper mt={1}>
