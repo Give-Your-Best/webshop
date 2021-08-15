@@ -1,8 +1,12 @@
 const Item = require('../../models/ItemSchema');
 
 const getAllItems = async () => {
-  const items = await Item.find({}).lean();
-  return items;
+  try {
+    const items = await Item.find({}).lean();
+    return items;
+  } catch (error) {
+    console.log('Error in getAllItems:', error);
+  }
 };
 
 module.exports = {
