@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { items } = require('../mockData/items');
+const { getAllItems } = require('../../services/items');
 
 // api/items
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+  const items = await getAllItems();
   res.json(items);
 });
 
