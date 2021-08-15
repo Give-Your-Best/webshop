@@ -20,7 +20,7 @@ mongoose.connect(
 
 // API routes
 // anything beginning with "/api" will go into this
-app.use('/api', require('./routes/api'));
+app.use('/api', require('./server/routes/api'));
 
 if (process.env.NODE_ENV === 'production') {
   // serve static files
