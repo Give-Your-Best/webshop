@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 // define the mongoose user model
 const userSchema = new Schema({
-  name: String,
+  username: String,
   email: String,
   password: String,
   role: String,

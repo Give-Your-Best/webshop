@@ -11,7 +11,7 @@ const tokenForUser = (user) => {
 const login = async (req, res) => {
   try {
     const user = await User.findOne({
-      name: req.body.name, // name or email?
+      username: req.body.username, // username or email?
     });
 
     if (!user) {
@@ -31,13 +31,13 @@ const login = async (req, res) => {
     }
     const token = tokenForUser({
       _id: user._id,
-      name: user.name,
+      username: user.username,
       password: user.password,
     });
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: user.name,
+      user: user.username,
       token: token,
     });
   } catch (err) {
@@ -53,6 +53,7 @@ const verifyToken = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token =
     req.body.token || req.query.token || req.headers['x-access-token'];
+  console.log('oh lala', token);
 
   if (token) {
     try {
