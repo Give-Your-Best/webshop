@@ -24,7 +24,6 @@ const login = async (req, res) => {
       req.body.password,
       user.password
     );
-    console.log('+isMatch!!', isMatch);
     if (!isMatch) {
       return res
         .status(401)
@@ -35,7 +34,6 @@ const login = async (req, res) => {
       name: user.name,
       password: user.password,
     });
-    console.log('+token!!', token);
     return res.json({
       success: true,
       message: 'Enjoy your token!',
@@ -58,7 +56,6 @@ const verifyToken = (req, res, next) => {
 
   if (token) {
     try {
-      // decode token
       // verifies secret and checks exp
       const decoded = jwt.verify(token, config.secret);
       // if everything is good, save to request for use in other routes
