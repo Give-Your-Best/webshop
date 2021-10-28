@@ -1,4 +1,4 @@
-const Item = require('../../models/ItemSchema');
+const Item = require('../../models/Item');
 
 const getAllItems = async () => {
   try {
@@ -6,6 +6,7 @@ const getAllItems = async () => {
     return items;
   } catch (error) {
     console.log('Error in getAllItems:', error);
+    return [];
   }
 };
 
