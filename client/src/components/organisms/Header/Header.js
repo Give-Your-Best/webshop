@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { AppHeading } from '../../';
-import { HeaderMenu } from '../HeaderMenu';
+// import { HeaderMenu } from '../HeaderMenu';
 import logo from './gyb_logo.png';
 import { HeaderWrapper, LogoWrapper } from './Header.styles';
 
 export const Header = () => {
   return (
     <HeaderWrapper data-testid="Header">
-      <HeaderMenu />
+      {/* bring back when login page is more functional and looks better */}
+      {/* <HeaderMenu /> */}
       <AppHeading>
         <LogoWrapper href="/">
           <img alt="give-your-best-logo" src={logo} />
