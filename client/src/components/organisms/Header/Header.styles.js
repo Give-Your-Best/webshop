@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
+  display: inline-block;
+  width: 100%;
+
   @media (max-width: 480px) {
     margin: 0 -1rem;
   }
@@ -18,7 +21,7 @@ export const LogoWrapper = styled.div`
   }
 
   @media (max-width: 480px) {
-    margin-right: 0.7rem;
+    margin-right: 0.6875rem;
 
     > img {
       max-width: 2.5rem;
