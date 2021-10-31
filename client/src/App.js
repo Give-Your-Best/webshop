@@ -11,7 +11,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <AppProvider>
         <BrowserRouter>
-          <AppWrapper data-testid="HomeRoute">
+          <AppWrapper>
             <Header />
             <Switch>
               <Route path={`/item/:itemId`}>

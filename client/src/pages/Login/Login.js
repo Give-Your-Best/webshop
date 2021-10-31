@@ -31,7 +31,7 @@ export const Login = () => {
   };
 
   return (
-    <div>
+    <div data-testid="LoginRoute">
       <h2>Login</h2>
       <form onSubmit={handleLoginSubmit}>
         <div>

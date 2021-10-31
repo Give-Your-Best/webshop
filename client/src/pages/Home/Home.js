@@ -15,13 +15,13 @@ export const Home = () => {
   }, []);
 
   return (
-    <Container>
+    <Container data-testid="HomeRoute">
       <FiltersWrapper mt={1}>
         <span>Filters selection (by size, colour, etc)</span>
       </FiltersWrapper>
       <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard key={item._id} item={item} />
         ))}
       </ItemsWrapper>
     </Container>
