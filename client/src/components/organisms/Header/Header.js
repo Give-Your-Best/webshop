@@ -9,7 +9,7 @@ export const Header = () => {
     <HeaderWrapper data-testid="Header">
       <HeaderMenu />
       <AppHeading>
-        <LogoWrapper>
+        <LogoWrapper href="/">
           <img alt="give-your-best-logo" src={logo} />
         </LogoWrapper>
         <span style={{ verticalAlign: 'middle' }}>Give Your Best webshop</span>

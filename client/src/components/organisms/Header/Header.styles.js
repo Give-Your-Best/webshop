@@ -9,7 +9,7 @@ export const HeaderWrapper = styled.div`
   }
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled.a`
   display: inline-block;
   margin-right: 1rem;
 
