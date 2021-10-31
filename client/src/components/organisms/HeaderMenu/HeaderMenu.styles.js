@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const HeaderMenuWrapper = styled.div`
@@ -6,7 +7,7 @@ export const HeaderMenuWrapper = styled.div`
   line-height: 52px;
 `;
 
-export const LoginMenuItem = styled.a`
+export const LoginMenuItem = styled(Link)`
   vertical-align: middle;
   color: black;
 `;
