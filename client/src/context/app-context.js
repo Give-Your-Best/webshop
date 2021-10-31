@@ -3,8 +3,8 @@ import * as React from 'react';
 export const AppContext = React.createContext();
 
 export const AppProvider = ({ children }) => {
-  const [user, setUser] = React.useState({ name: 'eirini' });
-  const [token, setToken] = React.useState('this-is-not-a-token');
+  const [user, setUser] = React.useState(null);
+  const [token, setToken] = React.useState(null);
 
   const value = {
     user,
