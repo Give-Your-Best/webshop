@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { AppContext } from '../../context/app-context';
 import { loginUser } from '../../services/user';
 
 export const Login = () => {
+  const { setUser, setToken } = React.useContext(AppContext);
   let history = useHistory();
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -18,9 +20,10 @@ export const Login = () => {
     event.preventDefault();
 
     const res = await loginUser({ username, password });
-    console.log('res!', res);
     if (res.success) {
-      // set global state with user obj + token (?)
+      // TODO: persist in cookies or localstorage
+      setUser(res.user);
+      setToken(res.token);
       history.push('/');
     } else {
       setErrorMessage(res.message);
