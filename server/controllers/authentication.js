@@ -11,7 +11,7 @@ const tokenForUser = (user) => {
 const login = async (req, res) => {
   try {
     const user = await User.findOne({
-      username: req.body.username, // username or email?
+      username: req.body.username,
     });
 
     if (!user) {
@@ -41,7 +41,7 @@ const login = async (req, res) => {
       token: token,
     });
   } catch (err) {
-    console.log(`Error in Authentication.login() : ${err}`);
+    console.error(`Error in Authentication.login() : ${err}`);
     return res.json({
       success: false,
       message: `Something went wrong: ${err}`,
@@ -53,7 +53,6 @@ const verifyToken = (req, res, next) => {
   // check header or url parameters or post parameters for token
   const token =
     req.body.token || req.query.token || req.headers['x-access-token'];
-  console.log('oh lala', token);
 
   if (token) {
     try {
@@ -63,6 +62,7 @@ const verifyToken = (req, res, next) => {
       req.decoded = decoded;
       next();
     } catch (err) {
+      console.error(`Error in Authentication.verifyToken() : ${err}`);
       return res
         .status(401)
         .send({ success: false, message: 'Failed to authenticate token.' });
