@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
@@ -9,7 +10,7 @@ export const HeaderWrapper = styled.div`
   }
 `;
 
-export const LogoWrapper = styled.a`
+export const LogoWrapper = styled(Link)`
   display: inline-block;
   margin-right: 1rem;
 

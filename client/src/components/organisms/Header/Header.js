@@ -10,7 +10,7 @@ export const Header = () => {
       {/* bring back when login page is more functional and looks better */}
       {/* <HeaderMenu /> */}
       <AppHeading>
-        <LogoWrapper href="/">
+        <LogoWrapper to="/">
           <img alt="give-your-best-logo" src={logo} />
         </LogoWrapper>
         <span style={{ verticalAlign: 'middle' }}>Give Your Best webshop</span>
