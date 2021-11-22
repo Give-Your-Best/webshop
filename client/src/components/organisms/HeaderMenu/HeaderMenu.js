@@ -9,7 +9,7 @@ export const HeaderMenu = () => {
     setUser(null);
     setToken(null);
     // TODO: also remove token from api headers
-    // and cookie/localstorage
+    // and remove cookie (server)
   };
   return (
     <HeaderMenuWrapper>
