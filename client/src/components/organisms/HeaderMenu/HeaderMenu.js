@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { useCookies } from 'react-cookie';
 import { AppContext } from '../../../context/app-context';
 import { HeaderMenuWrapper, LoginMenuItem } from './HeaderMenu.styles';
 
 export const HeaderMenu = () => {
+  const [, , removeCookie] = useCookies();
   const { user, setUser, setToken } = React.useContext(AppContext);
 
   const handleLogoutClick = () => {
     setUser(null);
     setToken(null);
-    // TODO: also remove token from api headers
-    // and remove cookie (server)
+    removeCookie('jwt_user', { path: '/' });
   };
   return (
     <HeaderMenuWrapper>
