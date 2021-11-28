@@ -11,14 +11,12 @@ export const Routes = () => {
 
   const authenticate = async (cookie) => {
     const res = await authenticateUser(cookie);
-
     if (res.success) {
       setUser(res.user);
       setToken(res.token);
-      //   setCookie('jwt_user', res.token); // is this needed? only if this cookie times out
     } else {
       // we dont really want to do sth (this is not a protected route)
-      //   user is just going to be logged out
+      // user is just going to be logged out
     }
   };
 
@@ -32,7 +30,7 @@ export const Routes = () => {
       // and redirect to /login
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cookies, user, token]);
+  }, [cookies['jwt_user'], user, token]);
 
   return (
     <Switch>
