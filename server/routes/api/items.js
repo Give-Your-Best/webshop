@@ -14,12 +14,15 @@ router.get('/:id', (req, res) => {
     params: { id },
   } = req;
   // TODO: fix with findById()
-  const foundItem = items.find((item) => item.itemNo === id);
-  if (foundItem) {
-    res.status(200).json(foundItem);
-  } else {
-    res.status(404).json({ message: 'Item not found' });
-  }
+  const foundItem = false;
+  res
+    .status(400)
+    .json({ success: false, message: 'API endpoint not yet implemented' });
+  // if (foundItem) {
+  //   res.status(200).json(foundItem);
+  // } else {
+  //   res.status(404).json({ message: 'Item not found' });
+  // }
 });
 
 module.exports = router;

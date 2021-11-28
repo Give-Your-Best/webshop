@@ -15,11 +15,10 @@ export const Routes = () => {
     if (res.success) {
       setUser(res.user);
       setToken(res.token);
-      //   setCookie('jwt_user', res.token); // is this needed?
-      console.log('re loggin user!');
+      //   setCookie('jwt_user', res.token); // is this needed? only if this cookie times out
     } else {
-      //   we dont really want to do sth, they are just going to be logged out
-      // it is not a protected route
+      // we dont really want to do sth (this is not a protected route)
+      //   user is just going to be logged out
     }
   };
 

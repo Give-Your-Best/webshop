@@ -11,14 +11,11 @@ const tokenForUser = (user) => {
 
 const setRefreshTokenCookie = (res) => {
   const refreshToken = uuidv4();
-  //  setCookies(refreshToken)
   res.cookie('refresh_token', refreshToken, {
     httpOnly: true,
     maxAge: 12 * 60 * 60, // 12 hours
     signed: true, // access cookie later with req.signedCookies
-    // httpOnly: true,
     sameSite: 'strict',
-    // secure: COOKIES.SECURE,
   });
 
   return refreshToken;
@@ -48,7 +45,7 @@ const login = async (req, res) => {
     const token = tokenForUser({
       _id: user._id,
       username: user.username,
-      password: user.password,
+      // password: user.password, // do not use password here since we're saving this to the cookies
     });
     setRefreshTokenCookie(res); // TODO check if still needed
     return res.json({

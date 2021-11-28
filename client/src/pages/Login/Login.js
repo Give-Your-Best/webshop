@@ -25,7 +25,7 @@ export const Login = () => {
     if (res.success) {
       setUser(res.user);
       setToken(res.token);
-      setCookie('jwt_user', res.token, { path: '/' }); // ch expiry
+      setCookie('jwt_user', res.token, { path: '/' }); // TODO ch expiry
       history.push('/');
     } else {
       setErrorMessage(res.message);

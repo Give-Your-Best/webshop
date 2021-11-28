@@ -9,7 +9,6 @@ export const Item = () => {
 
   React.useEffect(() => {
     const callTestApi = async () => {
-      console.log(' callTestApi token!', token);
       const res = await fetch('/api/test-auth-items', {
         mode: 'cors',
         cache: 'no-cache',
