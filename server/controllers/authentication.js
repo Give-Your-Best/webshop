@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn: '24h', // expires in 24 hours
+    expiresIn: '15m', // expires in 15 minutes
   });
 };
 
