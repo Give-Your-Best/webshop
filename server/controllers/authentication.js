@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn: '15m', // expires in 15 minutes
+    expiresIn: '24h', // expires in 24 hours // TODO: reduce to 15min and introduce auth flow with refresh token
   });
 };
 
@@ -47,7 +47,7 @@ const login = async (req, res) => {
       username: user.username,
       // password: user.password, // do not use password here since we're saving this to the cookies
     });
-    setRefreshTokenCookie(res); // TODO check if still needed
+    setRefreshTokenCookie(res); // currently not used
     return res.json({
       success: true,
       message: 'Enjoy your token!',
@@ -92,23 +92,12 @@ const verifyToken = (req, res, next) => {
 };
 
 const refreshToken = (req, res, next) => {
-  // 0. set refresh token as cookie
+  // set refresh token as cookie
   // get refresh_token cookie
-  // verify against db // ? how
-  // create token for user
-  // return res
-  // alternatively:
-  // 0. set the jwt token as a cookie
-  // if token not in-memory
-  // 1. call /refresh-token
-  // 2. decrypt data from token
-  // 3. log user in
-  // maybe check if refresh_token cookie is present?
-  // can there be another cross check?
-  // 1. if(refresh_token): call /refresh-token -- else go to /login
-  // 2. if refresh_token matches with the (?)
-  // 3. log user in
-  // 4. set new refresh token cookie
+  // verify against db
+  // create jwt & refresh tokens
+  // return res & restart countdown to next refresh token req
+  // https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/#jwt_structure
 };
 
 const authenticate = async (req, res) => {
