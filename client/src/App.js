@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { AppWrapper, Header } from './components';
 import { theme } from './theme';
-import { Home, Item, Login } from './pages';
+import { Routes } from './Routes';
 import { AppProvider } from './context/app-context';
 
 const App = () => {
@@ -13,17 +13,7 @@ const App = () => {
         <BrowserRouter>
           <AppWrapper>
             <Header />
-            <Switch>
-              <Route path={`/item/:itemId`}>
-                <Item />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/">
-                <Home />
-              </Route>
-            </Switch>
+            <Routes />
           </AppWrapper>
         </BrowserRouter>
       </AppProvider>

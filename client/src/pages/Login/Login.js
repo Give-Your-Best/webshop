@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
 import { loginUser } from '../../services/user';
 
 export const Login = () => {
+  const [, setCookie] = useCookies();
   const { setUser, setToken } = React.useContext(AppContext);
   let history = useHistory();
   const [username, setUsername] = React.useState('');
@@ -23,6 +25,7 @@ export const Login = () => {
     if (res.success) {
       setUser(res.user);
       setToken(res.token);
+      setCookie('jwt_user', res.token, { path: '/' }); // ch expiry
       history.push('/');
     } else {
       setErrorMessage(res.message);

@@ -5,10 +5,11 @@ import { AppContext } from '../../context/app-context';
 export const Item = () => {
   const { token } = React.useContext(AppContext);
   const { itemId } = useParams();
+  const [authenticated, setAuthenticated] = React.useState(false);
 
   React.useEffect(() => {
     const callTestApi = async () => {
-      console.log('token!', token);
+      console.log(' callTestApi token!', token);
       const res = await fetch('/api/test-auth-items', {
         mode: 'cors',
         cache: 'no-cache',
@@ -18,14 +19,15 @@ export const Item = () => {
           'x-access-token': token,
         },
       });
-      console.log('test RES!', await res.json());
+      setAuthenticated(res.ok);
     };
     callTestApi();
-  }, []);
+  }, [token]);
 
   return (
     <div>
       <h1>{`Item page! item id: ${itemId}`}</h1>
+      <p>{`authenticated: ${authenticated}`}</p>
     </div>
   );
 };
