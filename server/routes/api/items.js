@@ -13,7 +13,8 @@ router.get('/:id', (req, res) => {
   const {
     params: { id },
   } = req;
-  const foundItem = items.find((item) => item.id === id);
+  // TODO: fix with findById()
+  const foundItem = items.find((item) => item.itemNo === id);
   if (foundItem) {
     res.status(200).json(foundItem);
   } else {

@@ -38,7 +38,7 @@ const login = async (req, res) => {
       success: true,
       message: 'Enjoy your token!',
       user: { username: user.username, role: user.role },
-      token: token,
+      token,
     });
   } catch (err) {
     console.error(`Error in Authentication.login() : ${err}`);

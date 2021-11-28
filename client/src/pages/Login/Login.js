@@ -21,8 +21,8 @@ export const Login = () => {
 
     const res = await loginUser({ username, password });
     if (res.success) {
-      // TODO: persist in cookies or localstorage
       setUser(res.user);
+      // TODO: persist in cookies
       setToken(res.token);
       history.push('/');
     } else {
