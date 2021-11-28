@@ -50,9 +50,7 @@ const login = async (req, res) => {
       username: user.username,
       password: user.password,
     });
-    // TODO pbb here set the cookie
-    // todo still needed?
-    setRefreshTokenCookie(res);
+    setRefreshTokenCookie(res); // TODO check if still needed
     return res.json({
       success: true,
       message: 'Enjoy your token!',
@@ -116,40 +114,40 @@ const refreshToken = (req, res, next) => {
   // 4. set new refresh token cookie
 };
 
-const authenticate = (req, res) => {
-  // here check the cookie
-  // and log them back in if all good
-  // and call refreshToken()
-  // so the client needs no awareness of the cookie at that stage, it just checks if the user + token is in state
-
+const authenticate = async (req, res) => {
   const token = req.body.token;
-
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // req.decoded = decoded;
-      console.log('++++huhhhh', decoded);
-      return res.json({
-        success: true,
-        message: 'Authenticated!',
-        user: { username: decoded.username, role: decoded.role },
-        token,
-      });
-    } catch (err) {
-      console.error(`Error in Authentication.authenticate() : ${err}`);
-      return res
-        .status(401)
-        .send({
-          success: false,
-          message: `Failed to authenticate user. ${err}`,
-        });
-    }
-  } else {
-    // if there is no token
-    // return an error
+  if (!token) {
     return res.status(400).send({
       success: false,
       message: 'Bad request.',
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
+      return res
+        .status(401)
+        .send({ success: false, message: 'Failed to authenticate user.' });
+    }
+    const user = await User.findById(decoded._id);
+    if (!user) {
+      return res
+        .status(401)
+        .send({ success: false, message: 'Authentication failed.' });
+    }
+    req.decoded = decoded;
+    return res.json({
+      success: true,
+      message: 'Authenticated!',
+      user: { username: user.username, role: user.role },
+      token,
+    });
+  } catch (err) {
+    console.error(`Error in Authentication.authenticate() : ${err}`);
+    return res.status(401).send({
+      success: false,
+      message: `Failed to authenticate user. ${err}`,
     });
   }
 };
