@@ -22,7 +22,6 @@ export const Login = () => {
     const res = await loginUser({ username, password });
     if (res.success) {
       setUser(res.user);
-      // TODO: persist in cookies
       setToken(res.token);
       history.push('/');
     } else {

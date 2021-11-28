@@ -34,6 +34,7 @@ const login = async (req, res) => {
       username: user.username,
       password: user.password,
     });
+    // TODO pbb here set the cookie
     return res.json({
       success: true,
       message: 'Enjoy your token!',
