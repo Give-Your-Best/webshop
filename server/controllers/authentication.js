@@ -1,9 +1,9 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const User = require('../models/User');
-const config = require('../config');
 
 const tokenForUser = (user) => {
-  return jwt.sign(user, config.secret, {
+  return jwt.sign(user, process.env.JWT_SECRET, {
     expiresIn: '24h', // expires in 24 hours
   });
 };
@@ -57,7 +57,7 @@ const verifyToken = (req, res, next) => {
   if (token) {
     try {
       // verifies secret and checks exp
-      const decoded = jwt.verify(token, config.secret);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       // if everything is good, save to request for use in other routes
       req.decoded = decoded;
       next();
