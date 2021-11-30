@@ -8,6 +8,10 @@ And visit our webpage here: https://www.giveyourbest.uk/
 
 ## Getting started
 
+_Note: Until we automate this process and fetch the .env vars from Heroku/AWS Secrets/similar service,
+you will need to manually input the database URI in the `.env` file in order to connect to the database.
+See further below the steps how to set it up._
+
 Clone the app with:
 
 ```
@@ -64,3 +68,16 @@ npm run start:storybook
 ```
 
 Storybook will run on port 6006.
+
+## Setting up the database connection
+
+1. Log in to [MongoDB Atlas](https://cloud.mongodb.com) with our GYB developers Gmail credentials (ask Eirini if this doesn't ring any bells).
+2. Head to "Database Access" menu and click on the top right to "Add new database user".
+3. Add your user -> keep your username handy and copy your password - it's accessible only upon creation!
+4. Click the "Databases" option from the left menu. You'll see the "prod" database with some live charts.
+5. Click "connec" next to the name.
+6. "Connect using MongoDB Compass"
+7. Copy the database connection string you see
+8. Create a `.env` file in the root dir of the repo, and add a variable with the name `DB_CONNECTION_URI` and a value of the string
+   you just copied, replacing the username & password with your values (from step 3) and replacing the `/test` part with `/webshop?retryWrites=true&w=majority`
+9. Restart the server and you should be good to go!
