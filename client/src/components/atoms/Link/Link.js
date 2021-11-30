@@ -1,5 +1,5 @@
 import styled from 'styled-components';
 
-export const Link = styled.ul`
-    color: ${({ theme }) => theme.colorMappings.primary};
+export const Link = styled.a`
+  color: ${({ theme }) => theme.colorMappings.primary};
 `;
