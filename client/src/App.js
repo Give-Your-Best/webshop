@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import { AppWrapper, Header } from './components';
 import { theme } from './theme';
-import { Home, Item } from './pages';
+import { Routes } from './Routes';
+import { AppProvider } from './context/app-context';
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Switch>
-          <Route path={`/item/:itemId`}>
-            <Item />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <AppProvider>
+        <BrowserRouter>
+          <AppWrapper>
+            <Header />
+            <Routes />
+          </AppWrapper>
+        </BrowserRouter>
+      </AppProvider>
     </ThemeProvider>
   );
 };
