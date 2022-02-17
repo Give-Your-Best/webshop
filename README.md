@@ -71,7 +71,7 @@ Storybook will run on port 6006.
 
 ## Setting up the database connection
 
-1. Log in to [MongoDB Atlas](https://cloud.mongodb.com) with our GYB developers Gmail credentials (ask Eirini if this doesn't ring any bells).
+1. Log in to [MongoDB Atlas](https://cloud.mongodb.com) with (you should have received an invite to join the GYB org, ask Eirini if this doesn't ring any bells!).
 2. Head to "Database Access" menu and click on the top right to "Add new database user".
 3. Add your user -> keep your username handy and copy your password - it's accessible only upon creation!
 4. Click the "Databases" option from the left menu. You'll see the "prod" database with some live charts.
@@ -81,3 +81,9 @@ Storybook will run on port 6006.
 8. Create a `.env` file in the root dir of the repo, and add a variable with the name `DB_CONNECTION_URI` and a value of the string
    you just copied, replacing the username & password with your values (from step 3) and replacing the `/test` part with `/webshop?retryWrites=true&w=majority`
 9. Restart the server and you should be good to go!
+
+## Setting up the rest .env variables
+
+Everything is in Bitwarden!
+
+If you develop in this project, you should have access already. Otherwise, ask Eirini and/or Sol for more info!
