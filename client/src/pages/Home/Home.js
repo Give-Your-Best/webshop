@@ -10,6 +10,7 @@ export const Home = () => {
     const fetchItems = async () => {
       const items = await getItems();
       setItems(items);
+      console.log('test');
     };
     fetchItems();
   }, []);
