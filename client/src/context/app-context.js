@@ -6,12 +6,12 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [token, setToken] = React.useState(null);
 
-  const value = {
-    user,
+  const value = React.useMemo(() => ({ 
+    user, 
     token,
     setUser,
-    setToken,
-  };
+    setToken 
+  }), [user, token]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
