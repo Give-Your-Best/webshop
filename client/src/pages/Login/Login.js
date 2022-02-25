@@ -1,18 +1,22 @@
-import * as React from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
+import { required } from '../../helpers/field-validation';
 import { loginUser } from '../../services/user';
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
 
 export const Login = () => {
   const [, setCookie] = useCookies();
-  const { setUser, setToken } = React.useContext(AppContext);
+  const { setUser, setToken } = useContext(AppContext);
   let history = useHistory();
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const form = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (username || password) {
       setErrorMessage('');
     }
@@ -35,32 +39,34 @@ export const Login = () => {
   return (
     <div data-testid="LoginRoute">
       <h2>Login</h2>
-      <form onSubmit={handleLoginSubmit}>
+      <Form onSubmit={handleLoginSubmit} ref={form}>
         <div>
           <label htmlFor="username" style={{ marginRight: 16 }}>
             Username
           </label>
-          <input
+          <Input
             type="text"
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            validations={[required]}
           />
         </div>
         <div>
           <label htmlFor="password" style={{ marginRight: 16 }}>
             Password
           </label>
-          <input
+          <Input
             type="password"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            validations={[required]}
           />
         </div>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         <button>login</button>
-      </form>
+      </Form>
     </div>
   );
 };

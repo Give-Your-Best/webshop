@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from './context/app-context';
-import { Home, Item, Login } from './pages';
+import { Home, Item, Login, User, Register } from './pages';
 import { authenticateUser } from './services/user';
 
 export const Routes = () => {
@@ -37,8 +37,14 @@ export const Routes = () => {
       <Route path={`/item/:itemId`}>
         <Item />
       </Route>
+      <Route path="/user/:userId">
+        <User />
+      </Route>
       <Route path="/login">
         <Login />
+      </Route>
+      <Route path="/register">
+        <Register />
       </Route>
       <Route path="/">
         <Home />

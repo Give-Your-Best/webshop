@@ -7,7 +7,9 @@ export const HeaderMenuWrapper = styled.div`
   line-height: 3.25rem;
 `;
 
-export const LoginMenuItem = styled(Link)`
+export const UserMenuItem = styled(Link)`
   vertical-align: middle;
   color: black;
+  padding: .25em;
+  margin: 1em;
 `;

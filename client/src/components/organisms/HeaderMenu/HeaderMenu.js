@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../../context/app-context';
-import { HeaderMenuWrapper, LoginMenuItem } from './HeaderMenu.styles';
+import { HeaderMenuWrapper, UserMenuItem } from './HeaderMenu.styles';
 
 export const HeaderMenu = () => {
   const [, , removeCookie] = useCookies();
@@ -14,13 +14,12 @@ export const HeaderMenu = () => {
   };
   return (
     <HeaderMenuWrapper>
-      {!user && <LoginMenuItem to="/login">Login</LoginMenuItem>}
+      {!user && <UserMenuItem to="/login">Login</UserMenuItem>}
+      {!user && <UserMenuItem to="/register">Sign up</UserMenuItem>}
       {user && (
         <>
-          <span>Hello, {user.username}</span>
-          <span style={{ marginLeft: 16 }} onClick={handleLogoutClick}>
-            Logout
-          </span>
+          <span>Hello, <UserMenuItem to={`/user/${user.id}`}>{user.username}</UserMenuItem></span>
+          <UserMenuItem onClick={handleLogoutClick} to="/">Logout</UserMenuItem>
         </>
       )}
     </HeaderMenuWrapper>
