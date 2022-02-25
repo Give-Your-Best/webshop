@@ -3,11 +3,16 @@ const router = express.Router();
 const itemsRoutes = require('./items');
 const usersRoutes = require('./users');
 const Authentication = require('../../controllers/authentication');
+const Users = require('../../controllers/users');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
   res.send({ message: 'The Express backend is connected to React!' });
 });
+
+// sign up user endpoint post to api/users
+router.post('/register', Users.registerUser);
+
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
 

@@ -15,7 +15,7 @@ const setRefreshTokenCookie = (res) => {
     httpOnly: true,
     maxAge: 12 * 60 * 60, // 12 hours
     signed: true, // access cookie later with req.signedCookies
-    sameSite: 'strict',
+    sameSite: 'strict'
   });
 
   return refreshToken;

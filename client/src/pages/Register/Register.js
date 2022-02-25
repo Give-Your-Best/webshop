@@ -4,6 +4,7 @@ import { required, checkemail, checkpassword } from '../../helpers/field-validat
 import { registerUser } from '../../services/user';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
+import Select from "react-validation/build/select";
 import CheckButton from "react-validation/build/button";
 
 export const Register = () => {
@@ -12,6 +13,7 @@ export const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [role, setRole] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const form = useRef();
     const checkBtn = useRef();
@@ -20,7 +22,7 @@ export const Register = () => {
         event.preventDefault();
         form.current.validateAll();
         if (checkBtn.current.context._errors.length === 0) {
-            const res = await registerUser({ email, username, password });
+            const res = await registerUser({ email, username, password, role });
             if (res.success) {
                 history.push('/');
             } else {
@@ -58,6 +60,16 @@ export const Register = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         validations={[required, checkemail]}
                     />
+                </div>
+                <div>
+                    <label htmlFor="role" style={{ marginRight: 16 }}>
+                        Role
+                    </label>
+                    <Select name='role' validations={[required]} onChange={(e) => setRole(e.target.value)}>
+                        <option value=''>Select a role</option>
+                        <option value='donor'>Donor</option>
+                        <option value='shopper'>Shopper</option>
+                    </Select>
                 </div>
                 <div>
                     <label htmlFor="password" style={{ marginRight: 16 }}>

@@ -8,8 +8,6 @@ export const HeaderMenuWrapper = styled.div`
 `;
 
 export const UserMenuItem = styled(Link)`
-  vertical-align: middle;
   color: black;
-  padding: .25em;
-  margin: 1em;
+  margin-right: 1em;
 `;

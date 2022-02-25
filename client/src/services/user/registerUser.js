@@ -1,7 +1,7 @@
-export const registerUser = async ({ email, username, password }) => {
+export const registerUser = async ({ email, username, password, role }) => {
     //call api to register user
     try {
-      const response = await fetch('/api/users', {
+      const response = await fetch('/api/register', {
         method: 'post',
         headers: {
           Accept: 'application/json',
@@ -10,7 +10,8 @@ export const registerUser = async ({ email, username, password }) => {
         body: JSON.stringify({
           username,
           password,
-          email
+          email,
+          role
         }),
       });
       const jsonres = await response.json();
