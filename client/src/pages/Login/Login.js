@@ -1,35 +1,26 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
-import { required } from '../../helpers/field-validation';
 import { loginUser } from '../../services/user';
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
+import { TextInput } from '../../components/atoms/TextInput';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
   const { setUser, setToken } = useContext(AppContext);
   let history = useHistory();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const form = useRef();
 
-  useEffect(() => {
-    if (username || password) {
-      setErrorMessage('');
-    }
-  }, [username, password]);
-
-  const handleLoginSubmit = async (event) => {
-    event.preventDefault();
-
-    const res = await loginUser({ username, password });
+  const handleLoginSubmit = async (values, {setSubmitting}) => {
+    setSubmitting(true);
+    const res = await loginUser(values);
     if (res.success) {
       setUser(res.user);
       setToken(res.token);
       setCookie('jwt_user', res.token, { path: '/' });
+      setSubmitting(false);
       history.push('/');
     } else {
       setErrorMessage(res.message);
@@ -37,36 +28,27 @@ export const Login = () => {
   };
 
   return (
-    <div data-testid="LoginRoute">
+    <div data-id="LoginRoute">
       <h2>Login</h2>
-      <Form onSubmit={handleLoginSubmit} ref={form}>
-        <div>
-          <label htmlFor="username" style={{ marginRight: 16 }}>
-            Username
-          </label>
-          <Input
-            type="text"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            validations={[required]}
-          />
-        </div>
-        <div>
-          <label htmlFor="password" style={{ marginRight: 16 }}>
-            Password
-          </label>
-          <Input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            validations={[required]}
-          />
-        </div>
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        <button>login</button>
-      </Form>
+      <Formik
+        initialValues={{ username: '', password: '' }}
+        validationSchema= {loginSchema}
+        onSubmit={handleLoginSubmit}
+        >
+        {({ isSubmitting }) => (
+          <Form>
+            <Field type="text" name="username" as={TextInput} />
+            <ErrorMessage name="username" component="div" />
+            <Field type="password" name="password" as={TextInput} />
+            <ErrorMessage name="password" component="div" />
+            <button type="submit" disabled={isSubmitting}>
+              Submit
+            </button>
+          </Form>
+        )}
+
+      </Formik>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
     </div>
   );
 };

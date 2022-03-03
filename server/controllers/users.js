@@ -42,7 +42,8 @@ const registerUser = async (req, res) => {
     username : req.body.username || req.body.email,
     email : req.body.email || req.body.username,
     password : req.body.password,
-    role : req.body.role
+    role : req.body.role,
+    approved: false
   }
 
   try {
