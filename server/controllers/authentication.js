@@ -22,12 +22,14 @@ const setRefreshTokenCookie = (res) => {
 };
 
 const login = async (req, res) => {
+  console.log(req.body)
   try {
     const user = await User.findOne({
       username: req.body.username,
     });
 
     if (!user) {
+      console.log('no user found')
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });
@@ -38,6 +40,7 @@ const login = async (req, res) => {
       user.password
     );
     if (!isMatch) {
+      console.log('incorrect pass')
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });

@@ -9,6 +9,7 @@ const userSchema = new Schema({
   email: String,
   password: String,
   role: String,
+  approved: Boolean
 });
 
 // On save hook, encrypt password

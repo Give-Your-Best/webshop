@@ -1,104 +1,65 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { required, checkemail, checkpassword } from '../../helpers/field-validation';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { signupSchema } from '../../utils/validation';
+import { TextInput } from '../../components/atoms/TextInput';
 import { registerUser } from '../../services/user';
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import Select from "react-validation/build/select";
-import CheckButton from "react-validation/build/button";
 
 export const Register = () => {
     let history = useHistory();
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [role, setRole] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const form = useRef();
-    const checkBtn = useRef();
 
-    const handleRegisterSubmit = async (event) => {
-        event.preventDefault();
-        form.current.validateAll();
-        if (checkBtn.current.context._errors.length === 0) {
-            const res = await registerUser({ email, username, password, role });
-            if (res.success) {
-                history.push('/');
-            } else {
-                setErrorMessage(res.message);
-            }
+    const handleRegisterSubmit = async (values) => {
+        const res = await registerUser(values);
+        if (res.success) {
+            history.push('/');
         } else {
-            setErrorMessage('Check fields');
+            setErrorMessage(res.message);
         }
     };
 
     return (
         <div>
             <h2>Sign up</h2>
-            <Form onSubmit={handleRegisterSubmit} ref={form}>
-                <div>
-                    <label htmlFor="username" style={{ marginRight: 16 }}>
-                        Username
-                    </label>
-                    <Input
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        validations={[required]}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email" style={{ marginRight: 16 }}>
-                        Email address
-                    </label>
-                    <Input
-                        type="text"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        validations={[required, checkemail]}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="role" style={{ marginRight: 16 }}>
-                        Role
-                    </label>
-                    <Select name='role' validations={[required]} onChange={(e) => setRole(e.target.value)}>
+            <Formik
+                initialValues={{ username: '', password: '', email: '', passwordConfirm: '', role: '' }}
+                validationSchema= {signupSchema}
+                onSubmit={handleRegisterSubmit}
+                >
+                {({ isSubmitting }) => (
+                <Form>
+                    <Field type="text" name="username" as={TextInput} placeholder="Create a username" />
+                    <ErrorMessage name="username" component="div" />
+
+                    <Field type="text" name="email" as={TextInput} placeholder="Enter your email" />
+                    <ErrorMessage name="email" component="div" />
+
+                    <Field name="role" as="select" placeholder="Select a role" >
                         <option value=''>Select a role</option>
                         <option value='donor'>Donor</option>
                         <option value='shopper'>Shopper</option>
-                    </Select>
-                </div>
-                <div>
-                    <label htmlFor="password" style={{ marginRight: 16 }}>
-                        Password
-                    </label>
-                    <Input
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        validations={[required]}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="passwordConfirm" style={{ marginRight: 16 }}>
-                        Confirm Password
-                    </label>
-                    <Input
-                        type="password"
-                        name="confirm"
-                        value={passwordConfirm}
-                        onChange={(e) => setPasswordConfirm(e.target.value)}
-                        validations={[required, checkpassword]}
-                    />
-                </div>
-                {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                <button>Sign up</button>
-                <CheckButton style={{ display: "none" }} ref={checkBtn} />
-            </Form>
+                    </Field>
+                    <ErrorMessage name="role" component="div" />
+
+                    <Field type="password" name="password" as={TextInput} placeholder="Create a password" />
+                    <ErrorMessage name="password" component="div" />
+
+                    <Field type="password" name="passwordConfirm" as={TextInput} placeholder="Retype password" />
+                    <ErrorMessage name="passwordConfirm" component="div" />
+                    <div>
+                    <label>Can we email you? </label>
+                    <Field type="checkbox" name="emailMe" />
+                    <ErrorMessage name="emailMe" component="div" />
+                    </div>
+
+                    <button type="submit" disabled={isSubmitting}>
+                    Submit
+                    </button>
+                </Form>
+                )}
+
+            </Formik>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>
       );
 }
