@@ -3,14 +3,14 @@ import { useHistory } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { signupSchema } from '../../utils/validation';
 import { TextInput } from '../../components/atoms/TextInput';
-import { registerUser } from '../../services/user';
+import { register } from '../../services/user';
 
 export const Register = () => {
     let history = useHistory();
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleRegisterSubmit = async (values) => {
-        const res = await registerUser(values);
+        const res = await register(values);
         if (res.success) {
             history.push('/');
         } else {

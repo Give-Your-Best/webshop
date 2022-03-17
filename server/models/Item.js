@@ -14,6 +14,7 @@ const itemSchema = new Schema(
     colors: [String],
     status: String,
     country: String,
+    approved: Boolean
   },
   { strict: false }
 );

@@ -4,7 +4,7 @@ import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
-import { loginUser } from '../../services/user';
+import { login } from '../../services/user';
 import { TextInput } from '../../components/atoms/TextInput';
 
 export const Login = () => {
@@ -15,7 +15,7 @@ export const Login = () => {
 
   const handleLoginSubmit = async (values, {setSubmitting}) => {
     setSubmitting(true);
-    const res = await loginUser(values);
+    const res = await login(values);
     if (res.success) {
       setUser(res.user);
       setToken(res.token);

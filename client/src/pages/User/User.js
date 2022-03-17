@@ -8,7 +8,6 @@ export const User = () => {
   const { userId } = useParams();
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = React.useState([]);
-
   useEffect(() => {
     const fetchUser = async () => {
       const userDetails = await getUser(userId, token);

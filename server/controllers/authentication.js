@@ -10,6 +10,7 @@ const tokenForUser = (user) => {
 };
 
 const setRefreshTokenCookie = (res) => {
+  console.log('refresh token cookie')
   const refreshToken = uuidv4();
   res.cookie('refresh_token', refreshToken, {
     httpOnly: true,
@@ -22,6 +23,7 @@ const setRefreshTokenCookie = (res) => {
 };
 
 const login = async (req, res) => {
+  console.log('login fn')
   console.log(req.body)
   try {
     const user = await User.findOne({
@@ -67,6 +69,7 @@ const login = async (req, res) => {
 };
 
 const verifyToken = (req, res, next) => {
+  console.log('verifying token')
   // check header or url parameters or post parameters for token
   const token =
     req.body.token || req.query.token || req.headers['x-access-token'];
@@ -129,7 +132,7 @@ const authenticate = async (req, res) => {
     return res.json({
       success: true,
       message: 'Authenticated!',
-      user: { username: user.username, role: user.role },
+      user: { username: user.username, role: user.role, id: user._id },
       token,
     });
   } catch (err) {
