@@ -1,6 +1,8 @@
-export const getUser = async (id, token) => {
+export const deleteUser = async (id, token) => {
   const response = await fetch(`/api/users/${id}`, {
+    method: 'delete',
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       'x-access-token': token,
     },

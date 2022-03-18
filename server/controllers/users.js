@@ -1,7 +1,5 @@
 require('dotenv').config();
 const uuidv4 = require('uuid').v4;
-const User = require('../models/User');
-const constants = require('../utils/constants.js');
 const UserService = require('../services/users');
 
 const createUser = async (req, res) => {
@@ -10,15 +8,9 @@ const createUser = async (req, res) => {
     if (!req.body.username) {
       return res.status(400).send({message: "Service error: new user details are required"});
     }
-    const userData = {
-      username : req.body.username || req.body.email,
-      email : req.body.email || req.body.username,
-      password : req.body.password,
-      role : req.body.role || 'admin'
-    }
 
     try {
-      const response = await UserService.createUser(userData);
+      const response = await UserService.createUser(req.body);
       return res.status(200).send({
         success: true,
         message: `User created`,
@@ -35,19 +27,12 @@ const registerUser = async (req, res) => {
   if (!req.body.username) {
     return res.status(400).send({message: "Service error: new user details are required"});
   }
-  if (!req.body.role || !constants.userRoles.includes(req.body.role)) {
-    return res.status(400).send({message: "User must have a valid role"});
-  }
-  const userData = {
-    username : req.body.username || req.body.email,
-    email : req.body.email || req.body.username,
-    password : req.body.password,
-    role : req.body.role,
-    approved: false
+  if (!req.body.type || !['shopper', 'donor'].includes(req.body.type)) {
+    return res.status(400).send({message: "User must have a valid type"});
   }
 
   try {
-    const response = await UserService.createUser(userData);
+    const response = await UserService.createUser(req.body);
     return res.status(200).send({
       success: true,
       message: `User registered`,

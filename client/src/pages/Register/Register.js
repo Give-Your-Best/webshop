@@ -22,7 +22,7 @@ export const Register = () => {
         <div>
             <h2>Sign up</h2>
             <Formik
-                initialValues={{ username: '', password: '', email: '', passwordConfirm: '', role: '' }}
+                initialValues={{ username: '', password: '', email: '', passwordConfirm: '', type: '' }}
                 validationSchema= {signupSchema}
                 onSubmit={handleRegisterSubmit}
                 >
@@ -34,12 +34,12 @@ export const Register = () => {
                     <Field type="text" name="email" as={TextInput} placeholder="Enter your email" />
                     <ErrorMessage name="email" component="div" />
 
-                    <Field name="role" as="select" placeholder="Select a role" >
-                        <option value=''>Select a role</option>
+                    <Field name="type" as="select" placeholder="Select a type" >
+                        <option value=''>Select a type</option>
                         <option value='donor'>Donor</option>
                         <option value='shopper'>Shopper</option>
                     </Field>
-                    <ErrorMessage name="role" component="div" />
+                    <ErrorMessage name="type" component="div" />
 
                     <Field type="password" name="password" as={TextInput} placeholder="Create a password" />
                     <ErrorMessage name="password" component="div" />

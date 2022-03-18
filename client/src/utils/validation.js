@@ -3,7 +3,7 @@ import * as yup from "yup";
 export const signupSchema = yup.object().shape({
     username: yup.string().min(3).required(),
     email: yup.string().email().required(),
-    role: yup.string().min(3).required('Select a role'),
+    type: yup.string().min(3).required('Select a type'),
     password: yup.string().required('Please Enter your password')
         .matches(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,

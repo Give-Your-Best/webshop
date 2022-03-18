@@ -5,7 +5,8 @@ const { getAllUsers, getUser, deleteUser } = require('../../services/users');
 
 // get users endpoint api/users
 router.get('/', async (req, res) => {
-    const users = await getAllUsers();
+    let type = req.query.type || 'all';
+    const users = await getAllUsers(type);
     res.json(users);
 });
   

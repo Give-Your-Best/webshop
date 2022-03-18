@@ -1,7 +1,8 @@
 require('dotenv').config();
 const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const User = require('../models/User');
+const Role = require('../models/Role');
+const User_ = require('../models/User');
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
@@ -26,9 +27,10 @@ const login = async (req, res) => {
   console.log('login fn')
   console.log(req.body)
   try {
-    const user = await User.findOne({
+    const user = await User_.User.findOne({
       username: req.body.username,
-    });
+      approvedStatus: 'approved'
+    }).populate('assignedRole');
 
     if (!user) {
       console.log('no user found')
@@ -56,7 +58,7 @@ const login = async (req, res) => {
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: { username: user.username, role: user.role, id: user._id },
+      user: { username: user.username, type: user.kind || 'no-access', id: user._id },
       token,
     });
   } catch (err) {
@@ -122,8 +124,8 @@ const authenticate = async (req, res) => {
         .status(401)
         .send({ success: false, message: 'Failed to authenticate user.' });
     }
-    const user = await User.findById(decoded._id);
-    if (!user) {
+    const user = await User_.User.findById(decoded._id);
+    if (!user || user.approvedStatus != 'approved') {
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });
@@ -132,7 +134,7 @@ const authenticate = async (req, res) => {
     return res.json({
       success: true,
       message: 'Authenticated!',
-      user: { username: user.username, role: user.role, id: user._id },
+      user: { username: user.username, type: user.kind, id: user._id },
       token,
     });
   } catch (err) {
