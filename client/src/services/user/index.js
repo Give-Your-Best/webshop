@@ -1,6 +1,10 @@
 export { login } from './login';
 export { register } from './register';
 export { getUser } from './getUser';
+export { deleteUser } from './deleteUser';
 export { getUsers } from './getUsers';
 export { updateUser } from './updateUser';
+export { updateDonor } from './updateDonor';
 export { authenticateUser } from './authenticateUser';
+export { getAdminLocations } from './getAdminLocations';
+export { getDonations } from './getDonations';

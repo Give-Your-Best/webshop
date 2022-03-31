@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Form, Input, SubmitButton } from 'formik-antd';
+import { Formik, ErrorMessage } from 'formik';
 import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
 import { login } from '../../services/user';
-import { TextInput } from '../../components/atoms/TextInput';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
@@ -35,18 +35,13 @@ export const Login = () => {
         validationSchema= {loginSchema}
         onSubmit={handleLoginSubmit}
         >
-        {({ isSubmitting }) => (
           <Form>
-            <Field type="text" name="username" as={TextInput} />
+            <Input name="username" placeholder='Enter username'/>
             <ErrorMessage name="username" component="div" />
-            <Field type="password" name="password" as={TextInput} />
+            <Input.Password name="password" placeholder='Enter password' />
             <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
+            <SubmitButton>Login</SubmitButton>
           </Form>
-        )}
-
       </Formik>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
     </div>

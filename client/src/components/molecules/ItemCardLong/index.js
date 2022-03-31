@@ -1,0 +1,1 @@
+export { ItemCardLong } from './ItemCardLong';

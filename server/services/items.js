@@ -50,13 +50,70 @@ const deleteItem = async (id) => {
 
 const getAllItems = async () => {
     try {
-      const items = await Item.find({}).lean();
+      const items = await Item.find({"approvedStatus": "approved"}).lean();
       return items;
     } catch (error) {
       console.error(`Error in getAllItems: ${error}`);
       return { success: false, message: `Error in getAllItems: ${error}` }
     }
 };
+
+const getAccountNotificationItems = async (adminUserId) => {
+  const pendingReceiveQuery = {
+    "$and": [
+      {"approvedStatus": "approved"}, 
+      {"sendVia": adminUserId},
+      {"$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}]}
+    ]
+  };
+  const pendingSentQuery = {
+    "$and": [
+      {"approvedStatus": "approved"}, 
+      {"sendVia": adminUserId},
+      {"status": "received-by-gyb"}
+    ]
+  }
+
+  try {
+    const pendingReceive = await Item.find(pendingReceiveQuery).lean();
+    const pendingSent = await Item.find(pendingSentQuery).lean();
+    return [pendingReceive, pendingSent];
+  } catch (error) {
+    console.error(`Error in find items: ${error}`);
+    return { success: false, message: `Error in find items: ${error}` }
+  }
+}
+
+const getShopNotificationItems = async () => {
+  const pendingAssignQuery = {
+    "$and": [
+      {"approvedStatus": "approved"}, 
+      {"sendVia": {$exists: false}},
+    ]
+  }
+  const shoppedQuery = {
+    "$and": [
+      {"approvedStatus": "approved"}, 
+      {"kind": 'admin'},
+    ]
+  }
+
+  try {
+    const pendingAssign = await Item.find(pendingAssignQuery).populate({
+      "path": "shopperId",
+      "match": { "deliverPreference": "via gyb" }
+    }).lean();
+    const shopped = await Item.find(shoppedQuery).populate({
+      "path": "donorId",
+      "match": { "kind": "admin" }
+    }).lean();
+
+    return [pendingAssign, shopped];
+  } catch (error) {
+    console.error(`Error in get shop notifications: ${error}`);
+    return { success: false, message: `Error in get shop notifications: ${error}` }
+  }
+}
 
 const getItem = async (id) => {
     console.log('get item')
@@ -77,6 +134,8 @@ module.exports = {
     createItem,
     getItem,
     getAllItems,
+    getAccountNotificationItems,
+    getShopNotificationItems,
     deleteItem,
     updateItem
 };

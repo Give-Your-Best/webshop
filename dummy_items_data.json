@@ -1,0 +1,112 @@
+[
+    {
+        "name": "Blue pants with belt",
+        "donorId": "62455d9a526bf3290aed961b",
+        "category": "trousers",
+        "brand": "Zara",
+        "clothingSize": {
+            "UK": 12,
+            "EU": 40
+        },
+        "photos": [{
+            "front": true,
+            "src": "https://img01.ztat.net/article/spp-media-p1/ca86c03d733e4507a7f03c3dd1f03513/d179da10e7e949beaa680926322937a9.jpg?imwidth=1800&filter=packshot"
+        }],
+        "colors": ["navy", "black"],
+        "status": "shopped",
+        "shopperId": "62455d9a526bf3290aed9619",
+        "approvedStatus": "rejected",
+        "sendVia": "62455d9a526bf3290aed961e"
+    },
+    {
+        "name": "Blue pants with belt 2",
+        "donorId": "62455d9a526bf3290aed961b",
+        "category": "trousers",
+        "brand": "Zara",
+        "clothingSize": {
+            "UK": 12,
+            "EU": 40
+        },
+        "photos": [{
+            "front": true,
+            "src": "https://img01.ztat.net/article/spp-media-p1/ca86c03d733e4507a7f03c3dd1f03513/d179da10e7e949beaa680926322937a9.jpg?imwidth=1800&filter=packshot"
+        }],
+        "colors": ["navy", "black"],
+        "status": "received-by-gyb",
+        "shopperId": "62455d9a526bf3290aed9619",
+        "sendVia": "62455d9a526bf3290aed961e"
+    },
+    {
+        "name": "Summer dress",
+        "donorId": "62455d9a526bf3290aed961b",
+        "category": "dress",
+        "brand": "Zara",
+        "clothingSize": {
+            "UK": 14,
+            "EU": 44
+        },
+        "photos": [{
+            "front": true,
+            "src": "https://img01.ztat.net/article/spp-media-p1/90f05c8a79973dbfbc901b67a775353a/bf7a9125c20c495c95f46e0a6c87cdec.jpg?imwidth=762&filter=packshot"
+        }],
+        "colors": ["red", "white"]
+    },
+    {
+        "name": "Black skirt",
+        "descriptions": "Pencil skirt",
+        "donorId": "62455d9a526bf3290aed961c",
+        "category": "skirt",
+        "brand": "Mango",
+        "clothingSize": {
+            "UK": 6,
+            "EU": 36
+        },
+        "colors": ["black"],
+        "status": "shopped",
+        "shopperId": "623c936ed708d479150c3f17"
+    },
+    {
+        "name": "knee high brown boots",
+        "description": "Classic leather boots",
+        "donorId": "62455d9a526bf3290aed961c",
+        "category": "boots",
+        "brand": "Zara",
+        "shoeSize": {
+            "UK": 4
+        },
+        "photos": [
+            {
+                "front": true,
+                "src": "https://cdn.shopify.com/s/files/1/0304/0804/8699/products/saved-for-web_800x.jpg?v=1605742671"
+            },
+            {
+                "front": false,
+                "src": "https://cdn.shopify.com/s/files/1/0304/0804/8699/products/DSC02144-Recovered_600x.jpg?v=1605743579"
+            }
+        ],
+        "colors": ["brown", "nude"],
+        "status": "shopped",
+        "shopperId": "623c936ed708d479150c3f17"
+    },
+    {
+        "name": "Denim jacket",
+        "description": "Lined denom jacket",
+        "donorId": "62455d9a526bf3290aed961c",
+        "category": "jacket",
+        "brand": "unknown",
+        "clothingSize": {
+            "UK": 14
+        },
+        "photos": [
+            {
+                "front": true,
+                "src": "https://image.sportsmansguide.com/adimgs/l/2/228001_ts.jpg"
+            },
+            {
+                "front": true,
+                "src": "https://image.sportsmansguide.com/adimgs/l/2/228001_ts.jpg"
+            }
+        ],
+        "colors": ["blue", "denim", "cream"]
+    }
+]

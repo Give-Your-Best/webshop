@@ -12,6 +12,10 @@ export const Home = () => {
       setItems(items);
     };
     fetchItems();
+
+    return () => {
+      // cleanup
+    };
   }, []);
 
   return (

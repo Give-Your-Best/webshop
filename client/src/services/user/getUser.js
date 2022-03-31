@@ -9,5 +9,6 @@ export const getUser = async (id, token) => {
   if (response.status !== 200) {
     throw Error(body.message);
   }
+  console.log(body)
   return body;
 };

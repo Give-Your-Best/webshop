@@ -1,5 +1,5 @@
-export const getUsers = async (token) => {
-    const response = await fetch(`/api/users`, {
+export const getUsers = async (type, approvedStatus, token) => {
+    const response = await fetch(`/api/users?type=${type}${(approvedStatus)? '&approvedStatus='+ approvedStatus: ''}`, {
       headers: {
         'Content-Type': 'application/json',
         'x-access-token': token,

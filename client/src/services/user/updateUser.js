@@ -1,7 +1,10 @@
-export const updateUser = async (updateData, token) => {
+export const updateUser = async (id, updateData, token) => {
+  console.log('id')
+  console.log(id)
+  console.log(updateData)
     //call api to update user details
     try {
-      const response = await fetch('/api/user', {
+      const response = await fetch(`/api/users/${id}`, {
         method: 'put',
         headers: {
           Accept: 'application/json',

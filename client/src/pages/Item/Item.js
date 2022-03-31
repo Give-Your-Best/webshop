@@ -21,6 +21,10 @@ export const Item = () => {
       setAuthenticated(res.ok);
     };
     callTestApi();
+
+    return () => {
+      // cleanup
+    };
   }, [token]);
 
   return (
