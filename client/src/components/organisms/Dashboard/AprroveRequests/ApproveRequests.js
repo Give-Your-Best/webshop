@@ -14,7 +14,7 @@ export const ApproveRequests = () => {
     const [donations, setDonations] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const updateDonor = async (recordId, values) => {
+    const updateDonorWrapper = async (recordId, values) => {
       const res = await updateDonor(recordId, values, token);
       if (res.success) {
         return true;
@@ -23,7 +23,7 @@ export const ApproveRequests = () => {
       }
     };
 
-    const updateUser = async (recordId, values) => {
+    const updateUserWrapper = async (recordId, values) => {
       const res = await updateUser(recordId, values, token);
       if (res.success) {
         return true;
@@ -79,7 +79,7 @@ export const ApproveRequests = () => {
       console.log('mark as trused')
       console.log(recordIds)
       recordIds.forEach((recordId) => {
-        updateDonor(recordId, {"trustedDonor": true})
+        updateDonorWrapper(recordId, {"trustedDonor": true})
         .then(() => {
           setDonations(donations.filter(donation => {
             return donation._id !== recordId;
@@ -105,7 +105,7 @@ export const ApproveRequests = () => {
         }
 
         const updateRecord = async (values, action) => {
-            const res = await updateUser(record._id, values, token);
+            const res = await updateUserWrapper(record._id, values, token);
             if (res.success) {
                 if (action === 'info') {
                     console.log('info requeted - send email tbc');
