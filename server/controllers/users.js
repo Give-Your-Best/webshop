@@ -53,9 +53,32 @@ const updateUser = async (req, res) => {
         data = req.body;
   try {
     const response = await UserService.updateUser(id, data);
-    return res.status(200).send({
+    return res.status(200).json({
       success: true,
-      message: `User updated`,
+      message: response.message,
+      user: response.user
+    });
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({message: `Service error: ${err}`});
+  }
+
+};
+
+const updateDonor = async (req, res) => {
+  console.log('update donor controller');
+  console.log(req.body);
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).send({message: "Service error: User details are required"});
+  }
+  const id = req.params.id,
+        data = req.body;
+  try {
+    const response = await UserService.updateDonor(id, data);
+    return res.status(200).json({
+      success: true,
+      message: response.message,
+      user: response.user
     });
   } catch (err) {
     console.error(`Service error: ${err}`);
@@ -67,5 +90,6 @@ const updateUser = async (req, res) => {
 module.exports = {
   createUser,
   updateUser,
+  updateDonor,
   registerUser
 };

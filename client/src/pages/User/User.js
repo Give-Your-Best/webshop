@@ -14,7 +14,12 @@ export const User = () => {
       setUser(userDetails);
       setAuthenticated(userDetails.username? true: false);
     };
-    fetchUser()
+    fetchUser();
+
+
+    return () => {
+      // cleanup
+    };
   }, [token, userId]);
 
   return (

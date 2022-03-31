@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Form, Input, SubmitButton, Checkbox } from 'formik-antd';
+import { StyledSelect } from '../../components/atoms/Select/Select';
+import { Formik, ErrorMessage } from 'formik';
 import { signupSchema } from '../../utils/validation';
-import { TextInput } from '../../components/atoms/TextInput';
 import { register } from '../../services/user';
 
 export const Register = () => {
@@ -20,44 +21,38 @@ export const Register = () => {
 
     return (
         <div>
-            <h2>Sign up</h2>
+            <h2>Request to join</h2>
             <Formik
                 initialValues={{ username: '', password: '', email: '', passwordConfirm: '', type: '' }}
                 validationSchema= {signupSchema}
                 onSubmit={handleRegisterSubmit}
                 >
-                {({ isSubmitting }) => (
                 <Form>
-                    <Field type="text" name="username" as={TextInput} placeholder="Create a username" />
+                    <Input name="username" placeholder="Create a username" />
                     <ErrorMessage name="username" component="div" />
 
-                    <Field type="text" name="email" as={TextInput} placeholder="Enter your email" />
+                    <Input name="email" placeholder="Enter your email" />
                     <ErrorMessage name="email" component="div" />
 
-                    <Field name="type" as="select" placeholder="Select a type" >
-                        <option value=''>Select a type</option>
-                        <option value='donor'>Donor</option>
-                        <option value='shopper'>Shopper</option>
-                    </Field>
+                    <StyledSelect name="type" placeholder="How would you like to participate">
+                        <StyledSelect.Option value=''>Select an option</StyledSelect.Option>
+                        <StyledSelect.Option value='donor'>Donor</StyledSelect.Option>
+                        <StyledSelect.Option value='shopper'>Shopper</StyledSelect.Option>
+                    </StyledSelect>
                     <ErrorMessage name="type" component="div" />
 
-                    <Field type="password" name="password" as={TextInput} placeholder="Create a password" />
+                    <Input.Password name="password" placeholder="Create a password" />
                     <ErrorMessage name="password" component="div" />
 
-                    <Field type="password" name="passwordConfirm" as={TextInput} placeholder="Retype password" />
+                    <Input.Password name="passwordConfirm" placeholder="Retype password" />
                     <ErrorMessage name="passwordConfirm" component="div" />
                     <div>
                     <label>Can we email you? </label>
-                    <Field type="checkbox" name="emailMe" />
+                    <Checkbox name="emailMe" />
                     <ErrorMessage name="emailMe" component="div" />
                     </div>
-
-                    <button type="submit" disabled={isSubmitting}>
-                    Submit
-                    </button>
+                    <SubmitButton>Send request</SubmitButton>
                 </Form>
-                )}
-
             </Formik>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>

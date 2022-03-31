@@ -1,1 +1,0 @@
-export { DashboardTabs } from './DashboardTabs';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StatisticsCard } from '../../molecules';
+import { StatisticsCard } from '../../../molecules';
 
 export const Statistics = () => {
   const ordersToday = {

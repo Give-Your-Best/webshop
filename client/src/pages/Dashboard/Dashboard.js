@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Container } from '../../components';
-import { DashboardTabs } from '../../components'
+import { DashboardTabs } from '../../components/';
 
 export const Dashboard = () => {
 

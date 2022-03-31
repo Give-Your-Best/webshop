@@ -1,9 +1,10 @@
-import * as React from "react";
+import React from 'react';
 import { Table, Space } from 'antd';
 import { ListWrapper } from './UsersList.styles';
 
 export const UsersList = (data) => {
-  const columns = [
+
+  var columns = [
     {
       title: 'Username',
       dataIndex: 'username',
@@ -14,16 +15,19 @@ export const UsersList = (data) => {
       dataIndex: 'email',
       sorter: (a, b) => a.email.length - b.email.length,
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (record) => (
-        <Space size="middle">
-          <span onClick={() => data.handleDelete(record._id)}>Delete</span>
-        </Space>
-      ),
-    },
   ]
+
+  if (data.handleDelete) {
+    columns.push({
+        title: 'Action',
+        key: 'action',
+        render: (record) => (
+          <Space size="middle">
+            <span onClick={() => data.handleDelete(record._id, record.kind)}>Delete</span>
+          </Space>
+        )
+    })
+  }
 
   return (
     <ListWrapper>
@@ -31,7 +35,7 @@ export const UsersList = (data) => {
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{
-          expandedRowRender: record => <div><p style={{ margin: 0 }}>Username: {record.username}</p><p style={{ margin: 0 }}>Email: {record.email}</p></div>
+          expandedRowRender: data.expandRow
         }}
         dataSource={data.data}
       />

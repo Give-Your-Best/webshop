@@ -1,0 +1,124 @@
+[
+    {
+        "username": "Shopper1",
+        "name": "Shopper1",
+        "email": "Shopper1@Shopper1.com",
+        "password": "Shopper1",
+        "type": "shopper",
+        "referredBy": "family",
+        "currentStatus": "refugee",
+        "deliveryPreference": "via gyb",
+        "shoeSize": "6",
+        "clothingSize": "12 or EU40",
+        "shoppingFor": 1,
+        "approvedStatus": "approved"
+    },
+    {
+        "username": "Shopper2",
+        "name": "Shopper2",
+        "email": "Shopper2@Shopper2.com",
+        "password": "Shopper2",
+        "type": "shopper",
+        "referredBy": "pastor",
+        "currentStatus": "refugee",
+        "deliveryPreference": "via gyb",
+        "shoeSize": "3",
+        "clothingSize": "8 or EU36",
+        "shoppingFor": 2
+    },
+    {
+        "username": "Shopper3",
+        "name": "Shopper3",
+        "email": "Shopper3@Shopper3.com",
+        "password": "Shopper3",
+        "type": "shopper",
+        "referredBy": "pastor",
+        "currentStatus": "refugee",
+        "deliveryPreference": "direct",
+        "shoeSize": "3",
+        "clothingSize": "8 or EU36",
+        "shoppingFor": 1,
+        "deliveryAddress": {
+            "firstLine": "2 shopper street",
+            "postcode": "SH10 5tb",
+            "city": "Liverpool"
+        },
+        "approvedStatus": "approved"
+    },
+    {
+        "username": "Donor1",
+        "name": "Donor1",
+        "email": "Donor1@Donor1.com",
+        "password": "Donor1",
+        "type": "donor",
+        "approvedStatus": "approved",
+        "trustedDonor": false
+    },
+    {
+        "username": "Donor2",
+        "name": "Donor2",
+        "email": "Donor2@Donor2.com",
+        "password": "Donor2",
+        "type": "donor",
+        "approvedStatus": "approved",
+        "trustedDonor": true
+    },
+    {
+        "username": "Donor3",
+        "name": "Donor3",
+        "email": "Donor3@Donor3.com",
+        "password": "Donor3",
+        "type": "donor",
+        "trustedDonor": false
+    },
+    {
+        "username": "ZahraDev",
+        "name": "Zahra Ali",
+        "email": "me@zahraweb.uk",
+        "password": "testing",
+        "type": "admin",
+        "shoppingFor": 1,
+        "assignedRole": "623c8b03b1ce9ed8d506b0ac",
+        "addresses": [{
+            "firstLine": "47 Test Street",
+            "secondLine": "Flat 4",
+            "postcode": "NW1 011",
+            "city": "London",
+            "assignedCount": 0,
+            "available": false
+        }],
+        "approvedStatus": "approved"
+    },
+    {
+        "username": "TesterDev",
+        "name": "Tester",
+        "email": "tester@tester.com",
+        "password": "testing",
+        "approvedStatus": "approved",
+        "type": "admin",
+        "assignedRole": "623c8b04b1ce9ed8d506b0ad",
+        "addresses": {
+            "firstLine": "1 Test road",
+            "postcode": "N5 5NT",
+            "city": "London",
+            "available": true,
+            "assignedCount": 0
+        }
+    },
+    {
+        "username": "TesterDev2",
+        "name": "Tester2",
+        "email": "tester2@tester.com",
+        "password": "testing",
+        "approvedStatus": "approved",
+        "type": "admin",
+        "assignedRole": "623c8b05b1ce9ed8d506b0ae",
+        "addresses": {
+            "firstLine": "2 Test road",
+            "postcode": "N5 5NT",
+            "city": "London",
+            "available": true,
+            "assignedCount": 3
+        }
+    }
+]

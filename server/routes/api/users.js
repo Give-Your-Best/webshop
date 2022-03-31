@@ -1,14 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('../../controllers/users');
-const { getAllUsers, getUser, deleteUser } = require('../../services/users');
+const { getAllUsers, getUser, deleteUser, getAdminLocations, getDonations } = require('../../services/users');
 
 // get users endpoint api/users
 router.get('/', async (req, res) => {
     let type = req.query.type || 'all';
-    const users = await getAllUsers(type);
+    let approvedStatus = req.query.approvedStatus || '';
+    const users = await getAllUsers(type, approvedStatus);
     res.json(users);
 });
+
+// get admin user locations api/users
+router.get('/adminLocations', async (req, res) => {
+    const locations = await getAdminLocations();
+    res.json(locations);
+});
+
+// get all donated items by donor api/users/donations
+router.get('/donations', async (req, res) => {
+    let approvedStatus = req.query.approvedStatus || 'all';
+    const donations = await getDonations(approvedStatus);
+    res.json(donations);
+});
+
   
 // get user endoint api/users/:id
 router.get('/:id', async (req, res) => {
@@ -19,6 +34,9 @@ router.get('/:id', async (req, res) => {
 
 // update user endpoint put to api/users/:id
 router.put('/:id', Users.updateUser);
+
+// update user endpoint put to api/users/:id
+router.put('/donor/:id', Users.updateDonor);
 
 // create user endpoint post to api/users
 router.post('/', Users.createUser);

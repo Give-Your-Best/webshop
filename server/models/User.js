@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
-const options = { discriminatorKey: 'kind' };
+const options = { discriminatorKey: 'kind', timestamps: true };
 
 // define the shared mongoose user model
 const userSchema = new Schema({
@@ -13,9 +13,10 @@ const userSchema = new Schema({
   password: String,
   approvedStatus: {
     type: String,
-    enum: ['in-progress', 'approved', 'rejected', 'info-requested'],
+    enum: ['in-progress', 'approved', 'rejected'],
     default : 'in-progress'
-  }
+  },
+  infoRequested: Boolean
 }, options);
 
 // On save hook, encrypt password
@@ -63,14 +64,23 @@ const Shopper = User.discriminator("shopper", new Schema({
     UK: String,
     EU: String,
   },
-  deliveryPreference: ["direct", "via gyb", "to local"],
+  deliveryPreference: {
+    type: String,
+    enum: ["direct", "via gyb", "to local"],
+    default : 'direct'
+  },
   currentStatus: String,
   referredBy: String,
   shoppingFor: {
     type: Number,
     default : 1
   }, 
-  deliveryAddress: String
+  deliveryAddress: {
+    firstLine: String,
+    secondLine: String,
+    postcode: String,
+    city: String
+  }
 }, options));
 
 // User type admin
@@ -81,7 +91,14 @@ const Admin = User.discriminator("admin", new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
   },
-  addresses: [String]
+  addresses: [{
+    firstLine: String,
+    secondLine: String,
+    postcode: String,
+    city: String,
+    available: Boolean,
+    assignedCount: Number
+  }]
 }, options));
 
 // export the model

@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, DashboardMenuWrapper } from './DashboardTabs.styles';
+import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, DashboardMenuWrapper } from './Tabs.styles';
 import { Statistics } from '../Statistics';
 import { Users } from '../Users';
+import { Notifications } from '../Notifications';
+import { ApproveRequests } from '../AprroveRequests/ApproveRequests';
 
-export const DashboardTabs = () => {
+export const Tabs = () => {
   return (
     <DashboardMenuWrapper>
       <StyledTabs>
@@ -28,10 +30,10 @@ export const DashboardTabs = () => {
           <h2>Messaging</h2>
         </StyledTabPanel>
         <StyledTabPanel>
-          <h2>Notifications</h2>
+          <Notifications />
         </StyledTabPanel>
         <StyledTabPanel>
-          <h2>Approve requests</h2>
+          <ApproveRequests />
         </StyledTabPanel>
         <StyledTabPanel>
           <h2>Admin shop</h2>

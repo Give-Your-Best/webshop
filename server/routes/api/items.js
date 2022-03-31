@@ -1,11 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const Items = require('../../controllers/items');
-const { getAllItems, getItem, deleteItem } = require('../../services/items');
+const { getAllItems, getItem, deleteItem, getAccountNotificationItems, getShopNotificationItems } = require('../../services/items');
 
 // get items endpoint api/items
 router.get('/', async (req, res) => {
     const items = await getAllItems();
+    res.json(items);
+});
+
+// get account notification items endpoint api/items
+router.get('/accountNotification', async (req, res) => {
+    let adminUserId = req.query.adminUserId || '';
+    const items = await getAccountNotificationItems(adminUserId);
+    res.json(items);
+});
+
+// get shop notifications items endpoint api/items
+router.get('/shopNotification', async (req, res) => {
+    const items = await getShopNotificationItems();
     res.json(items);
 });
   
