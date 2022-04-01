@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, SubmitButton, Checkbox } from 'formik-antd';
-import { StyledSelect } from '../../components/atoms/Select/Select';
+import { StyledSelect } from '../../components/atoms';
 import { Formik, ErrorMessage } from 'formik';
 import { signupSchema } from '../../utils/validation';
 import { register } from '../../services/user';

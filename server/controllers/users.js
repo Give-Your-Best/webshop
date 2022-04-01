@@ -5,7 +5,7 @@ const UserService = require('../services/users');
 const createUser = async (req, res) => {
     console.log('create user controller')
     console.log(req.body);
-    if (!req.body.username) {
+    if (!req.body.email) {
       return res.status(400).send({message: "Service error: new user details are required"});
     }
 
@@ -14,6 +14,7 @@ const createUser = async (req, res) => {
       return res.status(200).send({
         success: true,
         message: `User created`,
+        user: response.user || {}
       });
     } catch (err) {
       console.error(`Service error: ${err}`);
@@ -33,13 +34,13 @@ const registerUser = async (req, res) => {
 
   try {
     const response = await UserService.createUser(req.body);
-    return res.status(200).send({
+    return response.status(200).send({
       success: true,
       message: `User registered`,
     });
   } catch (err) {
     console.error(`Service error: ${err}`);
-    return res.status(500).send({message: `Service error: ${err}`});
+    return response.status(500).send({message: `Service error: ${err}`});
   }
 };
 

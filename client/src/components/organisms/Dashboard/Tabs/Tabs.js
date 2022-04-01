@@ -4,6 +4,8 @@ import { Statistics } from '../Statistics';
 import { Users } from '../Users';
 import { Notifications } from '../Notifications';
 import { ApproveRequests } from '../AprroveRequests/ApproveRequests';
+import { ShippingLocations } from '../ShippingLocations/ShippingLocations';
+import { Logout } from '../../Logout/Logout';
 
 export const Tabs = () => {
   return (
@@ -15,7 +17,7 @@ export const Tabs = () => {
           <StyledTab>Messaging</StyledTab>
           <StyledTab>Notifications</StyledTab>
           <StyledTab>Approve Requests</StyledTab>
-          <StyledTab>Admin Shop</StyledTab>
+          <StyledTab>Shipping Locations</StyledTab>
           <StyledTab>Settings</StyledTab>
           <StyledTab>Logout</StyledTab>
         </StyledTabList>
@@ -36,13 +38,13 @@ export const Tabs = () => {
           <ApproveRequests />
         </StyledTabPanel>
         <StyledTabPanel>
-          <h2>Admin shop</h2>
+          <ShippingLocations />
         </StyledTabPanel>
         <StyledTabPanel>
           <h2>Settings</h2>
         </StyledTabPanel>
         <StyledTabPanel>
-          <h2>Logout</h2>
+          <Logout />
         </StyledTabPanel>
       </StyledTabs>
     </DashboardMenuWrapper>

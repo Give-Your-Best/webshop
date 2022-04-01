@@ -3,8 +3,10 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./server/models/User');
 const Item = require('./server/models/Item');
+const Location = require('./server/models/Location');
 const users = require('./dummy_users_data.json');
 const items = require('./dummy_items_data.json');
+const locations = require('./dummy_locations_data.json');
 
 // connect to the db
 mongoose.connect(
@@ -37,14 +39,26 @@ Script to add dummy data
 //     })
 // })
 
-items.forEach((item) => {
-    item = new Item(item);
-    item.save(err=>{
-        if (err) {
-            console.log(err)
-          throw Error(err);
-        } else {
-          return { success: true, message: 'Item created' }
-        }
-    })
+// items.forEach((item) => {
+//     item = new Item(item);
+//     item.save(err=>{
+//         if (err) {
+//             console.log(err)
+//           throw Error(err);
+//         } else {
+//           return { success: true, message: 'Item created' }
+//         }
+//     })
+// })
+
+locations.forEach((item) => {
+  item = new Location(item);
+  item.save(err=>{
+      if (err) {
+          console.log(err)
+        throw Error(err);
+      } else {
+        return { success: true, message: 'Location created' }
+      }
+  })
 })

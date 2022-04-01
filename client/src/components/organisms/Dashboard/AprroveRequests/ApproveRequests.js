@@ -107,9 +107,6 @@ export const ApproveRequests = () => {
         const updateRecord = async (values, action) => {
             const res = await updateUserWrapper(record._id, values, token);
             if (res.success) {
-                if (action === 'info') {
-                    console.log('info requeted - send email tbc');
-                }
               return true;
             } else {
               setErrorMessage(res.message);
@@ -125,9 +122,6 @@ export const ApproveRequests = () => {
                 break;
             case 'reject':
                 values = {'approvedStatus': 'rejected'}  
-                break;
-            case 'info':
-                values = {'infoRequested': true}
                 break;
             default:
                 break;

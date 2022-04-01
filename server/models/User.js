@@ -8,15 +8,15 @@ const options = { discriminatorKey: 'kind', timestamps: true };
 // define the shared mongoose user model
 const userSchema = new Schema({
   username: String,
-  name: String,
+  firstName: String,
+  lastName: String,
   email: String,
   password: String,
   approvedStatus: {
     type: String,
     enum: ['in-progress', 'approved', 'rejected'],
     default : 'in-progress'
-  },
-  infoRequested: Boolean
+  }
 }, options);
 
 // On save hook, encrypt password
@@ -56,14 +56,8 @@ const Donor = User.discriminator("donor", new Schema({
 
 //User type shopper
 const Shopper = User.discriminator("shopper", new Schema({
-  clothingSize: {
-    UK: String,
-    EU: String,
-  },
-  shoeSize: {
-    UK: String,
-    EU: String,
-  },
+  clothingSize: [String],
+  shoeSize: [String],
   deliveryPreference: {
     type: String,
     enum: ["direct", "via gyb", "to local"],
@@ -90,15 +84,7 @@ const Admin = User.discriminator("admin", new Schema({
   assignedRole: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
-  },
-  addresses: [{
-    firstLine: String,
-    secondLine: String,
-    postcode: String,
-    city: String,
-    available: Boolean,
-    assignedCount: Number
-  }]
+  }
 }, options));
 
 // export the model

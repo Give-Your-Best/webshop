@@ -79,14 +79,6 @@
         "type": "admin",
         "shoppingFor": 1,
         "assignedRole": "623c8b03b1ce9ed8d506b0ac",
-        "addresses": [{
-            "firstLine": "47 Test Street",
-            "secondLine": "Flat 4",
-            "postcode": "NW1 011",
-            "city": "London",
-            "assignedCount": 0,
-            "available": false
-        }],
         "approvedStatus": "approved"
     },
     {
@@ -96,14 +88,7 @@
         "password": "testing",
         "approvedStatus": "approved",
         "type": "admin",
-        "assignedRole": "623c8b04b1ce9ed8d506b0ad",
-        "addresses": {
-            "firstLine": "1 Test road",
-            "postcode": "N5 5NT",
-            "city": "London",
-            "available": true,
-            "assignedCount": 0
-        }
+        "assignedRole": "623c8b04b1ce9ed8d506b0ad"
     },
     {
         "username": "TesterDev2",
@@ -112,13 +97,6 @@
         "password": "testing",
         "approvedStatus": "approved",
         "type": "admin",
-        "assignedRole": "623c8b05b1ce9ed8d506b0ae",
-        "addresses": {
-            "firstLine": "2 Test road",
-            "postcode": "N5 5NT",
-            "city": "London",
-            "available": true,
-            "assignedCount": 3
-        }
+        "assignedRole": "623c8b05b1ce9ed8d506b0ae"
     }
 ]

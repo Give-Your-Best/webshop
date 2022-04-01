@@ -7,8 +7,6 @@ import { Button } from '../../atoms/Button';
 //these are all strings, select fields need to be added
 
 export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
-  console.log('ere')
-  console.log(approvalAction)
   return (
     <Form>
         <label>Name:</label>
@@ -34,8 +32,7 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <ErrorMessage name="shoppingFor" component="div" />
         {editingKey === recordId && !approvalAction &&<StyledSubmitButton>Save</StyledSubmitButton>} 
         {approvalAction && <Button small data-action='approve' onClick={approvalAction}>Approve</Button>}  
-        {approvalAction && <Button small data-action='reject' onClick={approvalAction}>Reject</Button>}  
-        {approvalAction && <Button small data-action='info' onClick={approvalAction}>More info</Button>}   
+        {approvalAction && <Button small data-action='reject' onClick={approvalAction}>Reject</Button>}
     </Form>
   );
 };

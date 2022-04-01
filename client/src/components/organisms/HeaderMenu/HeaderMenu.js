@@ -18,7 +18,7 @@ export const HeaderMenu = () => {
       {!user && <UserMenuItem to="/register">Sign up</UserMenuItem>}
       {user && (
         <>
-          <span>Hello, <UserMenuItem to={`/user/${user.id}`}>{user.username}</UserMenuItem></span>
+          <span>Hello, <UserMenuItem to={`/user/${user.id}`}>{user.email}</UserMenuItem></span>
           <UserMenuItem to="/dashboard">Admin</UserMenuItem>
           <UserMenuItem onClick={handleLogoutClick} to="/">Logout</UserMenuItem>
         </>

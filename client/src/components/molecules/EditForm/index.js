@@ -1,1 +1,7 @@
-export { DonorMiniEditForm, ShopperMiniEditForm } from './EditForm';
+export { 
+    DonorMiniEditForm, 
+    ShopperMiniEditForm, 
+    LocationMiniEditForm , 
+    DonorCreateForm,
+    ShopperCreateForm
+} from './EditForm';

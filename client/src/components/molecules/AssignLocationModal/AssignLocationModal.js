@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Modal } from 'antd';
-import { StyledSelect } from '../../atoms/Select/Select';
+import { StyledSelect } from '../../atoms';
 import { Formik, Form } from 'formik';
 import { SubmitButton } from 'formik-antd';
 
@@ -21,7 +21,7 @@ export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, 
                 <Form>
                 <StyledSelect name="location" placeholder="Select a location">
                     {locations.map((d)=>{
-                        return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.addresses[0].firstLine + ', ' + d.addresses[0].postcode}</StyledSelect.Option>);
+                        return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.firstLine + ', ' + d.postcode}</StyledSelect.Option>);
                         })}
                 </StyledSelect>
                 <SubmitButton>Assign</SubmitButton>

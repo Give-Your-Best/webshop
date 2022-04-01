@@ -28,7 +28,7 @@ const login = async (req, res) => {
   console.log(req.body)
   try {
     const user = await User_.User.findOne({
-      username: req.body.username,
+      email: req.body.email,
       approvedStatus: 'approved'
     }).populate('assignedRole');
 
@@ -51,14 +51,14 @@ const login = async (req, res) => {
     }
     const token = tokenForUser({
       _id: user._id,
-      username: user.username,
+      email: user.email,
       // password: user.password, // do not use password here since we're saving this to the cookies
     });
     setRefreshTokenCookie(res); // currently not used
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: { username: user.username, type: user.kind || 'no-access', id: user._id },
+      user: { email: user.email, type: user.kind || 'no-access', id: user._id },
       token,
     });
   } catch (err) {
@@ -134,7 +134,7 @@ const authenticate = async (req, res) => {
     return res.json({
       success: true,
       message: 'Authenticated!',
-      user: { username: user.username, type: user.kind, id: user._id },
+      user: { email: user.email, type: user.kind, id: user._id },
       token,
     });
   } catch (err) {

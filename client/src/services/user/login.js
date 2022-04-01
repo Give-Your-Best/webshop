@@ -1,4 +1,4 @@
-export const login = async ({ username, password }) => {
+export const login = async ({ email, password }) => {
   try {
     const response = await fetch('/api/auth/login', {
       method: 'post',
@@ -7,7 +7,7 @@ export const login = async ({ username, password }) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username,
+        email,
         password,
       }),
     });

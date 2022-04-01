@@ -31,13 +31,13 @@ export const Login = () => {
     <div data-id="LoginRoute">
       <h2>Login</h2>
       <Formik
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ email: '', password: '' }}
         validationSchema= {loginSchema}
         onSubmit={handleLoginSubmit}
         >
           <Form>
-            <Input name="username" placeholder='Enter username'/>
-            <ErrorMessage name="username" component="div" />
+            <Input name="email" placeholder='Enter email address'/>
+            <ErrorMessage name="email" component="div" />
             <Input.Password name="password" placeholder='Enter password' />
             <ErrorMessage name="password" component="div" />
             <SubmitButton>Login</SubmitButton>
