@@ -6,9 +6,9 @@ export const UsersList = (data) => {
 
   var columns = [
     {
-      title: 'Username',
-      dataIndex: 'username',
-      sorter: (a, b) => a.name.length - b.name.length,
+      title: 'Name',
+      dataIndex: 'firstName',
+      sorter: (a, b) => a.firstName.length - b.firstName.length,
     },
     {
       title: 'Email',

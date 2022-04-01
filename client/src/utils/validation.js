@@ -13,7 +13,30 @@ export const signupSchema = yup.object().shape({
 });
 
 export const loginSchema = yup.object().shape({
-    username: yup.string().min(3).required(),
+    email: yup.string().min(3).required(),
     password: yup.string().required('Please enter your password'),
+});
+
+export const donorCreateSchema = yup.object().shape({
+    firstName: yup.string().min(3).required(),
+    email: yup.string().email().required(),
+    type: yup.string().min(3).required('Select a type'),
+    password: yup.string().required('Please Enter your password')
+});
+
+export const shopperCreateSchema = yup.object().shape({
+    firstName: yup.string().min(3).required(),
+    email: yup.string().email().required(),
+    clothingSize: yup.array().required(),
+    shoeSize: yup.array().required(),
+    currentStatus: yup.string().required(),
+    referredBy: yup.string().required(),
+    shoppingFor: yup.number().required(),
+    deliveryAddress: yup.object()
+    .shape({
+        firstLine: yup.string(),
+        city: yup.string(),
+        postcode: yup.string()
+    })
 });
 

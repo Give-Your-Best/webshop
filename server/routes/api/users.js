@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('../../controllers/users');
-const { getAllUsers, getUser, deleteUser, getAdminLocations, getDonations } = require('../../services/users');
+const { getAllUsers, getUser, deleteUser, getDonations } = require('../../services/users');
 
 // get users endpoint api/users
 router.get('/', async (req, res) => {
@@ -9,12 +9,6 @@ router.get('/', async (req, res) => {
     let approvedStatus = req.query.approvedStatus || '';
     const users = await getAllUsers(type, approvedStatus);
     res.json(users);
-});
-
-// get admin user locations api/users
-router.get('/adminLocations', async (req, res) => {
-    const locations = await getAdminLocations();
-    res.json(locations);
 });
 
 // get all donated items by donor api/users/donations

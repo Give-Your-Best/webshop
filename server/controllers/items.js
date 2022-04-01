@@ -19,8 +19,8 @@ const createItem = async (req, res) => {
     try {
       const response = await ItemService.createItem(itemData);
       return res.status(200).send({
-        success: true,
-        message: `Item created`,
+        success: response.success,
+        message: response.message
       });
     } catch (err) {
       console.error(`Service error: ${err}`);
@@ -39,8 +39,8 @@ const updateItem = async (req, res) => {
   try {
     const response = await ItemService.updateItem(id, data);
     return res.status(200).send({
-      success: true,
-      message: `Item updated`,
+      success: response.success,
+      message: response.message
     });
   } catch (err) {
     console.error(`Service error: ${err}`);

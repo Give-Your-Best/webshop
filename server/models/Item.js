@@ -18,7 +18,6 @@ const itemSchema = new Schema(
       enum: ["in-progress", "approved", "rejected"],
       default : 'in-progress'
     },
-    infoRequested: Boolean,
     category: String,
     brand: String,
     description: String,
@@ -58,8 +57,8 @@ const itemSchema = new Schema(
       ref: 'User'
     },
     sendVia: {
-        type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then gyb team member id
-        ref: 'User' 
+        type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then location is
+        ref: 'Location' 
     }
   },
   options

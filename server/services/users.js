@@ -3,14 +3,14 @@ const Item = require('../models/Item');
 const User_ = require('../models/User');
 
 const createUser = async (data) => {
-    console.log('create user service');
+    console.log('create user serviceee');
     console.log(data)
     try {
         var user = await User_.User.findOne({
           email: data.email,
         });
         if (user) {
-            throw Error('Email is already in use');
+          throw Error('Email already in use');
         } else {
           if (data.type == 'donor') {
             user = new User_.Donor(data);
@@ -19,17 +19,12 @@ const createUser = async (data) => {
           } else if (data.type == "admin") {
             user = new User_.Admin(data);
           }
-          user.save(err=>{
-              if (err) {
-                throw Error(err);
-              } else {
-                return { success: true, message: 'User created' }
-              }
-          })
+          let saveUser = await user.save();
+          return { success: true, message: `User created`, user: user }
         }
     } catch (err) {
         console.error(err);
-        return { success: false, message: err }
+        throw Error(err);
     }
 };
 
@@ -133,31 +128,13 @@ const getDonations = async (approvedStatus) => {
           hod:"$hod",
           numOfDonationItems:{$size:"$donationItemsDetails"},
           donationItems:"$donationItemsDetails"
-          }
+        }
       }
     ]).exec();
     return donations;
   } catch (error) {
     console.error(`Error in get donations: ${error}`);
     return { success: false, message: `Error in getdonations: ${error}` }
-  }
-}
-
-const getAdminLocations = async () => {
-  console.log('admin locs')
-  const query = {
-    "$and": [
-      {"approvedStatus": "approved"}, 
-      {"addresses": {$exists: true}}
-    ]
-  };
-
-  try {
-    const locations = await User_.Admin.find(query, {"addresses": 1, "name": 1}).lean();
-    return [locations];
-  } catch (error) {
-    console.error(`Error in find locations: ${error}`);
-    return { success: false, message: `Error in find locations: ${error}` }
   }
 }
 
@@ -183,6 +160,5 @@ module.exports = {
     deleteUser,
     updateUser,
     updateDonor,
-    getAdminLocations,
     getDonations
 };

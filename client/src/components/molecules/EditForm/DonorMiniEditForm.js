@@ -21,7 +21,6 @@ export const DonorMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
         {editingKey === recordId && !approvalAction &&<StyledSubmitButton>Save</StyledSubmitButton>} 
         {approvalAction && <Button small data-action='approve' onClick={approvalAction}>Approve</Button>}  
         {approvalAction && <Button small data-action='reject' onClick={approvalAction}>Reject</Button>}  
-        {approvalAction && <Button small data-action='info' onClick={approvalAction}>More info</Button>}   
     </Form>
   );
 };

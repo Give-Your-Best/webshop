@@ -26,7 +26,7 @@ export const AccountNotificationsList = (data) => {
     <ListWrapper>
       <Table
         columns={columns}
-        rowKey={(record) => record.id}
+        rowKey={(record) => record.key}
         expandable={{
           expandedRowRender: data.expandRow
         }}

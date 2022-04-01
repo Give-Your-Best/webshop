@@ -1,4 +1,5 @@
 export { ItemCard } from './ItemCard';
+export { UserSelect } from './UserSelect';  
 export { ItemCardLong } from './ItemCardLong';
 export { StatisticsCard } from './StatisticsCard';
 export { UsersList } from './UsersList';
@@ -8,3 +9,7 @@ export { AccountNotificationsList } from './AccountNotificationsList';
 export { ApproveItemList } from './ApproveItemList';
 export { DonorMiniEditForm } from './EditForm/DonorMiniEditForm';
 export { ShopperMiniEditForm } from './EditForm/ShopperMiniEditForm';
+export { DonorCreateForm } from './EditForm/DonorCreateForm';
+export { ShopperCreateForm } from './EditForm/ShopperCreateForm';
+export { LocationMiniEditForm } from './EditForm/LocationMiniEditForm';
+export { ShippingLocationsList } from './ShippingLocationsList';

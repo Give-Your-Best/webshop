@@ -3,7 +3,7 @@ import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './Notifications.styles';
 import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLocationModal } from '../../../molecules';
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem } from '../../../../services/items';
-import { getAdminLocations } from '../../../../services/user';
+import { getAdminLocations } from '../../../../services/locations';
 import { Button } from '../../../atoms';
 import { Modal } from 'antd';
 
@@ -98,11 +98,11 @@ export const Notifications = () => {
     const fetchShopItems = async () => {
       const items = await getShopNotificationsItems(user.id, token);
       console.log(items);
-      const locations = await getAdminLocations(token);
+      const locations = await getAdminLocations('available', token);
       console.log(locations);
-      setAdminLocations(locations[0]);
+      setAdminLocations(locations);
       setShopNotificationsPendingAssign({
-        "id": 1,
+        "key": 1,
         "name": "Item coming to you!", //approved items where the shopper has marked as send via gyb and item sendVia is empty
         "message": "Please view and assign an address for you donor",
         "itemsCount": (items[0].length || 0),
@@ -111,7 +111,7 @@ export const Notifications = () => {
         "actionDesc": "Assign"
       });
       setShopNotificationsShopped({
-          "id": 2,
+          "key": 2,
           "name": "Item  shopped!", //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
           "message": "Address assigned, view for progress update",
           "itemsCount": (items[1].length || 0),
@@ -123,7 +123,7 @@ export const Notifications = () => {
       const items = await getAccountNotificationsItems(user.id, token);
       console.log(items);
       setAccountNotificationsPendingReceive({
-          "id": 1,
+          "key": 1,
           "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
           "message": "Waiting for received notification",
           "itemsCount": (items[0].length || 0),
@@ -132,7 +132,7 @@ export const Notifications = () => {
           "actionDesc": "Mark received"
       });
       setAccountNotificationsPendingSent({
-        "id": 2,
+        "key": 2,
         "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status received by gyb (i.e not sent to shopper yet)
         "message": "Received, waiting for sent notification",
         "itemsCount": (items[1].length || 0),

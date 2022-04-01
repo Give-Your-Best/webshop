@@ -1,5 +1,5 @@
-export const getAdminLocations = async (token) => {
-    const response = await fetch(`/api/users/adminLocations`, {
+export const getAdminLocations = async (status, token) => {
+    const response = await fetch(`/api/locations?status=${status}`, {
       headers: {
         'Content-Type': 'application/json',
         'x-access-token': token,
