@@ -2,29 +2,74 @@ import styled from 'styled-components';
 import { SubmitButton, Input, Checkbox, InputNumber } from 'formik-antd';
 
 const StyledSubmitButton = styled(SubmitButton)`
-  background-color: black;
+  font-size: 1rem;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 0.1rem;
+  border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
+  margin: 0 5px;
+  padding: 0.3rem 1rem;
+  position: absolute !important;
+  bottom: 10px !important;
+  right: 80px !important;
+  font-size: 0.8rem;
+  border-width: 0.1rem;
+  :hover {
+    background: transparent;
+    border-radius: 0.1rem;
+    border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+    color: ${({ theme }) => theme.colorMappings.primary};
+    border-width: 0.1rem;
+  }
+  :focus {
+    background: transparent;
+    border-radius: 0.1rem;
+    border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+    color: ${({ theme }) => theme.colorMappings.primary};
+    border-width: 0.1rem;
+  }
 `
 const StyledInput = styled(Input)`
+  width: min-content;
+  margin: 0.2em 1em 0.5em 0;
+  padding: 2px 5px;
+  display: block;
   &:disabled {
     background-color: transparent;
     color: black;
-    border: none;
   }
 `
 const StyledInputNumber = styled(InputNumber)`
+  width: 70px;
+  margin: 0;
+  padding: 0;
+  display: block;
+  height: 30px;
+  background-color: transparent;
+  color: black;
+  background: transparent;
   &:disabled {
     background-color: transparent;
     color: black;
-    border: none;
   }
 `
 
 const StyledCheckbox = styled(Checkbox)`
-    span&:disabled {
-        background-color: transparent;
-        color: black;
-        border: none;
-    }
+  margin: 0;
+  padding: 0;
+  color: black !important;
+  & .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: transparent !important;
+    border: 1x solid grey !important;
+    margin: 0;
+    padding: 0;
+    color: black !important;
+  }
 `
 
-export { StyledInput, StyledSubmitButton, StyledCheckbox, StyledInputNumber };
+const StyledLabel = styled.label `
+  display: inline-block;
+`
+
+export { StyledInput, StyledSubmitButton, StyledCheckbox, StyledInputNumber, StyledLabel };

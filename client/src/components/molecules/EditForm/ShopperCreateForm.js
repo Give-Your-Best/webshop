@@ -3,6 +3,7 @@ import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
 import { Formik, ErrorMessage } from 'formik';
 import { shopperCreateSchema } from '../../../utils/validation';
+import { reopenTab } from '../../../utils/helpers';
 import { clothingSizeOptions, shoeSizeOptions, currentStatus } from '../../../utils/constants';
 import { createUser } from '../../../services/user';
 import { Button, Notification, StyledSelect } from '../../atoms';
@@ -10,14 +11,15 @@ import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledInputNumber } fr
 
 export const ShopperCreateForm = (data) => {
     const { token } = useContext(AppContext);
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, {resetForm}) => {
         if (!values.shareAddress) {
             Object.assign(values, {'deliveryPreference': 'via gyb'})
         }
         const res = await createUser(values, token);
         if (res.success) {
             Notification('Success!', 'New shopper created', 'success');
-            document.querySelector('.shopperlist').click();
+            resetForm();
+            reopenTab('shopper');
             data.submitFunction(res.user, 'shopper');
         } else {
             Notification('Error creating shopper', res.message, 'error')
@@ -80,7 +82,7 @@ export const ShopperCreateForm = (data) => {
                     </div>
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button onClick={() => {document.querySelector('.shopperlist').click()}}>Cancel</Button>
+                    <Button type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
-import { AppContext } from '../../../../context/app-context';
-import { ShippingLocationsList, LocationMiniEditForm } from '../../../molecules';
-import { getAdminLocations, updateLocation, deleteLocation } from '../../../../services/locations';
-import { getUsers } from '../../../../services/user';
 import { Formik } from 'formik';
 import { Modal } from 'antd';
+import { AppContext } from '../../../../context/app-context';
+import { ShippingLocationsList, LocationMiniEditForm, LocationCreateForm } from '../../../molecules';
+import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './ShippingLocations.styles';
+import { getAdminLocations, updateLocation, deleteLocation } from '../../../../services/locations';
+import { getUsers } from '../../../../services/user';
 import { Button } from '../../../atoms';
+import { openHiddenTab } from "../../../../utils/helpers";
 
 export const ShippingLocations = () => {
   const { token } = useContext(AppContext);
@@ -30,20 +32,10 @@ export const ShippingLocations = () => {
     });
   };
 
-  const updateLocationWrapper = async (recordId, values) => {
-    const res = await updateLocation(recordId, values, token);
-    if (res.success) {
-      setEditingKey('');
-      return true;
-    } else {
-      setErrorMessage(res.message);
-    }
-  };
-
   const editLocation = (recordIds, status) => {
     const values = {available: (status==='available')? true: false}
     recordIds.forEach((recordId) => {
-      updateLocation(recordId, values)
+      updateLocation(recordId, values, token)
       .then(() => {
         setAdminLocations(adminLocations.filter(location => {
           if (location._id !== recordId) {
@@ -57,14 +49,10 @@ export const ShippingLocations = () => {
     return;
   }
 
-  const addNew = () => {
-    console.log('add new');
-  }
-
   useEffect(() => {
 
     const fetchAdminLocations = async () => {
-      const locations = await getAdminLocations(token);
+      const locations = await getAdminLocations('', token);
       setAdminLocations(locations);
     };
 
@@ -79,13 +67,27 @@ export const ShippingLocations = () => {
   }, [token]);
 
   const editForm = (record) => {
-    
-    const handleSubmit = (values) => {
-      updateLocationWrapper(record._id, values)
-      .then(() => {
+    const handleEditSave = (newRecord) => {
+      setAdminLocations(adminLocations.map(location => {
+        if (location._id === newRecord._id) {
+          return Object.assign(location, newRecord);
+        } else { 
+          return location
+        }
+      }));
+  };
+  
+
+    const handleSubmit = async (values) => {
+      const res = await updateLocation(record._id, values, token);
+      if (res.success) {
+        handleEditSave(res.location);
+        setEditingKey('');
         return true;
-      })
-    }
+      } else {
+        setErrorMessage(res.message);
+      }
+    };
 
     const handleEdit = () => {
       setEditingKey((editingKey)? '': record._id)
@@ -104,8 +106,25 @@ export const ShippingLocations = () => {
       </div>
     )      
   };
+  const submitFunction = (location) => {
+    setAdminLocations(adminLocations.concat(location));
+  }
 
   return (
-    <ShippingLocationsList data={adminLocations} expandRow={editForm} handleDelete={handleDelete} editLocation={editLocation} addNew={addNew} />
+    <StyledTabs forceRenderTabPanel={true}>
+      <StyledTabList>
+        <StyledTab className='locationlist'>Shipping locations</StyledTab>
+        <HiddenStyledTab className='addlocation'>Add Location</HiddenStyledTab>
+      </StyledTabList>
+
+      <StyledTabPanel>
+      <ShippingLocationsList data={adminLocations} expandRow={editForm} handleDelete={handleDelete} editLocation={editLocation} addNew={() => {openHiddenTab('location')}} />
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <LocationCreateForm submitFunction={submitFunction} users={adminUsers} />
+      </StyledTabPanel>
+
+    </StyledTabs>
+
   );
 };

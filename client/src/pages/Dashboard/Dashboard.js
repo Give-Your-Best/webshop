@@ -6,7 +6,6 @@ export const Dashboard = () => {
 
   return (
     <Container data-testid="Dashboard">
-        <h2>Dashboard</h2>
         <DashboardTabs />
     </Container>
   );

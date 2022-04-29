@@ -6,6 +6,7 @@ import { Modal } from 'antd';
 import { Formik } from 'formik';
 import { DonorMiniEditForm, ShopperMiniEditForm, UsersList, DonorCreateForm, ShopperCreateForm } from '../../../molecules';
 import { Button } from '../../../atoms';
+import { openHiddenTab } from '../../../../utils/helpers';
 
 export const Users = () => {
   const { confirm } = Modal;
@@ -86,7 +87,7 @@ export const Users = () => {
             } 
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <button onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</button>
+        <Button small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )
   }
@@ -111,22 +112,12 @@ export const Users = () => {
     };
   }, [token]);
 
-  const openHiddenTab = (type) => {
-    document.querySelector('.add' + type).click();
-  }
-
   const submitFunction = (user, type) => {
-    console.log('ere');
-    console.log(type)
-    console.log(user);
     if (user.kind === 'donor') {
       setDonors(donors.concat(user));
     } else if (user.kind === 'shopper') {
-      console.log(shoppers)
-      console.log(shoppers.concat(user))
       setShoppers(shoppers.concat(user));
     }
-
   }
   
   return (
@@ -150,7 +141,7 @@ export const Users = () => {
       <ShopperCreateForm submitFunction={submitFunction} />
     </StyledTabPanel>
     <StyledTabPanel>
-      <DonorCreateForm />
+      <DonorCreateForm submitFunction={submitFunction} />
     </StyledTabPanel>
 
   </StyledTabs>

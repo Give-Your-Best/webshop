@@ -6,5 +6,8 @@ export { deleteUser } from './deleteUser';
 export { getUsers } from './getUsers';
 export { updateUser } from './updateUser';
 export { updateDonor } from './updateDonor';
+export { updateShopper } from './updateShopper';
+export { updateAdmin } from './updateAdmin';
 export { authenticateUser } from './authenticateUser';
 export { getDonations } from './getDonations';
+export { updatePassword } from './updatePassword';

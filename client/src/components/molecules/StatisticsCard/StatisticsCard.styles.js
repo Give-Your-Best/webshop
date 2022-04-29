@@ -6,7 +6,7 @@ export const Statistic = styled(AntStatistic)`
   max-width: 13rem;
   min-width: 13rem;
   margin: 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid ${({ theme }) => theme.colorMappings.borders};
   padding: 1em;
   text-align: center;
 

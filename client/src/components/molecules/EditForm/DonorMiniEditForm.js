@@ -1,21 +1,18 @@
 import * as React from 'react';
 import { Form } from 'formik-antd';
 import { ErrorMessage } from 'formik';
-import { StyledSubmitButton, StyledInput, StyledCheckbox } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledLabel } from './EditForm.styles';
 import { Button } from '../../atoms/Button';
 
 export const DonorMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
   return (
     <Form>
-        <label>Name:</label>
-        <StyledInput name="name" disabled={editingKey !== recordId} />
+        <StyledLabel>Name
+        <StyledInput name="name" disabled={editingKey !== recordId} /></StyledLabel>
         <ErrorMessage name="name" component="div" />
-        <label>Email:</label>
-        <StyledInput name="email" disabled={editingKey !== recordId} />
+        <StyledLabel>Email
+        <StyledInput name="email" disabled={editingKey !== recordId} /></StyledLabel>
         <ErrorMessage name="email" component="div" />
-        <label>Username:</label>
-        <StyledInput name="username" disabled={editingKey !== recordId} />
-        <ErrorMessage name="username" component="div" />
         <StyledCheckbox name="trustedDonor" disabled={editingKey !== recordId}>Mark as trusted donor</StyledCheckbox>
         <ErrorMessage name="trustedDonor" component="div" />
         {editingKey === recordId && !approvalAction &&<StyledSubmitButton>Save</StyledSubmitButton>} 

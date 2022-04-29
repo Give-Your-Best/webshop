@@ -1,6 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
-import { ListWrapper } from './ShopNotificationsList.styles';
+import { ListWrapper, ExpandButton, StyledTable } from './ShopNotificationsList.styles';
 
 export const ShopNotificationsList = (data) => {
 
@@ -24,12 +23,21 @@ export const ShopNotificationsList = (data) => {
 
   return (
     <ListWrapper>
-      <Table
+      <StyledTable
+        pagination={{hideOnSinglePage: true}}
+        showHeader={false}
         columns={columns}
-        rowKey={(record) => record.id}
+        rowKey={(record) => record._id}
         expandable={{
-          expandedRowRender: data.expandRow
-        }}
+          expandedRowRender: data.expandRow,
+          expandIconColumnIndex: 3,
+          expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
+              ) : (
+                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
+              )
+          }}
         dataSource={data.data}
       />
     </ListWrapper>

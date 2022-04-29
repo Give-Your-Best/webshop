@@ -1,51 +1,41 @@
-import * as React from 'react';
+import React, { useContext } from "react";
+import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, DashboardMenuWrapper } from './Tabs.styles';
-import { Statistics } from '../Statistics';
-import { Users } from '../Users';
-import { Notifications } from '../Notifications';
-import { ApproveRequests } from '../AprroveRequests/ApproveRequests';
-import { ShippingLocations } from '../ShippingLocations/ShippingLocations';
-import { Logout } from '../../Logout/Logout';
+import { AccountWelcome } from '../../../molecules/AccountWelcome';
+import { adminTabs, donorTabs, shopperTabs } from './constants';
 
 export const Tabs = () => {
+  const { user } = useContext(AppContext);
+  console.log(user);
+  var tabs = [];
+
+  switch (user.type) {
+    default:
+      tabs = [];
+      break;
+    case 'admin':
+      tabs = adminTabs;
+      break;
+    case 'donor':
+      tabs = donorTabs;
+      break;
+    case 'shopper':
+      tabs = shopperTabs;
+      break;
+  }
   return (
     <DashboardMenuWrapper>
       <StyledTabs>
         <StyledTabList>
-          <StyledTab>Dashboard</StyledTab>
-          <StyledTab>Users</StyledTab>
-          <StyledTab>Messaging</StyledTab>
-          <StyledTab>Notifications</StyledTab>
-          <StyledTab>Approve Requests</StyledTab>
-          <StyledTab>Shipping Locations</StyledTab>
-          <StyledTab>Settings</StyledTab>
-          <StyledTab>Logout</StyledTab>
+          <AccountWelcome />
+          {tabs.map((d)=>{
+            return (<StyledTab>{d.name}</StyledTab>);
+          })}
         </StyledTabList>
 
-        <StyledTabPanel>
-          <Statistics />
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <Users />
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <h2>Messaging</h2>
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <Notifications />
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <ApproveRequests />
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <ShippingLocations />
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <h2>Settings</h2>
-        </StyledTabPanel>
-        <StyledTabPanel>
-          <Logout />
-        </StyledTabPanel>
+        {tabs.map((d)=>{
+            return (<StyledTabPanel>{d.content}</StyledTabPanel>);
+          })}
       </StyledTabs>
     </DashboardMenuWrapper>
   );

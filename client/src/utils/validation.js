@@ -13,7 +13,7 @@ export const signupSchema = yup.object().shape({
 });
 
 export const loginSchema = yup.object().shape({
-    email: yup.string().min(3).required(),
+    email: yup.string().email().required(),
     password: yup.string().required('Please enter your password'),
 });
 
@@ -38,5 +38,31 @@ export const shopperCreateSchema = yup.object().shape({
         city: yup.string(),
         postcode: yup.string()
     })
+});
+
+export const adminSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    assignedRole: yup.string().required(),
+});
+
+export const shopSettingsSchema = yup.object().shape({
+    shopItemLimit: yup.number().required(),
+    trustedDonorLimit: yup.number().required(),
+});
+
+export const locationCreateSchema = yup.object().shape({
+    name: yup.string().min(3).required(),
+    firstLine: yup.string().min(3).required(),
+    postcode: yup.string().min(3).required()
+});
+
+export const updatePasswordSchema = yup.object().shape({
+    oldPassword: yup.string().required('Please enter your current password'),
+    newPassword: yup.string().required('Please enter a new password')
+        .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "Must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
+        ),
+    passwordConfirm: yup.string().oneOf([yup.ref('newPassword')], 'Passwords does not match'),
 });
 

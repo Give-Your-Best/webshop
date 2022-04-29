@@ -5,7 +5,6 @@ const LocationsService = require('../services/locations');
 
 const updateLocation = async (req, res) => {
   console.log('update location controller');
-  console.log(req.body);
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: location details are required"});
   }
@@ -15,7 +14,8 @@ const updateLocation = async (req, res) => {
     const response = await LocationsService.updateLocation(id, data);
     return res.status(200).send({
       success: response.success,
-      message: response.message
+      message: response.message,
+      location: response.location
     });
   } catch (err) {
     console.error(`Service error: ${err}`);
@@ -24,6 +24,28 @@ const updateLocation = async (req, res) => {
 
 };
 
+const createLocation = async (req, res) => {
+  console.log('create location controller')
+  console.log(req.body);
+  if (!req.body.name) {
+    return res.status(400).send({message: "Service error: new location details are required"});
+  }
+
+  try {
+    const response = await LocationsService.createLocation(req.body);
+    return res.status(200).send({
+      success: true,
+      message: `Location created`,
+      location: response.location  || {}
+    });
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({message: `Service error: ${err}`});
+  }
+};
+
+
 module.exports = {
-  updateLocation
+  updateLocation,
+  createLocation
 };

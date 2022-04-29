@@ -1,7 +1,11 @@
 export { 
     DonorMiniEditForm, 
     ShopperMiniEditForm, 
-    LocationMiniEditForm , 
+    LocationMiniEditForm, 
+    AdminMiniEditForm,
+    AdminEditForm,
+    UserEditForm,
+    AdminCreateForm,
     DonorCreateForm,
     ShopperCreateForm
 } from './EditForm';

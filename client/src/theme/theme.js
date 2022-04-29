@@ -35,10 +35,12 @@ export const theme = {
   colorMappings: {
     primary: colors.red[500],
     secondary: colors.pink[500],
+    yellow: colors.yellow[500],
     white: colors.white[500],
     black: colors.black[500],
 
     borders: colors.grey[100],
     frontPanelBackground: colors.pink[100],
   },
+  mobile: '480px'
 };

@@ -1,4 +1,5 @@
 export const getUser = async (id, token) => {
+  console.log(id);
   const response = await fetch(`/api/users/${id}`, {
     headers: {
       'Content-Type': 'application/json',

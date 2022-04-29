@@ -3,6 +3,8 @@ const router = express.Router();
 const itemsRoutes = require('./items');
 const usersRoutes = require('./users');
 const locationRoutes = require('./locations');
+const settingsRoutes = require('./settings');
+const rolesRoutes = require('./roles');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const authRoutes = require('./auth');
@@ -16,10 +18,12 @@ router.post('/register', Users.registerUser);
 
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
-router.use('/locations', locationRoutes);
 
 // api endpoints below this call will need to provide a token
 router.use(Authentication.verifyToken);
 router.use('/users', usersRoutes);
+router.use('/roles', rolesRoutes);
+router.use('/locations', locationRoutes);
+router.use('/settings', settingsRoutes);
 
 module.exports = router;

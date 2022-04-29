@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Table } from 'antd';
-import { ListWrapper } from './ApproveItemList.styles';
+import { ListWrapper, StyledTable, ExpandButton } from './ApproveItemList.styles';
 import { Button } from '../../atoms';
 
 export const ApproveItemList = (data) => {
@@ -40,13 +39,22 @@ export const ApproveItemList = (data) => {
 
   return (
     <ListWrapper>
-      <Table
-        columns={columns}
+      <StyledTable
         rowSelection={rowSelection}
+        pagination={{hideOnSinglePage: true}}
+        showHeader={false}
+        columns={columns}
         rowKey={(record) => record._id}
         expandable={{
-          expandedRowRender: data.expandRow
-        }}
+          expandedRowRender: data.expandRow,
+          expandIconColumnIndex: 3,
+          expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
+              ) : (
+                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
+              )
+          }}
         dataSource={data.data}
       />
       <Button small onClick={markAsTrusted} disabled={!hasSelected}>Mark as Trusted Donor</Button>

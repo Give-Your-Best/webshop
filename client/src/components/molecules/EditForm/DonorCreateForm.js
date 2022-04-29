@@ -5,16 +5,18 @@ import { Formik, ErrorMessage } from 'formik';
 import { donorCreateSchema } from '../../../utils/validation';
 import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
+import { reopenTab } from '../../../utils/helpers';
 import { StyledSubmitButton, StyledInput, StyledCheckbox } from './EditForm.styles';
 
 export const DonorCreateForm = (data) => {
     const { token } = useContext(AppContext);
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, {resetForm}) => {
         const res = await createUser(values, token);
         if (res.success) {
-            Notification('Success!', 'New donor created', 'success')
-            document.querySelector('.donorlist').click();
+            Notification('Success!', 'New donor created', 'success');
+            resetForm();
+            reopenTab('donor');
             data.submitFunction(res.user, 'donor');
         } else {
             Notification('Error creating donor', res.message, 'success')
@@ -45,7 +47,7 @@ export const DonorCreateForm = (data) => {
                     <ErrorMessage name="trustedDonor" component="div" />
                     </div>
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button onClick={() => {document.querySelector('.donorlist').click()}}>Cancel</Button>
+                    <Button type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

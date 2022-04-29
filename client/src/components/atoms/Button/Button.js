@@ -8,8 +8,9 @@ export const Button = styled.button`
     border-radius: 0.1rem;
     border: 0.13rem solid ${theme.colorMappings.primary};
     color: ${theme.colorMappings.primary};
-    margin: 0 1rem;
+    margin: 0;
     padding: 0.3rem 1rem;
+    float: right;
 
     ${primary &&
     css`
