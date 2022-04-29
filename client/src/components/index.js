@@ -1,3 +1,3 @@
-export { Box, Button, AppHeading, Container, AppWrapper, Link } from './atoms';
+export { Box, Button, AppHeading, Container, AppWrapper, Link, AllWrapper } from './atoms';
 export { ItemCard } from './molecules';
-export { Header, Tabs as DashboardTabs } from './organisms';
+export { Header, Tabs as DashboardTabs, Footer } from './organisms';

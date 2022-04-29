@@ -58,6 +58,36 @@ const updateDonor = async (id, updateData) => {
   }
 };
 
+const updateShopper = async (id, updateData) => {
+  console.log('update shopper service');
+  try {
+      const user = await User_.Shopper.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
+      if (user) {
+          return { success: true, message: `User updated`, user: user }
+      } else {
+        throw Error('Cannot update user');
+      }
+  } catch (err) {
+      console.log(err);
+      return { success: false, message: err }
+  }
+};
+
+const updateAdmin = async (id, updateData) => {
+  console.log('update admin service');
+  try {
+      const user = await User_.Admin.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
+      if (user) {
+          return { success: true, message: `User updated`, user: user }
+      } else {
+        throw Error('Cannot update user');
+      }
+  } catch (err) {
+      console.log(err);
+      return { success: false, message: err }
+  }
+};
+
 
 const deleteUser = async (id) => {
     console.log('delete user service');
@@ -141,7 +171,7 @@ const getDonations = async (approvedStatus) => {
 const getUser = async (id) => {
     console.log('getuser')
     try {
-        const user = await User_.findById(id).populate('assignedRole');
+        const user = await User_.User.findById(id);
         if (user || approvedStatus != 'approved') {
             return user
         } else {
@@ -160,5 +190,7 @@ module.exports = {
     deleteUser,
     updateUser,
     updateDonor,
+    updateShopper,
+    updateAdmin,
     getDonations
 };

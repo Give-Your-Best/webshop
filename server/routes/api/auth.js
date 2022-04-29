@@ -12,4 +12,7 @@ router.post('/authenticate', Authentication.authenticate);
 // router.post('/refresh-token', Authentication.refreshToken);
 router.use(Authentication.verifyToken);
 
+//api/auth/updatepass
+router.put('/updatepass', Authentication.updatePassword);
+
 module.exports = router;

@@ -32,6 +32,12 @@ router.put('/:id', Users.updateUser);
 // update user endpoint put to api/users/:id
 router.put('/donor/:id', Users.updateDonor);
 
+// update user endpoint put to api/users/:id
+router.put('/shopper/:id', Users.updateShopper);
+
+// update user endpoint put to api/users/:id
+router.put('/admin/:id', Users.updateAdmin);
+
 // create user endpoint post to api/users
 router.post('/', Users.createUser);
 

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const uuidv4 = require('uuid').v4;
-const Setting = require('../models/Setting');
+const Setting = require('../models/Settings');
 const SettingsService = require('../services/settings');
 
 const updateSetting = async (req, res) => {
@@ -12,7 +12,7 @@ const updateSetting = async (req, res) => {
   const name = req.params.name,
         data = req.body;
   try {
-    const response = await SettingService.updateSetting(name, data);
+    const response = await SettingsService.updateSetting(name, data);
     return res.status(200).send({
       success: true,
       message: `Setting updated`,

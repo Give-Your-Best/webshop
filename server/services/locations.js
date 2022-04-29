@@ -3,9 +3,9 @@ const Location = require('../models/Location');
 const updateLocation = async (id, updateData) => {
     console.log('update locationa service');
     try {
-        const location = await Location.findOneAndUpdate({'_id': id}, updateData, { useFindAndModify: false });
+        const location = await Location.findOneAndUpdate({'_id': id}, updateData, { useFindAndModify: false, returnDocument: 'after'});
         if (location) {
-            return { success: true, message: 'setting updated' }
+            return { success: true, message: 'setting updated', location: location }
         } else {
           throw Error('Cannot update setting');
         }
@@ -24,6 +24,19 @@ const getAllLocations = async (status) => {
   } catch (error) {
     console.error(`Error in getAlllocations: ${error}`);
     return { success: false, message: `Error in getAlllocations: ${error}` }
+  }
+};
+
+const createLocation = async (data) => {
+  console.log('create location service');
+  console.log(data);
+  try {
+      const location = new Location(data)
+      let saveLocation = await location.save();
+      return { success: true, message: `Location created`, location: location }
+  } catch (err) {
+      console.error(err);
+      return { success: false, message: err }
   }
 };
 
@@ -61,5 +74,6 @@ module.exports = {
   getLocation,
   updateLocation,
   getAllLocations,
-  deleteLocation
+  deleteLocation,
+  createLocation
 };

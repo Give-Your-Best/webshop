@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyledSelect } from '../../atoms';
+import { StyledSelect } from '../Select';
 
 export const UserSelect = ({ users, selectName, fieldPlaceholder, disabled }) => {
   return (

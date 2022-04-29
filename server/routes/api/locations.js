@@ -27,4 +27,7 @@ router.delete('/:id', async (req, res) => {
     res.json(item);
 });
 
+// create location endpoint post to api/locations
+router.post('/', Locations.createLocation);
+
 module.exports = router;

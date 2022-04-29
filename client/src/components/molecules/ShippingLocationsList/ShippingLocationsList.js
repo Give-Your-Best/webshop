@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Table, Space } from 'antd';
+import { Space } from 'antd';
 import { Button } from '../../atoms';
-import { ListWrapper } from './ShippingLocationsList.styles';
+import { ListWrapper, StyledTable, ExpandButton } from './ShippingLocationsList.styles';
 
 export const ShippingLocationsList = (data) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -46,13 +46,22 @@ export const ShippingLocationsList = (data) => {
 
   return (
     <ListWrapper>
-      <Table
-        columns={columns}
+      <StyledTable
         rowSelection={rowSelection}
+        pagination={{hideOnSinglePage: true}}
+        showHeader={false}
+        columns={columns}
         rowKey={(record) => record._id}
         expandable={{
-          expandedRowRender: data.expandRow
-        }}
+          expandedRowRender: data.expandRow,
+          expandIconColumnIndex: 3,
+          expandIcon: ({ expanded, onExpand, record }) =>
+          expanded ? (
+                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
+              ) : (
+                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
+              )
+          }}
         dataSource={data.data}
       />
       <Button small onClick={data.addNew}>Add New</Button>

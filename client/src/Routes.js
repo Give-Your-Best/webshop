@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Home, Item, Login, User, Register, Dashboard } from './pages';
+import { Home, Item, Login, User, Register, Dashboard, Products } from './pages';
 import ProtectedRoute from "./components/ProtectedRoute"
 
 export const Routes = () => {
@@ -9,6 +9,9 @@ export const Routes = () => {
     <Switch>
       <Route path={`/item/:itemId`}>
         <Item />
+      </Route>
+      <Route path={`/products/:category`}>
+        <Products />
       </Route>
       <ProtectedRoute path="/user/:userId" component={User}></ProtectedRoute>
       <Route path="/login">

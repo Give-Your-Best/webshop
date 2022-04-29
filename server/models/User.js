@@ -41,6 +41,22 @@ userSchema.methods.comparePassword = async (
   return isMatch;
 };
 
+userSchema.methods.updatePassword = async (id, candidatePassword) => {
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) throw err;
+
+    bcrypt.hash(candidatePassword, salt, async (err, hash) => {
+      if (err) throw err;
+      const user = await User.findOneAndUpdate({"_id": id}, {password: hash}, { useFindAndModify: false});
+      if (user) {
+          return { success: true, message: `Password updated`}
+      } else {
+        return { success: false, message: `Could not update password`}
+      }
+    });
+  });
+};
+
 // create the model class
 const User = mongoose.model('User', userSchema);
 

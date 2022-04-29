@@ -66,17 +66,69 @@ export const currentStatus = [
 ]
 
 export const categories = [
-    'Dresses',
-    'Sweaters and Cardigans',
-    'Trousers',
-    'Jeans',
-    'Skirts',
-    'Shorts',
-    'Coats and Jackets',
-    'Tops and tshirts',
-    'Shirts and Blouses',
-    'Sleepwear and Loungewear',
-    'Accessories',
-    'Shoes',
-    'Other'
+    {
+        'name': 'Dresses',
+        'id': 'dresses'
+    },
+    {
+        'name': 'Sweaters and Cardigans',
+        'id': 'sweaters'
+    },
+    {
+        'name': 'Trousers',
+        'id': 'trousers'
+    },
+    {
+        'name': 'Jeans',
+        'id': 'jeans'
+    },
+    {
+        'name': 'Skirts',
+        'id': 'skirts'
+    },
+    {
+        'name': 'Shorts',
+        'id': 'shorts'
+    },
+    {
+        'name': 'Coats and Jackets',
+        'id': 'coats'
+    },
+    {
+        'name': 'Tops and T-shirts',
+        'id': 'tops'
+    },
+    {
+        'name': 'Shirts and Blouses',
+        'id': 'shirts'
+    },
+    {
+        'name': 'Sleepwear and Loungewear',
+        'id': 'sleepwear'
+    },
+    {
+        'name': 'Accessories',
+        'id': 'accessories'
+    },
+    {
+        'name': 'Shoes',
+        'id': 'shoes'
+    },
+    {
+        'name': 'Other',
+        'id': 'other'
+    }
+]
+
+export const permissions = [
+    'Message',
+    'View notifications',
+    'Assign locations',
+    'Approve shoppers',
+    'Approve donors',
+    'Approve items',
+    'Upload products',
+    'Adjust shop settings',
+    'Edit users',
+    'Add team members'
 ]

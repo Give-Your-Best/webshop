@@ -3,6 +3,7 @@ const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const Role = require('../models/Role');
 const User_ = require('../models/User');
+const UserService = require('../services/users');
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
@@ -58,7 +59,13 @@ const login = async (req, res) => {
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: { email: user.email, type: user.kind || 'no-access', id: user._id },
+      user: { 
+        email: user.email, 
+        type: user.kind || 'no-access', 
+        id: user._id, 
+        firstName: user.firstName, 
+        lastName: user.lastName 
+      },
       token,
     });
   } catch (err) {
@@ -146,9 +153,59 @@ const authenticate = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res) => {
+  console.log('update pass controller');
+  console.log(req.body)
+  try {
+    const user = await User_.User.findOne({
+      email: req.body.email,
+      approvedStatus: 'approved'
+    });
+
+    if (!user) {
+      console.log('no user found')
+      return res
+        .status(401)
+        .send({ success: false, message: 'Authentication failed.' });
+    }
+    // check if passwords match
+    const isMatch = await user.comparePassword(
+      req.body.oldPassword,
+      user.password
+    );
+    if (!isMatch) {
+      console.log('Incorrect current password')
+      return res
+        .status(401)
+        .send({ success: false, message: 'Incorrect current password' });
+    }
+
+    try {
+      const update = await user.updatePassword(req.body.id, req.body.newPassword);
+      return res.json({
+        success: true,
+        message: 'password updated!'
+      });
+    } catch (err) {
+      return res.json({
+        success: false,
+        message: 'password failed to update'
+      });
+    }
+  } catch (err) {
+    console.error(`Error in Authentication.updatePassword() : ${err}`);
+    return res.json({
+      success: false,
+      message: `Something went wrong: ${err}`,
+    });
+  }
+
+}
+
 module.exports = {
   login,
   verifyToken,
   refreshToken,
   authenticate,
+  updatePassword
 };

@@ -85,12 +85,55 @@ const updateDonor = async (req, res) => {
     console.error(`Service error: ${err}`);
     return res.status(500).send({message: `Service error: ${err}`});
   }
+};
 
+const updateShopper = async (req, res) => {
+  console.log('update shopper controller');
+  console.log(req.body);
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).send({message: "Service error: User details are required"});
+  }
+  const id = req.params.id,
+        data = req.body;
+  try {
+    const response = await UserService.updateShopper(id, data);
+    return res.status(200).json({
+      success: true,
+      message: response.message,
+      user: response.user
+    });
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({message: `Service error: ${err}`});
+  }
+};
+
+const updateAdmin = async (req, res) => {
+  console.log('update donor controller');
+  console.log(req.body);
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).send({message: "Service error: User details are required"});
+  }
+  const id = req.params.id,
+        data = req.body;
+  try {
+    const response = await UserService.updateAdmin(id, data);
+    return res.status(200).json({
+      success: true,
+      message: response.message,
+      user: response.user
+    });
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({message: `Service error: ${err}`});
+  }
 };
 
 module.exports = {
   createUser,
   updateUser,
   updateDonor,
+  updateShopper,
+  updateAdmin,
   registerUser
 };

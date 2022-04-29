@@ -97,9 +97,7 @@ export const Notifications = () => {
 
     const fetchShopItems = async () => {
       const items = await getShopNotificationsItems(user.id, token);
-      console.log(items);
       const locations = await getAdminLocations('available', token);
-      console.log(locations);
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
         "key": 1,
@@ -151,7 +149,6 @@ export const Notifications = () => {
   }, [token, user]);
 
   const editForm = (record) => {
-    console.log(record)
     return (
       <div>
       {record.items.map((item) => (

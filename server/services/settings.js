@@ -1,9 +1,9 @@
-const Setting = require('../models/Setting');
+const Setting = require('../models/Settings');
 
-const updateSetting = async (name, updateData) => {
+const updateSetting = async (name, data) => {
     console.log('update settings service');
     try {
-        const setting = await Setting.findOneAndUpdate({'name': name}, updateData, { useFindAndModify: false });
+        const setting = await Setting.findOneAndUpdate({'name': name}, data, { useFindAndModify: false });
         if (setting) {
             return { success: true, message: 'setting updated' }
         } else {
@@ -21,7 +21,7 @@ const getSetting = async (name) => {
     try {
         const setting = await Setting.find({'name': name});
         if (setting) {
-            return setting
+            return setting.value
         } else {
           throw Error('Cannot find setting');
         }
@@ -31,7 +31,18 @@ const getSetting = async (name) => {
       }
 };
 
+const getAllSettings = async () => {
+  try {
+    var settings = await Setting.find({}).lean();
+    return settings;
+  } catch (error) {
+    console.error(`Error in getAllsettings: ${error}`);
+    return { success: false, message: `Error in getAllsettings: ${error}` }
+  }
+};
+
 module.exports = { 
   getSetting,
-  updateSetting
+  updateSetting,
+  getAllSettings
 };

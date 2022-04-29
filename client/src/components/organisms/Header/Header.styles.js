@@ -2,11 +2,15 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-
-  @media (max-width: 480px) {
-    margin: 0 -1rem;
+  min-height: 125px;
+  background:  ${({ theme }) => theme.colorMappings.secondary};
+  padding: 1em 4em;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    padding: 0.5em;
+    min-height: 75px;
   }
 `;
 
@@ -17,16 +21,16 @@ export const LogoWrapper = styled(Link)`
   > img {
     width: auto;
     height: auto;
-    max-width: 3.125rem;
-    max-height: 3.125rem;
+    max-width: 6rem;
+    max-height: 6rem;
   }
 
-  @media (max-width: 480px) {
-    margin-right: 0.6875rem;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    margin-right: 0.5rem;
 
     > img {
-      max-width: 2.5rem;
-      max-height: 2.5rem;
+      max-width: 4rem;
+      max-height: 4rem;
     }
   }
 `;

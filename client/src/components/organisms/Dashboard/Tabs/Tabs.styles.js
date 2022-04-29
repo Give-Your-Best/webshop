@@ -6,7 +6,6 @@ const DashboardMenuWrapper = styled.div`
 `;
 
 const StyledTabs = styled(Tabs)`
-  border: 1px solid #e0e0e0;
   background: white;
   display: flex;
 `;
@@ -14,7 +13,7 @@ const StyledTabs = styled(Tabs)`
 const StyledTabList = styled(TabList)`
   padding: 0;
   margin: 0;
-  border-right: 1px solid #e0e0e0;
+  border: none;
 `;
 
 const StyledTab = styled(Tab).attrs({
@@ -27,8 +26,9 @@ const StyledTab = styled(Tab).attrs({
   list-style: none;
   cursor: pointer;
   color: #888;
-  border-left: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  margin: 1em 0;
+  min-width: 200px;
 
   &.selected {
     color: #0097ff;
@@ -41,11 +41,12 @@ const StyledTab = styled(Tab).attrs({
 `;
 
 const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
-  display: none;
-  padding: 10px 20px;
-  width: 100%;
   &.selected {
+    padding: 2em;
+    width: 100%;
+    margin: 0 3em;
     display: block;
+    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
   }
 `;
 

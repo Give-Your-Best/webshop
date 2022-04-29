@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Form } from 'formik-antd';
 import { ErrorMessage } from 'formik';
 import { StyledSubmitButton, StyledInput } from './EditForm.styles';
-import { UserSelect } from '../UserSelect';
+import { UserSelect } from '../../atoms/UserSelect';
 
 //admin user needs to be a dropdown listing all admin users
 
