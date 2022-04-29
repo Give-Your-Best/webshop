@@ -10,7 +10,7 @@ export const CategoryMenu = () => {
     <>
     <CategoryMenuWrapper>
       {categories.slice(0, 6).map((c)=>{
-          return (<CategoryMenuItem open={open} setOpen={setOpen} to={"/products/" + c.id} >{c.name}</CategoryMenuItem>);
+          return (<CategoryMenuItem open={open} setOpen={setOpen} key={c.id} to={"/products/" + c.id} >{c.name}</CategoryMenuItem>);
       })}
     </CategoryMenuWrapper>
     <BurgerMenu open={open} setOpen={setOpen} />
