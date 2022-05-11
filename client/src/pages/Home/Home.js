@@ -8,7 +8,7 @@ export const Home = () => {
 
   React.useEffect(() => {
     const fetchItems = async () => {
-      const items = await getItems();
+      const items = await getItems('approved');
       setItems(items);
     };
     fetchItems();

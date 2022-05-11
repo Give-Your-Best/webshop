@@ -21,3 +21,6 @@ export { ShopSettingsEditForm } from './EditForm/ShopSettingsEditForm';
 export { ShippingLocationsList } from './ShippingLocationsList';
 export { PasswordUpdate } from './PasswordUpdate';
 export { AccountWelcome } from './AccountWelcome';
+export { ItemsCollapsedList } from './ItemsCollapsedList';
+export { ItemMiniEditForm } from './EditForm/ItemMiniEditForm';
+export { ItemCreateForm } from './EditForm/ItemCreateForm';

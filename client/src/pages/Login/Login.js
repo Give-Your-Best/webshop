@@ -1,17 +1,18 @@
 import React, { useState, useContext } from 'react';
-import { Form, Input, SubmitButton } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Form, SubmitButton } from 'formik-antd';
+import { Formik } from 'formik';
 import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
 import { login } from '../../services/user';
+import { StyledInput, StyledError } from '../../components/molecules/EditForm/EditForm.styles';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
   const { setUser, setToken } = useContext(AppContext);
   let history = useHistory();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setStyledError] = useState('');
 
   const handleLoginSubmit = async (values, {setSubmitting}) => {
     setSubmitting(true);
@@ -23,7 +24,7 @@ export const Login = () => {
       setSubmitting(false);
       history.push('/');
     } else {
-      setErrorMessage(res.message);
+      setStyledError(res.message);
     }
   };
 
@@ -36,10 +37,10 @@ export const Login = () => {
         onSubmit={handleLoginSubmit}
         >
           <Form>
-            <Input name="email" placeholder='Enter email address'/>
-            <ErrorMessage name="email" component="div" />
-            <Input.Password name="password" placeholder='Enter password' />
-            <ErrorMessage name="password" component="div" />
+            <StyledInput name="email" placeholder='Enter email address'/>
+            <StyledError name="email" component="div" />
+            <StyledInput.Password name="password" placeholder='Enter password' />
+            <StyledError name="password" component="div" />
             <SubmitButton>Login</SubmitButton>
           </Form>
       </Formik>

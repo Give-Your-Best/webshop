@@ -89,8 +89,6 @@ export const ApproveRequests = () => {
     }
 
     const editForm = (record) => {
-        console.log('edt')
-        console.log(record)
 
         const handleSubmit = (record) => {
             if (record.kind === 'shopper') {

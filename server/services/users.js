@@ -154,7 +154,7 @@ const getDonations = async (approvedStatus) => {
       {
         $project:{
           _id:"$_id",
-          name:"$name",
+          name: {$concat: [ "$firstName", " ", "$lastName" ]},
           hod:"$hod",
           numOfDonationItems:{$size:"$donationItemsDetails"},
           donationItems:"$donationItemsDetails"

@@ -117,7 +117,7 @@ export const Settings = () => {
           <AdminMiniEditForm recordId={record._id} editingKey={editingKey} roles={roles} />
         </Formik> 
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button type="reset" onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button small type="reset" onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )      
   };
@@ -151,7 +151,7 @@ export const Settings = () => {
       </StyledTabPanel>
       <StyledTabPanel>
         <UsersList data={adminUsers} handleDelete={handleDelete} expandRow={editForm} />
-        <Button onClick={() => {openHiddenTab('team')}}>Create</Button>
+        <Button small onClick={() => {openHiddenTab('team')}}>Create</Button>
       </StyledTabPanel>
       <StyledTabPanel>
         <AdminCreateForm submitFunction={submitFunction} roles={roles} />

@@ -6,6 +6,8 @@ import { ShippingLocations } from '../ShippingLocations/ShippingLocations';
 import { Settings } from '../Settings/Settings';
 import { Logout } from '../../Logout/Logout';
 import { UserDetails } from '../UserDetails';
+import { DonorItems } from '../DonorItems';
+import { OrdersList } from '../../../molecules/OrdersList';
 
 export const adminTabs = [
     {
@@ -44,16 +46,16 @@ export const adminTabs = [
 
 export const donorTabs = [
     {
-      name: 'My details',
+      name: 'My Details',
     content: <UserDetails />
     },
     {
-      name: 'My items',
-    content: <h1>items</h1>
+      name: 'My Items',
+    content: <DonorItems />
     },
     {
-      name: 'Item processing',
-    content: <h2>processing</h2>
+      name: 'Item Processing',
+    content: <OrdersList />
     },
     {
       name: 'Messaging',
@@ -67,12 +69,12 @@ export const donorTabs = [
 
 export const shopperTabs = [
     {
-        name: 'My details',
+        name: 'My Details',
       content: <UserDetails />
       },
       {
-        name: 'My orders',
-      content: <h1>orders</h1>
+        name: 'My Orders',
+      content: <OrdersList />
       },
       {
         name: 'Messaging',

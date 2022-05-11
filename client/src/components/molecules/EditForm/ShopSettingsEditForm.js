@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { shopSettingsSchema } from '../../../utils/validation';
 import { updateSetting } from '../../../services/settings';
 import { Notification } from '../../atoms';
-import { StyledSubmitButton, StyledInputNumber} from './EditForm.styles';
+import { StyledSubmitButton, StyledInputNumber, StyledError} from './EditForm.styles';
 
 export const ShopSettingsEditForm = (data) => {
     const { token } = useContext(AppContext);
@@ -35,10 +35,10 @@ export const ShopSettingsEditForm = (data) => {
                 >
                 <Form>
                     <div><label>Item Limit</label><StyledInputNumber name="shopItemLimit" placeholder="Item limit" />
-                    <ErrorMessage name="shopItemLimit" component="div" /></div>
+                    <StyledError name="shopItemLimit" component="div" /></div>
 
                     <div><label>Trusted Donor Limit</label><StyledInputNumber name="trustedDonorLimit" placeholder="Trusted Donor Limit" />
-                    <ErrorMessage name="trustedDonorLimit" component="div" /></div>
+                    <StyledError name="trustedDonorLimit" component="div" /></div>
 
                     <StyledSubmitButton>Save</StyledSubmitButton>
                 </Form>

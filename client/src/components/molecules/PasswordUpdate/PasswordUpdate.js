@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { updatePasswordSchema } from '../../../utils/validation';
 import { updatePassword } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
-import { StyledSubmitButton, StyledInput } from '../EditForm/EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledError } from '../EditForm/EditForm.styles';
 
 export const PasswordUpdate = (data) => {
     const { token } = useContext(AppContext);
@@ -32,16 +32,16 @@ export const PasswordUpdate = (data) => {
                 >
                 <Form>
                     <StyledInput type="password" name="oldPassword" placeholder="Enter your old password" />
-                    <ErrorMessage name="oldPassword" component="div" />
+                    <StyledError name="oldPassword" component="div" />
 
                     <StyledInput type="password" name="newPassword" placeholder="Enter your new password" />
-                    <ErrorMessage name="newPassword" component="div" />
+                    <StyledError name="newPassword" component="div" />
 
                     <StyledInput type="password" name="passwordConfirm" placeholder="Confirm your new password" />
-                    <ErrorMessage name="passwordConfirm" component="div" />
+                    <StyledError name="passwordConfirm" component="div" />
 
                     <StyledSubmitButton>Update</StyledSubmitButton>
-                    <Button type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
+                    <Button small type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>
