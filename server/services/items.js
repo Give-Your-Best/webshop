@@ -1,37 +1,102 @@
 const Item = require('../models/Item');
+const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
     console.log('create item service');
-    console.log(data);
+    var new_photos = [];
+    const promises = data.photos.map((photo) => {
+      if (photo.status !== 'removed') {
+        console.log(photo.uid)
+        return cloudinary.uploader.upload(
+           photo.thumbUrl,
+           {
+               resource_type: "auto",
+               public_id: photo.uid,
+               overwrite: false
+           }).then((result) => {
+               console.log("*** Success: Cloudinary Upload: ", result.url);
+               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid });
+           }).catch((err) => {
+               console.error(err);
+               console.log("*** Error: Cloudinary Upload");
+           });
+      }
+    });
+    await Promise.all(promises)
+    data.photos = new_photos;
     try {
-        const item = new Item(data)
-        item.save(err=>{
-            if (err) {
-              throw Error(err);
-            } else {
-              return { success: true, message: 'Item created' }
-            }
-        })
+      const item = new Item(data)
+      let saveItem = await item.save();
+      return { success: true, message: 'Item created', item: item }
     } catch (err) {
         console.error(err);
         return { success: false, message: err }
     }
 };
-
+//messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
-    console.log('update item service');
-    try {
-        const item = await Item.findByIdAndUpdate(id, updateData, { useFindAndModify: false });
+    var results = {}
+    var new_photos = [];
+    console.log(updateData)
+    if (updateData.photos) {
+        console.log('here')
+        const promises = updateData.photos.map(async (photo) => {
+        console.log(photo.status)
+        if (photo.status == 'removed' && photo.publicId) {
+          console.log('desroying')
+          return cloudinary.uploader.destroy(photo.publicId);
+        } else if (!photo.url && photo.thumbUrl) {
+          console.log('uploading')
+          console.log(photo.uid)
+          return cloudinary.uploader.upload(
+            photo.thumbUrl,
+            {
+                resource_type: "auto",
+                public_id: photo.uid,
+                overwrite: false
+            }).then((result) => {
+                console.log("*** Success: Cloudinary Upload: ", result.url);
+                new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid });
+            }).catch((err) => {
+                console.error(err);
+                console.log("*** Error: Cloudinary Upload");
+            });
+        } else {
+          new_photos.push(photo);
+          return true
+        }
+      })
+      await Promise.all(promises)
+      updateData.photos = new_photos;
+      try {
+          const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
+          if (item) {
+                return {success: true, message: 'Item updated',  item: item}
+          } else {
+            throw Error('Cannot update item');
+          }
+      } catch (err) {
+          console.log(err);
+          return { success: false, message: err }
+      }
+    } else {
+      console.log('sdg')
+      delete updateData.photos;
+      try {
+        const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
         if (item) {
-            return { success: true, message: 'Item updated' }
+            results = { success: true, message: 'Item updated',  item: item }
         } else {
           throw Error('Cannot update item');
         }
     } catch (err) {
         console.log(err);
-        return { success: false, message: err }
+        results =  { success: false, message: err }
     }
+    }
+    return results;
 };
+
 
 const deleteItem = async (id) => {
     console.log('delete item service');
@@ -48,15 +113,24 @@ const deleteItem = async (id) => {
     }
 };
 
-const getAllItems = async () => {
-    try {
-      const items = await Item.find({"approvedStatus": "approved"}).lean();
-      return items;
-    } catch (error) {
-      console.error(`Error in getAllItems: ${error}`);
-      return { success: false, message: `Error in getAllItems: ${error}` }
+const getAllItems = async (approvedStatus, type, userId) => {
+  try {
+    if (type == 'donor') {
+      //logic to only return items that have not been sent
+      var items = await Item.find({ $or:[ {"approvedStatus": 'approved', donorId: userId}, {"approvedStatus": 'in-progress', donorId: userId} ]}).lean();
+    } else if (type == "shopper") {
+      //logic to only return ites that have not been received
+      var items = await Item.find({"approvedStatus": approvedStatus, shopperId: userId}).lean();
+    } else {
+      var items = await Item.find({"approvedStatus": "approved"}).lean();
     }
+    return items;
+  } catch (error) {
+    console.error(`Error in getAllitems: ${error}`);
+    return { success: false, message: `Error in getAllitems: ${error}` }
+  }
 };
+
 
 const getAccountNotificationItems = async (adminUserId) => {
   const pendingReceiveQuery = {

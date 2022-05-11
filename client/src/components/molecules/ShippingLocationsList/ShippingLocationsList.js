@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Space } from 'antd';
 import { Button } from '../../atoms';
-import { ListWrapper, StyledTable, ExpandButton } from './ShippingLocationsList.styles';
+import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ShippingLocationsList.styles';
 
 export const ShippingLocationsList = (data) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -29,7 +29,7 @@ export const ShippingLocationsList = (data) => {
       key: 'action',
       render: (record) => (
         <Space size="middle">
-          <span onClick={() => data.handleDelete(record._id, record.kind)}>Delete</span>
+          <DeleteButton onClick={() => data.handleDelete(record._id, record.kind)}>Delete</DeleteButton>
         </Space>
       )
     }
@@ -54,7 +54,7 @@ export const ShippingLocationsList = (data) => {
         rowKey={(record) => record._id}
         expandable={{
           expandedRowRender: data.expandRow,
-          expandIconColumnIndex: 3,
+          expandIconColumnIndex: 4,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
                 <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>

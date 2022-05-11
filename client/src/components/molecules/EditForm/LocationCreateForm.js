@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { locationCreateSchema } from '../../../utils/validation';
 import { reopenTab } from '../../../utils/helpers';
 import { createLocation } from '../../../services/locations';
 import { Button, Notification } from '../../atoms';
 import { UserSelect } from '../../atoms/UserSelect';
-import { StyledSubmitButton, StyledInput } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledError } from './EditForm.styles';
 
 export const LocationCreateForm = (data) => {
     const { token } = useContext(AppContext);
@@ -33,23 +33,23 @@ export const LocationCreateForm = (data) => {
                 >
                 <Form>
                     <StyledInput name="name" placeholder="Enter location name" />
-                    <ErrorMessage name="name" component="div" />
+                    <StyledError name="name" component="div" />
 
                     <StyledInput name="firstLine" placeholder="First line of address" />
-                    <ErrorMessage name="firstLine" component="div" />
+                    <StyledError name="firstLine" component="div" />
 
                     <StyledInput name="secondLine" placeholder="Second line of address" />
-                    <ErrorMessage name="secondLine" component="div" />
+                    <StyledError name="secondLine" component="div" />
 
                     <StyledInput name="postcode" placeholder="Postcode" />
-                    <ErrorMessage name="postcode" component="div" />
+                    <StyledError name="postcode" component="div" />
 
                     <label>Give your best member:</label>
                     <UserSelect users={data.users} selectName="adminUser"/>
-                    <ErrorMessage name="adminUser" component="div" />
+                    <StyledError name="adminUser" component="div" />
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
+                    <Button small type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

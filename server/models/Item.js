@@ -25,14 +25,8 @@ const itemSchema = new Schema(
       UK: String,
       EU: String,
     },
-    clothingSize: {
-      UK: String,
-      EU: String,
-    },
-    shoeSize: {
-      UK: String,
-      EU: String,
-    },
+    clothingSize: [String],
+    shoeSize: [String],
     photos: [{
       front: Boolean,
       src: String

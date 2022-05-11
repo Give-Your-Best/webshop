@@ -54,7 +54,7 @@ const HiddenStyledTab = styled(Tab).attrs({
   border-bottom: 1px solid ${({ theme }) => theme.colorMappings.borders};
 
   &.selected {
-    color: #0097ff;
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 
   &.disabled {

@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { shopperCreateSchema } from '../../../utils/validation';
 import { reopenTab } from '../../../utils/helpers';
 import { clothingSizeOptions, shoeSizeOptions, currentStatus } from '../../../utils/constants';
 import { createUser } from '../../../services/user';
 import { Button, Notification, StyledSelect } from '../../atoms';
-import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledInputNumber } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledInputNumber, StyledError } from './EditForm.styles';
 
 export const ShopperCreateForm = (data) => {
     const { token } = useContext(AppContext);
@@ -37,26 +37,26 @@ export const ShopperCreateForm = (data) => {
                 >
                 <Form>
                     <StyledInput name="email" placeholder="Enter email" />
-                    <ErrorMessage name="email" component="div" />
+                    <StyledError name="email" component="div" />
 
                     <StyledInput name="firstName" placeholder="Enter first name" />
-                    <ErrorMessage name="firstName" component="div" />
+                    <StyledError name="firstName" component="div" />
 
                     <StyledInput name="lastName" placeholder="Enter last name" />
-                    <ErrorMessage name="lastName" component="div" />
+                    <StyledError name="lastName" component="div" />
 
                     <StyledInput name="deliveryAddress.firstLine" placeholder="Enter first line of address" />
-                    <ErrorMessage name="deliveryAddress.firstLine" component="div" />
+                    <StyledError name="deliveryAddress.firstLine" component="div" />
 
                     <StyledInput name="deliveryAddress.secondLine" placeholder="Enter second line of address" />
-                    <ErrorMessage name="deliveryAddress.secondLine" component="div" />
+                    <StyledError name="deliveryAddress.secondLine" component="div" />
 
                     <StyledInput name="deliveryAddress.postcode" placeholder="Enter postcode" />
-                    <ErrorMessage name="deliveryAddress.postcode" component="div" />
+                    <StyledError name="deliveryAddress.postcode" component="div" />
 
                     <div>
                         <StyledCheckbox name="shareAddress">Share address with donors</StyledCheckbox>
-                        <ErrorMessage name="shareAddress" component="div" />
+                        <StyledError name="shareAddress" component="div" />
                     </div>
 
                     <StyledSelect name="currentStatus" placeholder="Current status">
@@ -64,7 +64,7 @@ export const ShopperCreateForm = (data) => {
                             return (<StyledSelect.Option key={d} value={d}>{d}</StyledSelect.Option>);
                         })}
                     </StyledSelect>
-                    <ErrorMessage name="type" component="div" />
+                    <StyledError name="type" component="div" />
 
                     <label>Clothing sizes</label>
                     <StyledCheckbox.Group name="clothingSize" options={clothingSizeOptions} />
@@ -73,16 +73,16 @@ export const ShopperCreateForm = (data) => {
                     <StyledCheckbox.Group name="shoeSize" options={shoeSizeOptions} />
 
                     <StyledInput name="referredBy" placeholder="Who referred them?" />
-                    <ErrorMessage name="referredBy" component="div" />
+                    <StyledError name="referredBy" component="div" />
 
                     <div>
                         <label>Shopping for more than one person? If so how many?</label>
                         <StyledInputNumber name="shoppingFor" />
-                        <ErrorMessage name="shoppingFor" component="div" />
+                        <StyledError name="shoppingFor" component="div" />
                     </div>
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
+                    <Button small type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

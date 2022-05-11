@@ -5,7 +5,11 @@ const { getAllItems, getItem, deleteItem, getAccountNotificationItems, getShopNo
 
 // get items endpoint api/items
 router.get('/', async (req, res) => {
-    const items = await getAllItems();
+    let type = req.query.type || 'all';
+    let approvedStatus = req.query.approvedStatus || '';
+    let userId = req.query.userId || '';
+    let itemStatus = req.query.itemStatus || '';
+    const items = await getAllItems(approvedStatus, type, userId, itemStatus);
     res.json(items);
 });
 
@@ -34,6 +38,11 @@ router.put('/:id', Items.updateItem);
 
 // create item endpoint post to api/items
 router.post('/', Items.createItem);
+
+// get items endpoint api/items
+router.post('/dummy', async (req, res) => {
+    res.json({"success": true});
+});
 
 // delete item endoint delete to api/items/:id
 router.delete('/:id', async (req, res) => {

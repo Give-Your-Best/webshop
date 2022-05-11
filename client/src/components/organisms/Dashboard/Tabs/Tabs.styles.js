@@ -31,7 +31,7 @@ const StyledTab = styled(Tab).attrs({
   min-width: 200px;
 
   &.selected {
-    color: #0097ff;
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 
   &.disabled {

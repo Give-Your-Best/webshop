@@ -1,5 +1,23 @@
 import styled from 'styled-components';
-import { SubmitButton, Input, Checkbox, InputNumber } from 'formik-antd';
+import { SubmitButton, Input, Checkbox, InputNumber, Form, Radio, Select } from 'formik-antd';
+import { ErrorMessage } from 'formik';
+
+const StyledError = styled(ErrorMessage)`
+  border: 1px solid red;
+  width: max-content;
+  padding: 1px 5px;
+  color: red;
+  margin: 5px 0;
+`
+
+const StyledSelect = styled(Select)`
+    width: 100%;
+  &:disabled {
+    background-color: transparent;
+    color: black;
+    border: none;
+  }
+`
 
 const StyledSubmitButton = styled(SubmitButton)`
   font-size: 1rem;
@@ -12,7 +30,7 @@ const StyledSubmitButton = styled(SubmitButton)`
   padding: 0.3rem 1rem;
   position: absolute !important;
   bottom: 10px !important;
-  right: 80px !important;
+  right: 120px !important;
   font-size: 0.8rem;
   border-width: 0.1rem;
   :hover {
@@ -68,8 +86,35 @@ const StyledCheckbox = styled(Checkbox)`
   }
 `
 
-const StyledLabel = styled.label `
-  display: inline-block;
+const StyledRadio = styled(Radio)`
+  margin: 0;
+  padding: 0;
+  color: black !important;
+  color: ${({ theme }) => theme.colorMappings.primary};
+  & .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: transparent !important;
+    border: 1x solid grey !important;
+    margin: 0;
+    padding: 0;
+    color: black !important;
+  }
 `
 
-export { StyledInput, StyledSubmitButton, StyledCheckbox, StyledInputNumber, StyledLabel };
+const StyledLabel = styled.label`
+  display: inline-block;
+  margin: 10px 0px;
+`
+
+const StyledForm = styled(Form)`
+  position: relative;
+`
+
+export { StyledInput, 
+  StyledSubmitButton, 
+  StyledCheckbox, 
+  StyledInputNumber, 
+  StyledLabel, 
+  StyledForm,
+  StyledRadio,
+StyledSelect,
+StyledError };

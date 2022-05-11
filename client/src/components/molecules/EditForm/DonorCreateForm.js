@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { donorCreateSchema } from '../../../utils/validation';
 import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
-import { StyledSubmitButton, StyledInput, StyledCheckbox } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError} from './EditForm.styles';
 
 export const DonorCreateForm = (data) => {
     const { token } = useContext(AppContext);
@@ -34,20 +34,20 @@ export const DonorCreateForm = (data) => {
                 >
                 <Form>
                     <StyledInput name="firstName" placeholder="Enter first name" />
-                    <ErrorMessage name="firstName" component="div" />
+                    <StyledError name="firstName" component="div" />
 
                     <StyledInput name="lastName" placeholder="Enter last name" />
-                    <ErrorMessage name="lastName" component="div" />
+                    <StyledError name="lastName" component="div" />
 
                     <StyledInput name="email" placeholder="Enter your email" />
-                    <ErrorMessage name="email" component="div" />
+                    <StyledError name="email" component="div" />
                     <div>
                     <label>Mark as trusted donor? </label>
                     <StyledCheckbox name="trustedDonor" />
-                    <ErrorMessage name="trustedDonor" component="div" />
+                    <StyledError name="trustedDonor" component="div" />
                     </div>
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
+                    <Button small type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>
