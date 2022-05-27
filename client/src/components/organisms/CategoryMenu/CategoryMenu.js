@@ -15,7 +15,7 @@ export const CategoryMenu = () => {
             <CategoryMenuItem 
               open={open} 
               setOpen={setOpen} 
-              key={c.id} 
+              key={c.id}  
               to={"/products/" + c.id}
             >
               {c.name}   
