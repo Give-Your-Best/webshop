@@ -19,7 +19,7 @@ export const SubCategoryMenuWrapper = styled.div`
   display: none;
 `
 
-export const CategoryMenuItem = styled(Link)`
+export const CategoryMenuItem = styled.span`
   color: black;
   background: ${({ theme }) => theme.colorMappings.yellow};
   padding-right: 2em;
