@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Link = styled.a`
-  color: ${({ theme }) => theme.colorMappings.primary};
+  color: '#BA1B1A';
 
   :hover {
     text-decoration: underline;

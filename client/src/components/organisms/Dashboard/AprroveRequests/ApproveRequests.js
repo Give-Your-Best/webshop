@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './ApproveRequests.styles';
 import { getUsers, updateDonor, updateUser, getDonations } from '../../../../services/user';
@@ -9,6 +9,7 @@ import { Formik } from 'formik';
 
 export const ApproveRequests = () => {
     const { token } = useContext(AppContext);
+    const mountedRef = useRef(true);
     const [shoppers, setShoppers] = useState([]);
     const [donors, setDonors] = useState([]);
     const [donations, setDonations] = useState([]);
@@ -34,6 +35,7 @@ export const ApproveRequests = () => {
 
     const itemExpand = (record) => {
       const approve = (e) => {
+        //TO DO Email Notification to say your donation has been approved
         const itemId = e.target.getAttribute('data-item-id');
         updateItem(itemId, {"approvedStatus": "approved"})
         .then(() => {
@@ -50,6 +52,7 @@ export const ApproveRequests = () => {
         })
       }
       const reject = (e) => {
+        //TO DO Email Notification to say your donation has been rejected
         const itemId = e.target.getAttribute('data-item-id');
         updateItem(itemId, {"approvedStatus": "rejected"})
         .then(() => {
@@ -69,7 +72,7 @@ export const ApproveRequests = () => {
       return (
         <div>
         {record.donationItems.map((item) => (
-          <div key={item._id}><ItemCardLong item={item} /><Button small data-item-id={item._id} onClick={approve}>Approve</Button><Button small data-item-id={item._id} onClick={reject}>Reject</Button></div>
+          <div key={item._id}><ItemCardLong item={item} /><Button centre primary small data-item-id={item._id} onClick={approve}>Approve</Button><Button centre small data-item-id={item._id} onClick={reject}>Reject</Button></div>
         ))}
         </div>
       )      
@@ -124,6 +127,7 @@ export const ApproveRequests = () => {
             default:
                 break;
           }
+          //TO DO Email Notification to say your account has been approved / rejected as shopper / donor
           updateRecord(values, action);
         };
         return (
@@ -149,18 +153,23 @@ export const ApproveRequests = () => {
 
         const fetchShoppers = async () => {
           const users = await getUsers('shopper', 'in-progress', token);
+          if (!mountedRef.current) return null;
           setShoppers(users);
         };
     
         const fetchDonors = async () => {
           const users = await getUsers('donor', 'in-progress', token);
+          if (!mountedRef.current) return null;
           setDonors(users);
         };
 
         const fetchDonations = async () => {
           const donations = await getDonations('in-progress', token);
-          console.log(donations)
-          setDonations(donations);
+          if (!mountedRef.current) return null;
+
+          setDonations(donations.filter(item => {
+            return item.numOfDonationItems !== 0
+          }));
         }
     
         fetchShoppers();
@@ -168,7 +177,7 @@ export const ApproveRequests = () => {
         fetchDonations();
     
         return () => {
-          // cleanup
+          mountedRef.current = false;
         };
       }, [token]);
 

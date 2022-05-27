@@ -47,7 +47,7 @@ export const DonorCreateForm = (data) => {
                     <StyledError name="trustedDonor" component="div" />
                     </div>
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
+                    <Button primary small type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

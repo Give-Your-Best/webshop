@@ -57,7 +57,7 @@ export const ApproveItemList = (data) => {
           }}
         dataSource={data.data}
       />
-      <Button small onClick={markAsTrusted} disabled={!hasSelected}>Mark as Trusted Donor</Button>
+      <Button primary small onClick={markAsTrusted} disabled={!hasSelected}>Mark as Trusted Donor</Button>
     </ListWrapper>
   );
 };

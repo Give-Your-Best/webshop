@@ -9,5 +9,6 @@ export {
     DonorCreateForm,
     ShopperCreateForm,
     ItemMiniEditForm,
-    ItemCreateForm
+    ItemCreateForm,
+    CategoryFields
 } from './EditForm';

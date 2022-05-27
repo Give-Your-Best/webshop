@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin: 0 auto;
-  max-width: 75rem;
+  margin: 3rem auto;
+  max-width: 60rem;
+
+  > h1 {
+    text-align: center;
+  }
 `;

@@ -5,13 +5,16 @@ export const AppContext = React.createContext();
 export const AppProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [token, setToken] = React.useState(null);
+  const [basket, setBasket] = React.useState(null);
 
   const value = React.useMemo(() => ({ 
     user, 
     token,
+    basket,
     setUser,
-    setToken 
-  }), [user, token]);
+    setToken,
+    setBasket
+  }), [user, token, basket]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

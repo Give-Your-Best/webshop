@@ -12,6 +12,9 @@ const colors = {
   white: {
     500: '#FFFFFF',
   },
+  blue: {
+    200: '#51C1EF',
+  },
   black: {
     400: '#454545',
     500: '#000000',
@@ -38,6 +41,7 @@ export const theme = {
     yellow: colors.yellow[500],
     white: colors.white[500],
     black: colors.black[500],
+    blue: colors.blue[200],
 
     borders: colors.grey[100],
     frontPanelBackground: colors.pink[100],

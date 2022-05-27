@@ -82,7 +82,7 @@ export const ShopperCreateForm = (data) => {
                     </div>
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
+                    <Button primary small type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
@@ -11,6 +11,7 @@ import { openHiddenTab } from "../../../../utils/helpers";
 
 export const ShippingLocations = () => {
   const { token } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [adminLocations, setAdminLocations] = useState([]);
   const [adminUsers, setAdminUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
@@ -53,16 +54,23 @@ export const ShippingLocations = () => {
 
     const fetchAdminLocations = async () => {
       const locations = await getAdminLocations('', token);
+      if (!mountedRef.current) return null;
       setAdminLocations(locations);
     };
 
     const fetchAdminUsers = async () => {
       const users = await getUsers('admin', 'approved', token);
+      if (!mountedRef.current) return null;
       setAdminUsers(users);
     };
 
     fetchAdminLocations();
     fetchAdminUsers();
+
+    return () => {
+      // cleanup
+      mountedRef.current = false;
+    };
 
   }, [token]);
 
@@ -102,7 +110,7 @@ export const ShippingLocations = () => {
           <LocationMiniEditForm recordId={record._id} editingKey={editingKey} users={adminUsers} />
         </Formik> 
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button primary small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )      
   };

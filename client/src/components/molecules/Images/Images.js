@@ -54,7 +54,7 @@ export const Images = (data) => {
       disabled={data.editingKey !== data.recordId}
       onChange={handleChange}
     >
-      {data.uploadedImages.length >= 8 ? null : uploadButton}
+      {data.uploadedImages.length >= 3 ? null : uploadButton}
     </Upload>
     <Modal
       visible={previewVisible}

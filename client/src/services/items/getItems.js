@@ -1,5 +1,10 @@
-export const getItems = async (approvedStatus, type, userId, itemStatus) => {
-  const response = await fetch(`/api/items?type=${type}&userId=${userId}&itemStatus=${itemStatus}${(approvedStatus)? '&approvedStatus='+ approvedStatus: ''}`, {
+export const getItems = async (approvedStatus, itemStatus, category, subCategory, donorId) => {
+  let fetchString = `/api/items?approvedStatus=${approvedStatus}&itemStatus=${itemStatus}`
+  if(category) fetchString = fetchString + `&category=${category}`;
+  if(subCategory) fetchString = fetchString + `&subCategory=${subCategory}`;
+  if(donorId) fetchString = fetchString + `&donorId=${donorId}`;
+
+  const response = await fetch(fetchString, {
     headers: {
       'Content-Type': 'application/json'
     },

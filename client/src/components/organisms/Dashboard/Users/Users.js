@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Users.styles';
 import { getUsers, deleteUser, updateDonor, updateShopper } from '../../../../services/user';
@@ -11,6 +11,7 @@ import { openHiddenTab } from '../../../../utils/helpers';
 export const Users = () => {
   const { confirm } = Modal;
   const { token } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -98,20 +99,22 @@ export const Users = () => {
             } 
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button primary small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )
   }
 
-  React.useEffect(() => {
+    useEffect(() => {
 
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'approved', token);
+      if (!mountedRef.current) return null;
       setShoppers(users);
     };
 
     const fetchDonors = async () => {
       const users = await getUsers('donor', 'approved', token);
+      if (!mountedRef.current) return null;
       setDonors(users);
     };
 
@@ -120,6 +123,7 @@ export const Users = () => {
 
     return () => {
       // cleanup
+      mountedRef.current = false;
     };
   }, [token]);
 
@@ -142,11 +146,11 @@ export const Users = () => {
 
     <StyledTabPanel>
       <UsersList data={shoppers} handleDelete={handleDelete} expandRow={editForm} />
-      <Button small onClick={() => {openHiddenTab('shopper')}}>Create</Button>
+      <Button primary small onClick={() => {openHiddenTab('shopper')}}>Create</Button>
     </StyledTabPanel>
     <StyledTabPanel>
       <UsersList data={donors} handleDelete={handleDelete} expandRow={editForm} />
-      <Button small onClick={() => {openHiddenTab('donor')}}>Create</Button>
+      <Button primary small onClick={() => {openHiddenTab('donor')}}>Create</Button>
     </StyledTabPanel>
     <StyledTabPanel>
       <ShopperCreateForm submitFunction={submitFunction} />

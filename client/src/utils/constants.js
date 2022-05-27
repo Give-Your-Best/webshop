@@ -9,13 +9,7 @@ export const clothingSizeOptions = [
     '20',
     '22',
     '24',
-    '26',
-    'XS',
-    'S',
-    'M',
-    'L',
-    'XL',
-    'XXL'
+    '26'
 ];
 
 export const shoeSizeOptions = [
@@ -67,44 +61,12 @@ export const currentStatus = [
 
 export const categories = [
     {
-        'name': 'Dresses',
-        'id': 'dresses'
+        'name': 'Women',
+        'id': 'women'
     },
     {
-        'name': 'Sweaters and Cardigans',
-        'id': 'sweaters'
-    },
-    {
-        'name': 'Trousers',
-        'id': 'trousers'
-    },
-    {
-        'name': 'Jeans',
-        'id': 'jeans'
-    },
-    {
-        'name': 'Skirts',
-        'id': 'skirts'
-    },
-    {
-        'name': 'Shorts',
-        'id': 'shorts'
-    },
-    {
-        'name': 'Coats and Jackets',
-        'id': 'coats'
-    },
-    {
-        'name': 'Tops and T-shirts',
-        'id': 'tops'
-    },
-    {
-        'name': 'Shirts and Blouses',
-        'id': 'shirts'
-    },
-    {
-        'name': 'Sleepwear and Loungewear',
-        'id': 'sleepwear'
+        'name': 'Children & Baby',
+        'id': 'children'
     },
     {
         'name': 'Accessories',
@@ -117,6 +79,127 @@ export const categories = [
     {
         'name': 'Other',
         'id': 'other'
+    }
+]
+
+export const subCategories = [
+    {
+        'name': 'Dresses',
+        'id': 'dresses',
+        'image': 'GYB-dresses.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Sweaters & Cardigans',
+        'id': 'sweaters',
+        'image': 'GYB-sweaters-and-cardigans.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Trousers & Jeans',
+        'id': 'trousers',
+        'image': 'GYB-trousers.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Skirts & Shorts',
+        'id': 'skirts',
+        'image': 'GYB-skirts.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Coats & Jackets',
+        'id': 'coats',
+        'image': 'GYB-coats-and-jackets.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Tops & T-shirts',
+        'id': 'tops',
+        'image': 'GYB-tops-and-tshirts.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Shirts & Blouses',
+        'id': 'shirts',
+        'image': 'GYB-shirts-and-blouses.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Sleepwear & Loungewear',
+        'id': 'sleepwear',
+        'image': 'GYB-sleepwear-and-loungewear.svg',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Underwear',
+        'id': 'underwear',
+        'parentCategory': 'women'
+    },
+    {
+        'name': 'Maternity',
+        'id': 'maternity',
+        'parentCategory': 'women'
+    },
+    {
+        'name': '13 - 14',
+        'id': '13/14',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Baby bundles',
+        'id': 'baby',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Bags',
+        'id': 'bags',
+        'parentCategory': 'accessories'
+    },
+    {
+        'name': 'Hats, Scarves & Gloves',
+        'id': 'winter',
+        'parentCategory': 'accessories'
+    },
+    {
+        'name': 'Jewellery',
+        'id': 'jewellery',
+        'parentCategory': 'accessories'
+    },
+    {
+        'name': 'Other',
+        'id': 'other',
+        'parentCategory': 'accessories'
+    },
+    {
+        'name': 'Trainers / Sneakers',
+        'id': 'trainers',
+        'parentCategory': 'shoes'
+    },
+    {
+        'name': 'Sandals',
+        'id': 'sandals',
+        'parentCategory': 'shoes'
+    },
+    {
+        'name': 'Boots',
+        'id': 'boots',
+        'parentCategory': 'shoes'
+    },
+    {
+        'name': 'Heels',
+        'id': 'heels',
+        'parentCategory': 'shoes'
+    },
+    {
+        'name': 'Flats',
+        'id': 'flats',
+        'parentCategory': 'shoes'
+    },
+    {
+        'name': 'Other',
+        'id': 'other',
+        'parentCategory': 'other'
     }
 ]
 

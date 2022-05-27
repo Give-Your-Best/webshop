@@ -12,7 +12,6 @@ export const PasswordUpdate = (data) => {
     const { token } = useContext(AppContext);
 
     const handleSubmit = async (values, {resetForm}) => {
-        console.log('submiot update password')
         const res = await updatePassword(values, token);
         if (res.success) {
             Notification('Success!', 'Password updated', 'success');
@@ -25,6 +24,7 @@ export const PasswordUpdate = (data) => {
 
     return (
         <div>
+            <h2>Update password</h2>
             <Formik
                 initialValues={{ id: data.id, email: data.email, oldPassword: '', newPassword: '', passwordConfirm: ''}}
                 validationSchema={updatePasswordSchema}
@@ -41,7 +41,7 @@ export const PasswordUpdate = (data) => {
                     <StyledError name="passwordConfirm" component="div" />
 
                     <StyledSubmitButton>Update</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
+                    <Button primary small type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

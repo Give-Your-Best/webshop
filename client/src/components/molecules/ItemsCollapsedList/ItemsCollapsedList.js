@@ -1,8 +1,9 @@
 import React from "react";
 import { Space } from 'antd';
+import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 
-export const ItemsCollapsedList = (data) => {
+export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen}) => {
 
   var columns = [
     {
@@ -14,17 +15,21 @@ export const ItemsCollapsedList = (data) => {
       title: 'Approved Status',
       dataIndex: 'approvedStatus',
       sorter: (a, b) => a.name.length - b.name.length,
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (record) => (
-        <Space size="middle">
-          <DeleteButton onClick={() => data.handleDelete(record._id)}>Delete</DeleteButton>
-        </Space>
-      )
     }
   ]
+
+  if (handleDelete) {
+    columns.push({
+        title: 'Action',
+        key: 'action',
+        width: 20,
+        render: (record) => (
+          <Space size="middle">
+            <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
+          </Space>
+        )
+    })
+  }
 
   return (
     <ListWrapper>
@@ -34,7 +39,7 @@ export const ItemsCollapsedList = (data) => {
         columns={columns}
         rowKey={(record) => record._id || 0}
         expandable={{
-          expandedRowRender: data.expandRow,
+          expandedRowRender: expandRow,
           expandIconColumnIndex: 2,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
@@ -43,8 +48,9 @@ export const ItemsCollapsedList = (data) => {
                 <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
               )
           }}
-        dataSource={data.data}
+        dataSource={data}
       />
+      {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button>: ''}
     </ListWrapper>
   );
 };

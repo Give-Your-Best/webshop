@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Form } from 'formik-antd';
-import { StyledSubmitButton, StyledInput, StyledLabel, StyledSelect, StyledCheckbox, StyledError } from './EditForm.styles';
-import { clothingSizeOptions, shoeSizeOptions, categories, colours } from '../../../utils/constants';
+import { StyledSubmitButton, StyledInput, StyledLabel, StyledCheckbox, StyledError } from './EditForm.styles';
+import { clothingSizeOptions, shoeSizeOptions, colours } from '../../../utils/constants';
 import { Images } from '../Images';
+import { CategoryFields } from './CategoryFields';
 
 export const ItemMiniEditForm = ({ editingKey, recordId, photos, handleImageUpdate }) => {
   const [uploadedImages, setUploadedImages] = useState(photos);
@@ -17,41 +18,18 @@ export const ItemMiniEditForm = ({ editingKey, recordId, photos, handleImageUpda
         <StyledInput name="description" disabled={editingKey !== recordId} /></StyledLabel>
         <StyledError name="description" component="div" />
 
-        <StyledLabel>Item Category</StyledLabel>
-        <StyledSelect name="category" disabled={editingKey !== recordId}>
-          {categories.map((d)=>{
-              return (<StyledSelect.Option key={d.id} value={d.id}>{d.name}</StyledSelect.Option>);
-              })}
-        </StyledSelect>
-        <StyledError name="category" component="div" />
-
-        <StyledLabel>Sub Category</StyledLabel>
-        <StyledSelect name="subCategory" disabled={editingKey !== recordId}>
-          {categories.map((d)=>{
-              return (<StyledSelect.Option key={d.id} value={d.id}>{d.name}</StyledSelect.Option>);
-              })}
-        </StyledSelect>
-        <StyledError name="subCategory" component="div" />
+        <CategoryFields editingKey={editingKey} recordId={recordId} />
 
         <StyledLabel>Brand
         <StyledInput name="brand" disabled={editingKey !== recordId} /></StyledLabel>
         <StyledError name="brand" component="div" />
 
-        <StyledLabel>Clothing size</StyledLabel>
-        <StyledSelect name="clothingSize" disabled={editingKey !== recordId}>
-          {clothingSizeOptions.map((d)=>{
-              return (<StyledSelect.Option key={d} value={d}>{d}</StyledSelect.Option>);
-              })}
-        </StyledSelect>
+        <StyledLabel>Clothing sizes
+        <StyledCheckbox.Group disabled={editingKey !== recordId} name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
         <StyledError name="clothingSize" component="div" />
 
-
-        <StyledLabel>Shoe size</StyledLabel>
-        <StyledSelect name="shoeSize"  disabled={editingKey !== recordId}>
-          {shoeSizeOptions.map((d)=>{
-              return (<StyledSelect.Option key={d} value={d}>{d}</StyledSelect.Option>);
-              })}
-        </StyledSelect>
+        <StyledLabel>Shoe sizes
+        <StyledCheckbox.Group disabled={editingKey !== recordId} name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
         <StyledError name="shoeSize" component="div" />
 
         <StyledLabel>Colours

@@ -40,9 +40,22 @@ const StyledTab = styled(Tab).attrs({
   }
 `;
 
+const StyledTabHidden = styled(Tab)`
+  display: none;
+`;
+
 const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
   &.selected {
     padding: 2em;
+    width: 100%;
+    margin: 0 3em;
+    display: block;
+    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  }
+`;
+
+const StyledTabPanelDashboardImage = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
+  &.selected {
     width: 100%;
     margin: 0 3em;
     display: block;
@@ -55,4 +68,12 @@ StyledTabs.tabsRole = 'Tabs';
 StyledTabPanel.tabsRole = 'TabPanel';
 StyledTabList.tabsRole = 'TabList';
 
-export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, DashboardMenuWrapper };
+export { 
+  StyledTab, 
+  StyledTabList, 
+  StyledTabs, 
+  StyledTabPanel, 
+  DashboardMenuWrapper, 
+  StyledTabPanelDashboardImage,
+  StyledTabHidden 
+};

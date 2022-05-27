@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Modal } from 'antd';
 import { StyledSelect } from '../../atoms';
 import { Formik, Form } from 'formik';
-import { SubmitButton } from 'formik-antd';
+import { StyledSubmitButton } from '../EditForm/EditForm.styles';
 
 export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, locations }) => {
   return (
@@ -24,7 +24,7 @@ export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, 
                         return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.firstLine + ', ' + d.postcode}</StyledSelect.Option>);
                         })}
                 </StyledSelect>
-                <SubmitButton>Assign</SubmitButton>
+                <StyledSubmitButton>Assign</StyledSubmitButton>
                 </Form>
             </Formik>
     </Modal>

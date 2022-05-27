@@ -1,12 +1,19 @@
 import React, { useContext } from "react";
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, DashboardMenuWrapper } from './Tabs.styles';
+import { 
+  StyledTab, 
+  StyledTabList, 
+  StyledTabs, 
+  StyledTabPanel, 
+  DashboardMenuWrapper, 
+  StyledTabPanelDashboardImage,
+  StyledTabHidden
+} from './Tabs.styles';
 import { AccountWelcome } from '../../../molecules/AccountWelcome';
 import { adminTabs, donorTabs, shopperTabs } from './constants';
 
 export const Tabs = () => {
   const { user } = useContext(AppContext);
-  console.log(user);
   var tabs = [];
 
   switch (user.type) {
@@ -29,12 +36,18 @@ export const Tabs = () => {
         <StyledTabList>
           <AccountWelcome />
           {tabs.map((d)=>{
-            return (<StyledTab>{d.name}</StyledTab>);
+            return (
+              (d.name === 'Dashboard')? <StyledTabHidden key={d.name}>{d.name}</StyledTabHidden>
+              : <StyledTab key={d.name}>{d.name}</StyledTab>
+            )
           })}
         </StyledTabList>
-
+      
         {tabs.map((d)=>{
-            return (<StyledTabPanel>{d.content}</StyledTabPanel>);
+            return (
+              (d.name === 'Dashboard')? <StyledTabPanelDashboardImage key={d.name}>{d.content}</StyledTabPanelDashboardImage>
+              : <StyledTabPanel key={d.name}>{d.content}</StyledTabPanel>
+            )
           })}
       </StyledTabs>
     </DashboardMenuWrapper>

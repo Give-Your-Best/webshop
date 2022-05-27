@@ -1,0 +1,1 @@
+export { DashboardImage } from './DashboardImage';

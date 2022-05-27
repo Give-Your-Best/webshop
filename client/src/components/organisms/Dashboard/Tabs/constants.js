@@ -1,4 +1,3 @@
-import { Statistics } from '../Statistics';
 import { Users } from '../Users';
 import { Notifications } from '../Notifications';
 import { ApproveRequests } from '../AprroveRequests/ApproveRequests';
@@ -7,12 +6,18 @@ import { Settings } from '../Settings/Settings';
 import { Logout } from '../../Logout/Logout';
 import { UserDetails } from '../UserDetails';
 import { DonorItems } from '../DonorItems';
+import { AdminItems } from '../AdminItems';
 import { OrdersList } from '../../../molecules/OrdersList';
+import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 
 export const adminTabs = [
     {
       name: 'Dashboard',
-    content: <Statistics />
+    content: <DashboardImage />
+    },
+    {
+      name: 'Items',
+    content: <AdminItems />
     },
     {
       name: 'Users',
@@ -46,6 +51,10 @@ export const adminTabs = [
 
 export const donorTabs = [
     {
+      name: 'Dashboard',
+    content: <DashboardImage />
+    },
+    {
       name: 'My Details',
     content: <UserDetails />
     },
@@ -68,6 +77,10 @@ export const donorTabs = [
 ]
 
 export const shopperTabs = [
+    {
+      name: 'Dashboard',
+    content: <DashboardImage />
+    },
     {
         name: 'My Details',
       content: <UserDetails />

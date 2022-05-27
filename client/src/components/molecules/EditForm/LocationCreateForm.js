@@ -49,7 +49,7 @@ export const LocationCreateForm = (data) => {
                     <StyledError name="adminUser" component="div" />
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
+                    <Button primary small type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

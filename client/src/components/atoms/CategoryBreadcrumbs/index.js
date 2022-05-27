@@ -1,0 +1,1 @@
+export { CategoryBreadcrumbs } from './CategoryBreadcrumbs';

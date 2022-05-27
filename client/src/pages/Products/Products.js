@@ -1,43 +1,52 @@
-import * as React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
-import { categories } from '../../utils/constants';
-// import { AppContext } from '../../context/app-context';
+import { categories, subCategories } from '../../utils/constants';
+import { Container, ItemCard, CategoryBreadcrumbs } from '../../components';
+import { getItems } from '../../services/items';
+import { ItemsWrapper } from './Products.styles';
 
 export const Products = () => {
-  // const { token } = React.useContext(AppContext);
-  const { category } = useParams();
+  const { category, subCategory } = useParams();
+  const [items, setItems] = useState([]);
+  const mountedRef = useRef(true);
+  
   let categoryName = '';
   categories.forEach((c) => {
     if (c.id === category) {
       categoryName = c.name;
     }
   })
-  // const [authenticated, setAuthenticated] = React.useState(false);
 
-  // React.useEffect(() => {
-  //   const callTestApi = async () => {
-  //     const res = await fetch('/api/test-auth-items', {
-  //       mode: 'cors',
-  //       cache: 'no-cache',
-  //       credentials: 'same-origin',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'x-access-token': token,
-  //       },
-  //     });
-  //     setAuthenticated(res.ok);
-  //   };
-  //   callTestApi();
+  subCategories.forEach((c) => {
+    if (c.id === subCategory) {
+      categoryName = c.name;
+    }
+  })
 
-  //   return () => {
-  //     // cleanup
-  //   };
-  // }, [token]);
+  useEffect(() => {
+
+    const fetchItems = async () => {
+        const items = await getItems('approved', 'in-shop', category, subCategory);
+        if (!mountedRef.current) return null;
+        setItems(items);
+    };
+
+    fetchItems();
+    return () => {
+      mountedRef.current = false;
+    };
+
+  }, [category, subCategory]);
 
   return (
-    <div>
-      <h2>{`Products listed here for category: ${categoryName}`}</h2>
-      {/* <p>{`authenticated: ${authenticated}`}</p> */}
-    </div>
+    <Container>
+      <CategoryBreadcrumbs category={category} subCategory={subCategory} />
+      <h1>{(categoryName)? categoryName: 'All Items'}</h1>
+      <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
+        {items.map((item) => (
+          <ItemCard key={item._id} item={item} />
+        ))}
+      </ItemsWrapper>
+    </Container>
   );
 };

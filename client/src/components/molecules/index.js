@@ -24,3 +24,4 @@ export { AccountWelcome } from './AccountWelcome';
 export { ItemsCollapsedList } from './ItemsCollapsedList';
 export { ItemMiniEditForm } from './EditForm/ItemMiniEditForm';
 export { ItemCreateForm } from './EditForm/ItemCreateForm';
+export { CategoryFields } from './EditForm/CategoryFields';

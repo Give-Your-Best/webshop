@@ -28,7 +28,7 @@ export const AdminEditForm = (data) => {
               return (<StyledSelect.Option key={d._id} value={d._id}>{d.name}</StyledSelect.Option>);
               })}
         </StyledSelect>
-        <Button small type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>
+        <Button primary small type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>
         <StyledSubmitButton>Save</StyledSubmitButton>
     </Form>
   );

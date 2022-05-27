@@ -22,26 +22,23 @@ const StyledSelect = styled(Select)`
 const StyledSubmitButton = styled(SubmitButton)`
   font-size: 1rem;
   cursor: pointer;
-  background: transparent;
+  background: ${({ theme }) => theme.colorMappings.blue};
   border-radius: 0.1rem;
   border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
   color: ${({ theme }) => theme.colorMappings.primary};
-  margin: 0 5px;
+  margin: 1em 5px 1em 0;
   padding: 0.3rem 1rem;
-  position: absolute !important;
-  bottom: 10px !important;
-  right: 120px !important;
   font-size: 0.8rem;
   border-width: 0.1rem;
   :hover {
-    background: transparent;
+    background: ${({ theme }) => theme.colorMappings.blue};
     border-radius: 0.1rem;
     border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
     color: ${({ theme }) => theme.colorMappings.primary};
     border-width: 0.1rem;
   }
   :focus {
-    background: transparent;
+    background: ${({ theme }) => theme.colorMappings.blue};
     border-radius: 0.1rem;
     border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
     color: ${({ theme }) => theme.colorMappings.primary};
@@ -102,7 +99,7 @@ const StyledRadio = styled(Radio)`
 
 const StyledLabel = styled.label`
   display: inline-block;
-  margin: 10px 0px;
+  margin: 1px 0px;
 `
 
 const StyledForm = styled(Form)`
