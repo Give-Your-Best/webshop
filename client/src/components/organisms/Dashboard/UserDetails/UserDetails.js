@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { AppContext } from '../../../../context/app-context';
 import { UserEditForm, PasswordUpdate } from '../../../molecules';
@@ -7,6 +7,7 @@ import { getUsers, updateDonor, updateShopper } from '../../../../services/user'
 
 export const UserDetails = () => {
   const { token, user } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [currentUser, setCurrentUser] = useState({});
   const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
@@ -34,11 +35,16 @@ export const UserDetails = () => {
 
     const fetchUsers = async () => {
       const users = await getUsers(type, 'approved', token);
+      if (!mountedRef.current) return null;
       setUsers(users);
       setCurrentUser(users.find(d => {return d._id === user.id}));
     };
 
     fetchUsers();
+    return () => {
+      // cleanup
+      mountedRef.current = false;
+    };
 
   }, [token, user, type]);
 

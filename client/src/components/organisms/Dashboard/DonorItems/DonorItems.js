@@ -1,16 +1,17 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemsCollapsedList, ItemMiniEditForm, ItemCreateForm } from '../../../molecules';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './DonorItems.styles';
-import { getItems, updateItem, deleteItem } from '../../../../services/items';
+import { getDonorItems, updateItem, deleteItem } from '../../../../services/items';
 import { Button } from '../../../atoms';
 import { openHiddenTab, reopenTab } from "../../../../utils/helpers";
 import { itemCreateschema } from "../../../../utils/validation";
 
 export const DonorItems = () => {
   const { token, user } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
@@ -52,13 +53,24 @@ export const DonorItems = () => {
   useEffect(() => {
 
     const fetchItems = async () => {
-        const items = await getItems('', user.type, user.id);
+        const items = await getDonorItems(user.id, 'in-shop');
+        if (!mountedRef.current) return null;
         setItems(items);
     };
 
+    const fetchPastItems = async () => {
+      const items = await getDonorItems(user.id, 'received');
+      if (!mountedRef.current) return null;
+      setPastItems(items);
+    };
+
     fetchItems();
-    //TO DO get list of past items
-    setPastItems([]);
+    fetchPastItems();
+
+    return () => {
+      // cleanup
+      mountedRef.current = false;
+    };
 
 }, [token, user]);
 
@@ -103,7 +115,11 @@ export const DonorItems = () => {
           <ItemMiniEditForm photos={record.photos} recordId={record._id} editingKey={editingKey} handleImageUpdate={setImages} />
         </Formik> 
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        {
+          (record.status !== 'received')? 
+          <Button primary small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+          : ''
+        }
       </div>
     )      
   };
@@ -121,14 +137,14 @@ export const DonorItems = () => {
 
       <StyledTabPanel>
         <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} editItem={editItem} />
-        <Button small onClick={() => openHiddenTab('item')}>Upload Item</Button>
-        <Button small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
+        <Button primary small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
+        <Button primary small onClick={() => openHiddenTab('item')}>Upload Item</Button>
       </StyledTabPanel>
       <StyledTabPanel>
         <ItemCreateForm submitFunction={submitFunction} photos={[]} />
       </StyledTabPanel>
       <StyledTabPanel>
-        <ItemsCollapsedList data={pastItems} reOpen={() => {reopenTab('items')}} />
+        <ItemsCollapsedList data={pastItems} expandRow={editForm} reOpen={() => {reopenTab('items')}} />
       </StyledTabPanel>
 
     </StyledTabs>

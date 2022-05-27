@@ -1,34 +1,83 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
 import { ListWrapper, StyledTab, StyledTabPanel, StyledTabList, StyledTabs } from './OrdersList.styles';
-import { Button } from '../../atoms';
-import { getItems } from '../../../services/items';
+import { getShopperItems, getDonorItems } from '../../../services/items';
 import { ItemCardLong } from "../ItemCardLong";
+import { updateItem } from '../../../services/items';
 
 export const OrdersList = () => {
     const { token, user } = useContext(AppContext);
     const [items, setItems] = useState([]);
+    const mountedRef = useRef(true);
+    var actionText = '';
+    var action;
 
-    const markAsDelivered = () => {
-        console.log('mark as delivered')
-        //to do update item status
+    const markAsReceived = (itemId) => {
+        console.log('mark as received')
+        const d = new Date();
+        let date = d.toISOString();
+        setItems(items.filter(item => {
+            return item._id !== itemId;
+        }));
+        return updateItem(itemId, {'status': 'received', 'statusUpdateDates.shopperReceivedDate': date}, token);
     }
 
-    const markAsSent = () => {
-        console.log('mark as sent')
-        //to do update item status
+    const markAsSent = (itemId) => {
+        console.log('mark as sent');
+        const d = new Date();
+        let date = d.toISOString();
+        const item = items.filter(i => {
+            return i._id === itemId
+        })[0];
+
+        setItems(items.filter(item => {
+            return item._id !== itemId;
+        }));
+
+        if (typeof item.sendVia === 'string') {
+            console.log('send via exists (location assigned)');
+            return updateItem(itemId, {'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': date}, token)
+        } else {
+            console.log('send via does not exist (location not assigned or shopper has shared address');
+            return updateItem(itemId, {'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': date}, token)
+        }
+    }
+
+    if (user.type === 'shopper') {
+        actionText = 'Mark as Received';
+        action = markAsReceived;
+    }
+
+    if (user.type === 'donor') {
+        actionText = 'Mark as Sent';
+        action = markAsSent;
     }
 
     useEffect(() => {
 
-        const fetchItems = async () => {
-            const items = await getItems('approved', user.type, user.id);
+        const fetchShopperItems = async () => {
+            const items = await getShopperItems(user.id);
+            if (!mountedRef.current) return null;
+            console.log(items)
+            setItems(items);
+        };
+
+        const fetchDonorItems = async () => {
+            const items = await getDonorItems(user.id);
+            if (!mountedRef.current) return null;
+            console.log(items)
             setItems(items);
         };
     
-        fetchItems();
+        if (user.type === 'shopper') {
+            fetchShopperItems();
+        } else if (user.type === 'donor') {
+            fetchDonorItems();
+        }
+
         return () => {
           // cleanup
+          mountedRef.current = false;
         };
 
     }, [token, user]);
@@ -41,13 +90,28 @@ export const OrdersList = () => {
                 </StyledTabList>
         
                 <StyledTabPanel>
-                    {items.map((item) => (
-                    <div key={item._id}>
-                        <ItemCardLong item={item} />
-                        {user.type === 'shopper' && <Button small onClick={markAsDelivered}>Mark as delivered</Button>}
-                            {user.type === 'donor' && <Button small onClick={markAsSent}>Mark as sent</Button>}
-                    </div>
-                    ))}
+                    {items.map((item) => {
+                    if ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor')) {
+                        return (
+                            <div key={item._id}>
+                                <ItemCardLong 
+                                    item={item} 
+                                    type={user.type} 
+                                />
+                            </div>)
+                    } else {
+                        return (
+                            <div key={item._id}>
+                                <ItemCardLong 
+                                    item={item} 
+                                    type={user.type} 
+                                    actionText={actionText}
+                                    action={action}
+                                />
+                            </div>)
+                    }
+                    }
+                    )}
                 </StyledTabPanel>
           </StyledTabs>
         </ListWrapper>

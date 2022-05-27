@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './Notifications.styles';
 import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLocationModal } from '../../../molecules';
@@ -9,6 +9,7 @@ import { Modal } from 'antd';
 
 export const Notifications = () => {
   const { token, user } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [shopNotificationsPendingAssign, setShopNotificationsPendingAssign] = useState([]);
@@ -52,8 +53,11 @@ export const Notifications = () => {
     }
 
     const markReceived = (e) => {
+      const d = new Date();
+      let date = d.toISOString();
       const itemId = e.target.getAttribute('data-item-id');
-      const updateData = { "status": "received-by-gyb"};
+      const updateData = { "status": "received-by-gyb", 'statusUpdateDates.gybReceivedDate': date};
+
       confirm({
         title: `Are you sure you want to do this?`,
         onOk() {
@@ -74,8 +78,11 @@ export const Notifications = () => {
     }
 
     const markSent = (e) => {
+      const d = new Date();
+      let date = d.toISOString();
       const itemId = e.target.getAttribute('data-item-id');
-      const updateData = { "status": "shipped-to-shopper"};
+      const updateData = { "status": "shipped-to-shopper", 'statusUpdateDates.shopperShippedDate': date};
+
       confirm({
         title: `Are you sure you want to do this?`,
         onOk() {
@@ -96,15 +103,18 @@ export const Notifications = () => {
     }
 
     const fetchShopItems = async () => {
-      const items = await getShopNotificationsItems(user.id, token);
+      const items = await getShopNotificationsItems(token);
       const locations = await getAdminLocations('available', token);
+
+      if (!mountedRef.current) return null;
+
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
         "key": 1,
         "name": "Item coming to you!", //approved items where the shopper has marked as send via gyb and item sendVia is empty
         "message": "Please view and assign an address for you donor",
-        "itemsCount": (items[0].length || 0),
-        "items": items[0],
+        "itemsCount": (items[0])? items[0].length: 0,
+        "items": (items[0])? items[0]: [],
         "action": assignAddress,
         "actionDesc": "Assign"
       });
@@ -112,20 +122,22 @@ export const Notifications = () => {
           "key": 2,
           "name": "Item  shopped!", //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
           "message": "Address assigned, view for progress update",
-          "itemsCount": (items[1].length || 0),
-          "items": items[1]
+          "itemsCount": (items[1])? items[1].length: 0,
+          "items": (items[1])? items[1]: []
       });
     };
 
     const fetchAccountItems = async () => {
       const items = await getAccountNotificationsItems(user.id, token);
-      console.log(items);
+
+      if (!mountedRef.current) return null;
+
       setAccountNotificationsPendingReceive({
           "key": 1,
           "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
           "message": "Waiting for received notification",
           "itemsCount": (items[0].length || 0),
-          "items": items[0],
+          "items": items[0] || [],
           "action": markReceived,
           "actionDesc": "Mark received"
       });
@@ -134,7 +146,7 @@ export const Notifications = () => {
         "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status received by gyb (i.e not sent to shopper yet)
         "message": "Received, waiting for sent notification",
         "itemsCount": (items[1].length || 0),
-        "items": items[1],
+        "items": items[1] || [],
         "action": markSent,
         "actionDesc": "Mark sent"
       });
@@ -145,14 +157,19 @@ export const Notifications = () => {
 
     return () => {
       // cleanup
+      mountedRef.current = false;
     };
+
   }, [token, user]);
 
   const editForm = (record) => {
     return (
       <div>
       {record.items.map((item) => (
-        <div key={item._id}><ItemCardLong item={item} /><Button small data-item-id={item._id} onClick={record.action}>{record.actionDesc}</Button></div>
+        <div key={item._id}>
+          <ItemCardLong item={item} type={user.type} />
+          {(record.action)? <Button primary small data-item-id={item._id} onClick={record.action}>{record.actionDesc}</Button>: ''}
+          </div>
       ))}
       </div>
     )      

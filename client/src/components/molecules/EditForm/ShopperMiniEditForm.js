@@ -30,8 +30,8 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <StyledInputNumber name="shoppingFor" disabled={editingKey !== recordId} /></StyledLabel> 
         <StyledError name="shoppingFor" component="div" />
         {editingKey === recordId && !approvalAction &&<StyledSubmitButton>Save</StyledSubmitButton>} 
-        {approvalAction && <Button small data-action='approve' onClick={approvalAction}>Approve</Button>}  
-        {approvalAction && <Button small data-action='reject' onClick={approvalAction}>Reject</Button>}
+        {approvalAction && <Button primary small data-action='approve' onClick={approvalAction}>Approve</Button>}  
+        {approvalAction && <Button primary small data-action='reject' onClick={approvalAction}>Reject</Button>}
     </Form>
   );
 };

@@ -51,7 +51,7 @@ export const AdminCreateForm = (data) => {
                         })}
                     </StyledSelect>
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('team')}}>Cancel</Button>
+                    <Button primary small type="reset" onClick={() => {reopenTab('team')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

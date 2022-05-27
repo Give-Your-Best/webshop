@@ -9,3 +9,5 @@ export { Notification } from './Notification';
 export { StyledSelect } from './Select';
 export { UserSelect } from './UserSelect';
 export { StyledCheckbox } from './Checkbox';
+export { ColourCircles } from './ColourCircles';
+export { CategoryBreadcrumbs } from './CategoryBreadcrumbs';

@@ -7,17 +7,11 @@ const { Meta } = AntCard;
 
 export const ItemCard = ({ item }) => {
   let history = useHistory();
-  const frontPhoto =
-    item.photos.length > 0 &&
-    item.photos.find((photo) => (photo.front ? photo : null));
-
   return (
     <Card
       hoverable
       cover={
-        frontPhoto ? (
-          <img alt={`front of ${item.name}`} src={frontPhoto.src} />
-        ) : null
+        <img alt={`front of ${item.name}`} src={item.photos[0].url} />
       }
       onClick={() => history.push(`/item/${item._id}`)}
     >

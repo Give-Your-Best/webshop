@@ -7,7 +7,7 @@ export const HeaderWrapper = styled.div`
   width: 100%;
   min-height: 125px;
   background:  ${({ theme }) => theme.colorMappings.secondary};
-  padding: 1em 4em;
+  padding: .5em 4em .5em 2em;
   @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 0.5em;
     min-height: 75px;
@@ -16,13 +16,12 @@ export const HeaderWrapper = styled.div`
 
 export const LogoWrapper = styled(Link)`
   display: inline-block;
-  margin-right: 1rem;
 
   > img {
-    width: auto;
+    width: 8rem;
     height: auto;
-    max-width: 6rem;
-    max-height: 6rem;
+    max-width: 8rem;
+    max-height: 8rem;
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {

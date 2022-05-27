@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { Form, SubmitButton } from 'formik-antd';
+import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
 import { login } from '../../services/user';
-import { StyledInput, StyledError } from '../../components/molecules/EditForm/EditForm.styles';
+import { StyledInput, StyledError, StyledSubmitButton } from '../../components/molecules/EditForm/EditForm.styles';
+import { Container } from '../../components';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
@@ -29,7 +30,7 @@ export const Login = () => {
   };
 
   return (
-    <div data-id="LoginRoute">
+    <Container data-id="LoginRoute">
       <h2>Login</h2>
       <Formik
         initialValues={{ email: '', password: '' }}
@@ -41,10 +42,10 @@ export const Login = () => {
             <StyledError name="email" component="div" />
             <StyledInput.Password name="password" placeholder='Enter password' />
             <StyledError name="password" component="div" />
-            <SubmitButton>Login</SubmitButton>
+            <StyledSubmitButton>Login</StyledSubmitButton>
           </Form>
       </Formik>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-    </div>
+    </Container>
   );
 };

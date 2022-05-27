@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
@@ -14,6 +14,7 @@ import { adminSchema } from "../../../../utils/validation";
 
 export const Settings = () => {
   const { token, user } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [currentUser, setCurrentUser] = useState({});
   const [roles, setRoles] = useState([]);
   const [settings, setSettings] = useState([]);
@@ -52,16 +53,19 @@ export const Settings = () => {
 
     const fetchRoles = async () => {
       const roles = await getRoles(token);
+      if (!mountedRef.current) return null;
       setRoles(roles);
     };
 
     const fetchSettings = async () => {
       const settings = await getSettings(token);
+      if (!mountedRef.current) return null;
       setSettings(settings);
     }
 
     const fetchAdminUsers = async () => {
       const users = await getUsers('admin', 'approved', token);
+      if (!mountedRef.current) return null;
       setAdminUsers(users);
       setCurrentUser(users.find(adminUser => {return adminUser._id === user.id}));
     };
@@ -69,6 +73,10 @@ export const Settings = () => {
     fetchRoles();
     fetchAdminUsers();
     fetchSettings();
+    return () => {
+      // cleanup
+      mountedRef.current = false;
+    };
 
   }, [token, user]);
 
@@ -117,7 +125,7 @@ export const Settings = () => {
           <AdminMiniEditForm recordId={record._id} editingKey={editingKey} roles={roles} />
         </Formik> 
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button small type="reset" onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button primary small type="reset" onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )      
   };
@@ -151,7 +159,7 @@ export const Settings = () => {
       </StyledTabPanel>
       <StyledTabPanel>
         <UsersList data={adminUsers} handleDelete={handleDelete} expandRow={editForm} />
-        <Button small onClick={() => {openHiddenTab('team')}}>Create</Button>
+        <Button primary small onClick={() => {openHiddenTab('team')}}>Create</Button>
       </StyledTabPanel>
       <StyledTabPanel>
         <AdminCreateForm submitFunction={submitFunction} roles={roles} />

@@ -10,7 +10,7 @@ import { ConfigProvider } from 'antd';
 
 ConfigProvider.config({
   theme: {
-    primaryColor: theme.colorMappings.primary,
+    primaryColor: theme.colorMappings.primary
   },
 });
 

@@ -64,9 +64,9 @@ export const ShippingLocationsList = (data) => {
           }}
         dataSource={data.data}
       />
-      <Button small onClick={data.addNew}>Add New</Button>
-      <Button small onClick={() => {data.editLocation(selectedRowKeys, 'available')}} disabled={!hasSelected}>Mark as Available</Button>
-      <Button small onClick={() => {data.editLocation(selectedRowKeys, 'un-available')}} disabled={!hasSelected}>Mark as Unavailable</Button>
+      <Button primary small onClick={data.addNew}>Add New</Button>
+      <Button primary small onClick={() => {data.editLocation(selectedRowKeys, 'available')}} disabled={!hasSelected}>Mark as Available</Button>
+      <Button primary small onClick={() => {data.editLocation(selectedRowKeys, 'un-available')}} disabled={!hasSelected}>Mark as Unavailable</Button>
     </ListWrapper>
   );
 };

@@ -17,8 +17,8 @@ export const Logout = () => {
   };
   return (
     <div>
-      <h2>Thanks for stopping by</h2>
-      <Button onClick={handleLogoutClick}>Logout</Button>
+      <h2>Thanks for stopping by!</h2>
+      <Button small primary onClick={handleLogoutClick}>Logout</Button>
     </div>
   );
 };

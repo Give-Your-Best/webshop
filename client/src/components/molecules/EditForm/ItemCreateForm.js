@@ -4,11 +4,12 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab } from '../../../utils/helpers';
-import { clothingSizeOptions, shoeSizeOptions, categories, colours } from '../../../utils/constants';
+import { clothingSizeOptions, shoeSizeOptions, colours } from '../../../utils/constants';
 import { createItem } from '../../../services/items';
-import { Button, Notification, StyledSelect } from '../../atoms';
+import { Button, Notification } from '../../atoms';
 import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError, StyledLabel } from './EditForm.styles';
 import { Images } from '../Images';
+import { CategoryFields } from './CategoryFields';
 
 export const ItemCreateForm = (data) => {
     const { token, user } = useContext(AppContext);
@@ -45,41 +46,18 @@ export const ItemCreateForm = (data) => {
                     <StyledInput name="description" /></StyledLabel>
                     <StyledError name="description" component="div" />
 
-                    <StyledLabel>Item Category</StyledLabel>
-                    <StyledSelect name="category" >
-                    {categories.map((d)=>{
-                        return (<StyledSelect.Option key={d.id} value={d.id}>{d.name}</StyledSelect.Option>);
-                        })}
-                    </StyledSelect>
-                    <StyledError name="category" component="div" />
-
-                    <StyledLabel>Sub Category</StyledLabel>
-                    <StyledSelect name="subCategory" >
-                    {categories.map((d)=>{
-                        return (<StyledSelect.Option key={d.id} value={d.id}>{d.name}</StyledSelect.Option>);
-                        })}
-                    </StyledSelect>
-                    <StyledError name="subCategory" component="div" />
+                    <CategoryFields />
 
                     <StyledLabel>Brand
                     <StyledInput name="brand" /></StyledLabel>
                     <StyledError name="brand" component="div" />
 
-                    <StyledLabel>Clothing size</StyledLabel>
-                    <StyledSelect name="clothingSize" >
-                    {clothingSizeOptions.map((d)=>{
-                        return (<StyledSelect.Option key={d} value={d}>{d}</StyledSelect.Option>);
-                        })}
-                    </StyledSelect>
+                    <StyledLabel>Clothing size
+                    <StyledCheckbox.Group name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
                     <StyledError name="clothingSize" component="div" />
 
-
-                    <StyledLabel>Shoe size</StyledLabel>
-                    <StyledSelect name="shoeSize">
-                    {shoeSizeOptions.map((d)=>{
-                        return (<StyledSelect.Option key={d} value={d}>{d}</StyledSelect.Option>);
-                        })}
-                    </StyledSelect>
+                    <StyledLabel>Shoe size
+                    <StyledCheckbox.Group name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
                     <StyledError name="shoeSize" component="div" />
 
                     <StyledLabel>Colours
@@ -91,8 +69,8 @@ export const ItemCreateForm = (data) => {
                     <StyledInput hidden name="photos" ></StyledInput>
                     <StyledError name="photos" component="div" />
 
-                    <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button small type="reset" onClick={() => {reopenTab('items')}}>Cancel</Button>
+                    <StyledSubmitButton>Upload Item</StyledSubmitButton>
+                    <Button small primary type="reset" onClick={() => {reopenTab('items')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

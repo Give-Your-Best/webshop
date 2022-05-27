@@ -28,14 +28,13 @@ const itemSchema = new Schema(
     clothingSize: [String],
     shoeSize: [String],
     photos: [{
-      front: Boolean,
-      src: String
+      url: String
     }],
     moreInfo: String,
     colors: [String],
     status: {
       type: String,
-      enum: ["in-shop", "shopped", "shipped-to-gyb", "received-by-gyb", "shipped-to-shopper", "received-by-shopper"],
+      enum: ["in-shop", "shopped", "shipped-to-gyb", "received-by-gyb", "shipped-to-shopper", "received"],
       // in-shop then shopped when a shopper selects it. shipped-to-gyb and received-by-gyb only used if shopper is sending via gyb
       default : 'in-shop'
     },

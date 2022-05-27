@@ -3,7 +3,11 @@ const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const Role = require('../models/Role');
 const User_ = require('../models/User');
+const Item = require('../models/Item');
 const UserService = require('../services/users');
+
+const today = new Date();
+var sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
@@ -32,6 +36,21 @@ const login = async (req, res) => {
       email: req.body.email,
       approvedStatus: 'approved'
     }).populate('assignedRole');
+
+    if ( user && user.kind === 'shopper') {
+      const recentItems = await Item.find({
+        'shopperId': user._id,
+        'statusUpdateDates.shoppedDate': {
+          $gte: new Date(sevenDaysAgo),
+          $lte: new Date(today)
+        }
+      });
+      if (recentItems) {
+        console.log('recent')
+        console.log(recentItems)
+        user.recentItems = recentItems;
+      }
+    }
 
     if (!user) {
       console.log('no user found')
@@ -64,7 +83,9 @@ const login = async (req, res) => {
         type: user.kind || 'no-access', 
         id: user._id, 
         firstName: user.firstName, 
-        lastName: user.lastName 
+        lastName: user.lastName,
+        recentItems: user.recentItems || [],
+        deliveryAddress: user.deliveryAddress || {}
       },
       token,
     });

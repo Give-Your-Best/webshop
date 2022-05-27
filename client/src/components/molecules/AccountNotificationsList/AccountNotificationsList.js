@@ -27,7 +27,7 @@ export const AccountNotificationsList = (data) => {
         pagination={{hideOnSinglePage: true}}
         showHeader={false}
         columns={columns}
-        rowKey={(record) => record._id}
+        rowKey={(record) => record.key}
         expandable={{
           expandedRowRender: data.expandRow,
           expandIconColumnIndex: 4,

@@ -6,7 +6,6 @@ const createItem = async (data) => {
     var new_photos = [];
     const promises = data.photos.map((photo) => {
       if (photo.status !== 'removed') {
-        console.log(photo.uid)
         return cloudinary.uploader.upload(
            photo.thumbUrl,
            {
@@ -37,17 +36,11 @@ const createItem = async (data) => {
 const updateItem = async (id, updateData) => {
     var results = {}
     var new_photos = [];
-    console.log(updateData)
     if (updateData.photos) {
-        console.log('here')
         const promises = updateData.photos.map(async (photo) => {
-        console.log(photo.status)
         if (photo.status == 'removed' && photo.publicId) {
-          console.log('desroying')
           return cloudinary.uploader.destroy(photo.publicId);
         } else if (!photo.url && photo.thumbUrl) {
-          console.log('uploading')
-          console.log(photo.uid)
           return cloudinary.uploader.upload(
             photo.thumbUrl,
             {
@@ -80,7 +73,6 @@ const updateItem = async (id, updateData) => {
           return { success: false, message: err }
       }
     } else {
-      console.log('sdg')
       delete updateData.photos;
       try {
         const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
@@ -113,45 +105,126 @@ const deleteItem = async (id) => {
     }
 };
 
-const getAllItems = async (approvedStatus, type, userId) => {
+const getDonorItems = async (userId, itemStatus) => {
+  console.log('get donor items')
+  var conditions = {}
   try {
-    if (type == 'donor') {
-      //logic to only return items that have not been sent
-      var items = await Item.find({ $or:[ {"approvedStatus": 'approved', donorId: userId}, {"approvedStatus": 'in-progress', donorId: userId} ]}).lean();
-    } else if (type == "shopper") {
-      //logic to only return ites that have not been received
-      var items = await Item.find({"approvedStatus": approvedStatus, shopperId: userId}).lean();
+    if (itemStatus !== '') {
+      conditions = { 
+        "$or": [{"approvedStatus": "approved"}, {"approvedStatus": "rejected"}],
+        donorId: userId, 
+        status: itemStatus
+      }
     } else {
-      var items = await Item.find({"approvedStatus": "approved"}).lean();
+      conditions = { 
+        approvedStatus: "approved",
+        donorId: userId, 
+        "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
+      }
     }
+    var items = await Item.find(conditions).lean();
     return items;
   } catch (error) {
-    console.error(`Error in getAllitems: ${error}`);
-    return { success: false, message: `Error in getAllitems: ${error}` }
+    console.error(`Error in getting donor items: ${error}`);
+    return { success: false, message: `Error in getting donor items: ${error}` }
+  }
+}
+
+const getShopperItems = async (userId) => {
+  console.log('get shopper items')
+  console.log(userId)
+  try {
+    const conditions = { 
+      approvedStatus: 'approved', 
+      shopperId: userId, 
+      "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
+    };
+    var items = await Item.find(conditions).lean();
+    return items;
+  } catch (error) {
+    console.error(`Error in getting shopper items: ${error}`);
+    return { success: false, message: `Error in getting shopper items: ${error}` }
+  }
+}
+
+const getAdminItems = async (isCurrent) => {
+  //here type is current or past
+  console.log('get admin items items')
+  console.log(isCurrent)
+  var conditions = {};
+
+  try {
+    if (isCurrent) {
+      conditions = { 
+        approvedStatus: "approved",
+        "$or": [{"status": "in-shop"}, {"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
+      }
+    } else {
+      conditions = { 
+        status: 'received'
+      }
+    }
+    var items = await Item.find(conditions).lean();
+    return items;
+  } catch (error) {
+    console.error(`Error in getting admin items: ${error}`);
+    return { success: false, message: `Error in getting admin items: ${error}` }
+  }
+}
+
+const getAllItems = async (approvedStatus, itemStatus, category, subCategory, donorId) => {
+  console.log('getting alll items')
+  try {
+    const conditions = { approvedStatus: approvedStatus, status: itemStatus };
+    if(category) conditions.category = category;
+    if(subCategory) conditions.subCategory = subCategory;
+    if(donorId) conditions.donorId = donorId;
+    console.log(conditions);
+    var items = await Item.find(conditions).lean();
+    return items;
+  } catch (error) {
+    console.error(`Error in getting all items: ${error}`);
+    return { success: false, message: `Error in getting all items: ${error}` }
   }
 };
 
 
 const getAccountNotificationItems = async (adminUserId) => {
+  var results = [];
+
   const pendingReceiveQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
-      {"sendVia": adminUserId},
+      {"sendVia": {$exists: true}},
       {"$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}]}
     ]
   };
   const pendingSentQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
-      {"sendVia": adminUserId},
+      {"sendVia": {$exists: true}},
       {"status": "received-by-gyb"}
     ]
   }
 
   try {
-    const pendingReceive = await Item.find(pendingReceiveQuery).lean();
-    const pendingSent = await Item.find(pendingSentQuery).lean();
-    return [pendingReceive, pendingSent];
+    const pendingReceive = await Item.find(pendingReceiveQuery).populate({
+      "path": "sendVia",
+      "match": { "adminUser": adminUserId }
+    });
+    const pendingSent = await Item.find(pendingSentQuery).populate({
+      "path": "sendVia",
+      "match": { "adminUser": adminUserId }
+    });
+
+    results.push(pendingReceive.filter((i) => {
+      return i.sendVia !== null
+    }))
+    results.push(pendingSent.filter((i) => {
+      return i.sendVia !== null
+    }))
+
+    return results;
   } catch (error) {
     console.error(`Error in find items: ${error}`);
     return { success: false, message: `Error in find items: ${error}` }
@@ -159,30 +232,43 @@ const getAccountNotificationItems = async (adminUserId) => {
 }
 
 const getShopNotificationItems = async () => {
+  var results = [];
+
   const pendingAssignQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
-      {"sendVia": {$exists: false}},
+      {"status": "shopped"},
+      {"sendVia": {$exists: false}}
     ]
   }
   const shoppedQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
-      {"kind": 'admin'},
+      {"status": "shopped"},
+      {"sendVia": {$exists: true}}
     ]
   }
 
   try {
+    var results = [];
     const pendingAssign = await Item.find(pendingAssignQuery).populate({
       "path": "shopperId",
-      "match": { "deliverPreference": "via gyb" }
-    }).lean();
+      "match": { "deliveryPreference": "via-gyb" }
+    });
     const shopped = await Item.find(shoppedQuery).populate({
-      "path": "donorId",
-      "match": { "kind": "admin" }
-    }).lean();
+      "path": "shopperId",
+      "match": { "deliveryPreference": "via-gyb" }
+    });
 
-    return [pendingAssign, shopped];
+    results.push(pendingAssign.filter((i) => {
+      return i.shopperId !== null
+    }))
+    results.push(shopped.filter((i) => {
+      return i.shopperId !== null
+    }))
+    
+    return results
+
   } catch (error) {
     console.error(`Error in get shop notifications: ${error}`);
     return { success: false, message: `Error in get shop notifications: ${error}` }
@@ -208,6 +294,9 @@ module.exports = {
     createItem,
     getItem,
     getAllItems,
+    getShopperItems,
+    getDonorItems,
+    getAdminItems,
     getAccountNotificationItems,
     getShopNotificationItems,
     deleteItem,
