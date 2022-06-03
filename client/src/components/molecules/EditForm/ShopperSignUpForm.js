@@ -25,7 +25,7 @@ export const ShopperSignUpForm = () => {
         <div>
             <h3>Shopper Sign Up</h3>
             <Formik
-                initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'shopper', shareAddress: true }}
+                initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'shopper', shareAddress: true, deliveryPreference: 'direct' }}
                 validationSchema= {shopperCreateSchema}
                 onSubmit={handleSubmit}
                 >
