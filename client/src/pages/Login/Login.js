@@ -6,8 +6,11 @@ import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
 import { login } from '../../services/user';
-import { StyledInput, StyledError, StyledSubmitButton } from '../../components/molecules/EditForm/EditForm.styles';
+import { StyledInput, StyledError, StyledSubmitButton, StyledLabel } from '../../components/molecules/EditForm/EditForm.styles';
+import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Login.styles';
 import { Container } from '../../components';
+import { SignUpContainer } from '../../components/atoms';
+import { DonorSignUpForm, ShopperSignUpForm } from '../../components/molecules';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
@@ -31,21 +34,47 @@ export const Login = () => {
 
   return (
     <Container data-id="LoginRoute">
-      <h2>Login</h2>
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        validationSchema= {loginSchema}
-        onSubmit={handleLoginSubmit}
-        >
-          <Form>
-            <StyledInput name="email" placeholder='Enter email address'/>
-            <StyledError name="email" component="div" />
-            <StyledInput.Password name="password" placeholder='Enter password' />
-            <StyledError name="password" component="div" />
-            <StyledSubmitButton>Login</StyledSubmitButton>
-          </Form>
-      </Formik>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+      <StyledTabs forceRenderTabPanel={true} defaultIndex={1}>
+        <StyledTabList>
+          <StyledTab>Sign Up</StyledTab>
+          <StyledTab>Login</StyledTab>
+          <HiddenStyledTab className='adddonor'>Donor signup</HiddenStyledTab>
+          <HiddenStyledTab className='addshopper'>Shopper signup</HiddenStyledTab>
+        </StyledTabList>
+
+        <StyledTabPanel>
+          <SignUpContainer />
+        </StyledTabPanel>
+        <StyledTabPanel>
+          <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema= { loginSchema }
+          onSubmit={ handleLoginSubmit }
+          >
+            <Form>
+              <div>
+              <StyledLabel>Email address</StyledLabel>
+              <StyledInput name="email" placeholder='Enter email address'/>
+              <StyledError name="email" component="div" />
+
+              <StyledLabel>Password</StyledLabel>
+              <StyledInput.Password name="password" placeholder='Enter password' />
+              <StyledError name="password" component="div" />
+              </div>
+
+              <StyledSubmitButton>Login</StyledSubmitButton>
+            </Form>
+        </Formik>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        </StyledTabPanel>
+        <StyledTabPanel>
+          <DonorSignUpForm />
+        </StyledTabPanel>
+        <StyledTabPanel>
+          <ShopperSignUpForm />
+        </StyledTabPanel>
+      </StyledTabs>
+
     </Container>
   );
 };

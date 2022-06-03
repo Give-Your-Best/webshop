@@ -25,7 +25,7 @@ export const Item = () => {
   }
 
   const size = () => {
-    return (itemDetails.category === 'shoes')? itemDetails.shoeSize: itemDetails.clothingSize;
+    return (itemDetails.category === 'shoes')? (itemDetails.shoeSize)? itemDetails.shoeSize.join(', '): '' : (itemDetails.clothingSize)? itemDetails.clothingSize.join(', '): '';
   }
 
   useEffect(() => {

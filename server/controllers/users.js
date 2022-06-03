@@ -3,8 +3,19 @@ const uuidv4 = require('uuid').v4;
 const UserService = require('../services/users');
 
 const createUser = async (req, res) => {
-    console.log('create user controller')
+    console.log('create user controller');
     console.log(req.body);
+    // console.log(mg)
+    // mg.messages.create('sandboxfa5f0a6a1c8c44c69488b2e0311bb84e.mailgun.org', {
+    //   from: "Excited User <mailgun@sandboxfa5f0a6a1c8c44c69488b2e0311bb84e.mailgun.org>",
+    //   to: ["zahra.8d@gmail.com"],
+    //   subject: "Hello",
+    //   text: "Testing some Mailgun awesomness!",
+    //   html: "<h1>Testing some Mailgun awesomness!</h1>"
+    // })
+    // .then(msg => console.log(msg)) // logs response data
+    // .catch(err => console.log(err)); // logs any error
+
     if (!req.body.email) {
       return res.status(400).send({message: "Service error: new user details are required"});
     }
@@ -25,7 +36,7 @@ const createUser = async (req, res) => {
 const registerUser = async (req, res) => {
   console.log('register user controller')
   console.log(req.body);
-  if (!req.body.username) {
+  if (!req.body.email) {
     return res.status(400).send({message: "Service error: new user details are required"});
   }
   if (!req.body.type || !['shopper', 'donor'].includes(req.body.type)) {
@@ -34,13 +45,14 @@ const registerUser = async (req, res) => {
 
   try {
     const response = await UserService.createUser(req.body);
-    return response.status(200).send({
+    return res.status(200).send({
       success: true,
       message: `User registered`,
+      user: response.user || {}
     });
   } catch (err) {
     console.error(`Service error: ${err}`);
-    return response.status(500).send({message: `Service error: ${err}`});
+    return res.status(500).send({message: `Service error: ${err}`});
   }
 };
 

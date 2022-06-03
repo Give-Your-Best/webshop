@@ -15,11 +15,13 @@ const createUser = async (data) => {
           if (data.type == 'donor') {
             user = new User_.Donor(data);
           } else if (data.type == "shopper") {
+            console.log('saving')
             user = new User_.Shopper(data);
           } else if (data.type == "admin") {
             user = new User_.Admin(data);
           }
           let saveUser = await user.save();
+          console.log(saveUser)
           return { success: true, message: `User created`, user: user }
         }
     } catch (err) {

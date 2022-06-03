@@ -25,3 +25,5 @@ export { ItemsCollapsedList } from './ItemsCollapsedList';
 export { ItemMiniEditForm } from './EditForm/ItemMiniEditForm';
 export { ItemCreateForm } from './EditForm/ItemCreateForm';
 export { CategoryFields } from './EditForm/CategoryFields';
+export { DonorSignUpForm } from './EditForm/DonorSignUpForm';
+export { ShopperSignUpForm } from './EditForm/ShopperSignUpForm';

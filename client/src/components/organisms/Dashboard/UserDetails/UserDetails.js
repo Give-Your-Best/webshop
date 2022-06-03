@@ -62,7 +62,7 @@ export const UserDetails = () => {
         // validationSchema={adminSchema}
         onSubmit={updateCurrentUserWrapper}
         >
-          <UserEditForm users={users} errorMessage={errorMessage} type={user.type} />
+          <UserEditForm type={user.type} users={users} errorMessage={errorMessage} />
         </Formik> 
       </StyledTabPanel>
       <StyledTabPanel>
