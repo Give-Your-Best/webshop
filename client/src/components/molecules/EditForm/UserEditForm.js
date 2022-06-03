@@ -4,8 +4,10 @@ import { Button } from '../../atoms';
 import { openHiddenTab } from '../../../utils/helpers';
 import { AddressFields } from './AddressFields';
 import { ShopperFields } from './ShopperFields';
+import { PasswordFields } from './PasswordFields';
 
-export const UserEditForm = (data) => {
+export const UserEditForm = ({type, signUp}) => {
+
   return (
     <StyledForm>
       <div>
@@ -22,11 +24,12 @@ export const UserEditForm = (data) => {
           <StyledInput name="email" /></StyledLabel>
         <StyledError name="email" component="div" />
       </div>
+        {signUp && <PasswordFields />}
 
-        {data.type === 'shopper' && <><AddressFields /><ShopperFields /></> }
+        {type === 'shopper' && <><AddressFields /><ShopperFields /></> }
 
-        <Button primary left small type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>
-        <StyledSubmitButton>Save</StyledSubmitButton>
+        {!signUp && <Button primary left small type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>}
+        {!signUp && <StyledSubmitButton>Save</StyledSubmitButton>}
     </StyledForm>
   );
 };

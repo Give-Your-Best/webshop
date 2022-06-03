@@ -106,6 +106,11 @@ const StyledForm = styled(Form)`
   position: relative;
 `
 
+const InfoNote = styled.p`
+  font-size; 9px;
+  text-decoration: italic;
+`
+
 export { StyledInput, 
   StyledSubmitButton, 
   StyledCheckbox, 
@@ -113,5 +118,7 @@ export { StyledInput,
   StyledLabel, 
   StyledForm,
   StyledRadio,
-StyledSelect,
-StyledError };
+  StyledSelect,
+  StyledError,
+  InfoNote 
+};

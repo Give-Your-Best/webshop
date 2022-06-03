@@ -15,7 +15,7 @@ export const Basket = () => {
 
   const address = (
     <div>
-    <p>Please check your address below, it can be updated from your account profile.</p>
+    <p>Confirm address</p>
     {user.deliveryAddress.firstLine && <p>First line: {user.deliveryAddress.firstLine}</p>}
     {user.deliveryAddress.secondLine && <p>Second line: {user.deliveryAddress.secondLine}</p>}
     {user.deliveryAddress.city && <p>City: {user.deliveryAddress.city}</p>}

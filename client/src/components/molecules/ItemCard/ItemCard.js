@@ -17,7 +17,7 @@ export const ItemCard = ({ item }) => {
     >
       <Meta
         title={item.name}
-        description={`UK size: ${item.size?.UK || '-'}`}
+        description={item.description}
       />
     </Card>
   );

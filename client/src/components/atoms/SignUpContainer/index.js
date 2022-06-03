@@ -1,0 +1,1 @@
+export { SignUpContainer } from './SignUpContainer';
