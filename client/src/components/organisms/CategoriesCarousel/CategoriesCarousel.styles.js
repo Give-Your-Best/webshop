@@ -3,17 +3,21 @@ import styled from 'styled-components';
 
 export const StyledCarousel = styled(Carousel)`
   border: none;
+  margin: 4rem auto;
+  max-width: 90%;
 
   > .slick-dots {
-    bottom: -20px !important;
+    display: none !important;
   }
 
-  > .slick-dots li {
-    background: black;
-  }
+  .slick-prev,
+  .slick-next,
+  .slick-prev:hover,
+  .slick-next:hover {
+    font-size: 28px;
+    font-weight: bold;
+    font-family: 'Alfa Slab One', cursive;
+    color: ${({ theme }) => theme.colorMappings.primary};
 
-  > .slick-dots li.slick-active {
-    background: ${({ theme }) => theme.colorMappings.primary};
-    border: ${({ theme }) => theme.colorMappings.primary};
   }
 `

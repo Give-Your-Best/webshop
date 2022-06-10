@@ -13,7 +13,6 @@ export const Header = () => {
         <LogoWrapper to="/">
           <img alt="give-your-best-logo" src={logo} />
         </LogoWrapper>
-        <span style={{ verticalAlign: 'middle' }}>Give Your Best webshop</span>
       </AppHeading>
       <HeaderMenu />
     </HeaderWrapper>

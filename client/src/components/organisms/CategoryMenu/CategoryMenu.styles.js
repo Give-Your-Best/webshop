@@ -1,54 +1,65 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-export const CategoryMenuWrapper = styled.div`
+export const CategoryMenuWrapper = styled.nav`
   margin: 0;
   width: 100%;
-  padding: 0 4em;
   background: ${({ theme }) => theme.colorMappings.yellow};
-  display: flex;
+  height: 82px;
+  padding: 0 calc((100vw - 80rem)/2);
+`
 
-  @media (max-width: ${({ theme }) => theme.mobile}) {
-    height: 38px;
-    padding: 38px 0 0 0;
+export const CategoryMenuItem = styled.li`
+  background: ${({ theme }) => theme.colorMappings.yellow};
+  display: inline-block;
+  height: 82px;
+
+  :hover > ul {
+    display: inherit;
   }
 `;
 
-export const SubCategoryMenuWrapper = styled.div`
-  margin: 0;
-  display: none;
-`
-
-export const CategoryMenuItem = styled.span`
-  color: black;
-  background: ${({ theme }) => theme.colorMappings.yellow};
-  padding-right: 2em;
-  transition: .3s all ease;
+export const CategoryMenuLink = styled(Link)`
+  color:  ${({ theme }) => theme.colorMappings.primary};
+  display: block;
+  padding: 0 10px;
+  display: table-cell;
+  padding: 0 1rem;
+  height: 82px;
+  vertical-align: middle;
+  font-family: lato;
+  font-weight: bold;
+  font-size: 20px;
 
   :hover {
-    color: ${({ theme }) => theme.colorMappings.primary};
-
-    > div {
-      display: block;
-    }
-  }
-
-  @media (max-width: ${({ theme }) => theme.mobile}) {
-    padding-right: 0;
-    text-align: center;
-    display: ${({ open }) => open ? 'block' : 'none'};
-    z-index: 10;
-    position: relative;
+    background-color: #F9D238;
   }
 `;
 
 export const SubMenuItem = styled(Link)`
-  color: black;
-  background: ${({ theme }) => theme.colorMappings.yellow};
-  padding: right: 2em;
+  color: ${({ theme }) => theme.colorMappings.primary};
+  background: #F9D238;
+  padding: 5px 1em;
   display: block;
+  font-family: lato;
+  font-weight: bold;
+  font-size: 18px;
+`
 
-  :hover {
-    color: ${({ theme }) => theme.colorMappings.primary};
-  }
+export const MainMenuNav = styled.ul`
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  margin: 0 0 0 22px;
+`
+
+export const SubMenuNav = styled.ul`
+  display: none;
+  position: absolute;
+  top: 82px;
+  list-style: none;
+  padding: 0;
+  border: 1px solid #F9D238;
+  z-index: 99;
 `

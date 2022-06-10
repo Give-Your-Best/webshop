@@ -1,21 +1,26 @@
 import styled, { css } from 'styled-components';
 
 export const Button = styled.button`
-  ${({ theme, primary, round, small, large, center, left }) => css`
-    font-size: 1rem;
+  ${({ theme, primary, round, small, large, center, left, right }) => css`
+    font-size: 22px;
     cursor: pointer;
-    background: transparent;
     border-radius: 0.1rem;
-    border: 0.13rem solid ${theme.colorMappings.primary};
+    border: 2px solid ${theme.colorMappings.primary};
     color: ${theme.colorMappings.primary};
     margin: 1em 5px 1em 0;
     padding: 0.3rem 1rem;
     float: right;
+    min-height: 44px;
 
     ${left &&
     css`
       float: left;
     `};
+
+    ${right &&
+      css`
+        float: right !important;
+      `};
 
     ${primary &&
     css`
@@ -30,14 +35,13 @@ export const Button = styled.button`
 
     ${small &&
     css`
-      font-size: 0.8rem;
-      border-width: 0.1rem;
+      font-size: 18px !important;
       float: left;
     `};
 
     ${center &&
     css`
-      width: 200px;
+      width: 221px;
       margin: auto;
       float: none;
     `};

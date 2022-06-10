@@ -13,3 +13,7 @@ export const reopenTab = (type) => {
 export const checkPermission = (permissions, permission) => {
     return permissions.map(p => p.toLowerCase()).includes(permission.toLowerCase());
 }
+
+export const trunc = (str) => {
+    return (str.length > 61)? str.substring(0, 61) + '...': str;
+}

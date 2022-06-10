@@ -3,14 +3,19 @@ import { Card as AntCard } from 'antd';
 
 export const Card = styled(AntCard)`
   max-width: 80%;
-  min-width: 70%;
-  margin: 1rem auto;
+  min-width: 80%;
+  margin: 0.5rem auto;
   border: none;
-  padding: 1rem;
+  cursor: pointer;
 
   .ant-card-meta-title {
-    font-size: 1rem;
+    font-size: 20px;
     text-align: center;
+    color: ${({ theme }) => theme.colorMappings.blush};
+  }
+
+  .ant-card-body {
+    padding: 10px;
   }
 
   @media (max-width: 768px) {

@@ -7,7 +7,7 @@ import { reopenTab } from '../../../utils/helpers';
 import { clothingSizeOptions, shoeSizeOptions, colours } from '../../../utils/constants';
 import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
-import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError, StyledLabel } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledError, StyledLabel, StyledCheckboxGroup } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 
@@ -53,15 +53,15 @@ export const ItemCreateForm = (data) => {
                     <StyledError name="brand" component="div" />
 
                     <StyledLabel>Clothing size
-                    <StyledCheckbox.Group name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
+                    <StyledCheckboxGroup name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
                     <StyledError name="clothingSize" component="div" />
 
                     <StyledLabel>Shoe size
-                    <StyledCheckbox.Group name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
+                    <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
                     <StyledError name="shoeSize" component="div" />
 
                     <StyledLabel>Colours
-                    <StyledCheckbox.Group name="colors" options={colours}/></StyledLabel>
+                    <StyledCheckboxGroup name="colors" options={colours}/></StyledLabel>
                     <StyledError name="colors" component="div" />
 
                     <StyledLabel>Please upload a front and back image</StyledLabel>

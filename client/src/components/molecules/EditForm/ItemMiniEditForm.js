@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form } from 'formik-antd';
-import { StyledSubmitButton, StyledInput, StyledLabel, StyledCheckbox, StyledError } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledLabel, StyledError, StyledCheckboxGroup } from './EditForm.styles';
 import { clothingSizeOptions, shoeSizeOptions, colours } from '../../../utils/constants';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
@@ -25,15 +25,15 @@ export const ItemMiniEditForm = ({ editingKey, recordId, photos, handleImageUpda
         <StyledError name="brand" component="div" />
 
         <StyledLabel>Clothing sizes
-        <StyledCheckbox.Group disabled={editingKey !== recordId} name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
+        <StyledCheckboxGroup disabled={editingKey !== recordId} name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
         <StyledError name="clothingSize" component="div" />
 
         <StyledLabel>Shoe sizes
-        <StyledCheckbox.Group disabled={editingKey !== recordId} name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
+        <StyledCheckboxGroup disabled={editingKey !== recordId} name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
         <StyledError name="shoeSize" component="div" />
 
         <StyledLabel>Colours
-        <StyledCheckbox.Group name="colors" disabled={editingKey !== recordId} options={colours}/></StyledLabel>
+        <StyledCheckboxGroup name="colors" disabled={editingKey !== recordId} options={colours}/></StyledLabel>
         <StyledError name="colors" component="div" />
         <Images uploadedImages={uploadedImages} setUploadedImages={setUploadedImages} editingKey={editingKey} recordId={recordId} handleChange={handleImageUpdate} />
         <StyledInput name="photos" hidden></StyledInput>

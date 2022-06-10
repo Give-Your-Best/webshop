@@ -3,10 +3,11 @@ import { Box } from '../../components';
 
 export const ItemsWrapper = styled(Box)`
   margin: 1rem auto;
-  max-width: 60rem;
+  max-width: 80rem;
+  display: flex;
+  justify-content: center;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    justify-content: space-between;
     margin-left: -0.4rem;
     margin-right: -0.4rem;
   }
@@ -15,7 +16,7 @@ export const ItemsWrapper = styled(Box)`
 export const ButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  margin: 1em auto;
+  margin: 1em auto 4em auto;
 `;
 
 export const FiltersWrapper = styled(Box)`
@@ -29,10 +30,10 @@ export const FiltersWrapper = styled(Box)`
 `;
 
 export const CategoriesWrapper = styled(Box)`
-  margin: 3rem auto;
-  max-width: 60rem;
+  margin: 1rem auto;
+  max-width: 80rem;
 
-  > h2 {
+  > h1 {
     text-align: center;
   }
 `
@@ -50,13 +51,14 @@ export const CoverWrapper = styled.div`
     margin-bottom: 2px;
   }
 
-  > h3 {
+  > p {
     text-align: center;
     margin-bottom: 1px;
-    font-weight: normal;
+    font-size: 24px;
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 `;
 
-export const H2 = styled.h2`
+export const H1 = styled.h1`
  text-align:center;
 `
