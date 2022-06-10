@@ -12,6 +12,7 @@ const StyledError = styled(ErrorMessage)`
 
 const StyledSelect = styled(Select)`
     width: 100%;
+    color: ${({ theme }) => theme.colorMappings.primary};
   &:disabled {
     background-color: transparent;
     color: black;
@@ -47,6 +48,7 @@ const StyledSubmitButton = styled(SubmitButton)`
 `
 const StyledInput = styled(Input)`
   width: min-content;
+  color: ${({ theme }) => theme.colorMappings.primary};
   margin: 0.2em 1em 0.5em 0;
   padding: 2px 5px;
   display: block;
@@ -57,6 +59,7 @@ const StyledInput = styled(Input)`
 `
 const StyledInputNumber = styled(InputNumber)`
   width: 70px;
+  color: ${({ theme }) => theme.colorMappings.primary};
   margin: 0;
   padding: 0;
   display: block;
@@ -73,41 +76,53 @@ const StyledInputNumber = styled(InputNumber)`
 const StyledCheckbox = styled(Checkbox)`
   margin: 0;
   padding: 0;
-  color: black !important;
+  color: ${({ theme }) => theme.colorMappings.primary};
+
   & .ant-checkbox-checked .ant-checkbox-inner {
     background-color: transparent !important;
-    border: 1x solid grey !important;
+    border: 1x solid ${({ theme }) => theme.colorMappings.primary}; !important;
     margin: 0;
     padding: 0;
-    color: black !important;
+    color: ${({ theme }) => theme.colorMappings.primary};
+  }
+`
+
+const StyledCheckboxGroup = styled(Checkbox.Group)`
+  color: ${({ theme }) => theme.colorMappings.primary};
+
+  .ant-checkbox-wrapper {
+    color: ${({ theme }) => theme.colorMappings.primary};
+    margin: 3px;
   }
 `
 
 const StyledRadio = styled(Radio)`
   margin: 0;
   padding: 0;
-  color: black !important;
   color: ${({ theme }) => theme.colorMappings.primary};
   & .ant-checkbox-checked .ant-checkbox-inner {
     background-color: transparent !important;
-    border: 1x solid grey !important;
+    border: 1x solid grey ${({ theme }) => theme.colorMappings.primary};;
     margin: 0;
     padding: 0;
-    color: black !important;
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 `
 
 const StyledLabel = styled.label`
   display: inline-block;
-  margin: 1px 0px;
+  margin: 1px 0;
+  color: ${({ theme }) => theme.colorMappings.primary};
 `
 
 const StyledForm = styled(Form)`
   position: relative;
+  color: ${({ theme }) => theme.colorMappings.primary};
 `
 
 const InfoNote = styled.p`
   font-size; 9px;
+  color: ${({ theme }) => theme.colorMappings.primary};
   text-decoration: italic;
 `
 
@@ -120,5 +135,6 @@ export { StyledInput,
   StyledRadio,
   StyledSelect,
   StyledError,
-  InfoNote 
+  InfoNote,
+  StyledCheckboxGroup
 };

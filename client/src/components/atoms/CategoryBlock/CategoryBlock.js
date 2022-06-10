@@ -10,7 +10,6 @@ export const CategoryBlock = ({ category }) => {
 
   return (
     <Card
-      hoverable
       cover={
         category.image ? (
           <img alt={`category ${category.name}`} src={category.image} />

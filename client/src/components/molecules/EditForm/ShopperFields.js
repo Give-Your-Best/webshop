@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyledLabel, StyledRadio, StyledCheckbox, StyledError, StyledSelect, StyledInput, InfoNote, StyledInputNumber } from './EditForm.styles';
+import { StyledLabel, StyledRadio, StyledError, StyledSelect, StyledInput, InfoNote, StyledInputNumber, StyledCheckboxGroup } from './EditForm.styles';
 import { clothingSizeOptions, shoeSizeOptions, currentStatus } from '../../../utils/constants';
 
 export const ShopperFields = () => {
@@ -32,10 +32,10 @@ export const ShopperFields = () => {
       <StyledError name="shoppingFor" component="div" />
 
       <StyledLabel>Clothing sizes
-      <StyledCheckbox.Group name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
+      <StyledCheckboxGroup name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
       <StyledError name="clothingSize" component="div" />
       <StyledLabel>Shoe sizes
-      <StyledCheckbox.Group name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
+      <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
       <StyledError name="shoeSize" component="div" />
     </div>
   );

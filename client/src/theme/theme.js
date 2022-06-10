@@ -6,6 +6,9 @@ const colors = {
     100: '#db709312',
     500: '#F9D5DE',
   },
+  blush: {
+    100: '#EF7C98',
+  },
   yellow: {
     500: '#FFDE59',
   },
@@ -39,6 +42,8 @@ export const theme = {
     primary: colors.red[500],
     secondary: colors.pink[500],
     yellow: colors.yellow[500],
+    blush: colors.blush[100],
+    lightPink: colors.pink[100],
     white: colors.white[500],
     black: colors.black[500],
     blue: colors.blue[200],

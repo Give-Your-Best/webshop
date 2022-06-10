@@ -27,3 +27,4 @@ export { ItemCreateForm } from './EditForm/ItemCreateForm';
 export { CategoryFields } from './EditForm/CategoryFields';
 export { DonorSignUpForm } from './EditForm/DonorSignUpForm';
 export { ShopperSignUpForm } from './EditForm/ShopperSignUpForm';
+export { Filters } from './Filters';

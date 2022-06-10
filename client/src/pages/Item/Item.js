@@ -112,7 +112,7 @@ export const Item = () => {
         <ImageGallery changeMainImage={changeMainImage} mainImage={mainImage} otherImages={otherImages} />
         <ItemDetailsWrapper>
           <h1>{itemDetails.name}</h1>
-          <h2>{itemDetails.description || ''}</h2>
+          <p>{itemDetails.description || ''}</p>
           <p>Colour: {colours()}</p>
           <p>Brand: {itemDetails.brand || ''}</p>
           <p>Size: {size()}</p>

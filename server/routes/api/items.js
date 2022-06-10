@@ -13,12 +13,19 @@ const { getAllItems,
 
 // get items endpoint api/items
 router.get('/', async (req, res) => {
-    let approvedStatus = req.query.approvedStatus || '';
-    let itemStatus = req.query.itemStatus || '';
-    let category = req.query.category || null;
-    let subCategory = req.query.subCategory || null;
-    let donorId = req.query.donorId || null;
-    const items = await getAllItems(approvedStatus, itemStatus, category, subCategory, donorId);
+
+    let approvedStatus = req.query.approvedStatus || '',
+        itemStatus = req.query.itemStatus || '',
+        category = req.query.category || null,
+        subCategory = req.query.subCategory || null,
+        donorId = req.query.donorId || null,
+        clothingSizes = req.query.clothingSizes || null,
+        shoeSizes = req.query.shoeSizes || null,
+        colours = req.query.colours || null,
+        page = req.query.page,
+        limit = req.query.limit;
+
+    const items = await getAllItems(page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours);
     res.json(items);
 });
 

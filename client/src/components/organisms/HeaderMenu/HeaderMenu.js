@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../../context/app-context';
-import { HeaderMenuWrapper, UserMenuItem } from './HeaderMenu.styles';
+import { HeaderMenuWrapper, UserMenuItem, Icon } from './HeaderMenu.styles';
 import { useHistory } from 'react-router-dom';
 
 export const HeaderMenu = () => {
@@ -22,6 +22,8 @@ export const HeaderMenu = () => {
   return (
     <HeaderMenuWrapper>
       <UserMenuItem to="/dashboard">Account</UserMenuItem>
+      <UserMenuItem to='/dashboard'><Icon src='/GYB-account.svg' alt='account icon' /></UserMenuItem>
+      <UserMenuItem to="#" onClick={basketCheck}><Icon src='/GYB-basket.svg' alt='basket icon' /></UserMenuItem>
       <UserMenuItem to="#" onClick={basketCheck}>Basket</UserMenuItem>
     </HeaderMenuWrapper>
   );

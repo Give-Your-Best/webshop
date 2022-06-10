@@ -139,16 +139,37 @@ export const subCategories = [
     {
         'name': 'Maternity',
         'id': 'maternity',
-        'parentCategory': 'women'
+        'parentCategory': 'women',
+        'image': 'GYB-maternity.svg',
     },
     {
-        'name': '13 - 14',
-        'id': '13/14',
+        'name': 'Aged 4 - 5',
+        'id': '4/5',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Aged 6 - 9',
+        'id': '46/9',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Aged 10 - 12',
+        'id': '10/12',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Aged 13 - 16',
+        'id': '13/16',
         'parentCategory': 'children'
     },
     {
         'name': 'Baby bundles',
         'id': 'baby',
+        'parentCategory': 'children'
+    },
+    {
+        'name': '12 - 36 month bundles',
+        'id': '12/35-month',
         'parentCategory': 'children'
     },
     {

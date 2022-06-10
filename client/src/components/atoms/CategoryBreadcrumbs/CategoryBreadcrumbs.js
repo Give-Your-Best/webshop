@@ -22,10 +22,12 @@ export const CategoryBreadcrumbs = ({ category, subCategory }) => {
   })
 
   return (
-    <StyledBreadcrumbs separator=">">
-        <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Home</StyledBreadcrumbs.Item>
-        <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}`)}>{categoryName}</StyledBreadcrumbs.Item>
-        { (subCategoryName)? <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}/${subCategory}`)}>{subCategoryName}</StyledBreadcrumbs.Item>: ''}
-    </StyledBreadcrumbs>
-  );
+      (category)?
+        <StyledBreadcrumbs separator=">">
+          <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Home</StyledBreadcrumbs.Item>
+          <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}`)}>{categoryName}</StyledBreadcrumbs.Item>
+          { (subCategoryName)? <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}/${subCategory}`)}>{subCategoryName}</StyledBreadcrumbs.Item>: ''}
+        </StyledBreadcrumbs>
+        : ''
+  )
 };

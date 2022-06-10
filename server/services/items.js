@@ -172,15 +172,28 @@ const getAdminItems = async (isCurrent) => {
   }
 }
 
-const getAllItems = async (approvedStatus, itemStatus, category, subCategory, donorId) => {
+const getAllItems = async (page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours) => {
   console.log('getting alll items')
   try {
     const conditions = { approvedStatus: approvedStatus, status: itemStatus };
+    const limiti = parseInt(limit);
+    const pagei = parseInt(page);
+    const skipIndex = (pagei - 1) * limiti;
+
     if(category) conditions.category = category;
     if(subCategory) conditions.subCategory = subCategory;
     if(donorId) conditions.donorId = donorId;
-    console.log(conditions);
-    var items = await Item.find(conditions).lean();
+    if (clothingSizes) conditions.clothingSize = { $in: clothingSizes.split(',') }
+    if (shoeSizes) conditions.shoeSize = { $in: shoeSizes.split(',') }
+    if (colours) conditions.colors = { $in: colours.split(',') }
+
+    console.log(conditions)
+    var items = await Item.find(conditions)
+      .sort({createdAt: -1})
+      .limit(limiti)
+      .skip(skipIndex)
+      .exec();
+
     return items;
   } catch (error) {
     console.error(`Error in getting all items: ${error}`);
