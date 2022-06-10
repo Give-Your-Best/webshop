@@ -21,9 +21,14 @@ export const ShopperSignUpForm = () => {
         }
     };
 
+    const pStyle = {
+        'text-align': 'center',
+        'font-weight': 'bold'
+   }
+
     return (
         <div>
-            <h3>Shopper Sign Up</h3>
+            <p style={pStyle}>Shopper Sign Up</p>
             <Formik
                 initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'shopper', shareAddress: true, deliveryPreference: 'direct' }}
                 validationSchema= {shopperCreateSchema}

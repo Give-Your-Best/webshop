@@ -5,7 +5,7 @@ import { StyledSelect } from '../../components/atoms';
 import { Formik } from 'formik';
 import { signupSchema } from '../../utils/validation';
 import { register } from '../../services/user';
-import { StyledSubmitButton, StyledInput, StyledError, StyledCheckbox } from '../../components/molecules/EditForm/EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledError, StyledCheckbox, StyledInputPassword } from '../../components/molecules/EditForm/EditForm.styles';
 
 export const Register = () => {
     let history = useHistory();
@@ -42,10 +42,10 @@ export const Register = () => {
                     </StyledSelect>
                     <StyledError name="type" component="div" />
 
-                    <StyledInput.Password name="password" placeholder="Create a password" />
+                    <StyledInputPassword name="password" placeholder="Create a password" />
                     <StyledError name="password" component="div" />
 
-                    <StyledInput.Password name="passwordConfirm" placeholder="Retype password" />
+                    <StyledInputPassword name="passwordConfirm" placeholder="Retype password" />
                     <StyledError name="passwordConfirm" component="div" />
                     <div>
                     <label>Can we email you? </label>

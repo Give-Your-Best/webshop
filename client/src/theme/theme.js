@@ -3,6 +3,7 @@ const colors = {
     500: '#BA1B1A',
   },
   pink: {
+    0: '#FFFBFC',
     100: '#db709312',
     500: '#F9D5DE',
   },
@@ -39,6 +40,7 @@ export const theme = {
     large: 20,
   },
   colorMappings: {
+    background: colors.pink[0],
     primary: colors.red[500],
     secondary: colors.pink[500],
     yellow: colors.yellow[500],
@@ -48,7 +50,7 @@ export const theme = {
     black: colors.black[500],
     blue: colors.blue[200],
 
-    borders: colors.grey[100],
+    borders: colors.red[500],
     frontPanelBackground: colors.pink[100],
   },
   mobile: '480px'

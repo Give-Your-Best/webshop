@@ -23,9 +23,14 @@ export const DonorSignUpForm = () => {
         }
     };
 
+    const pStyle = {
+        'text-align': 'center',
+        'font-weight': 'bold'
+   }
+
     return (
         <div>
-            <h3>Donor Sign Up</h3>
+            <p style={pStyle}>Donor Sign Up</p>
             <Formik
                 initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'donor' }}
                 validationSchema= {donorCreateSchema}

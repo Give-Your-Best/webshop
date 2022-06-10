@@ -7,13 +7,13 @@ import { useHistory } from 'react-router-dom';
 export const HeaderMenu = () => {
   const { user } = React.useContext(AppContext);
   let history = useHistory();
-  const { info } = Modal;
+  const { confirm } = Modal;
 
   const basketCheck = () => {
     if (user && user.type === 'shopper') {
       history.push(`/basket`);
     } else {
-      info({
+      confirm({
         title: `Please sign up as a shopper to shop!`
       });
     }

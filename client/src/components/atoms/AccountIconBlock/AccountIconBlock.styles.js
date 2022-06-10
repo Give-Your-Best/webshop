@@ -8,8 +8,11 @@ export const AccountIconImage = styled.img`
 `;
 
 export const AccountIconCaption = styled.p`
-  font-size: 20px;
+  font-size: 24px;
+  font-family: Lato;
+  font-weight: bold;
   cursor: pointer;
   text-align: center;
   text-transform: capitalize;
+  color: ${({ theme }) => theme.colorMappings.blush};
 `;

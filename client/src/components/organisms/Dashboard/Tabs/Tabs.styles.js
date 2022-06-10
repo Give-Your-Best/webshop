@@ -6,8 +6,10 @@ const DashboardMenuWrapper = styled.div`
 `;
 
 const StyledTabs = styled(Tabs)`
-  background: white;
+  background: ${({ theme }) => theme.colorMappings.background};
   display: flex;
+  font-family: lato;
+  bakground: ${({ theme }) => theme.colorMappings.background};
 `;
 
 const StyledTabList = styled(TabList)`
@@ -26,7 +28,7 @@ const StyledTab = styled(Tab).attrs({
   list-style: none;
   cursor: pointer;
   color: #888;
-  border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  border: 2px solid ${({ theme }) => theme.colorMappings.borders};
   margin: 1em 0;
   min-width: 200px;
 
@@ -50,7 +52,7 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
     width: 100%;
     margin: 0 3em;
     display: block;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+    border: 2px solid ${({ theme }) => theme.colorMappings.borders};
   }
 `;
 
@@ -59,7 +61,7 @@ const StyledTabPanelDashboardImage = styled(TabPanel).attrs({ selectedClassName:
     width: 100%;
     margin: 0 3em;
     display: block;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+    border: 2px solid ${({ theme }) => theme.colorMappings.borders};
   }
 `;
 

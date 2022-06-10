@@ -43,6 +43,7 @@ export const ItemDetailsWrapper = styled.div`
     text-align: left;
     font-family: lato;
     font-size: 48px;
+    font-weight: bold;
   }
 
   p {

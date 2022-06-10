@@ -8,4 +8,9 @@ export const Container = styled.div`
   > h1, h2, h3 {
     text-align: center;
   }
+
+  p {
+    color: ${({ theme }) => theme.colorMappings.primary};
+    font-size: 20px;
+  }
 `;

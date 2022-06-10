@@ -16,7 +16,7 @@ export const Item = () => {
   const [mainImage, setMainImage] = useState({})
   const [otherImages, setOtherImages] = useState([]);
   const [ limit, setLimit ] = useState(0);
-  const { info, confirm } = Modal;
+  const { confirm } = Modal;
   let history = useHistory();
   const mountedRef = useRef(true);
 
@@ -73,21 +73,21 @@ export const Item = () => {
     const cannotShop = ((user)? user.recentItems.length: 0) + ((basket)? basket.length: 0) >= limit;
 
     if (!user || user.type !== 'shopper') { //if not signed in
-      info({
+      confirm({
         title: `Please sign up as a shopper to shop!`
       });
       return;
     }
 
     if (isShopped) { //if alerady in basket
-      info({
+      confirm({
         title: `This item is already in your basket`
       });
       return;
     }
 
     if (cannotShop) { //if limit reached
-      info({
+      confirm({
         title: `You have reached your weekly shopping limit!`,
         content: 'Please check your current orders on your account profile.'
       });

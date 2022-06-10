@@ -1,15 +1,22 @@
 import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
+import { Form } from 'formik-antd';
+
+const StyledForm = styled(Form)`
+  width: 400px;
+  margin: auto;
+`
 
 const StyledTabs = styled(Tabs)`
-    background: white;
+    background: ${({ theme }) => theme.colorMappings.background};
     display: block;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     margin: auto;
-    padding: 1em;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
-    border-radius: 10px;
+    padding: 1em 5em 5em 5em;
+    border: 2px solid ${({ theme }) => theme.colorMappings.borders};
+    border-radius: 30px;
+    font-family: lato;
 `;
 
 const StyledTabList = styled(TabList)`
@@ -25,14 +32,10 @@ const StyledTab = styled(Tab)`
   padding: 0.4em 1em;
   list-style: none;
   cursor: pointer;
-  color: #888;
   max-width: max-content;
   padding: 0 3em;
-  font-size: 24px;
-
-  :last-child {
-      border-left: 1px solid ${({ theme }) => theme.colorMappings.borders};
-  }
+  font-size: 30px;
+  color:  ${({ theme }) => theme.colorMappings.primary};
 `;
 
 const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
@@ -58,9 +61,17 @@ const SignUpWrapper = styled.div`
   justify-content: center;
 `
 
-const SignUpHeading = styled.h2`
-  text-align:center;
-`
+const SignUpStyledTab = styled(Tab)`
+  text-align: center;
+  padding: 0.4em 1em;
+  list-style: none;
+  cursor: pointer;
+  color:  ${({ theme }) => theme.colorMappings.primary};
+  max-width: max-content;
+  padding: 0 3em;
+  font-size: 30px;
+  border-right: 2px solid ${({ theme }) => theme.colorMappings.borders};
+`;
 
 export { 
     StyledTab, 
@@ -68,6 +79,7 @@ export {
     StyledTabs, 
     StyledTabPanel, 
     SignUpWrapper, 
-    SignUpHeading,
-    HiddenStyledTab
+    SignUpStyledTab,
+    HiddenStyledTab,
+    StyledForm
 };

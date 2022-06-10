@@ -2,16 +2,17 @@ import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
 
 const StyledTabs = styled(Tabs)`
-  background: white;
+  background: ${({ theme }) => theme.colorMappings.background};
   display: block;
   width: 100%;
+  font-family: lato;
 `;
 
 
 const StyledTabList = styled(TabList)`
   padding: 0;
   margin: 2em 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  border-bottom: 2px solid ${({ theme }) => theme.colorMappings.borders};
   display: flex;
   width: 100%;
 `;
@@ -50,8 +51,8 @@ const HiddenStyledTab = styled(Tab).attrs({
   list-style: none;
   cursor: pointer;
   color: #888;
-  border-left: 1px solid ${({ theme }) => theme.colorMappings.borders};
-  border-bottom: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  border-left: 2px solid ${({ theme }) => theme.colorMappings.borders};
+  border-bottom: 2px solid ${({ theme }) => theme.colorMappings.borders};
 
   &.selected {
     color: ${({ theme }) => theme.colorMappings.primary};

@@ -8,10 +8,13 @@ const StyledError = styled(ErrorMessage)`
   padding: 1px 5px;
   color: red;
   margin: 5px 0;
+  font-size: 20px;
 `
 
 const StyledSelect = styled(Select)`
     width: 100%;
+    font-size: 20px;
+    min-width: 400px;
     color: ${({ theme }) => theme.colorMappings.primary};
   &:disabled {
     background-color: transparent;
@@ -48,18 +51,38 @@ const StyledSubmitButton = styled(SubmitButton)`
 `
 const StyledInput = styled(Input)`
   width: min-content;
+  min-width: 400px;
+  border: 1px solid ${({ theme }) => theme.colorMappings.primary};
   color: ${({ theme }) => theme.colorMappings.primary};
   margin: 0.2em 1em 0.5em 0;
   padding: 2px 5px;
   display: block;
+  font-size: 20px;
   &:disabled {
     background-color: transparent;
     color: black;
   }
 `
+
+const StyledInputPassword = styled(Input.Password)`
+  width: max-content;
+  min-width: 400px;
+  border: 1px solid ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
+  margin: 0.2em 1em 0.5em 0;
+  padding: 2px 5px;
+  display: flex;
+  font-size: 20px;
+  &:disabled {
+    background-color: transparent;
+    color: black;
+  }
+`
+
 const StyledInputNumber = styled(InputNumber)`
   width: 70px;
   color: ${({ theme }) => theme.colorMappings.primary};
+  border: 1px solid ${({ theme }) => theme.colorMappings.primary};
   margin: 0;
   padding: 0;
   display: block;
@@ -67,6 +90,7 @@ const StyledInputNumber = styled(InputNumber)`
   background-color: transparent;
   color: black;
   background: transparent;
+  font-size: 20px;
   &:disabled {
     background-color: transparent;
     color: black;
@@ -77,10 +101,11 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
   padding: 0;
   color: ${({ theme }) => theme.colorMappings.primary};
+  font-size: 20px;
 
   & .ant-checkbox-checked .ant-checkbox-inner {
     background-color: transparent !important;
-    border: 1x solid ${({ theme }) => theme.colorMappings.primary}; !important;
+    border: 1px solid ${({ theme }) => theme.colorMappings.primary}!important;
     margin: 0;
     padding: 0;
     color: ${({ theme }) => theme.colorMappings.primary};
@@ -89,6 +114,7 @@ const StyledCheckbox = styled(Checkbox)`
 
 const StyledCheckboxGroup = styled(Checkbox.Group)`
   color: ${({ theme }) => theme.colorMappings.primary};
+  font-size: 20px;
 
   .ant-checkbox-wrapper {
     color: ${({ theme }) => theme.colorMappings.primary};
@@ -99,10 +125,11 @@ const StyledCheckboxGroup = styled(Checkbox.Group)`
 const StyledRadio = styled(Radio)`
   margin: 0;
   padding: 0;
+  font-size: 20px;
   color: ${({ theme }) => theme.colorMappings.primary};
   & .ant-checkbox-checked .ant-checkbox-inner {
     background-color: transparent !important;
-    border: 1x solid grey ${({ theme }) => theme.colorMappings.primary};;
+    border: 1px solid grey ${({ theme }) => theme.colorMappings.primary};
     margin: 0;
     padding: 0;
     color: ${({ theme }) => theme.colorMappings.primary};
@@ -113,9 +140,11 @@ const StyledLabel = styled.label`
   display: inline-block;
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
+  font-size: 20px !important;
 `
 
 const StyledForm = styled(Form)`
+  font-size: 20px;
   position: relative;
   color: ${({ theme }) => theme.colorMappings.primary};
 `
@@ -136,5 +165,6 @@ export { StyledInput,
   StyledSelect,
   StyledError,
   InfoNote,
-  StyledCheckboxGroup
+  StyledCheckboxGroup,
+  StyledInputPassword
 };

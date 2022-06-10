@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
 
 const StyledTabs = styled(Tabs)`
-  background: white;
+  background: ${({ theme }) => theme.colorMappings.background};
   display: block;
   width: 100%;
+  font-family: lato;
 `;
 
 

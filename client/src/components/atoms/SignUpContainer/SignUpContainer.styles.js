@@ -7,6 +7,10 @@ const SignUpWrapper = styled.div`
 
 const SignUpHeading = styled.h2`
   text-align:center;
+  font-family: Lato !important;
+  font-weight: bold !important;
+  font-size: 24px !important;
+  margin-bottom: 1.5em;
 `
 
 export { SignUpWrapper, SignUpHeading };
