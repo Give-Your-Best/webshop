@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Form } from 'formik-antd';
 import { StyledSelect } from '../../components/atoms';
 import { Formik } from 'formik';
-import { signupSchema } from '../../utils/validation';
+// import { signupSchema } from '../../utils/validation';
 import { register } from '../../services/user';
 import { StyledSubmitButton, StyledInput, StyledError, StyledCheckbox, StyledInputPassword } from '../../components/molecules/EditForm/EditForm.styles';
 
@@ -25,7 +25,7 @@ export const Register = () => {
             <h2>Request to join</h2>
             <Formik
                 initialValues={{ username: '', password: '', email: '', passwordConfirm: '', type: '' }}
-                validationSchema= {signupSchema}
+                // validationSchema= {signupSchema}
                 onSubmit={handleRegisterSubmit}
                 >
                 <Form>

@@ -4,14 +4,17 @@ import { UserOutlined } from '@ant-design/icons';
 import { AppContext } from '../../../context/app-context';
 import { AccountWelcomeWrapper } from "./AccountWelcome.styles";
 
-export const AccountWelcome = () => {
+export const AccountWelcome = ({firstName, lastName}) => {
     const { user } = useContext(AppContext);
     var welcome = '';
-    if (user.firstName && user.lastName) {
+    if (!firstName && user.firstName && user.lastName) {
         welcome = 'Welcome back, ' + user.firstName + ' ' + user.lastName + '!'
+    } else if (firstName && lastName) {
+        welcome = firstName + ' ' + lastName;
     } else {
         welcome = 'Welcome back!'
     }
+
     return (
         <AccountWelcomeWrapper>
             <Avatar

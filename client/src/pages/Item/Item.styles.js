@@ -1,5 +1,18 @@
 import styled from 'styled-components';
 import { Box } from '../../components';
+import { Link } from 'react-router-dom';
+
+export const DonorLink = styled(Link)`
+  color:  ${({ theme }) => theme.colorMappings.primary};
+  padding: 0;
+  margin: 1em 0;
+  font-family: lato;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: underline;
+  display: block;
+  display: none;
+`;
 
 export const ItemWrapper = styled(Box)`
     display: flex;

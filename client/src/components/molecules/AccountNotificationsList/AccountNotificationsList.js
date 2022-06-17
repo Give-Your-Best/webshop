@@ -2,6 +2,8 @@ import React from 'react';
 import { ListWrapper, ExpandButton, StyledTable } from './AccountNotificationsList.styles';
 
 export const AccountNotificationsList = (data) => {
+  console.log('data')
+  console.log(data)
 
   const columns = [
     {

@@ -9,7 +9,21 @@ export const BasketDetails = styled.div`
     width: 100%;
     margin: 0 3em;
     display: block;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+    border: 2px solid ${({ theme }) => theme.colorMappings.borders};
+    border-radius: 30px;
+
+    h1 {
+      font-family: lato;
+      font-weight: bold;
+      font-size: 26px;
+    }
+
+    h2 {
+      font-family: lato;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: left;
+    }
 `;
 
 export const BasketSidebar = styled.div`

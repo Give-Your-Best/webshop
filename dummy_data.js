@@ -23,35 +23,35 @@ mongoose.connect(
 Script to add dummy data
 ***************************/
 
-// users_new.forEach((user) => {
-//     if (user.type == 'donor') {
-//         user = new User.Donor(user);
-//     } else if (user.type == "shopper") {
-//         user = new User.Shopper(user);
-//     } else if (user.type == "admin") {
-//         user = new User.Admin(user);
-//     }
-//     user.save(err=>{
-//         if (err) {
-//             console.log(err)
-//           throw Error(err);
-//         } else {
-//           return { success: true, message: 'User created' }
-//         }
-//     })
-// })
-
-items_new.forEach((item) => {
-    item = new Item(item);
-    item.save(err=>{
+users_new.forEach((user) => {
+    if (user.type == 'donor') {
+        user = new User.Donor(user);
+    } else if (user.type == "shopper") {
+        user = new User.Shopper(user);
+    } else if (user.type == "admin") {
+        user = new User.Admin(user);
+    }
+    user.save(err=>{
         if (err) {
             console.log(err)
           throw Error(err);
         } else {
-          return { success: true, message: 'Item created' }
+          return { success: true, message: 'User created' }
         }
     })
 })
+
+// items_new.forEach((item) => {
+//     item = new Item(item);
+//     item.save(err=>{
+//         if (err) {
+//             console.log(err)
+//           throw Error(err);
+//         } else {
+//           return { success: true, message: 'Item created' }
+//         }
+//     })
+// })
 
 // locations.forEach((item) => {
 //   item = new Location(item);

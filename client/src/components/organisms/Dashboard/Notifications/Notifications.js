@@ -2,9 +2,11 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './Notifications.styles';
 import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLocationModal } from '../../../molecules';
-import { getShopNotificationsItems, getAccountNotificationsItems, updateItem } from '../../../../services/items';
+import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
+import { getUser } from '../../../../services/user';
 import { Button } from '../../../atoms';
+import { sendAutoEmail } from "../../../../utils/helpers";
 import { Modal } from 'antd';
 
 export const Notifications = () => {
@@ -20,11 +22,23 @@ export const Notifications = () => {
   const [assignAddressId, setAssignAddressId] = useState('');
 
   const handleOk = (values) => {
+
       setLoading(true);
       let updateData = {'sendVia': values.location}
       return new Promise((resolve, reject) => {
         updateItem(assignAddressId, updateData, token)
         .then(() => {
+
+          const item = shopNotificationsPendingAssign.items.filter((i) => {return assignAddressId === i._id})[0];
+          const locationDetails = adminLocations.filter((l) => {return values.location === l._id})[0];
+          //get donor details
+          const donorDetails = getUser(item.donorId, token)
+          .then((donor) => {
+            console.log(donorDetails)
+            console.log(item)
+            sendAutoEmail('item_shopped_with_address', donor, [item], locationDetails);
+          })
+
           setAssignAddressId('');
           setVisible(false);
           setShopNotificationsPendingAssign(prevState => {
@@ -89,6 +103,17 @@ export const Notifications = () => {
           return new Promise((resolve, reject) => {
             updateItem(itemId, updateData, token)
             .then(() => {
+
+              const itemDet = getItem(itemId)
+              .then((item) => {
+                const shopperDetails = getUser(item.shopperId, token)
+                .then((shopper) => {
+                  console.log(itemDet)
+                  console.log(shopperDetails)
+                  sendAutoEmail('item_on_the_way', shopper);
+                })
+              })
+
               setAccountNotificationsPendingSent(prevState => {
                 return { ...prevState, itemsCount: prevState.itemsCount - 1, items: (prevState.items).filter(item => {
                   return item._id !== itemId;

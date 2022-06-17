@@ -27,7 +27,7 @@ export const ShopperFields = () => {
         <StyledInput name="referredBy" />
         <StyledError name="referredBy" component="div" />
       
-      <label>Are you shopping for more than one person? If so how many?</label>
+      <StyledLabel>Are you shopping for more than one person? If so how many?</StyledLabel>
       <StyledInputNumber name="shoppingFor" />
       <StyledError name="shoppingFor" component="div" />
 

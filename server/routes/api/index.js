@@ -5,19 +5,28 @@ const usersRoutes = require('./users');
 const locationRoutes = require('./locations');
 const settingsRoutes = require('./settings');
 const rolesRoutes = require('./roles');
+const mailerRoutes = require('./mail');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
+const { getSetting } = require('../../services/settings');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
   res.send({ message: 'The Express backend is connected to React!' });
 });
 
-// sign up user endpoint post to api/users
 router.post('/register', Users.registerUser);
+
+// get item endoint api/settings/:name
+router.get('/settings/:name', async (req, res) => {
+  const name = req.params.name;
+  const setting = await getSetting(name);
+  res.json(setting);
+});
 
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
+router.use('/mail', mailerRoutes);
 
 // api endpoints below this call will need to provide a token
 router.use(Authentication.verifyToken);

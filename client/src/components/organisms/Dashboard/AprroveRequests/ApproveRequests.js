@@ -1,11 +1,14 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './ApproveRequests.styles';
 import { getUsers, updateDonor, updateUser, getDonations } from '../../../../services/user';
 import { updateItem } from '../../../../services/items';
+import { getSetting } from "../../../../services/settings";
+import { sendAutoEmail } from '../../../../utils/helpers';
 import { ShopperMiniEditForm, DonorMiniEditForm, ApproveItemList, UsersList, ItemCardLong } from "../../../molecules";
 import { Button } from '../../../atoms';
 import { Formik } from 'formik';
+import { Modal } from 'antd';
 
 export const ApproveRequests = () => {
     const { token } = useContext(AppContext);
@@ -14,6 +17,9 @@ export const ApproveRequests = () => {
     const [donors, setDonors] = useState([]);
     const [donations, setDonations] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [ trustedDonorLimit, setTrustedDonorLimit ] = useState(0);
+    const [ approvedItemCount, setApprovedItemCount ] = useState(0);
+    const { confirm } = Modal;
 
     const updateDonorWrapper = async (recordId, values) => {
       const res = await updateDonor(recordId, values, token);
@@ -33,22 +39,37 @@ export const ApproveRequests = () => {
       }
     };
 
+    //items approval
+
     const itemExpand = (record) => {
       const approve = (e) => {
         //TO DO Email Notification to say your donation has been approved
         const itemId = e.target.getAttribute('data-item-id');
         updateItem(itemId, {"approvedStatus": "approved"})
         .then(() => {
-          record.donationItems = record.donationItems.filter(item => {
-            return item._id !== itemId
-          });
-          setDonations(donations.filter(donation => {
-            if (donation._id !== record._id) {
-              return record
-            } else {
-              return donation
-            }
-          }));
+
+          //if reached trusted donor limit then auto approve donor
+          setApprovedItemCount(approvedItemCount+1);
+          if (approvedItemCount >= trustedDonorLimit) {
+            markAsTrusted([record._id]);
+            confirm({
+              title: `You have marked this donor as trusted!`,
+              content: 'If you wish to continue to approve their items, please uncheck their trusted donor status in the user panel'
+            });
+
+          } else {
+            //otherwise remove from list of donations and continue
+            record.donationItems = record.donationItems.filter(item => {
+              return item._id !== itemId
+            });
+            setDonations(donations.filter(donation => {
+              if (donation._id !== record._id) {
+                return record
+              } else {
+                return donation
+              }
+            }));
+          }
         })
       }
       const reject = (e) => {
@@ -79,8 +100,6 @@ export const ApproveRequests = () => {
     };
 
     const markAsTrusted = (recordIds) => {
-      console.log('mark as trused')
-      console.log(recordIds)
       recordIds.forEach((recordId) => {
         updateDonorWrapper(recordId, {"trustedDonor": true})
         .then(() => {
@@ -91,6 +110,7 @@ export const ApproveRequests = () => {
       })
     }
 
+    //user approval
     const editForm = (record) => {
 
         const handleSubmit = (record) => {
@@ -116,19 +136,18 @@ export const ApproveRequests = () => {
 
         const approvalAction = (e) => {
           const action = e.target.getAttribute('data-action');
-          let values = {}
           switch (action) {
             case 'approve':
-                values = {'approvedStatus': 'approved'}
+                updateRecord({'approvedStatus': 'approved'}, action);
+                sendAutoEmail('account_approved', record);
                 break;
             case 'reject':
-                values = {'approvedStatus': 'rejected'}  
+                updateRecord({'approvedStatus': 'rejected'} , action); 
+                sendAutoEmail('account_declined', record);
                 break;
             default:
                 break;
           }
-          //TO DO Email Notification to say your account has been approved / rejected as shopper / donor
-          updateRecord(values, action);
         };
         return (
           <div>
@@ -149,7 +168,7 @@ export const ApproveRequests = () => {
         )
       }
 
-    React.useEffect(() => {
+    useEffect(() => {
 
         const fetchShoppers = async () => {
           const users = await getUsers('shopper', 'in-progress', token);
@@ -171,15 +190,24 @@ export const ApproveRequests = () => {
             return item.numOfDonationItems !== 0
           }));
         }
+
+        const fetchSetting = async () => {
+          if (!token) return null;
+          const settingValue = await getSetting('trustedDonorLimit', token);
+          if (!mountedRef.current) return null;
+          setTrustedDonorLimit(settingValue);
+        }
+      
     
         fetchShoppers();
         fetchDonors();
         fetchDonations();
+        fetchSetting();
     
         return () => {
           mountedRef.current = false;
         };
-      }, [token]);
+    }, [token]);
 
     return (
         <StyledTabs>
