@@ -10,6 +10,9 @@ export const AddressFields = () => {
       <StyledLabel>Address Line 2
       <StyledInput name="deliveryAddress.secondLine" /></StyledLabel>
       <StyledError name="deliveryAddress.secondLine" component="div" />
+      <StyledLabel>City
+      <StyledInput name="deliveryAddress.city" /></StyledLabel>
+      <StyledError name="deliveryAddress.city" component="div" />
       <StyledLabel>Post Code
       <StyledInput name="deliveryAddress.postcode" /></StyledLabel>
       <StyledError name="deliveryAddress.postcode" component="div" />

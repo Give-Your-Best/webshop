@@ -73,6 +73,11 @@ const StyledInputPassword = styled(Input.Password)`
   padding: 2px 5px;
   display: flex;
   font-size: 20px;
+
+  .ant-input {
+    font-size: 20px;
+  }
+
   &:disabled {
     background-color: transparent;
     color: black;
@@ -88,7 +93,7 @@ const StyledInputNumber = styled(InputNumber)`
   display: block;
   height: 30px;
   background-color: transparent;
-  color: black;
+  color: ${({ theme }) => theme.colorMappings.primary};
   background: transparent;
   font-size: 20px;
   &:disabled {
@@ -119,6 +124,7 @@ const StyledCheckboxGroup = styled(Checkbox.Group)`
   .ant-checkbox-wrapper {
     color: ${({ theme }) => theme.colorMappings.primary};
     margin: 3px;
+    font-size: 20px;
   }
 `
 
@@ -127,13 +133,10 @@ const StyledRadio = styled(Radio)`
   padding: 0;
   font-size: 20px;
   color: ${({ theme }) => theme.colorMappings.primary};
-  & .ant-checkbox-checked .ant-checkbox-inner {
-    background-color: transparent !important;
-    border: 1px solid grey ${({ theme }) => theme.colorMappings.primary};
-    margin: 0;
-    padding: 0;
-    color: ${({ theme }) => theme.colorMappings.primary};
-  }
+
+    span {
+      font-size: 20px;
+    }
 `
 
 const StyledLabel = styled.label`

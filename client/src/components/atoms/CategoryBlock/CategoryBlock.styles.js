@@ -12,10 +12,17 @@ export const Card = styled(AntCard)`
     font-size: 20px;
     text-align: center;
     color: ${({ theme }) => theme.colorMappings.blush};
+    background: ${({ theme }) => theme.colorMappings.background};
+    margin: 0;
+  }
+
+  .ant-card-cover img {
+    background: ${({ theme }) => theme.colorMappings.background};
   }
 
   .ant-card-body {
     padding: 10px;
+    background: ${({ theme }) => theme.colorMappings.background};
   }
 
   @media (max-width: 768px) {

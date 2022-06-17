@@ -251,14 +251,14 @@ const getShopNotificationItems = async () => {
     "$and": [
       {"approvedStatus": "approved"}, 
       {"status": "shopped"},
-      {"sendVia": {$exists: false}}
+      {"sendVia": null }
     ]
   }
   const shoppedQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
       {"status": "shopped"},
-      {"sendVia": {$exists: true}}
+      {"sendVia": { $ne: null }}
     ]
   }
 

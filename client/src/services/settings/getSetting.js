@@ -1,8 +1,7 @@
-export const getSetting = async (name, token) => {
+export const getSetting = async (name) => {
     const response = await fetch(`/api/settings/${name}`, {
       headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token,
+        'Content-Type': 'application/json'
       },
     });
     const body = await response.json();

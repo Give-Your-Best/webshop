@@ -3,7 +3,7 @@ import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
-import { reopenTab } from '../../../utils/helpers';
+import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
 import { clothingSizeOptions, shoeSizeOptions, colours } from '../../../utils/constants';
 import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
@@ -19,6 +19,9 @@ export const ItemCreateForm = (data) => {
         const res = await createItem(values, token);
         if (res.success) {
             Notification('Success!', 'New item created', 'success');
+            if (!user.trustedDonor) {
+                sendAutoEmail('new_item_approve');
+            } 
             resetForm();
             setFieldValue("photos", []);
             setUploadedImages([]);

@@ -1,3 +1,5 @@
+const homeLink = 'https://give-your-best-webshop.herokuapp.com';
+
 export const clothingSizeOptions = [
     '6',
     '8',
@@ -235,4 +237,72 @@ export const permissions = [
     'Adjust shop settings',
     'Edit users',
     'Add team members'
+]
+
+export const autoEmails = [
+    {
+       'type': 'test',
+       'subject': 'dev_test',
+       'content': "<p>Hi {{name}}!<p><p>Great news! Your account has been approved. Follow this link to log in and view your donor dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'sign_up',
+        'content': "<p>Hi {{name}}!<p><p>Thanks for signing up, your application has been sent to our admin team and we’ll get back to you as soon as possible.</p>"
+    },
+    {
+        'type': 'account_approved',
+        'content': "<p>Hi {{name}}!<p><p>Great news! Your account has been approved. Follow this link to log in and view your dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'account_declined',
+        'content': "<p>Hi {{name}}!<p><p>We’re sorry, but your account has been declined at this time. If you think this is a mistake, contact us here to let us know why!</p><a href='"+homeLink+"/dashboard'>Contact Us</a>"
+    },
+    {
+        'type': 'shopper_account_declined',
+        'content': "<p>Hi {{name}}!<p><p>We’re sorry, but your account has been declined at this time. If you think this is a mistake, contact us here to let us know why!</p><a href='"+homeLink+"/dashboard'>Contact Us</a>"
+    },
+    { // need tyo add order placed html grid
+        'type': 'order_placed',
+        'content': "<p>Hi {{name}}!<p><p>Thank you for your order! Please see a summary below.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'message_sent',
+        'content': "<p>Hi {{name}}!<p><p>Thank you for your message. An admin will reply to you as soon as possible.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'new_message',
+        'content': "<p>Hi {{name}}!<p><p>You have 1 new message waiting on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    { // need tyo add order placed html grid
+        'type': 'item_shopped_with_address',
+        'content': "<p>Hi {{name}}!<p><p>You have 1 new order waiting to be dispatched.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    { // need tyo add order placed html grid
+        'type': 'item_shopped_pending_address',
+        'content': "<p>Hi {{name}}!<p><p>You have 1 new order waiting to be dispatched. You will hear from us with a delivery address soon.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'new_signup',
+        'content': "<p>Hi Admin!<p><p>There’s been a new sign up! Please log in here to review the application.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'new_admin_message',
+        'content': "<p>Hi Admin!<p><p>You have 1 new message waiting on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'new_admin_notification',
+        'content': "<p>Hi Admin!<p><p>You have 1 new notification waiting on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'new_item_approve',
+        'content': "<p>Hi Admin!<p><p>You have new items to approve on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'item_on_the_way_admin',
+        'content': "<p>Hi Admin!<p><p>Great news, an order is on it’s way to you! Don’t forget to update the tracking on your admin dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'item_on_the_way',
+        'content': "<p>Hi {{name}}!<p><p>Great news, your order is on it’s way! Don’t forget to let us know when it arrives.</p><p>We hope you love it.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
 ]

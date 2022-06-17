@@ -17,7 +17,6 @@ const updateSetting = async (name, data) => {
 
 
 const getSetting = async (name) => {
-    console.log('get setting')
     try {
         const settings = await Setting.find({'name': name});
         if (settings.length >= 1) {

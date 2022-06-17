@@ -1,12 +1,10 @@
 import * as yup from "yup";
 
-export const signupSchema = yup.object().shape({
-    email: yup.string().email().required('Please enter your email address'),
-    type: yup.string().min(3).required('Select a type'),
+export const passwordSchema = yup.object().shape({
     password: yup.string().required('Please Enter your password')
         .matches(
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-        "Must contain 8 characters, one uppercase, one lowercase, one number and one special case character"
+        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+        "Must contain 8 characters, at least one letter and one number"
         ),
     passwordConfirm: yup.string().oneOf([yup.ref('password')], 'Passwords does not match'),
 });
@@ -19,8 +17,6 @@ export const loginSchema = yup.object().shape({
 export const donorCreateSchema = yup.object().shape({
     firstName: yup.string().min(3).required('Please enter a first name'),
     email: yup.string().email().required('Please enter an email address'),
-    type: yup.string().min(3).required('Select a type'),
-    password: yup.string().required('Please Enter your password')
 });
 
 export const shopperCreateSchema = yup.object().shape({
@@ -29,12 +25,11 @@ export const shopperCreateSchema = yup.object().shape({
     clothingSize: yup.array().required('Please enter your clothing size'),
     shoeSize: yup.array().required('Please enter your shoe size'),
     currentStatus: yup.string().required('Please enter your current status'),
-    shoppingFor: yup.number().required('How many people are you shopping for?'),
     deliveryAddress: yup.object()
     .shape({
-        firstLine: yup.string('Please enter the first line of your address'),
-        city: yup.string('Please enter a city'),
-        postcode: yup.string('Please enter a postcode')
+        firstLine: yup.string().required('Please enter the first line of your address'),
+        city: yup.string().required('Please enter a city'),
+        postcode: yup.string().required('Please enter a postcode')
     })
 });
 

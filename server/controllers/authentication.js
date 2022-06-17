@@ -29,8 +29,6 @@ const setRefreshTokenCookie = (res) => {
 };
 
 const login = async (req, res) => {
-  console.log('login fn')
-  console.log(req.body)
   try {
     const user = await User_.User.findOne({
       email: req.body.email,
@@ -46,8 +44,6 @@ const login = async (req, res) => {
         }
       });
       if (recentItems) {
-        console.log('recent')
-        console.log(recentItems)
         user.recentItems = recentItems;
       }
     }
@@ -75,18 +71,30 @@ const login = async (req, res) => {
       // password: user.password, // do not use password here since we're saving this to the cookies
     });
     setRefreshTokenCookie(res); // currently not used
+
+    var userRes = { 
+      email: user.email, 
+      type: user.kind || 'no-access', 
+      id: user._id, 
+      firstName: user.firstName, 
+      lastName: user.lastName,
+      recentItems: user.recentItems || [],
+      deliveryAddress: user.deliveryAddress || {}
+    }
+
+    if (user.kind === 'donor') {
+      userRes.trustedDonor = user.trustedDonor || false
+    }
+
+    if (user.kind === 'shopper') {
+      userRes.deliveryAddress = user.deliveryAddress || {}
+      userRes.deliveryPreference = user.deliveryPreference || 'direct'
+    }
+
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: { 
-        email: user.email, 
-        type: user.kind || 'no-access', 
-        id: user._id, 
-        firstName: user.firstName, 
-        lastName: user.lastName,
-        recentItems: user.recentItems || [],
-        deliveryAddress: user.deliveryAddress || {}
-      },
+      user: userRes,
       token,
     });
   } catch (err) {

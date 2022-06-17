@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Home, Item, Login, Register, Dashboard, Products, Basket } from './pages';
+import { Home, Item, Login, Register, Dashboard, Products, Basket, DonorProducts } from './pages';
 import ProtectedRoute from "./components/ProtectedRoute"
 
 export const Routes = () => {
@@ -18,6 +18,9 @@ export const Routes = () => {
       </Route>
       <Route path={`/products/`}>
         <Products />
+      </Route>
+      <Route path={`/donorproducts/:donorId`}>
+        <DonorProducts />
       </Route>
       <Route path="/login">
         <Login />

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
 import { getItem } from '../../services/items';
-import { ItemDetailsWrapper, ItemWrapper } from './Item.styles';
+import { ItemDetailsWrapper, ItemWrapper, DonorLink } from './Item.styles';
 import { Container, ImageGallery, CategoryBreadcrumbs } from '../../components';
 import { ColourCircles, Button }from '../../components/atoms';
 import { useHistory } from 'react-router-dom';
@@ -32,6 +32,7 @@ export const Item = () => {
     const fetchItemDetails = async () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;
+      console.log(itemDetails)
       setItemDetails(itemDetails);
       setMainImage(itemDetails.photos[0]);
 
@@ -39,7 +40,6 @@ export const Item = () => {
         setOtherImages(itemDetails.photos.slice(1))
       }
     };
-
     const fetchSetting = async () => {
       if (!token) return null;
       const settingValue = await getSetting('shopItemLimit', token);
@@ -50,6 +50,7 @@ export const Item = () => {
 
     fetchItemDetails();
     fetchSetting();
+
     return () => {
       mountedRef.current = false;
     };
@@ -116,6 +117,7 @@ export const Item = () => {
           <p>Colour: {colours()}</p>
           <p>Brand: {itemDetails.brand || ''}</p>
           <p>Size: {size()}</p>
+          <DonorLink to={'/donorproducts/' + itemDetails.donorId}>See other items by this donor</DonorLink>
           <Button primary left small onClick={() => {addToBasket(itemDetails._id)}}>Add to Basket</Button>
         </ItemDetailsWrapper>
       </ItemWrapper>

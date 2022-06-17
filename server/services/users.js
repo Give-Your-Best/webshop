@@ -47,6 +47,9 @@ const updateUser = async (id, updateData) => {
 
 const updateDonor = async (id, updateData) => {
   console.log('update donor service');
+  if (updateData.trustedDonor === true) {
+    const update = await Item.updateMany({ donorId: id.toString(), approvedStatus: 'in-progress' }, { $set: { 'approvedStatus': 'approved' } });
+  }
   try {
       const user = await User_.Donor.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
       if (user) {

@@ -7,11 +7,14 @@ import { Button, Notification } from '../../components/atoms';
 import { BasketSidebar, BasketDetails, BasketWrapper } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
 import { updateItem } from '../../services/items';
+import { getUser } from '../../services/user';
+import { sendAutoEmail } from '../../utils/helpers';
 
 export const Basket = () => {
   const { setBasket, basket, user, token, setUser } = useContext(AppContext);
   let history = useHistory();
   const { confirm } = Modal;
+  console.log(basket)
 
   const address = (
     <div>
@@ -58,6 +61,7 @@ export const Basket = () => {
         const promises = basket.map((item) => {
           const d = new Date();
           let date = d.toISOString();
+          // add to recent items
             setUser(user => ({
               ...user,
               'recentItems': [
@@ -65,10 +69,27 @@ export const Basket = () => {
                 item
               ]
             }));
+
+            //get donor details
+            const donorDetails = getUser(item.donorId, token)
+            .then((donor) => {
+              console.log('got item donor')
+              console.log(donorDetails)
+              if (user.deliveryPreference === 'direct') { 
+                console.log('direct send')
+                //send address directly in email
+                sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
+              } else if (user.deliveryPreference === 'via-gyb') {
+                console.log('indirect send')
+                //send email without address - to be sent later with gyb address
+                sendAutoEmail('item_shopped_pending_address', donor, [item]);
+              }
+            })
            return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': date}, token)
         });
         Promise.all(promises)
         .then(() => {
+          sendAutoEmail('order_placed', user, basket, user.deliveryAddress);
           setBasket(null);
           //TO DO Email Notification to donor that item has been shopped
           Notification('Items shopped!', 'You will receive updates on your item delivery soon!', 'success');

@@ -2,14 +2,13 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
-import { AdminEditForm, AdminMiniEditForm, PasswordUpdate, UsersList, AdminCreateForm, RolesList, ShopSettingsEditForm } from '../../../molecules';
+import { AdminEditForm, AdminMiniEditForm, PasswordUpdate, UsersList, AdminCreateForm, ShopSettingsEditForm } from '../../../molecules';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Settings.styles';
 import { getUsers, updateAdmin, deleteUser } from '../../../../services/user';
 import { getRoles } from '../../../../services/roles';
 import { getSettings } from '../../../../services/settings';
 import { Button } from '../../../atoms';
-import { openHiddenTab, checkPermission } from "../../../../utils/helpers";
-import { permissions } from '../../../../utils/constants';
+import { openHiddenTab } from "../../../../utils/helpers";
 import { adminSchema } from "../../../../utils/validation";
 
 export const Settings = () => {
@@ -80,15 +79,15 @@ export const Settings = () => {
 
   }, [token, user]);
 
-  const viewRole = (role) => {
-    return (
-      <div>
-      {permissions.map((d)=>{
-        return (<><input type="checkbox" name={d} disabled checked={checkPermission(role.permissions, d)? true: false}/><label> {d} </label></>);
-      })}
-      </div>
-    )
-  }
+  // const viewRole = (role) => {
+  //   return (
+  //     <div>
+  //     {permissions.map((d)=>{
+  //       return (<><input type="checkbox" name={d} disabled checked={checkPermission(role.permissions, d)? true: false}/><label> {d} </label></>);
+  //     })}
+  //     </div>
+  //   )
+  // }
 
   const editForm = (record) => {
     const handleEditSave = (newRecord) => {
@@ -140,7 +139,6 @@ export const Settings = () => {
         <HiddenStyledTab className='addpassword'>Update password</HiddenStyledTab>
         <StyledTab className='teamlist'>Team</StyledTab>
         <HiddenStyledTab className='addteam'>Add Team</HiddenStyledTab>
-        <StyledTab>Roles</StyledTab>
         <StyledTab>Shop</StyledTab>
       </StyledTabList>
 
@@ -163,9 +161,6 @@ export const Settings = () => {
       </StyledTabPanel>
       <StyledTabPanel>
         <AdminCreateForm submitFunction={submitFunction} roles={roles} />
-      </StyledTabPanel>
-      <StyledTabPanel>
-        <RolesList data={roles} expandRow={viewRole} />
       </StyledTabPanel>
       <StyledTabPanel>
         <ShopSettingsEditForm settings={settings} />

@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
 import { ListWrapper, StyledTab, StyledTabPanel, StyledTabList, StyledTabs } from './OrdersList.styles';
-import { getShopperItems, getDonorItems } from '../../../services/items';
+import { getShopperItems, getDonorItems, updateItem } from '../../../services/items';
+import { getUser } from '../../../services/user';
+import { sendAutoEmail } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
-import { updateItem } from '../../../services/items';
 
 export const OrdersList = () => {
     const { token, user } = useContext(AppContext);
@@ -36,9 +37,16 @@ export const OrdersList = () => {
 
         if (typeof item.sendVia === 'string') {
             console.log('send via exists (location assigned)');
+            sendAutoEmail('item_on_the_way_admin');
             return updateItem(itemId, {'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': date}, token)
         } else {
             console.log('send via does not exist (location not assigned or shopper has shared address');
+            const shopperDetails = getUser(item.shopperId, token)
+            .then((shopper) => {
+              console.log('obtained shopper')
+              console.log(shopperDetails)
+              sendAutoEmail('item_on_the_way', shopper, [item]);
+            })
             return updateItem(itemId, {'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': date}, token)
         }
     }

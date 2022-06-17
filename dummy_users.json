@@ -1,28 +1,9 @@
 [{
-    "firstName": "Jane",
-    "lastName": "Smith",
-    "email": "janesmith@gmail.com",
-    "password": "janesmith",
-    "type": "shopper",
-    "referredBy": "pastor",
-    "currentStatus": "refugee",
-    "deliveryPreference": "direct",
-    "shoeSize": "3",
-    "clothingSize": "8 or EU36",
-    "shoppingFor": 1,
-    "deliveryAddress": {
-        "firstLine": "2 shopper street",
-        "postcode": "SH10 5tb",
-        "city": "Liverpool"
-    },
-    "approvedStatus": "approved"
-},
-{
-    "firstName": "Sharon",
-    "lastName": "Dan",
-    "email": "sharondan@gmail.com",
-    "password": "Donor1",
-    "type": "donor",
+    "firstName": "GYB",
+    "lastName": "Admin",
+    "email": "gyb.developers@gmail.com",
+    "password": "gyb.developer1",
+    "type": "admin",
     "approvedStatus": "approved",
-    "trustedDonor": false
+    "assignedRole": "623c8b03b1ce9ed8d506b0ac"
 }]
