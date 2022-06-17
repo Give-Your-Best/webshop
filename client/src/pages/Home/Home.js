@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { AppContext } from '../../context/app-context';
+import React, { useState, useEffect, useRef } from "react";
 import { Button, ItemCard } from '../../components';
 import { CategoriesCarousel} from '../../components/organisms';
 import { getItems } from '../../services/items';
@@ -8,34 +7,13 @@ import logo from './website_cover.png';
 import { subCategories } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { getSetting } from '../../services/settings';
-import { sendMail } from '../../services/mail';
-import { Notification } from '../../components/atoms';
-import { emailTemplate } from '../../utils/helpers';
-import { autoEmails } from '../../utils/constants';
 
 export const Home = () => {
-  const { token } = useContext(AppContext);
   const [items, setItems] = useState([]);
   const [shopItemLimit, setShopItemLimit] = useState(0);
 
   let history = useHistory();
   const mountedRef = useRef(true);
-
-  const sendMailTest = async () => {
-    const res = await sendMail({
-      subject: autoEmails.filter((e) => {return e.type ==='account_declined'})[0].subject, 
-      emailHTML: emailTemplate(autoEmails.filter((e) => {return e.type ==='account_declined'})[0].content.replace('{{name}}', 'Zahra Ali')),
-      recipient: 'zahra@mailbox.org',
-      recipientName: 'Zahra Ali'
-    }, token);
-
-    if (res.success) {
-        Notification('Success!', 'Mail sent', 'success');
-    } else {
-        Notification('Error sending mail', res.message, 'error');
-    }
-    return
-};
 
   useEffect(() => {
 
@@ -79,7 +57,6 @@ export const Home = () => {
       </ItemsWrapper>
       <ButtonWrapper>
         <Button center primary onClick={() => history.push(`/products/`)}>Browse All ></Button>
-        <Button onClick={sendMailTest}>Send mail test</Button>
       </ButtonWrapper>
     </div>
   );
