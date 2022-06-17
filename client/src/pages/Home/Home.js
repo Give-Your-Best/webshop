@@ -56,7 +56,7 @@ export const Home = () => {
         ))}
       </ItemsWrapper>
       <ButtonWrapper>
-        <Button center primary onClick={() => history.push(`/products/`)}>Browse All ></Button>
+        <Button center primary onClick={() => history.push(`/products/`)}>Browse All</Button>
       </ButtonWrapper>
     </div>
   );

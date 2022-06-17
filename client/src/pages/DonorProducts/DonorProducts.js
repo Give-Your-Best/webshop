@@ -48,7 +48,7 @@ export const DonorProducts = () => {
             ))}
           </ItemsWrapper>
           {(!noMoreLoad)?
-            <Button center primary onClick={handleLoadMore}>Load More ></Button>: ''
+            <Button center primary onClick={handleLoadMore}>Load More</Button>: ''
           }
         </PageWrapper>:
         (noItems)? 
