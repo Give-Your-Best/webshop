@@ -7,6 +7,7 @@ import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
 import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError} from './EditForm.styles';
+import { sendAutoEmail } from '../../../utils/helpers';
 
 export const DonorCreateForm = (data) => {
     const { token } = useContext(AppContext);
@@ -14,6 +15,7 @@ export const DonorCreateForm = (data) => {
     const handleSubmit = async (values, {resetForm}) => {
         const res = await createUser(values, token);
         if (res.success) {
+            sendAutoEmail('new_user', values);
             Notification('Success!', 'New donor created', 'success');
             resetForm();
             reopenTab('donor');
@@ -23,7 +25,7 @@ export const DonorCreateForm = (data) => {
         }
     };
 
-    const temp = Math.random().toString(36).slice(2, 10);
+    const temp = Math.random().toString(36).slice(2, 12);
 
     return (
         <div>

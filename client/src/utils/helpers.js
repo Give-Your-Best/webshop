@@ -107,6 +107,7 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
     const subject = autoEmails.filter((e) => {return e.type === type})[0].subject;
     var emailContent = autoEmails.filter((e) => {return e.type === type})[0].content;
     const recipientName = (userDetails)? userDetails.firstName + ' ' + userDetails.lastName: 'Admin';
+    const password = (userDetails && userDetails.password)? userDetails.password: '';
 
     if (type === 'order_placed' || type === 'item_shopped_with_address') {
         console.log('?')
@@ -120,7 +121,7 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
 
     const res = await sendMail({
         subject: subject, 
-        emailHTML: emailHTML.replace('{{name}}', recipientName),
+        emailHTML: emailHTML.replace('{{name}}', recipientName).replace('{{password}}', password),
         recipient: (userDetails)? userDetails.email: null,
         recipientName: recipientName
       });

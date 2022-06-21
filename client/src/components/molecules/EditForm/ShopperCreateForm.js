@@ -8,6 +8,7 @@ import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
 import { StyledSubmitButton } from './EditForm.styles';
 import { UserEditForm } from './UserEditForm';
+import { sendAutoEmail } from '../../../utils/helpers';
 
 export const ShopperCreateForm = (data) => {
     const { token } = useContext(AppContext);
@@ -17,6 +18,7 @@ export const ShopperCreateForm = (data) => {
         }
         const res = await createUser(values, token);
         if (res.success) {
+            sendAutoEmail('new_user', values);
             Notification('Success!', 'New shopper created', 'success');
             resetForm();
             reopenTab('shopper');
@@ -26,7 +28,7 @@ export const ShopperCreateForm = (data) => {
         }
         return
     };
-    const temp = Math.random().toString(36).slice(2, 10);
+    const temp = Math.random().toString(36).slice(2, 12);
 
     return (
         <div>
@@ -36,7 +38,7 @@ export const ShopperCreateForm = (data) => {
                 onSubmit={handleSubmit}
                 >
                 <Form>
-                    <UserEditForm type='shopper' signUp='shopper' />
+                    <UserEditForm type='shopper' signUp='shopper' admin='admin' />
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
                     <Button primary small type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>

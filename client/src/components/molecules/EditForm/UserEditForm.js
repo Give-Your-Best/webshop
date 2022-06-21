@@ -6,7 +6,7 @@ import { AddressFields } from './AddressFields';
 import { ShopperFields } from './ShopperFields';
 import { PasswordFields } from './PasswordFields';
 
-export const UserEditForm = ({type, signUp}) => {
+export const UserEditForm = ({type, signUp, admin}) => {
 
   return (
     <StyledForm>
@@ -24,7 +24,7 @@ export const UserEditForm = ({type, signUp}) => {
           <StyledInput name="email" /></StyledLabel>
         <StyledError name="email" component="div" />
       </div>
-        {signUp && <PasswordFields />}
+        {signUp && !admin && <PasswordFields />}
 
         {type === 'shopper' && <><AddressFields /><ShopperFields /></> }
 

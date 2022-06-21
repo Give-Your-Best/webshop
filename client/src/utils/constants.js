@@ -241,9 +241,8 @@ export const permissions = [
 
 export const autoEmails = [
     {
-       'type': 'test',
-       'subject': 'dev_test',
-       'content': "<p>Hi {{name}}!<p><p>Great news! Your account has been approved. Follow this link to log in and view your donor dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+       'type': 'new_user',
+       'content': "<p>Hi {{name}}!<p><p>Great news! You have a new account with Give Your Best.</p>Your temporary password is: </p><p>{{password}}</p></p>Follow this link to log in and update your password.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
         'type': 'sign_up',
