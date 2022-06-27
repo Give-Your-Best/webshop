@@ -44,6 +44,7 @@ export const Button = styled.button`
       width: 221px;
       margin: auto;
       float: none;
+      display: block;
     `};
 
     ${large &&

@@ -6,6 +6,7 @@ const locationRoutes = require('./locations');
 const settingsRoutes = require('./settings');
 const rolesRoutes = require('./roles');
 const mailerRoutes = require('./mail');
+const messageRoutes = require('./messages');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const { getSetting } = require('../../services/settings');
@@ -34,5 +35,6 @@ router.use('/users', usersRoutes);
 router.use('/roles', rolesRoutes);
 router.use('/locations', locationRoutes);
 router.use('/settings', settingsRoutes);
+router.use('/messages', messageRoutes);
 
 module.exports = router;

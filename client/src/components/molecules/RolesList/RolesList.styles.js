@@ -13,12 +13,30 @@ const ExpandButton = styled.span`
 const DeleteButton = styled.span`
   cursor: pointer;
 `
-
 const StyledTable = styled((props) => <Table {...props} />)`
-margin-bottom: 2em;
-  && tbody > tr > td {
-    padding: 10px 4px;
-  }
+  margin-bottom: 2em;
+    && tbody > tr > td {
+      padding: 10px 4px;
+    }
+
+    .ant-table-cell {
+      font-size: 22px;
+      color: ${({ theme }) => theme.colorMappings.primary};
+      font-family: lato;
+    }
+
+    .ant-table-row,
+    .ant-table-tbody > tr.ant-table-row:hover > td, 
+    .ant-table-tbody > tr > td.ant-table-cell-row-hover,
+    .ant-table-row:hover,
+    tr.ant-table-expanded-row:hover > td, tr.ant-table-expanded-row > td {
+      background: ${({ theme }) => theme.colorMappings.background}; !important;
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: 1px solid ${({ theme }) => theme.colorMappings.borders};
+      transition: background .3s;
+    }
 `
 
 

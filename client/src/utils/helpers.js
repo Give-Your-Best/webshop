@@ -21,6 +21,19 @@ export const trunc = (str) => {
     return (str.length > 61)? str.substring(0, 61) + '...': str;
 }
 
+export const checkUnread = (type, userId, messages) => {
+    let unread = [];
+    messages.filter((m) => {
+      if (type === 'admin' && m.recipient.kind === 'admin' && m.viewed === false) {
+        unread.push(m._id);
+      } else if (m.recipient._id === userId && m.viewed === false) {
+        unread.push(m._id);
+      }
+      return ''
+    })
+    return [unread.length, unread];
+}
+
 const emailFooter = `
     <div style="margin-top:30px;">
     <p>Thanks!</p>

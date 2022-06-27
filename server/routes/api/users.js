@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('../../controllers/users');
-const { getAllUsers, getUser, deleteUser, getDonations } = require('../../services/users');
+const { getAllUsers, getUser, deleteUser, getDonations, getGYBDummyUser } = require('../../services/users');
 
 // get users endpoint api/users
 router.get('/', async (req, res) => {
@@ -23,6 +23,13 @@ router.get('/donations', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
     const user = await getUser(id);
+    res.json(user);
+});
+
+// get user endoint api/users/:id
+router.get('/dummyadmin/:name', async (req, res) => {
+    const name = req.params.name;
+    const user = await getGYBDummyUser(name);
     res.json(user);
 });
 

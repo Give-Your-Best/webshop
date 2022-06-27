@@ -12,5 +12,6 @@ export {
     ItemCreateForm,
     CategoryFields,
     DonorSignUpForm,
-    ShopperSignUpForm
+    ShopperSignUpForm,
+    StartMessageThread
 } from './EditForm';

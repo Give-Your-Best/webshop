@@ -53,53 +53,61 @@ export const Basket = () => {
   }
 
   const checkout = () => {
-    confirm({
-      title: `Is this your address?`,
-      content: address,
-      okText: 'Continue to checkout',
-      onOk() {
-        const promises = basket.map((item) => {
-          const d = new Date();
-          let date = d.toISOString();
-          // add to recent items
-            setUser(user => ({
-              ...user,
-              'recentItems': [
-                ...user.recentItems || [],
-                item
-              ]
-            }));
-
-            //get donor details
-            const donorDetails = getUser(item.donorId, token)
-            .then((donor) => {
-              console.log('got item donor')
-              console.log(donorDetails)
-              if (user.deliveryPreference === 'direct') { 
-                console.log('direct send')
-                //send address directly in email
-                sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
-              } else if (user.deliveryPreference === 'via-gyb') {
-                console.log('indirect send')
-                //send email without address - to be sent later with gyb address
-                sendAutoEmail('item_shopped_pending_address', donor, [item]);
-              }
-            })
-           return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': date}, token)
-        });
-        Promise.all(promises)
-        .then(() => {
-          sendAutoEmail('order_placed', user, basket, user.deliveryAddress);
-          setBasket(null);
-          //TO DO Email Notification to donor that item has been shopped
-          Notification('Items shopped!', 'You will receive updates on your item delivery soon!', 'success');
-          history.push(`/`);
-        })
-        .catch(error => {
-          Notification('Error shopping items', error, 'error');
-        });
-      }
-    });
+    //if no address
+    if (!user.deliveryAddress.firstLine || user.deliveryAddress.firstLine === '') {
+      confirm({
+        title: `Please update your account with a delivery address!`
+      });
+      //otherwise confirm address and continue
+    } else {
+      confirm({
+        title: `Is this your address?`,
+        content: address,
+        okText: 'Continue to checkout',
+        onOk() {
+          const promises = basket.map((item) => {
+            const d = new Date();
+            let date = d.toISOString();
+            // add to recent items
+              setUser(user => ({
+                ...user,
+                'recentItems': [
+                  ...user.recentItems || [],
+                  item
+                ]
+              }));
+  
+              //get donor details
+              const donorDetails = getUser(item.donorId, token)
+              .then((donor) => {
+                console.log('got item donor')
+                console.log(donorDetails)
+                if (user.deliveryPreference === 'direct') { 
+                  console.log('direct send')
+                  //send address directly in email
+                  sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
+                } else if (user.deliveryPreference === 'via-gyb') {
+                  console.log('indirect send')
+                  //send email without address - to be sent later with gyb address
+                  sendAutoEmail('item_shopped_pending_address', donor, [item]);
+                }
+              })
+             return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': date}, token)
+          });
+          Promise.all(promises)
+          .then(() => {
+            sendAutoEmail('order_placed', user, basket, user.deliveryAddress);
+            setBasket(null);
+            //TO DO Email Notification to donor that item has been shopped
+            Notification('Items shopped!', 'You will receive updates on your item delivery soon!', 'success');
+            history.push(`/`);
+          })
+          .catch(error => {
+            Notification('Error shopping items', error, 'error');
+          });
+        }
+      });
+    }
   }
 
 

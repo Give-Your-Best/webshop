@@ -1,9 +1,10 @@
 const { mailjet } = require('../utils/mailjet');
+const { getSetting } = require('../services/settings');
 
 const sendMail = async (subject, emailHTML, recipient, recipientName) => {
   console.log('send mail service');
-  console.log(subject);
-  console.log(emailHTML);
+  const gybEmail = await getSetting('shop_email');
+  console.log(gybEmail)
 
   const request = await mailjet
   .post("send", {'version': 'v3.1'})
@@ -11,12 +12,12 @@ const sendMail = async (subject, emailHTML, recipient, recipientName) => {
     "Messages":[
       {
         "From": {
-          "Email": "hello@giveyourbest.uk",
+          "Email": gybEmail,
           "Name": "Give Your Best"
         },
         "To": [
           {
-            "Email": (recipient && recipient !== "")? recipient: "hello@giveyourbest.uk",
+            "Email": (recipient && recipient !== "")? recipient: gybEmail,
             "Name": recipientName
           }
         ],

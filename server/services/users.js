@@ -188,6 +188,16 @@ const getUser = async (id) => {
       }
 };
 
+const getGYBDummyUser = async (name) => {
+  try {
+      const user = await User_.User.find({'firstName': name});
+      return user[0]._id
+    } catch (error) {
+      console.error(`Error in getting User for message: ${error}`);
+      return { success: false, message: `Error in getting User for message: ${error}` }
+    }
+};
+
 module.exports = { 
     createUser,
     getUser,
@@ -197,5 +207,6 @@ module.exports = {
     updateDonor,
     updateShopper,
     updateAdmin,
+    getGYBDummyUser,
     getDonations
 };

@@ -5,8 +5,8 @@ const ListWrapper = styled.div`
   width: 100%;
 `
 const ExpandButton = styled.span`
-  border-left: 1px solid ${({ theme }) => theme.colorMappings.borders};
-  padding-left: 10px;
+  border-right: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  padding-right: 10px;
   cursor: pointer;
 `
 
@@ -40,5 +40,10 @@ const StyledTable = styled((props) => <Table {...props} />)`
     }
 `
 
+const Note = styled.span`
+    color: ${({ theme }) => theme.colorMappings.primary};
+    margin: 0;
+`
 
-export { ListWrapper, ExpandButton, StyledTable, DeleteButton };
+
+export { ListWrapper, ExpandButton, StyledTable, DeleteButton, Note };
