@@ -4,7 +4,7 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { adminSchema } from '../../../utils/validation';
 import { createUser } from '../../../services/user';
-import { Button, Notification, StyledSelect } from '../../atoms';
+import { Button, Notification } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
 import { StyledSubmitButton, StyledInput, StyledError } from './EditForm.styles';
 
@@ -45,11 +45,6 @@ export const AdminCreateForm = (data) => {
                     <StyledInput name="role" placeholder="Enter role" />
                     <StyledError name="role" component="div" />
 
-                    <StyledSelect name="assignedRole" placeholder="Assigned role">
-                    {data.roles.map((d)=>{
-                        return (<StyledSelect.Option key={d._id} value={d._id}>{d.name}</StyledSelect.Option>);
-                        })}
-                    </StyledSelect>
                     <StyledSubmitButton>Create</StyledSubmitButton>
                     <Button primary small type="reset" onClick={() => {reopenTab('team')}}>Cancel</Button>
                 </Form>

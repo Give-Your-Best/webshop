@@ -33,7 +33,7 @@ const login = async (req, res) => {
     const user = await User_.User.findOne({
       email: req.body.email,
       approvedStatus: 'approved'
-    }).populate('assignedRole');
+    });
 
     if ( user && user.kind === 'shopper') {
       const recentItems = await Item.find({

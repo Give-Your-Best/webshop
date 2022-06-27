@@ -34,8 +34,23 @@ export const shopperCreateSchema = yup.object().shape({
 });
 
 export const adminSchema = yup.object().shape({
+    firstName: yup.string().min(3).required('Please enter a first name'),
     email: yup.string().email().required('Please enter an email address'),
-    assignedRole: yup.string().required('Please assign a role'),
+});
+
+export const newThread = yup.object().shape({
+    subject: yup.string().required('Please enter a message subject'),
+    message: yup.string().required('Please type your message'),
+    recipient: yup.string().required('Please select a recipient')
+});
+
+export const newThreadUser = yup.object().shape({
+    subject: yup.string().required('Please enter a message subject'),
+    message: yup.string().required('Please type your message')
+});
+
+export const newMessage = yup.object().shape({
+    message: yup.string().required('Please type your message')
 });
 
 export const shopSettingsSchema = yup.object().shape({

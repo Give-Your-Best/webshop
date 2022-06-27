@@ -1,7 +1,8 @@
-export const sendMail = async ( values, token ) => {
-    console.log('send email service');
+export const sendMessage = async ( values, token ) => {
+    //call api to send message
+    console.log('send message service')
     try {
-      const response = await fetch('/api/mail/', {
+      const response = await fetch('/api/messages/', {
         method: 'post',
         headers: {
           Accept: 'application/json',
@@ -13,7 +14,7 @@ export const sendMail = async ( values, token ) => {
       const jsonres = await response.json();
       return jsonres;
     } catch (error) {
-      console.error(`Error in send mail: ${error}`);
+      console.error(`Error in send message: ${error}`);
       return error;
     }
   };

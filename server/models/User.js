@@ -110,3 +110,8 @@ module.exports = {
   Donor: Donor,
   Admin: Admin
 };
+
+
+// db.users.insertMany([
+//   { firstName: "GYBAdminAccountForMessages", lastName: "DO NOT DELETE", kind: "admin"}
+// ])

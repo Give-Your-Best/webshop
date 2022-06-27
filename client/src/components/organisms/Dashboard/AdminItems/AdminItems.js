@@ -12,6 +12,13 @@ export const AdminItems = () => {
   const mountedRef = useRef(true);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
+
+  //lazy loading params
+  const [noMoreLoad, setNoMoreLoad] = useState(false);
+  const [page, setPage] = useState(1);
+  const [noMoreLoadPastItems, setNoMoreLoadPastItems] = useState(false);
+  const [pagePastItems, setPagePastItems] = useState(1);
+
 //   const { confirm } = Modal;
 
 //   const handleDelete = (id) => {
@@ -45,17 +52,37 @@ export const AdminItems = () => {
 //     return;
 //   }
 
+  const handleLoadMore = async () => {
+    const more = await getAdminItems(page + 1, 20, true);
+    if (more.length > 0) {
+      setItems(items.concat(more));
+      setPage(page+1);
+    } else {
+      setNoMoreLoad(true);
+    }
+  }
+
+  const handleLoadMorePastItems = async () => {
+    const more = await getAdminItems(pagePastItems + 1, 20, false);
+    if (more.length > 0) {
+      setPastItems(pastItems.concat(more));
+      setPagePastItems(pagePastItems+1);
+    } else {
+      setNoMoreLoadPastItems(true);
+    }
+  }
+
   useEffect(() => {
 
     const fetchItems = async () => {
         //current items
-        const items = await getAdminItems(true);
+        const items = await getAdminItems(page, 20, true);
         if (!mountedRef.current) return null;
         setItems(items);
     };
 
     const fetchPastItems = async () => {
-      const items = await getAdminItems(false);
+      const items = await getAdminItems(page, 20, false);
       if (!mountedRef.current) return null;
       setPastItems(items);
     };
@@ -67,7 +94,7 @@ export const AdminItems = () => {
       // cleanup
       mountedRef.current = false;
     };
-
+// eslint-disable-next-line
 }, [token, user]);
 
   return (
@@ -81,12 +108,18 @@ export const AdminItems = () => {
         {items.map((item) => (
             <div key={item._id}><ItemCardLong item={item} type='all' /></div>
         ))}
+        {(!noMoreLoad)?
+          <div><Button center primary onClick={handleLoadMore}>Load More</Button></div>: ''
+        }
         <Button primary small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
       </StyledTabPanel>
       <StyledTabPanel>
         {pastItems.map((item) => (
             <div key={item._id}><ItemCardLong item={item} type='all' /></div>
         ))}
+        {(!noMoreLoadPastItems)?
+          <div><Button center primary onClick={handleLoadMorePastItems}>Load More</Button></div>: ''
+        }
         <Button primary small onClick={() => reopenTab('items')}>Back to Current Items</Button>
       </StyledTabPanel>
 

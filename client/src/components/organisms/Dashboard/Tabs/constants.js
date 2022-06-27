@@ -5,6 +5,8 @@ import { ShippingLocations } from '../ShippingLocations/ShippingLocations';
 import { Settings } from '../Settings/Settings';
 import { Logout } from '../../Logout/Logout';
 import { UserDetails } from '../UserDetails';
+import { AdminMessages } from '../AdminMessages';
+import { UserMessages } from '../UserMessages';
 import { DonorItems } from '../DonorItems';
 import { AdminItems } from '../AdminItems';
 import { OrdersList } from '../../../molecules/OrdersList';
@@ -25,7 +27,7 @@ export const adminTabs = [
     },
     {
       name: 'Messaging',
-    content: <h2>Messaging</h2>
+    content: <AdminMessages />
     },
     {
       name: 'Notifications',
@@ -68,7 +70,7 @@ export const donorTabs = [
     },
     {
       name: 'Messaging',
-    content: <h1>messaging</h1>
+    content: <UserMessages />
     },
     {
       name: 'Logout',
@@ -91,7 +93,7 @@ export const shopperTabs = [
       },
       {
         name: 'Messaging',
-      content: <h1>messaging</h1>
+      content: <UserMessages />
       },
       {
         name: 'Logout',

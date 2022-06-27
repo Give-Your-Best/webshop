@@ -5,15 +5,16 @@ import { Formik } from 'formik';
 import { shopSettingsSchema } from '../../../utils/validation';
 import { updateSetting } from '../../../services/settings';
 import { Notification } from '../../atoms';
-import { StyledSubmitButton, StyledInputNumber, StyledError} from './EditForm.styles';
+import { StyledSubmitButton, StyledInputNumber, StyledError, StyledInput} from './EditForm.styles';
 
 export const ShopSettingsEditForm = (data) => {
     const { token } = useContext(AppContext);
 
-    const handleSubmit = async (values, {resetForm}) => {
+    const handleSubmit = async (values) => {
         const res = await updateSetting('shopItemLimit', values.shopItemLimit, token);
         const res_2 = await updateSetting('trustedDonorLimit', values.trustedDonorLimit, token);
-        if (res.success && res_2.success) {
+        const res_3 = await updateSetting('shop_email', values.shop_email, token);
+        if (res.success && res_2.success && res_3.success) {
             Notification('Success!', 'Shop settings updated', 'success');
         } else {
             Notification('Error updating shop settings', res.message, 'error')
@@ -39,6 +40,9 @@ export const ShopSettingsEditForm = (data) => {
 
                     <div><label>Trusted Donor Limit</label><StyledInputNumber name="trustedDonorLimit" placeholder="Trusted Donor Limit" />
                     <StyledError name="trustedDonorLimit" component="div" /></div>
+
+                    <div><label>Shop Email</label><StyledInput name="shop_email" placeholder="Shop Email" />
+                    <StyledError name="shop_email" component="div" /></div>
 
                     <StyledSubmitButton>Save</StyledSubmitButton>
                 </Form>

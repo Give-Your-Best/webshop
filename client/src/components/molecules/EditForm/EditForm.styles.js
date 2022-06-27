@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SubmitButton, Input, Checkbox, InputNumber, Form, Radio, Select } from 'formik-antd';
+import { SubmitButton, Input, Checkbox, InputNumber, Form, Radio, Select, AutoComplete } from 'formik-antd';
 import { ErrorMessage } from 'formik';
 
 const StyledError = styled(ErrorMessage)`
@@ -24,29 +24,29 @@ const StyledSelect = styled(Select)`
 `
 
 const StyledSubmitButton = styled(SubmitButton)`
-  font-size: 1rem;
+  font-family: lato;
   cursor: pointer;
   background: ${({ theme }) => theme.colorMappings.blue};
+  font-size: 18px;
+  cursor: pointer;
   border-radius: 0.1rem;
-  border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+  border: 2px solid ${({ theme }) => theme.colorMappings.primary} !important;
+  min-height: 44px;
   color: ${({ theme }) => theme.colorMappings.primary};
   margin: 1em 5px 1em 0;
   padding: 0.3rem 1rem;
-  font-size: 0.8rem;
   border-width: 0.1rem;
   :hover {
     background: ${({ theme }) => theme.colorMappings.blue};
     border-radius: 0.1rem;
-    border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+    border: 2px solid ${({ theme }) => theme.colorMappings.primary};
     color: ${({ theme }) => theme.colorMappings.primary};
-    border-width: 0.1rem;
   }
   :focus {
     background: ${({ theme }) => theme.colorMappings.blue};
     border-radius: 0.1rem;
-    border: 0.13rem solid ${({ theme }) => theme.colorMappings.primary};
+    border: 2px solid ${({ theme }) => theme.colorMappings.primary};
     color: ${({ theme }) => theme.colorMappings.primary};
-    border-width: 0.1rem;
   }
 `
 const StyledInput = styled(Input)`
@@ -60,7 +60,44 @@ const StyledInput = styled(Input)`
   font-size: 20px;
   &:disabled {
     background-color: transparent;
-    color: black;
+    color: ${({ theme }) => theme.colorMappings.primary} !important;
+  }
+`
+
+const StyledInputArea = styled(Input.TextArea)`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
+  margin: 0.2em 1em 0.5em 0;
+  padding: 2px 5px;
+  display: block;
+  font-size: 20px;
+  &:disabled {
+    background-color: transparent;
+    color: ${({ theme }) => theme.colorMappings.primary} !important;
+  }
+`
+
+const StyledAutoComplete = styled(AutoComplete)`
+  width: 100%;
+  color: ${({ theme }) => theme.colorMappings.primary};
+
+  .ant-select-selector {
+    border: 1px solid ${({ theme }) => theme.colorMappings.primary} !important;
+    color: ${({ theme }) => theme.colorMappings.primary} !important;
+    margin: 0.2em 1em 0.5em 0;
+    padding: 2px 5px;
+    display: block;
+    font-size: 20px;
+    height: 36px !important;
+  }
+  &:disabled {
+    background-color: transparent;
+    color:  ${({ theme }) => theme.colorMappings.primary} !important;
+  }
+  &:placeholder {
+    background-color: transparent;
+    color:  ${({ theme }) => theme.colorMappings.primary} !important;
   }
 `
 
@@ -169,5 +206,7 @@ export { StyledInput,
   StyledError,
   InfoNote,
   StyledCheckboxGroup,
-  StyledInputPassword
+  StyledInputPassword,
+  StyledAutoComplete,
+  StyledInputArea
 };

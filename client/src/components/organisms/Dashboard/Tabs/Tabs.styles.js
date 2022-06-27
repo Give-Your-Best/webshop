@@ -53,6 +53,7 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
     margin: 0 3em;
     display: block;
     border: 2px solid ${({ theme }) => theme.colorMappings.borders};
+    border-radius: 30px;
   }
 `;
 
