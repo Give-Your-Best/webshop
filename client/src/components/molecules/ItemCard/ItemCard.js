@@ -13,7 +13,7 @@ export const ItemCard = ({ item }) => {
     <Card
       hoverable
       cover={
-        <img alt={`front of ${item.name}`} src={item.photos[0].url} />
+        <img alt={`front of ${item.name}`} src={(item.photos.length)? item.photos[0].url: ''} />
       }
       onClick={() => history.push(`/item/${item._id}`)}
     >

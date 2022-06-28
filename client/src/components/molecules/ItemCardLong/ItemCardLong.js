@@ -10,7 +10,7 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
   return (
     <CardLong
       cover={
-        <CardLongImage alt={`front of ${item.name}`} src={item.photos[0].url} width='200' />
+        <CardLongImage alt={`front of ${item.name}`} src={(item.photos.length)? item.photos[0].url: ''} width='200' />
       }
     >
       <Meta

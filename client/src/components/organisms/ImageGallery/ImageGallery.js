@@ -10,7 +10,7 @@ export const ImageGallery = ({changeMainImage, mainImage, otherImages}) => {
             <img key={image._id} onClick={changeMainImage} data-id={image._id} alt={`other images`} src={image.url} />
         ))}
         </MiniImagesWrapper>
-        <img alt={`main`} src={mainImage.url || '/product-placeholder.jpeg'} />
+        <img alt={`main`} src={(mainImage && mainImage.url)? mainImage.url : '/product-placeholder.jpeg'} />
     </ImagesWrapper>
     );
 };
