@@ -6,5 +6,6 @@ export { getAccountNotificationsItems } from './getAccountNotificationsItems';
 export { getShopNotificationsItems } from './getShopNotificationsItems';
 export { updateItem } from './updateItem';
 export { deleteItem } from './deleteItem';
+export { deleteDonorItems } from './deleteDonorItems';
 export { createItem } from './createItem';
 export { getItem } from './getItem';

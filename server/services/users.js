@@ -132,7 +132,10 @@ const getDonations = async (approvedStatus) => {
       {
         $match: {
           $and: [
-            {trustedDonor: false},
+            {$or: [
+              {"trustedDonor": false},
+              {"trustedDonor": null }
+            ]},
             {approvedStatus: 'approved'}
           ]
         },
@@ -166,6 +169,8 @@ const getDonations = async (approvedStatus) => {
         }
       }
     ]).exec();
+    console.log('?')
+    console.log(donations)
     return donations;
   } catch (error) {
     console.error(`Error in get donations: ${error}`);

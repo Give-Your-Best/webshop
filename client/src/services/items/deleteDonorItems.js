@@ -1,7 +1,8 @@
-export const getDonations = async (approvedStatus, token) => {
-  console.log(approvedStatus)
-  const response = await fetch(`/api/users/donations?approvedStatus=${approvedStatus}`, {
+export const deleteDonorItems = async (id, token) => {
+  const response = await fetch(`/api/items/donor/${id}`, {
+    method: 'delete',
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       'x-access-token': token,
     },

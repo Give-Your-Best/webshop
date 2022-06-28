@@ -4,6 +4,7 @@ const Items = require('../../controllers/items');
 const { getAllItems, 
     getItem, 
     deleteItem, 
+    deleteDonorItems,
     getAccountNotificationItems, 
     getShopNotificationItems,
     getDonorItems,
@@ -90,6 +91,13 @@ router.delete('/:id', async (req, res) => {
     const id = req.params.id;
     const item = await deleteItem(id);
     res.json(item);
+});
+
+// delete donor item endoint delete to api/items/donor/:id
+router.delete('/donor/:id', async (req, res) => {
+    const id = req.params.id;
+    const items = await deleteDonorItems(id);
+    res.json(items);
 });
 
 module.exports = router;

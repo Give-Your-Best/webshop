@@ -26,12 +26,13 @@ const StyledTab = styled(Tab).attrs({
   padding: 0.4em 1em;
   list-style: none;
   cursor: pointer;
-  color: #888;
+  color: ${({ theme }) => theme.colorMappings.primary};
   max-width: max-content;
+  font-size: 22px;
 
   &.selected {
-    color: ${({ theme }) => theme.colorMappings.black};
-    background: #CCC;
+    color: ${({ theme }) => theme.colorMappings.white};
+    background: ${({ theme }) => theme.colorMappings.primary};
   }
 
   &.disabled {

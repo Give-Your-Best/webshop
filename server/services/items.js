@@ -310,6 +310,25 @@ const getItem = async (id) => {
       }
 };
 
+const deleteDonorItems = async (id) => {
+  console.log('delete donor items');
+  if (!id || id === '') {
+    throw Error('No donor id provided');
+  }
+  try {
+      const item = await Item.findOneAndDelete({donorId: id}, { useFindAndModify: false });
+      if (item) {
+          return { success: true, message: 'Donor items deleted' }
+      } else {
+        throw Error('Cannot delete donor items');
+      }
+  } catch (error) {
+      console.error(`Error in delete donor items: ${error}`);
+      return { success: false, message: `Error in delete donor items: ${error}` }
+  }
+
+}
+
 module.exports = { 
     createItem,
     getItem,
@@ -320,5 +339,6 @@ module.exports = {
     getAccountNotificationItems,
     getShopNotificationItems,
     deleteItem,
+    deleteDonorItems,
     updateItem
 };

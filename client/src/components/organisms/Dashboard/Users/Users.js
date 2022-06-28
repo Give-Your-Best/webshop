@@ -2,6 +2,7 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Users.styles';
 import { getUsers, deleteUser, updateDonor, updateShopper } from '../../../../services/user';
+import { deleteDonorItems } from '../../../../services/items';
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import { DonorMiniEditForm, ShopperMiniEditForm, UsersList, DonorCreateForm, ShopperCreateForm } from '../../../molecules';
@@ -29,6 +30,7 @@ export const Users = () => {
               return shopper._id !== id;
             }));
           } else if (kind === 'donor') {
+            deleteDonorItems(id, token);
             setDonors(donors.filter(donor => {
               return donor._id !== id;
             }));

@@ -30,10 +30,14 @@ const StyledTab = styled(Tab).attrs({
   color: #888;
   border: 2px solid ${({ theme }) => theme.colorMappings.borders};
   margin: 1em 0;
-  min-width: 200px;
+  min-width: 300px;
+  border-radius: 20px;
+  color: ${({ theme }) => theme.colorMappings.primary};
+  font-size: 20px;
+  font-family: lato;
 
   &.selected {
-    color: ${({ theme }) => theme.colorMappings.primary};
+    background: ${({ theme }) => theme.colorMappings.yellow};
   }
 
   &.disabled {

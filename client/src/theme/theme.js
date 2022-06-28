@@ -11,7 +11,7 @@ const colors = {
     100: '#EF7C98',
   },
   yellow: {
-    500: '#FFDE59',
+    500: '#FAD22A',
   },
   white: {
     500: '#FFFFFF',
