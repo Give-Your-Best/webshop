@@ -55,5 +55,6 @@ export const theme = {
     buttonBorders: colors.red[600],
     frontPanelBackground: colors.pink[100],
   },
-  mobile: '480px'
+  mobile: '768px',
+  mid: '65rem'
 };

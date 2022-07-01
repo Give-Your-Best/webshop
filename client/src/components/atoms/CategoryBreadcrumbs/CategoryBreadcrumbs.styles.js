@@ -7,6 +7,11 @@ export const StyledBreadcrumbs = styled(Breadcrumb)`
   text-transform: lowercase;
   color: ${({ theme }) => theme.colorMappings.primary};
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    margin: 0 0 0 0;
+    font-size: 18px;
+  }
+
   .ant-breadcrumb-separator {
     color: ${({ theme }) => theme.colorMappings.primary};
     margin: 0 5px;

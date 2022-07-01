@@ -15,88 +15,108 @@ import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 export const adminTabs = [
     {
       name: 'Dashboard',
-    content: <DashboardImage />
+    content: <DashboardImage />,
+    id:'adminImage'
     },
     {
       name: 'Items',
-    content: <AdminItems />
+    content: <AdminItems />,
+    id:'adminItems'
     },
     {
       name: 'Users',
-    content: <Users />
+    content: <Users />,
+    id:'adminUsers'
     },
     {
       name: 'Messaging',
-    content: <AdminMessages />
+    content: <AdminMessages />,
+    id:'adminMessages'
     },
     {
       name: 'Notifications',
-    content: <Notifications />
+    content: <Notifications />,
+    id:'adminNotif'
     },
     {
       name: 'Approve Requests',
-    content: <ApproveRequests />
+    content: <ApproveRequests />,
+    id:'adminApprove'
     },
     {
       name: 'Shipping Locations',
-    content: <ShippingLocations />
+    content: <ShippingLocations />,
+    id:'adminLocations'
     },
     {
       name: 'Settings',
-    content: <Settings />
+    content: <Settings />,
+    id:'adminSettings'
     },
     {
       name: 'Logout',
-    content: <Logout />
+    content: <Logout />,
+    id:'logout'
     },
 ]
 
 export const donorTabs = [
     {
       name: 'Dashboard',
-    content: <DashboardImage />
+    content: <DashboardImage />,
+    id:'adminImage'
     },
     {
       name: 'My Details',
-    content: <UserDetails />
+    content: <UserDetails />,
+    id:'donorDetails'
     },
     {
       name: 'My Items',
-    content: <DonorItems />
+    content: <DonorItems />,
+    id:'donorItems'
     },
     {
       name: 'Item Processing',
-    content: <OrdersList />
+    content: <OrdersList />,
+    id:'donorProcessing'
     },
     {
       name: 'Messaging',
-    content: <UserMessages />
+    content: <UserMessages />,
+    id:'donorMessages'
     },
     {
       name: 'Logout',
-    content: <Logout />
+    content: <Logout />,
+    id:'logout'
     },
 ]
 
 export const shopperTabs = [
     {
       name: 'Dashboard',
-    content: <DashboardImage />
+    content: <DashboardImage />,
+    id:'adminImage'
     },
     {
         name: 'My Details',
-      content: <UserDetails />
+      content: <UserDetails />,
+      id:'shopperDetails'
       },
       {
         name: 'My Orders',
-      content: <OrdersList />
+      content: <OrdersList />,
+      id:'shopperOrders'
       },
       {
         name: 'Messaging',
-      content: <UserMessages />
+      content: <UserMessages />,
+      id:'shopperMessages'
       },
       {
         name: 'Logout',
-      content: <Logout />
+      content: <Logout />,
+      id:'logout'
       },
 ]

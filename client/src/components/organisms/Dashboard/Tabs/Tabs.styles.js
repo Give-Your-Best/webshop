@@ -16,6 +16,9 @@ const StyledTabList = styled(TabList)`
   padding: 0;
   margin: 0;
   border: none;
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    display: none;
+  }
 `;
 
 const StyledTab = styled(Tab).attrs({
@@ -45,6 +48,10 @@ const StyledTab = styled(Tab).attrs({
     color: #e0e0e0;
     cursor: not-allowed;
   }
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    min-width: unset;
+  }
 `;
 
 const StyledTabHidden = styled(Tab)`
@@ -60,6 +67,18 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
     border: 2px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 30px;
   }
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    &.selected {
+      margin: 0 0 0 2em;
+      padding: 0.75em;
+    }
+  }
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    &.selected {
+      margin: 0;
+    }
+  }
 `;
 
 const StyledTabPanelDashboardImage = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
@@ -68,6 +87,18 @@ const StyledTabPanelDashboardImage = styled(TabPanel).attrs({ selectedClassName:
     box-shadow: 0px 3px 6px #BA191A29;
     margin: 0 3em;
     display: block;
+  }
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    &.selected {
+      margin: 0 0 0 2em;
+    }
+  }
+
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    &.selected {
+      margin: 0;
+    }
   }
 `;
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { 
   StyledTab, 
@@ -10,29 +10,27 @@ import {
   StyledTabHidden
 } from './Tabs.styles';
 import { AccountWelcome } from '../../../molecules/AccountWelcome';
-import { adminTabs, donorTabs, shopperTabs } from './constants';
+import { tabList } from "../../../../utils/helpers";
 
-export const Tabs = () => {
+
+export const Tabs = ({itemId}) => {
+  const [tabIndex, setTabIndex] = useState(0);
   const { user } = useContext(AppContext);
-  var tabs = [];
 
-  switch (user.type) {
-    default:
-      tabs = [];
-      break;
-    case 'admin':
-      tabs = adminTabs;
-      break;
-    case 'donor':
-      tabs = donorTabs;
-      break;
-    case 'shopper':
-      tabs = shopperTabs;
-      break;
-  }
+  var tabs = tabList(user);
+
+  useEffect(() => {
+    tabs.forEach((t, index) => {
+      if (itemId && t.id === itemId) {
+        setTabIndex(index);
+      }
+    })
+
+}, [itemId, tabs]);
+
   return (
     <DashboardMenuWrapper>
-      <StyledTabs>
+      <StyledTabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
         <StyledTabList>
           <AccountWelcome />
           {tabs.map((d)=>{

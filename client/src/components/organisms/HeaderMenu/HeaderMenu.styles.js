@@ -4,6 +4,9 @@ import styled from 'styled-components';
 export const HeaderMenuWrapper = styled.div`
   display: table;
   margin-right: 15px;
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    display: none;
+  }
 `;
 
 export const Icon = styled.img`

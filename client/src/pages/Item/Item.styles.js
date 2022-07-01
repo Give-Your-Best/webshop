@@ -57,6 +57,9 @@ export const ItemDetailsWrapper = styled.div`
     font-family: lato;
     font-size: 48px;
     font-weight: bold;
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      font-size: 20px;
+    }
   }
 
   p {

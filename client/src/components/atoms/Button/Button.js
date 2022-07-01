@@ -13,6 +13,11 @@ export const Button = styled.button`
     min-height: 52px;
     font-weight: bold;
 
+    @media (max-width:${({ theme }) => theme.mid}) {
+      font-size: 18px;
+      min-height: 46px;
+    }
+
     ${left &&
     css`
       float: left;
