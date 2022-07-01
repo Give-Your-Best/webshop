@@ -71,6 +71,10 @@ const StyledSubmitButton = styled(SubmitButton)`
     border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder};
     color: ${({ theme }) => theme.colorMappings.primary};
   }
+  @media (max-width:${({ theme }) => theme.mid}) {
+    font-size: 18px;
+    min-height: 46px;
+  }
 `
 const StyledInput = styled(Input)`
   width: 100%;

@@ -28,6 +28,9 @@ const StyledTable = styled((props) => <Table {...props} />)`
     .ant-table-cell {
       font-size: 22px;
       color: ${({ theme }) => theme.colorMappings.primary};
+      @media (max-width:${({ theme }) => theme.mid}) {
+        font-size: 20px;
+      }
     }
 
     .ant-table-row,

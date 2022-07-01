@@ -9,6 +9,9 @@ export const AppWrapper = styled.div`
     font-family: 'Alfa Slab One', cursive;
     color: ${({ theme }) => theme.colorMappings.primary};
     font-size: 60px;
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      font-size: 26px;
+    }
   }
 
   h2 {
@@ -22,6 +25,6 @@ export const AppWrapper = styled.div`
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    padding: 1rem;
+    padding: 0.1rem;
   }
 `;

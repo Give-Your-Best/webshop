@@ -53,7 +53,7 @@ export const Home = () => {
         <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
         {items.map((item) => {
           if (item.photos.length) {
-            return <ItemCard key={item._id} item={item} />
+            return (<ItemCard key={item._id} item={item} />)
           } else {
             return '';
           }

@@ -5,6 +5,9 @@ import { Form } from 'formik-antd';
 const StyledForm = styled(Form)`
   width: 400px;
   margin: auto;
+  @media (max-width:${({ theme }) => theme.mid}) {
+    width: 100%;
+  }
 `
 
 const StyledTabs = styled(Tabs)`
@@ -17,6 +20,10 @@ const StyledTabs = styled(Tabs)`
     border: 2px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 30px;
     font-family: lato;
+
+    @media (max-width:${({ theme }) => theme.mid}) {
+      padding: 0em 0em 6em 0em;
+    }
 `;
 
 const StyledTabList = styled(TabList)`
@@ -36,6 +43,11 @@ const StyledTab = styled(Tab)`
   padding: 0 3em;
   font-size: 30px;
   color:  ${({ theme }) => theme.colorMappings.primary};
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    padding: 0em 1em;
+  }
+
 `;
 
 const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
@@ -44,6 +56,10 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
   padding: 10px 20px;
   &.selected {
     display: block;
+  }
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    padding: 10px 5px;
   }
 `;
 
@@ -71,6 +87,9 @@ const SignUpStyledTab = styled(Tab)`
   padding: 0 3em;
   font-size: 30px;
   border-right: 2px solid ${({ theme }) => theme.colorMappings.borders};
+  @media (max-width:${({ theme }) => theme.mid}) {
+    padding: 0em 1em;
+  }
 `;
 
 export { 

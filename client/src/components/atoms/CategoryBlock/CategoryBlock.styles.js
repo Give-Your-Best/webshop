@@ -22,6 +22,13 @@ export const Card = styled(AntCard)`
   .ant-card-cover img {
     background: ${({ theme }) => theme.colorMappings.background};
     width: 200px;
+    @media (max-width:${({ theme }) => theme.mid}) {
+      width: 150px;
+    }
+    @media (max-width:${({ theme }) => theme.mobile}) {
+      width: 250px;
+      margin: auto;
+    }
   }
 
   .ant-card-body {
@@ -29,13 +36,13 @@ export const Card = styled(AntCard)`
     background: ${({ theme }) => theme.colorMappings.background};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.mobile}) {
     margin: 0.5rem 0.3rem;
-    max-width: 9rem;
-    min-width: 9rem;
+    width: 250px;
+    width: 250px;
 
     .ant-card-meta-title {
-      font-size: 0.8rem;
+      font-size: 18px;
       text-align: center;
     }
   }

@@ -10,7 +10,7 @@ export const Statistic = styled(AntStatistic)`
   padding: 1em;
   text-align: center;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${({ theme }) => theme.mobile}) {
     margin: 0.5rem 0.3rem;
     max-width: 9rem;
     min-width: 9rem;

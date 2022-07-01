@@ -11,8 +11,12 @@ export const FooterWrapper = styled.div`
   border-top: 15px solid #152f45;
   margin-top: 2rem;
 
+  @media (max-width: ${({ theme }) => theme.mid}) {
+    padding: 10px 5rem 10px;
+  }
   @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 1em;
+    display: block;
   }
 `;
 
@@ -20,6 +24,9 @@ export const SocialWrapper = styled.div`
   display: flex;
   width: 60%;
   margin: auto;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100%;
+  }
 
   div {
     display: block;
@@ -43,6 +50,9 @@ export const SocialWrapper = styled.div`
 export const FooterItem = styled.div`
   width: 25%;
   text-align: center;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100%;
+  }
 
   img {
     width: 148px;
@@ -71,6 +81,10 @@ export const FooterItemWider = styled.div`
   width: 40%;
   text-align: center;
   margin-left: 3rem;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100%;
+    margin: 0;
+  }
 
   img {
     width: 148px;

@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyledBurger } from './BurgerMenu.styles';
+import { showMobileMenu } from '../../../utils/helpers';
 
-export const BurgerMenu = ({ open, setOpen }) => {
+export const BurgerMenu = () => {
   return (
-    <StyledBurger open={open} onClick={() => setOpen(!open)}>
+    <StyledBurger onClick={showMobileMenu}>
       <div />
       <div />
       <div />

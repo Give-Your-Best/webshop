@@ -14,4 +14,8 @@ export const Container = styled.div`
     color: ${({ theme }) => theme.colorMappings.primary};
     font-size: 20px;
   }
+
+  @media (max-width:${({ theme }) => theme.mid}) {
+    padding: 1rem 1rem;
+  }
 `;

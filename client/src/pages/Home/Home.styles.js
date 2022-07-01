@@ -59,6 +59,9 @@ export const CoverWrapper = styled.div`
     color: ${({ theme }) => theme.colorMappings.primary};
     line-height: 1.3;
     font-family: lato;
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      font-size: 20px;
+    }
 
   }
 `;

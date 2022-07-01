@@ -31,6 +31,7 @@ export const Routes = () => {
       <Route path="/register">
         <Register />
       </Route>
+      <ProtectedRoute path={`/dashboard/:itemId`} component={Dashboard}></ProtectedRoute>
       <ProtectedRoute path="/dashboard" component={Dashboard}></ProtectedRoute>
       <Route path="/">
         <Home />

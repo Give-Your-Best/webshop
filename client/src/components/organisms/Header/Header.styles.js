@@ -9,8 +9,8 @@ export const HeaderWrapper = styled.div`
   background:  ${({ theme }) => theme.colorMappings.secondary};
   padding: 0 calc((100vw - 80rem) / 2);
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    padding: 0.5em;
-    min-height: 75px;
+    justify-content: center;
+    min-height: 100px;
   }
 `;
 
@@ -23,6 +23,12 @@ export const LogoWrapper = styled(Link)`
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    margin-right: 0.5rem;
+    display: block;
+
+    > img {
+      width: 100px;
+      height: 100px;
+      margin: auto;
+    }
   }
 `;

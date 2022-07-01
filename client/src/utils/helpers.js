@@ -1,5 +1,18 @@
 import { sendMail } from '../services/mail';
 import { autoEmails } from '../utils/constants';
+import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashboard/Tabs/constants';
+
+export const hideMobileMenu = () => {
+    document.getElementById('mobileMenu').style.display = 'none';
+    document.getElementById('cross').style.display = 'none';
+    return
+}
+
+export const showMobileMenu = () => {
+    document.getElementById('mobileMenu').style.display = 'block';
+    document.getElementById('cross').style.display = 'block';
+    return
+}
 
 export const name = (userDetails) => {
     if (userDetails.firstName && userDetails.lastName) {
@@ -11,6 +24,30 @@ export const name = (userDetails) => {
     } else {
         return userDetails.email
     }
+}
+
+export const tabList = (user) => {
+    var tabs = [];
+
+    if (!user) {
+        return tabs;
+    }
+
+    switch (user.type) {
+      default:
+        tabs = [];
+        break;
+      case 'admin':
+        tabs = adminTabs;
+        break;
+      case 'donor':
+        tabs = donorTabs;
+        break;
+      case 'shopper':
+        tabs = shopperTabs;
+        break;
+    }
+    return tabs;
 }
 
 export const openHiddenTab = (type) => {

@@ -40,12 +40,17 @@ export const Card = styled(AntCard)`
     position: absolute;
     bottom: 0;
     right: 10px;
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      position:relative;
+      margin: 7px 10px;
+      right: 0;
+    }
   }
 
-  @media (max-width: 768px) {
-    margin: 0.5rem 0.3rem;
-    width: 150px;
-    height: 300px;
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    margin: 0.5rem auto;
+    width: 80%;
+    height: auto;
 
     .ant-card-meta-title {
       font-size: 0.8rem;
