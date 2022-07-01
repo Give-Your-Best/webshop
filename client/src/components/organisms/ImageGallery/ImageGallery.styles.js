@@ -9,7 +9,8 @@ export const ImagesWrapper = styled.div`
         width: 80%;
         height:fit-content;
         margin-left: 10px;
-        border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+        border-radius: 10px;
+        background: white;
     }
 `
 
@@ -21,7 +22,8 @@ export const MiniImagesWrapper = styled(Box)`
     > img {
     width: 100%;
     max-height: 200px;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+    border-radius: 10px;
+    background: white;
     margin: 5px 0;
     cursor: pointer;
     }

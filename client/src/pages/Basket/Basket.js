@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { AppContext } from '../../context/app-context';
 import { Modal } from 'antd';
 import { Container } from '../../components';
-import { AccountWelcome, ItemCardLong } from '../../components/molecules';
+import { AccountWelcome, ItemCardBasket } from '../../components/molecules';
 import { Button, Notification } from '../../components/atoms';
 import { BasketSidebar, BasketDetails, BasketWrapper } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
@@ -43,7 +43,7 @@ export const Basket = () => {
       return (
         <div>
         {basket.map((b)=>{
-          return (<ItemCardLong key={b._id} item={b} actionText={'Remove from basket'} action={removeFromBasket} />);
+          return (<ItemCardBasket key={b._id} item={b} actionText={'Remove from basket'} action={removeFromBasket} />);
         })}
         </div>
       )
@@ -120,8 +120,8 @@ export const Basket = () => {
         <BasketDetails>
           <h1>My Basket</h1>
         {basketList()}
-        <Button primary small left onClick={() => {history.push(`/products`)}}>Keep Shopping</Button>
-        {basket && <Button primary small onClick={checkout}>Checkout</Button>}
+        <Button primary left onClick={() => {history.push(`/products`)}}>Keep Shopping</Button>
+        {basket && <Button primary onClick={checkout}>Checkout</Button>}
         </BasketDetails>
       </BasketWrapper>
     </Container>

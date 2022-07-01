@@ -6,7 +6,7 @@ import { shopperCreateSchema, passwordSchema } from '../../../utils/validation';
 import { sendAutoEmail } from '../../../utils/helpers';
 import { register } from '../../../services/user';
 import { Notification } from '../../atoms';
-import { StyledSubmitButton } from './EditForm.styles';
+import { StyledSubmitButton, SubHead } from './EditForm.styles';
 import { UserEditForm } from './UserEditForm';
 
 export const ShopperSignUpForm = () => {
@@ -24,14 +24,9 @@ export const ShopperSignUpForm = () => {
         }
     };
 
-    const pStyle = {
-        'text-align': 'center',
-        'font-weight': 'bold'
-   }
-
     return (
         <div>
-            <p style={pStyle}>Shopper Sign Up</p>
+            <SubHead>Shopper Sign Up</SubHead>
             <Formik
                 initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'shopper', shareAddress: true, deliveryPreference: 'direct' }}
                 validationSchema= {shopperCreateSchema.concat(passwordSchema)}

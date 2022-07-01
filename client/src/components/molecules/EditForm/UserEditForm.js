@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyledInput, StyledForm, StyledLabel, StyledError, StyledSubmitButton } from './EditForm.styles';
+import { StyledInput, StyledForm, StyledLabel, StyledError, StyledSubmitButton, FieldContainerHalf } from './EditForm.styles';
 import { Button } from '../../atoms';
 import { openHiddenTab } from '../../../utils/helpers';
 import { AddressFields } from './AddressFields';
@@ -10,26 +10,24 @@ export const UserEditForm = ({type, signUp, admin}) => {
 
   return (
     <StyledForm>
-      <div>
+      <FieldContainerHalf>
       <StyledLabel>First name
-        <StyledInput name="firstName" /></StyledLabel>
-        <StyledError name="firstName" component="div" />
+        <StyledInput name="firstName" />
+        <StyledError name="firstName" component="div" /></StyledLabel>
 
         <StyledLabel>Last name
-        <StyledInput name="lastName" /></StyledLabel>
-        <StyledError name="lastName" component="div" />   
-      </div>
-      <div>
+        <StyledInput name="lastName" />
+        <StyledError name="lastName" component="div" /></StyledLabel> 
+      </FieldContainerHalf>
         <StyledLabel>Email address
-          <StyledInput name="email" /></StyledLabel>
-        <StyledError name="email" component="div" />
-      </div>
+          <StyledInput name="email" />
+        <StyledError name="email" component="div" /></StyledLabel>
         {signUp && !admin && <PasswordFields />}
 
         {type === 'shopper' && <><AddressFields /><ShopperFields /></> }
 
-        {!signUp && <Button primary left small type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>}
         {!signUp && <StyledSubmitButton>Save</StyledSubmitButton>}
+        {!signUp && <Button primary type="reset" onClick={() => {openHiddenTab('password')}}>Update Password</Button>}
     </StyledForm>
   );
 };

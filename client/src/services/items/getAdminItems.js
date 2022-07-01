@@ -1,5 +1,5 @@
-export const getAdminItems = async (page, limit, isCurrent) => {
-    const response = await fetch(`/api/items/admin?page=${page}&limit=${limit}&${(isCurrent)? '&isCurrent='+ isCurrent: 'false'}`, {
+export const getAdminItems = async (isCurrent) => {
+    const response = await fetch(`/api/items/admin?${(isCurrent)? '&isCurrent='+ isCurrent: 'false'}`, {
       headers: {
         'Content-Type': 'application/json'
       },

@@ -6,7 +6,7 @@ import { donorCreateSchema } from '../../../utils/validation';
 import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
-import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError} from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledCheckbox, StyledError, FieldContainerHalf, StyledLabel } from './EditForm.styles';
 import { sendAutoEmail } from '../../../utils/helpers';
 
 export const DonorCreateForm = (data) => {
@@ -35,21 +35,25 @@ export const DonorCreateForm = (data) => {
                 onSubmit={handleSubmit}
                 >
                 <Form>
-                    <StyledInput name="firstName" placeholder="Enter first name" />
-                    <StyledError name="firstName" component="div" />
+                <FieldContainerHalf>
+                    <StyledLabel>First name
+                    <StyledInput name="firstName" />
+                    <StyledError name="firstName" component="div" /></StyledLabel>
 
-                    <StyledInput name="lastName" placeholder="Enter last name" />
-                    <StyledError name="lastName" component="div" />
+                    <StyledLabel>Last name
+                    <StyledInput name="lastName" />
+                    <StyledError name="lastName" component="div" /></StyledLabel>
+                </FieldContainerHalf>
 
-                    <StyledInput name="email" placeholder="Enter your email" />
-                    <StyledError name="email" component="div" />
+                    <StyledLabel>Email
+                    <StyledInput name="email" />
+                    <StyledError name="email" component="div" /></StyledLabel>
+
                     <div>
-                    <label>Mark as trusted donor? </label>
-                    <StyledCheckbox name="trustedDonor" />
-                    <StyledError name="trustedDonor" component="div" />
-                    </div>
+                    <StyledCheckbox name="trustedDonor">Mark as trusted donor</StyledCheckbox>
+                    <StyledError name="trustedDonor" component="div" /></div>
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('donor')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

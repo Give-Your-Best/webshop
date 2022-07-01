@@ -3,9 +3,9 @@ import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemsCollapsedList, ItemMiniEditForm, ItemCreateForm } from '../../../molecules';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './DonorItems.styles';
+import { StyledTabListHidden, StyledTabs, StyledTabPanel, HiddenStyledTab } from './DonorItems.styles';
 import { getDonorItems, updateItem, deleteItem } from '../../../../services/items';
-import { Button } from '../../../atoms';
+import { Button, H2 } from '../../../atoms';
 import { openHiddenTab, reopenTab } from "../../../../utils/helpers";
 import { itemCreateschema } from "../../../../utils/validation";
 
@@ -129,21 +129,24 @@ export const DonorItems = () => {
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
-      <StyledTabList>
-        <StyledTab className='itemslist'>My items</StyledTab>
+      <StyledTabListHidden>
+        <HiddenStyledTab className='itemslist'>My items</HiddenStyledTab>
         <HiddenStyledTab className='additem'>Upload Item</HiddenStyledTab>
         <HiddenStyledTab className='pastitemslist'>My Past Items</HiddenStyledTab>
-      </StyledTabList>
+      </StyledTabListHidden>
 
       <StyledTabPanel>
+        <H2>My Orders</H2>
         <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} editItem={editItem} />
         <Button primary small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
-        <Button primary small onClick={() => openHiddenTab('item')}>Upload Item</Button>
+        <Button primary small onClick={() => openHiddenTab('item')}>Add Item</Button>
       </StyledTabPanel>
       <StyledTabPanel>
+        <H2>Add Item</H2>
         <ItemCreateForm submitFunction={submitFunction} photos={[]} />
       </StyledTabPanel>
       <StyledTabPanel>
+      <H2>Past Items</H2>
         <ItemsCollapsedList data={pastItems} expandRow={editForm} reOpen={() => {reopenTab('items')}} />
       </StyledTabPanel>
 

@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { Formik } from 'formik';
 import { AppContext } from '../../../../context/app-context';
 import { UserEditForm, PasswordUpdate } from '../../../molecules';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './UserDetails.styles';
+import { H2 } from '../../../atoms';
+import { StyledTabListHidden, StyledTabs, StyledTabPanel, HiddenStyledTab } from './UserDetails.styles';
 import { getUsers, updateDonor, updateShopper } from '../../../../services/user';
 import { donorCreateSchema, shopperCreateSchema, adminSchema } from '../../../../utils/validation';
 
@@ -66,12 +67,13 @@ export const UserDetails = () => {
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
-      <StyledTabList>
-        <StyledTab className='detaillist'>My Details</StyledTab>
+      <StyledTabListHidden>
+        <HiddenStyledTab className='detaillist'>My Details</HiddenStyledTab>
         <HiddenStyledTab className='addpassword'>Update password</HiddenStyledTab>
-      </StyledTabList>
+      </StyledTabListHidden>
 
       <StyledTabPanel>
+        <H2>My Details</H2>
       <Formik
         enableReinitialize={true}
         initialValues={currentUser}

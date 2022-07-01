@@ -1,21 +1,25 @@
 import * as React from 'react';
-import { StyledInput, StyledLabel, StyledError } from './EditForm.styles';
+import { StyledInput, StyledLabel, StyledError, FieldContainerHalf } from './EditForm.styles';
 
 export const AddressFields = () => {
   return (
-    <div>
+    <>
+    <FieldContainerHalf>
       <StyledLabel>Address Line 1
-      <StyledInput name="deliveryAddress.firstLine" /></StyledLabel>
-      <StyledError name="deliveryAddress.firstLine" component="div" />
+      <StyledInput name="deliveryAddress.firstLine" />
+      <StyledError name="deliveryAddress.firstLine" component="div" /></StyledLabel>
       <StyledLabel>Address Line 2
-      <StyledInput name="deliveryAddress.secondLine" /></StyledLabel>
-      <StyledError name="deliveryAddress.secondLine" component="div" />
+      <StyledInput name="deliveryAddress.secondLine" />
+      <StyledError name="deliveryAddress.secondLine" component="div" /></StyledLabel>
+      </FieldContainerHalf>
+      <FieldContainerHalf>
       <StyledLabel>City
-      <StyledInput name="deliveryAddress.city" /></StyledLabel>
-      <StyledError name="deliveryAddress.city" component="div" />
+      <StyledInput name="deliveryAddress.city" />
+      <StyledError name="deliveryAddress.city" component="div" /></StyledLabel>
       <StyledLabel>Post Code
-      <StyledInput name="deliveryAddress.postcode" /></StyledLabel>
-      <StyledError name="deliveryAddress.postcode" component="div" />
-    </div>
+      <StyledInput name="deliveryAddress.postcode" />
+      <StyledError name="deliveryAddress.postcode" component="div" /></StyledLabel>
+      </FieldContainerHalf>
+    </>
   );
 };

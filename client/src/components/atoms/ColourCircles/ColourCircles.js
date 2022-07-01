@@ -7,7 +7,6 @@ export const ColourCircles = styled.span`
     padding: 0 1px;
     margin: 1px 5px;
     vertical-align: middle;
-    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
     display:inline-block;
     background: ${props => (props.colour ? (props.colour === 'Neutral')? '#bfab8e': props.colour.toLowerCase() : '')};
 `

@@ -61,7 +61,7 @@ export const Login = () => {
               <StyledError name="password" component="div" />
               </div>
 
-              <StyledSubmitButton>Login</StyledSubmitButton>
+              <StyledSubmitButton>Log In</StyledSubmitButton>
             </StyledForm>
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

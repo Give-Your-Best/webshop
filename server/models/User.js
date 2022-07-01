@@ -76,7 +76,7 @@ const Shopper = User.discriminator("shopper", new Schema({
   shoeSize: [String],
   deliveryPreference: {
     type: String,
-    enum: ["direct", "via gyb", "to local"],
+    enum: ["direct", "via-gyb", "to-local"],
     default : 'direct'
   },
   currentStatus: String,

@@ -46,7 +46,7 @@ export const AdminCreateForm = (data) => {
                     <StyledError name="role" component="div" />
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {reopenTab('team')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('team')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

@@ -73,7 +73,7 @@ export const ItemCreateForm = (data) => {
                     <StyledError name="photos" component="div" />
 
                     <StyledSubmitButton>Upload Item</StyledSubmitButton>
-                    <Button small primary type="reset" onClick={() => {reopenTab('items')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('items')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

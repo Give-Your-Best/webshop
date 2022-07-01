@@ -7,6 +7,8 @@ export { Container } from './Container';
 export { Link } from './Link';
 export { Notification } from './Notification';
 export { StyledSelect } from './Select';
+export { H2 } from './H2';
+export { Space } from './Space';
 export { UserSelect } from './UserSelect';
 export { StyledCheckbox } from './Checkbox';
 export { ColourCircles } from './ColourCircles';

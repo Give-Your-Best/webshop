@@ -7,6 +7,8 @@ export const Card = styled(AntCard)`
   margin: 0.5rem auto;
   border: none;
   cursor: pointer;
+  background: inherit;
+
 
   .ant-card-meta-title {
     font-size: 20px;
@@ -14,10 +16,12 @@ export const Card = styled(AntCard)`
     color: ${({ theme }) => theme.colorMappings.blush};
     background: ${({ theme }) => theme.colorMappings.background};
     margin: 0;
+    font-weight: bold;
   }
 
   .ant-card-cover img {
     background: ${({ theme }) => theme.colorMappings.background};
+    width: 200px;
   }
 
   .ant-card-body {

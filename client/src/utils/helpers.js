@@ -1,6 +1,18 @@
 import { sendMail } from '../services/mail';
 import { autoEmails } from '../utils/constants';
 
+export const name = (userDetails) => {
+    if (userDetails.firstName && userDetails.lastName) {
+        return userDetails.firstName + ' ' + userDetails.lastName
+    } else if (userDetails.firstName && !userDetails.lastName) {
+        return userDetails.firstName
+    } else if (!userDetails.firstName && userDetails.lastName) {
+        return userDetails.lastName
+    } else {
+        return userDetails.email
+    }
+}
+
 export const openHiddenTab = (type) => {
     if (document.querySelector('.add' + type)) {
         document.querySelector('.add' + type).click();
@@ -81,12 +93,12 @@ export const emailTemplate = (content) => {
                         text-align: center;
                     }
                     a {
-                        border: 2px solid #BA1B1A;
+                        border: 2px solid #A21010;
                         padding: 0.3rem 1.2rem;
                         font-size: 20px;
                         color: #BA191A;
                         font-family: Lato;
-                        background-color: #51C1EF;
+                        background-color: #7ed4f7;
                         margin: 30px auto;
                         width: 150px;
                         text-align: center;
@@ -100,7 +112,7 @@ export const emailTemplate = (content) => {
                     <img style=" width:100px;height:100px;margin:auto;display:block;" alt='logo' src='https://res.cloudinary.com/hnlrfgzzh/image/upload/v1655378744/GYB_Logos_copy-07_z1ke0l_td1xmj.png' />
                 </div>
                 <div style="width:20%;margin:0;display:block"></div>
-                <div style="width:60%;display:block;margin:-40px auto 0 auto;background-color:white;border:2px solid #BA191A;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:center;">
+                <div style="width:60%;display:block;margin:-40px auto 0 auto;background-color:white;border:2px solid #A21010;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:center;">
                 ` + content + `
                 ` + emailFooter + `
                 </div>

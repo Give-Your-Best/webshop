@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
-import { ListWrapper, StyledTab, StyledTabPanel, StyledTabList, StyledTabs } from './OrdersList.styles';
+import { ListWrapper, HiddenStyledTab, StyledTabPanel, StyledTabs, StyledTabListHidden } from './OrdersList.styles';
 import { getShopperItems, getDonorItems, updateItem } from '../../../services/items';
+import { H2 } from '../../atoms';
 import { getUser } from '../../../services/user';
 import { sendAutoEmail } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
@@ -93,11 +94,12 @@ export const OrdersList = () => {
     return (
         <ListWrapper>
             <StyledTabs forceRenderTabPanel={true}>
-                <StyledTabList>
-                <StyledTab>{user.type === 'shopper'? 'My Orders': 'Item Processing'}</StyledTab>
-                </StyledTabList>
+                <StyledTabListHidden>
+                <HiddenStyledTab>{user.type === 'shopper'? 'My Orders': 'Item Processing'}</HiddenStyledTab>
+                </StyledTabListHidden>
         
                 <StyledTabPanel>
+                    <H2>{user.type === 'shopper'? 'My Orders': 'Item Processing'}</H2>
                     {items.map((item) => {
                     if ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor')) {
                         return (

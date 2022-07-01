@@ -4,10 +4,6 @@ export const AppWrapper = styled.div`
   padding: 0rem;
   margin: 0;
   flex: 1 0 auto;
-  
-  a {
-    font-family: lato;
-  }
 
   h1 {
     font-family: 'Alfa Slab One', cursive;

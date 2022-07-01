@@ -54,17 +54,18 @@ export const StartMessageThreadAdmin = ({submitFunction, users, cancelFunction, 
                 onSubmit={handleSubmit}
                 >
                 <Form>
+
+                    {(users)? <><UserSelect users={users} selectName="recipient" fieldPlaceholder="Select a recipient" showSearch />
+                    <StyledError name="recipient" component="div" /></>: ''}
+
                     <StyledInput name="subject" placeholder="Message subject" />
                     <StyledError name="subject" component="div" />
-
-                    {(users)? <><UserSelect users={users} selectName="recipient" showSearch />
-                    <StyledError name="recipient" component="div" /></>: ''}
 
                     <StyledInputArea autosize="true" name="message" placeholder="Your message" />
                     <StyledError name="message" component="div" />
 
                     <StyledSubmitButton>Send</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {cancelFunction(false)}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {cancelFunction(false)}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

@@ -3,7 +3,7 @@ import { Card as AntCard } from 'antd';
 
 export const Card = styled(AntCard)`
   width: 250px;
-  height: 420px;
+  height: 425px;
   margin: 1rem;
   padding: 7px;
   background: ${({ theme }) => theme.colorMappings.secondary};
@@ -30,6 +30,7 @@ export const Card = styled(AntCard)`
       color: ${({ theme }) => theme.colorMappings.primary};
       font-family: lato;
       font-size: 16px;
+      margin-bottom: 1px;
     }
   }
 

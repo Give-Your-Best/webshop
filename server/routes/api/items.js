@@ -40,10 +40,8 @@ router.get('/donor', async (req, res) => {
 
 // get admin items endpoint api/items
 router.get('/admin', async (req, res) => {
-    let isCurrent = req.query.isCurrent || false,
-        page = req.query.page,
-        limit = req.query.limit;
-    const items = await getAdminItems(page, limit, isCurrent);
+    let isCurrent = req.query.isCurrent || false;
+    const items = await getAdminItems(isCurrent);
     res.json(items);
 });
 

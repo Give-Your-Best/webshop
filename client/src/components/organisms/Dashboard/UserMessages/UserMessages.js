@@ -1,14 +1,14 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { MessageReceived, MessageSent, MessagesContainer, StyledForm } from './UserMessages.styles';
-import { StyledInputArea, StyledSubmitButton, StyledError } from '../../../molecules/EditForm/EditForm.styles';
+import { StyledSubmitButton, StyledError, InfoNote, StyledInputAreaInLine } from '../../../molecules/EditForm/EditForm.styles';
 import { getMessages, sendMessage, markMessageAsViewed } from '../../../../services/messages';
 import { getGYBDummyUser } from '../../../../services/user';
 import { MessagesList, StartMessageThreadUser } from '../../../molecules';
-import { Notification } from '../../../atoms';
+import { Notification, H2 } from '../../../atoms';
 import { Button } from '../../../atoms';
 import { Formik } from 'formik';
-import { checkUnread } from '../../../../utils/helpers';
+import { checkUnread, name } from '../../../../utils/helpers';
 
 export const UserMessages = () => {
   const { token, user } = useContext(AppContext);
@@ -60,9 +60,9 @@ export const UserMessages = () => {
         <MessagesContainer>
         {conversation.messages.map((m)=>{
           if (m.recipient.kind === 'admin') {
-            return (<MessageReceived key={m.threadId}><p>{m.message}</p></MessageReceived>);
+            return (<MessageReceived key={m.threadId}><div><p>{m.message}</p><InfoNote>{name(m.sender) + ' ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageReceived>);
           } else {
-            return (<MessageSent key={m.threadId}><p>{m.message}</p></MessageSent>);
+            return (<MessageSent key={m.threadId}><div><p>{m.message}</p><InfoNote>{'Admin ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageSent>);
           }
         })}
         </MessagesContainer>
@@ -72,10 +72,10 @@ export const UserMessages = () => {
           onSubmit={handleSubmit}
           >
             <StyledForm>
-            <StyledInputArea autosize="true" name="message" placeholder="Your message" />
+            <StyledInputAreaInLine autosize="true" name="message" placeholder="Your message" />
             <StyledError name="message" component="div" />
 
-            <StyledSubmitButton>Send</StyledSubmitButton>
+            <StyledSubmitButton>{'Send >'}</StyledSubmitButton>
           </StyledForm>
 
         </Formik>
@@ -108,9 +108,9 @@ export const UserMessages = () => {
 
   return (
     <>
-    <h2>Messages</h2>
+    <H2>Messaging</H2>
     <MessagesList data={messages || []} userId={user.id} expandRow={viewConversation} />
-      {!newThread && <Button primary small onClick={() => {setNewThread(true)}}>Start Thread</Button>}
+      {!newThread && <Button primary onClick={() => {setNewThread(true)}}>Start a Thread</Button>}
       {newThread && <StartMessageThreadUser cancelFunction={setNewThread} submitFunction={handleSubmit} emailId={emailId}></StartMessageThreadUser>}
     </>
   );

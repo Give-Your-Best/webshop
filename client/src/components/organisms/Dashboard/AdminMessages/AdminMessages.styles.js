@@ -13,13 +13,27 @@ const MessageSent = styled.div`
 width: 100%;
 display: flex;
 justify-content: start;
-  p {
+  div {
     display: block;
     width: 45%;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
-    color: ${({ theme }) => theme.colorMappings.primary};
-    padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px #BA191A29;
+    
+    p {
+      color: ${({ theme }) => theme.colorMappings.primary};
+      padding: 7px;
+      margin-bottom: 0;
+    }
+
+    p:last-child {
+      padding-top: 1px;
+      float: right;
+    }
+
+    p:first-child {
+      padding-bottom: 0;
+    }
   }
 `
 
@@ -27,13 +41,28 @@ const MessageReceived = styled.div`
 width: 100%;
 display: flex;
 justify-content: end;
-  p {
+
+  div {
     display: block;
     width: 45%;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
-    color: ${({ theme }) => theme.colorMappings.primary};
-    padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px #BA191A29;
+
+    p {
+      color: ${({ theme }) => theme.colorMappings.primary};
+      padding: 7px;
+      margin-bottom: 0;
+    }
+
+    p:last-child {
+      padding-top: 1px;
+      float: right;
+    }
+
+    p:first-child {
+      padding-bottom: 0;
+    }
   }
 `
 

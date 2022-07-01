@@ -40,7 +40,7 @@ export const DonorProducts = () => {
 
   return (
     <Container>
-      <AccountWelcome firstName='tets' lastName='las' />
+      <AccountWelcome />
       {(items.length > 0)? 
         <PageWrapper>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">

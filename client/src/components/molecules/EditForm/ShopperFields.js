@@ -23,7 +23,7 @@ export const ShopperFields = () => {
       <StyledError name="currentStatus" component="div" />
 
       <StyledLabel>Referred By</StyledLabel>
-        <InfoNote>If you weren't referred, please type N/A</InfoNote>
+        <InfoNote>! - If you weren't referred, please type N/A</InfoNote>
         <StyledInput name="referredBy" />
         <StyledError name="referredBy" component="div" />
       

@@ -49,13 +49,17 @@ export const CoverWrapper = styled.div`
   > h1 {
     text-align: center;
     margin-bottom: 2px;
+    margin-top: 15px;
   }
 
   > p {
     text-align: center;
-    margin-bottom: 1px;
+    margin-bottom: 0;
     font-size: 24px;
     color: ${({ theme }) => theme.colorMappings.primary};
+    line-height: 1.3;
+    font-family: lato;
+
   }
 `;
 

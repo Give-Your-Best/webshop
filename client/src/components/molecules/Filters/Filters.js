@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
-import { FiltersWrapper, ClearFilters, Accordian, FilterItem } from './Filters.styles';
+import { FiltersWrapper, ClearFilters, Accordian, StyledForm, StyledSubmitButton } from './Filters.styles';
 import { clothingSizeOptions, shoeSizeOptions, colours as coloursList } from '../../../utils/constants';
-import { StyledLabel, StyledSubmitButton, StyledCheckboxGroup } from '../EditForm/EditForm.styles';
-import { Formik, Form } from 'formik';
+import { StyledCheckboxGroup } from '../EditForm/EditForm.styles';
+import { Formik } from 'formik';
 import { Collapse } from 'antd';
 
-export const Filters = ({setClothingSizes, setColours, setShoeSizes, clothingSizes, shoeSizes, colours, setFilters}) => {
+export const Filters = ({setClothingSizes, setColours, setShoeSizes, setFilters}) => {
 
     const { Panel } = Collapse;
     const formikRef = useRef();
@@ -18,7 +18,9 @@ export const Filters = ({setClothingSizes, setColours, setShoeSizes, clothingSiz
         setFilters(true);
 
         //collapse filters accordian
-        document.querySelector('.ant-collapse-header').click();
+        document.querySelectorAll('.ant-collapse-header').forEach((c) => {
+            c.click();
+        })
 
         return true
     }
@@ -38,26 +40,24 @@ export const Filters = ({setClothingSizes, setColours, setShoeSizes, clothingSiz
         onSubmit={handleOk}
         innerRef={formikRef}
         >
-            <Form>
+            <StyledForm>
                 <Accordian>
-                    <Panel header="Filters">
-                    <StyledLabel>Clothing size
-                    <StyledCheckboxGroup name="clothingSize" options={clothingSizeOptions}/></StyledLabel>
+                    <Panel header="Size">
+                    <StyledCheckboxGroup name="clothingSize" options={clothingSizeOptions}/>
+                    </Panel>
 
-                    <StyledLabel>Shoe size 
-                    <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions}/></StyledLabel>
+                    <Panel header="Shoe Size">
+                    <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions}/>
+                    </Panel>
 
-                    <StyledLabel>Colours 
-                    <StyledCheckboxGroup name="colour" options={coloursList}/></StyledLabel>
+                    <Panel header="Colours">
+                    <StyledCheckboxGroup name="colour" options={coloursList}/>
+                    </Panel>
 
                     <StyledSubmitButton>Apply Filters</StyledSubmitButton>
-                    </Panel>
                 </Accordian>
-            </Form>
+            </StyledForm>
         </Formik>
-        {(clothingSizes.length > 0) && <FilterItem>Clothing sizes: {clothingSizes.join(', ')}</FilterItem>}
-        {(shoeSizes.length > 0) && <FilterItem>Shoe sizes: {shoeSizes.join(', ')}</FilterItem>}
-        {(colours.length > 0) && <FilterItem>Colours: {colours.join(', ')}</FilterItem>}
         <ClearFilters onClick={handleClear}>x Clear all Filters</ClearFilters>
     </FiltersWrapper>
   );

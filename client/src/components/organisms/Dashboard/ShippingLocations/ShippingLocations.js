@@ -94,6 +94,7 @@ export const ShippingLocations = () => {
         return true;
       } else {
         setErrorMessage(res.message);
+        console.log(errorMessage)
       }
     };
 
@@ -109,8 +110,7 @@ export const ShippingLocations = () => {
         >
           <LocationMiniEditForm recordId={record._id} editingKey={editingKey} users={adminUsers} />
         </Formik> 
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button primary small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button primary onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )      
   };

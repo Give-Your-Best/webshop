@@ -7,14 +7,14 @@ export const HeaderMenuWrapper = styled.div`
 `;
 
 export const Icon = styled.img`
-  width: 53px;
-  height: 53px;
+  width: 50px;
+  height: 50px;
   display: block;
 `;
 
 export const UserMenuItem = styled(Link)`
   color: ${({ theme }) => theme.colorMappings.primary};
-  font-size: 24px;
+  font-size: 20px;
   margin-right: 1em;
   display: table-cell;
   vertical-align: middle;

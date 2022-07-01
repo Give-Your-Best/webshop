@@ -54,7 +54,7 @@ export const StartMessageThreadUser = ({submitFunction, cancelFunction, emailId}
                     <StyledError name="message" component="div" />
 
                     <StyledSubmitButton>Send</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {cancelFunction(false)}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {cancelFunction(false)}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

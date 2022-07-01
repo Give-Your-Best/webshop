@@ -8,6 +8,12 @@ const StyledTabs = styled(Tabs)`
   font-family: lato;
 `;
 
+const StyledTabListHidden = styled(TabList)`
+  padding: 0;
+  margin: 0;
+  width: 100%;
+`;
+
 
 const StyledTabList = styled(TabList)`
   padding: 0;
@@ -84,4 +90,4 @@ const ListWrapper = styled.div`
   width: 100%;
 `
 
-export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab };
+export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, StyledTabListHidden };
