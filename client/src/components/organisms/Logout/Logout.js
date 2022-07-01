@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../context/app-context';
-import { Button } from '../../atoms/';
+import { Button, H2 } from '../../atoms/';
 
 export const Logout = () => {
   let history = useHistory();
@@ -17,7 +17,7 @@ export const Logout = () => {
   };
   return (
     <div>
-      <h2>Thanks for stopping by!</h2>
+      <H2>Thanks for stopping by!</H2>
       <Button small primary onClick={handleLogoutClick}>Logout</Button>
     </div>
   );

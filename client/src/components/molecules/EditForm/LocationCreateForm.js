@@ -5,9 +5,9 @@ import { Formik } from 'formik';
 import { locationCreateSchema } from '../../../utils/validation';
 import { reopenTab } from '../../../utils/helpers';
 import { createLocation } from '../../../services/locations';
-import { Button, Notification } from '../../atoms';
+import { Button, Notification, Space } from '../../atoms';
 import { UserSelect } from '../../atoms/UserSelect';
-import { StyledSubmitButton, StyledInput, StyledError } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledError, StyledLabel } from './EditForm.styles';
 
 export const LocationCreateForm = (data) => {
     console.log(data.users)
@@ -28,7 +28,7 @@ export const LocationCreateForm = (data) => {
     return (
         <div>
             <Formik
-                initialValues={{ name: '', firstLine: '', secondLine: '', postcode: '' }}
+                initialValues={{ name: '', firstLine: '', secondLine: '', postcode: '', available: true }}
                 validationSchema= {locationCreateSchema}
                 onSubmit={handleSubmit}
                 >
@@ -45,12 +45,14 @@ export const LocationCreateForm = (data) => {
                     <StyledInput name="postcode" placeholder="Postcode" />
                     <StyledError name="postcode" component="div" />
 
-                    <label>Give your best member:</label>
+                    <StyledLabel>Give your best member:</StyledLabel>
                     <UserSelect users={data.users} selectName="adminUser"/>
                     <StyledError name="adminUser" component="div" />
 
+                    <Space />
+
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('location')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

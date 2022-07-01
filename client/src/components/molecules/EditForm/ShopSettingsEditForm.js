@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { shopSettingsSchema } from '../../../utils/validation';
 import { updateSetting } from '../../../services/settings';
 import { Notification } from '../../atoms';
-import { StyledSubmitButton, StyledInputNumber, StyledError, StyledInput} from './EditForm.styles';
+import { StyledSubmitButton, StyledInputNumber, StyledError, StyledInput, StyledLabel, InfoNote } from './EditForm.styles';
 
 export const ShopSettingsEditForm = (data) => {
     const { token } = useContext(AppContext);
@@ -35,14 +35,17 @@ export const ShopSettingsEditForm = (data) => {
                 validationSchema={shopSettingsSchema}
                 >
                 <Form>
-                    <div><label>Item Limit</label><StyledInputNumber name="shopItemLimit" placeholder="Item limit" />
-                    <StyledError name="shopItemLimit" component="div" /></div>
+                    <StyledLabel>Item Limit
+                    <StyledInputNumber name="shopItemLimit" placeholder="Item limit" />
+                    <StyledError name="shopItemLimit" component="div" /></StyledLabel>
 
-                    <div><label>Trusted Donor Limit</label><StyledInputNumber name="trustedDonorLimit" placeholder="Trusted Donor Limit" />
-                    <StyledError name="trustedDonorLimit" component="div" /></div>
+                    <StyledLabel>Trusted Donor Limit
+                    <StyledInputNumber name="trustedDonorLimit" placeholder="Trusted Donor Limit" />
+                    <StyledError name="trustedDonorLimit" component="div" /></StyledLabel>
 
-                    <div><label>Shop Email</label><StyledInput name="shop_email" placeholder="Shop Email" />
-                    <StyledError name="shop_email" component="div" /></div>
+                    <StyledLabel>Shop Email <InfoNote>! - This will update the email associated with your email provider</InfoNote>
+                    <StyledInput name="shop_email" placeholder="Shop Email" />
+                    <StyledError name="shop_email" component="div" /></StyledLabel>
 
                     <StyledSubmitButton>Save</StyledSubmitButton>
                 </Form>

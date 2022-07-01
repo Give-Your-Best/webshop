@@ -147,14 +147,11 @@ const getShopperItems = async (userId) => {
   }
 }
 
-const getAdminItems = async (page, limit, isCurrent) => {
+const getAdminItems = async (isCurrent) => {
   //here type is current or past
   console.log('get admin items items')
   console.log(isCurrent)
   var conditions = {};
-  const limiti = parseInt(limit);
-  const pagei = parseInt(page);
-  const skipIndex = (pagei - 1) * limiti;
 
   try {
     if (isCurrent) {
@@ -169,8 +166,6 @@ const getAdminItems = async (page, limit, isCurrent) => {
     }
     var items = await Item.find(conditions)
       .sort({createdAt: -1})
-      .limit(limiti)
-      .skip(skipIndex)
       .exec();
     return items;
   } catch (error) {

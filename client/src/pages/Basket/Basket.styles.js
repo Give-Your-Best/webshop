@@ -11,6 +11,7 @@ export const BasketDetails = styled.div`
     display: block;
     border: 2px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 30px;
+    min-height: 600px;
 
     h1 {
       font-family: lato;

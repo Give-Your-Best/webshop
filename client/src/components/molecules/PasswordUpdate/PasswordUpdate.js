@@ -4,7 +4,7 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { updatePasswordSchema } from '../../../utils/validation';
 import { updatePassword } from '../../../services/user';
-import { Button, Notification } from '../../atoms';
+import { Button, Notification, H2 } from '../../atoms';
 import { reopenTab } from '../../../utils/helpers';
 import { StyledSubmitButton, StyledInput, StyledError } from '../EditForm/EditForm.styles';
 
@@ -24,7 +24,7 @@ export const PasswordUpdate = (data) => {
 
     return (
         <div>
-            <h2>Update password</h2>
+            <H2>Update password</H2>
             <Formik
                 initialValues={{ id: data.id, email: data.email, oldPassword: '', newPassword: '', passwordConfirm: ''}}
                 validationSchema={updatePasswordSchema}
@@ -41,7 +41,7 @@ export const PasswordUpdate = (data) => {
                     <StyledError name="passwordConfirm" component="div" />
 
                     <StyledSubmitButton>Update</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('detail')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

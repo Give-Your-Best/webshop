@@ -23,6 +23,7 @@ const StyledTab = styled(Tab).attrs({
   disabledClassName: 'disabled'
 })`
   flex-grow: 1;
+  box-shadow: 0px 3px 6px #BA191A29;
   text-align: center;
   padding: 1em;
   list-style: none;
@@ -64,9 +65,9 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
 const StyledTabPanelDashboardImage = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
   &.selected {
     width: 100%;
+    box-shadow: 0px 3px 6px #BA191A29;
     margin: 0 3em;
     display: block;
-    border: 2px solid ${({ theme }) => theme.colorMappings.borders};
   }
 `;
 

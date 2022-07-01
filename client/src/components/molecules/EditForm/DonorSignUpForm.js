@@ -6,7 +6,7 @@ import { donorCreateSchema, passwordSchema } from '../../../utils/validation';
 import { sendAutoEmail } from '../../../utils/helpers';
 import { register } from '../../../services/user';
 import { Notification } from '../../atoms';
-import { StyledSubmitButton, StyledCheckbox, StyledError, StyledLabel } from './EditForm.styles';
+import { StyledSubmitButton, SubHead } from './EditForm.styles';
 import { UserEditForm } from './UserEditForm';
 
 export const DonorSignUpForm = () => {
@@ -24,14 +24,9 @@ export const DonorSignUpForm = () => {
         }
     };
 
-    const pStyle = {
-        'text-align': 'center',
-        'font-weight': 'bold'
-   }
-
     return (
         <div>
-            <p style={pStyle}>Donor Sign Up</p>
+            <SubHead>Donor Sign Up</SubHead>
             <Formik
                 initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'donor' }}
                 validationSchema= {donorCreateSchema.concat(passwordSchema)}
@@ -39,11 +34,6 @@ export const DonorSignUpForm = () => {
                 >
                 <Form>
                     <UserEditForm type='donor' signUp='donor' />
-                    <div>
-                    <StyledLabel>Can we use your email for marketing purposes?</StyledLabel>
-                    <StyledCheckbox name="emailMe" />
-                    <StyledError name="emailMe" component="div" />
-                    </div>
 
                     <StyledSubmitButton>Sign Up</StyledSubmitButton>
                 </Form>

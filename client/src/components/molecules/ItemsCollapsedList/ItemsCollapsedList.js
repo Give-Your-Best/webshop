@@ -3,20 +3,23 @@ import { Space } from 'antd';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 
-export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen}) => {
+export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin}) => {
+  console.log(admin)
 
   var columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       sorter: (a, b) => a.name.length - b.name.length,
-    },
-    {
-      title: 'Approved Status',
-      dataIndex: 'approvedStatus',
-      sorter: (a, b) => a.name.length - b.name.length,
     }
   ]
+
+  if (!admin) {
+    columns.push({
+      title:'Approved Status',
+      key: 'approvedStatus'
+    })
+  }
 
   if (handleDelete) {
     columns.push({
@@ -40,7 +43,7 @@ export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen}) => {
         rowKey={(record) => record._id || 0}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: 2,
+          expandIconColumnIndex: (!admin)? 2: 1,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
                 <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>

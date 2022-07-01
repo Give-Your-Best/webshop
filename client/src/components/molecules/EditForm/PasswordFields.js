@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { StyledLabel, StyledError, StyledInputPassword } from './EditForm.styles';
+import { StyledLabel, StyledError, StyledInputPassword, FieldContainerHalf } from './EditForm.styles';
 
 export const PasswordFields = () => {
   return (
-    <div>
+    <FieldContainerHalf>
         <StyledLabel>Password
-        <StyledInputPassword name="password" /></StyledLabel>
-        <StyledError name="password" component="div" />
+        <StyledInputPassword name="password" />
+        <StyledError name="password" component="div" /></StyledLabel>
+
 
         <StyledLabel>Confirm Password
-        <StyledInputPassword name="passwordConfirm" placeholder="Retype password" /></StyledLabel>
-        <StyledError name="passwordConfirm" component="div" />
-    </div>
+        <StyledInputPassword name="passwordConfirm" placeholder="Retype password" />
+        <StyledError name="passwordConfirm" component="div" /></StyledLabel>
+    </FieldContainerHalf>
   );
 };

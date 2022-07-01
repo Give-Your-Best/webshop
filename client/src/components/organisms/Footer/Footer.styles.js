@@ -9,6 +9,7 @@ export const FooterWrapper = styled.div`
   padding: 30px 10rem 30px;
   flex-shrink: 0;
   border-top: 15px solid #152f45;
+  margin-top: 2rem;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 1em;
@@ -17,7 +18,7 @@ export const FooterWrapper = styled.div`
 
 export const SocialWrapper = styled.div`
   display: flex;
-  width: 70%;
+  width: 60%;
   margin: auto;
 
   div {

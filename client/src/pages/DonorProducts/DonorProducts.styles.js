@@ -3,6 +3,7 @@ import { Box } from '../../components';
 
 export const ItemsWrapper = styled(Box)`
   margin: 0 auto 2rem auto;
+  background: ${({ theme }) => theme.colorMappings.background};
   max-width: 80rem;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {

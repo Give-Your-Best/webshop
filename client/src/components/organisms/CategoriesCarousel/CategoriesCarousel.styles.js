@@ -11,13 +11,22 @@ export const StyledCarousel = styled(Carousel)`
   }
 
   .slick-prev,
-  .slick-next,
   .slick-prev:hover,
-  .slick-next:hover {
-    font-size: 28px;
-    font-weight: bold;
+  .slick-prev:focus {
     font-family: 'Alfa Slab One', cursive;
+    font-size: 40px;
+    cursor: pointer;
+    display:inherit;
     color: ${({ theme }) => theme.colorMappings.primary};
-
+  }
+  
+  .slick-next,
+  .slick-next:hover,
+  .slick-next:focus {
+    font-family: 'Alfa Slab One' !important;
+    font-size: 40px;
+    cursor: pointer;
+    display:inherit;
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 `

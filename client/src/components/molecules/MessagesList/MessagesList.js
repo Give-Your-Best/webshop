@@ -1,18 +1,18 @@
 import React from 'react';
 import { Space } from 'antd';
 import { ListWrapper, ExpandButton, StyledTable, DeleteButton, Note } from './MessagesList.styles';
-import { checkUnread } from '../../../utils/helpers';
+import { checkUnread, name } from '../../../utils/helpers';
 
 export const MessagesList = (data) => {
 
   const getName = (value) => {
-    let name = '';
+    let result = '';
     if (data.type !== 'admin') {
-      name = 'GYB administrator';
+      result = 'GYB administrator';
     } else {
-      name = ((value.firstName)? value.firstName: '') + " " + ((value.lastName)? value.lastName: '');
+      result = name(value);
     }
-    return name;
+    return result;
   }
 
   var columns = [
@@ -20,7 +20,7 @@ export const MessagesList = (data) => {
       title: 'Name',
       dataIndex: 'user',
       key: 'user',
-      width: 150,
+      width: 200,
       render: (value) => {
         return getName(value)
       }

@@ -8,14 +8,12 @@ export const UsersList = (data) => {
     {
       title: 'Name',
       dataIndex: 'firstName',
-      key: 'name',
-      sorter: (a, b) => a.firstName.length - b.firstName.length,
+      key: 'name'
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      key: 'email',
-      sorter: (a, b) => a.email.length - b.email.length,
+      key: 'email'
     }
   ]
 

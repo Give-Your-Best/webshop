@@ -1,9 +1,9 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, MessageReceived, MessageSent, MessagesContainer, StyledForm } from './AdminMessages.styles';
-import { StyledInputArea, StyledSubmitButton, StyledError } from '../../../molecules/EditForm/EditForm.styles';
+import { StyledInputAreaInLine, StyledSubmitButton, StyledError, InfoNote } from '../../../molecules/EditForm/EditForm.styles';
 import { getMessages, sendMessage, markMessageAsViewed } from '../../../../services/messages';
-import { sendAutoEmail, checkUnread } from '../../../../utils/helpers';
+import { sendAutoEmail, checkUnread, name } from '../../../../utils/helpers';
 import { getUsers } from '../../../../services/user';
 import { MessagesList, StartMessageThreadAdmin } from '../../../molecules';
 import { Notification } from '../../../atoms';
@@ -29,6 +29,8 @@ export const AdminMessages = () => {
   }
 
   const viewConversation = (conversation) => {
+    console.log('convo')
+    console.log(conversation)
 
     const markAsRead = async () => {
       let unread = checkUnread('admin', '', conversation.messages);
@@ -72,16 +74,17 @@ export const AdminMessages = () => {
       } else {
           Notification('Error sending message', res.message, 'success')
       }
-  };
+    };
 
     return (
       <div>
         <MessagesContainer>
         {conversation.messages.map((m)=>{
+          console.log(m)
           if (!m.recipient || m.recipient.kind === 'admin') {
-            return (<MessageSent key={m.threadId}><p>{m.message}</p></MessageSent>);
+            return (<MessageSent key={m.threadId}><div><p>{m.message}</p><InfoNote>{name(m.sender) + ' ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageSent>);
           } else {
-            return (<MessageReceived key={m.threadId}><p>{m.message}</p></MessageReceived>);
+            return (<MessageReceived key={m.threadId}><div><p>{m.message}</p><InfoNote>{'Admin ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageReceived>);
           }
         })}
         </MessagesContainer>
@@ -91,10 +94,10 @@ export const AdminMessages = () => {
           onSubmit={handleSubmit}
           >
             <StyledForm>
-            <StyledInputArea autosize="true" name="message" placeholder="Your message" />
+            <StyledInputAreaInLine autosize="true" name="message" placeholder="Your message" />
             <StyledError name="message" component="div" />
 
-            <StyledSubmitButton>Send</StyledSubmitButton>
+            <StyledSubmitButton>{'Send >'}</StyledSubmitButton>
           </StyledForm>
 
         </Formik>
@@ -151,12 +154,12 @@ export const AdminMessages = () => {
 
     <StyledTabPanel>
       <MessagesList data={shoppersMessages} expandRow={viewConversation} type='admin' />
-      {!newShopperThread && <Button primary small onClick={() => {setNewShopperThread(true)}}>Start Thread</Button>}
+      {!newShopperThread && <Button primary onClick={() => {setNewShopperThread(true)}}>Start a Thread</Button>}
       {newShopperThread && <StartMessageThreadAdmin users={shoppers} cancelFunction={setNewShopperThread} submitFunction={handleSubmit} type='shopper'></StartMessageThreadAdmin>}
     </StyledTabPanel>
     <StyledTabPanel>
       <MessagesList data={donorsMessages} expandRow={viewConversation} type='admin' />
-      {!newDonorThread && <Button primary small onClick={() => {setNewDonorThread(true)}}>Start Thread</Button>}
+      {!newDonorThread && <Button primary onClick={() => {setNewDonorThread(true)}}>Start a Thread</Button>}
       {newDonorThread && <StartMessageThreadAdmin users={donors} cancelFunction={setNewDonorThread} submitFunction={handleSubmit} type='donor'></StartMessageThreadAdmin>}
     </StyledTabPanel>
 

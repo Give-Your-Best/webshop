@@ -54,12 +54,14 @@ export const Home = () => {
         {items.map((item) => {
           if (item.photos.length) {
             return <ItemCard key={item._id} item={item} />
+          } else {
+            return '';
           }
         }
         )}
       </ItemsWrapper>
       <ButtonWrapper>
-        <Button center primary onClick={() => history.push(`/products/`)}>Browse All</Button>
+        <Button center primary onClick={() => history.push(`/products/`)}>{'Browse All >'}</Button>
       </ButtonWrapper>
     </div>
   );

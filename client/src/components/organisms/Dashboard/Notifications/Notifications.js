@@ -5,7 +5,6 @@ import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLo
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
 import { getUser } from '../../../../services/user';
-import { Button } from '../../../atoms';
 import { sendAutoEmail } from "../../../../utils/helpers";
 import { Modal } from 'antd';
 
@@ -59,17 +58,15 @@ export const Notifications = () => {
   useEffect(() => {
     const { confirm } = Modal;
 
-    const assignAddress = async (e) => {
-      const itemId = e.target.getAttribute('data-item-id');
+    const assignAddress = async (itemId) => {
       setVisible(true);
       setAssignAddressId(itemId);
       return
     }
 
-    const markReceived = (e) => {
+    const markReceived = (itemId) => {
       const d = new Date();
       let date = d.toISOString();
-      const itemId = e.target.getAttribute('data-item-id');
       const updateData = { "status": "received-by-gyb", 'statusUpdateDates.gybReceivedDate': date};
 
       confirm({
@@ -91,10 +88,9 @@ export const Notifications = () => {
       });
     }
 
-    const markSent = (e) => {
+    const markSent = (itemId) => {
       const d = new Date();
       let date = d.toISOString();
-      const itemId = e.target.getAttribute('data-item-id');
       const updateData = { "status": "shipped-to-shopper", 'statusUpdateDates.shopperShippedDate': date};
 
       confirm({
@@ -181,7 +177,6 @@ export const Notifications = () => {
     fetchAccountItems();
 
     return () => {
-      // cleanup
       mountedRef.current = false;
     };
 
@@ -192,8 +187,7 @@ export const Notifications = () => {
       <div>
       {record.items.map((item) => (
         <div key={item._id}>
-          <ItemCardLong item={item} type={user.type} />
-          {(record.action)? <Button primary small data-item-id={item._id} onClick={record.action}>{record.actionDesc}</Button>: ''}
+          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} />
           </div>
       ))}
       </div>

@@ -5,12 +5,13 @@ export const Button = styled.button`
     font-size: 22px;
     cursor: pointer;
     border-radius: 0.1rem;
-    border: 2px solid ${theme.colorMappings.primary};
+    border: 2px solid ${theme.colorMappings.buttonBorders};
     color: ${theme.colorMappings.primary};
-    margin: 1em 5px 1em 0;
+    margin: 0 5px 1em 0;
     padding: 0.3rem 1rem;
     float: right;
-    min-height: 44px;
+    min-height: 52px;
+    font-weight: bold;
 
     ${left &&
     css`
@@ -24,7 +25,7 @@ export const Button = styled.button`
 
     ${primary &&
     css`
-      background: ${theme.colorMappings.blue};
+      background: ${theme.colorMappings.yellow};
       color: ${theme.colorMappings.primary};
     `};
 
@@ -35,7 +36,7 @@ export const Button = styled.button`
 
     ${small &&
     css`
-      font-size: 18px !important;
+      font-size: 20px !important;
       float: left;
     `};
 
@@ -45,6 +46,7 @@ export const Button = styled.button`
       margin: auto;
       float: none;
       display: block;
+      min-height: 62px;
     `};
 
     ${large &&

@@ -11,9 +11,9 @@ const StyledTabs = styled(Tabs)`
     background: ${({ theme }) => theme.colorMappings.background};
     display: block;
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     margin: auto;
-    padding: 1em 5em 5em 5em;
+    padding: 1em 5em 8em 5em;
     border: 2px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 30px;
     font-family: lato;

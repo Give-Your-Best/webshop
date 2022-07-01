@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Modal } from 'antd';
-import { StyledSelect } from '../../atoms';
+import { StyledSelect, Space } from '../../atoms';
 import { Formik, Form } from 'formik';
 import { StyledSubmitButton } from '../EditForm/EditForm.styles';
+import { ModalStyled } from './AssignLocationModal.styles';
 
 export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, locations }) => {
   return (
-    <Modal
+    <ModalStyled
         visible={visible}
         title="Please select a team members location from the menu below"
         onOk={handleOk}
@@ -24,9 +24,10 @@ export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, 
                         return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.firstLine + ', ' + d.postcode}</StyledSelect.Option>);
                         })}
                 </StyledSelect>
+                <Space />
                 <StyledSubmitButton>Assign</StyledSubmitButton>
                 </Form>
             </Formik>
-    </Modal>
+    </ModalStyled>
   );
 };

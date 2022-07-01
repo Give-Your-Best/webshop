@@ -15,6 +15,11 @@ const DeleteButton = styled.span`
 `
 const StyledTable = styled((props) => <Table {...props} />)`
   margin-bottom: 2em;
+
+  .ant-table-empty {
+    background: inherit;
+  }
+  
     && tbody > tr > td {
       padding: 10px 4px;
     }

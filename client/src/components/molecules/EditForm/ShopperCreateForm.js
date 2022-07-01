@@ -14,7 +14,7 @@ export const ShopperCreateForm = (data) => {
     const { token } = useContext(AppContext);
     const handleSubmit = async (values, {resetForm}) => {
         if (!values.shareAddress) {
-            Object.assign(values, {'deliveryPreference': 'via gyb'})
+            Object.assign(values, {'deliveryPreference': 'via-gyb'})
         }
         const res = await createUser(values, token);
         if (res.success) {
@@ -41,7 +41,7 @@ export const ShopperCreateForm = (data) => {
                     <UserEditForm type='shopper' signUp='shopper' admin='admin' />
 
                     <StyledSubmitButton>Create</StyledSubmitButton>
-                    <Button primary small type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
+                    <Button primary type="reset" onClick={() => {reopenTab('shopper')}}>Cancel</Button>
                 </Form>
             </Formik>
         </div>

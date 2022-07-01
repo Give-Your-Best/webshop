@@ -1,11 +1,12 @@
 const colors = {
   red: {
-    500: '#BA1B1A',
+    500: '#BA191A',
+    600: '#A21010'
   },
   pink: {
     0: '#FFFBFC',
     100: '#db709312',
-    500: '#F9D5DE',
+    500: '#FAD6DF',
   },
   blush: {
     100: '#EF7C98',
@@ -17,7 +18,7 @@ const colors = {
     500: '#FFFFFF',
   },
   blue: {
-    200: '#51C1EF',
+    200: '#7ed4f7',
   },
   black: {
     400: '#454545',
@@ -51,6 +52,7 @@ export const theme = {
     blue: colors.blue[200],
 
     borders: colors.red[500],
+    buttonBorders: colors.red[600],
     frontPanelBackground: colors.pink[100],
   },
   mobile: '480px'

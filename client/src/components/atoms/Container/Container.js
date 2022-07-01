@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin: 2rem auto;
+  margin: 0 auto;
   max-width: 80rem;
-  padding: 0 2rem;
+  padding: 2rem 2rem;
+  background: ${({ theme }) => theme.colorMappings.background};
 
   > h1, h2, h3 {
     text-align: center;

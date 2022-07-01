@@ -38,7 +38,7 @@ export const adminAllItemStatus = [
         'statusText': 'Received by Give your Best'
     },
     {
-        'status': 'shipped-to-gyb',
+        'status': 'shipped-to-shopper',
         'progress': '75',
         'statusText': 'Shipped to shopper'
     },

@@ -17,6 +17,12 @@ const StyledTabList = styled(TabList)`
   width: 100%;
 `;
 
+const StyledTabListHidden = styled(TabList)`
+  padding: 0;
+  margin: 0;
+  width: 100%;
+`;
+
 const StyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
   disabledClassName: 'disabled'
@@ -84,4 +90,4 @@ const ListWrapper = styled.div`
   width: 100%;
 `
 
-export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab };
+export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, StyledTabListHidden };

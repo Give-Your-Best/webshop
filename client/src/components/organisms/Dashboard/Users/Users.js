@@ -86,6 +86,7 @@ export const Users = () => {
     const handleEdit = () => {
       setEditingKey((editingKey)? '': record._id)
     }
+
     return (
       <div>
         <Formik
@@ -101,7 +102,7 @@ export const Users = () => {
             } 
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button primary small onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        <Button primary onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
       </div>
     )
   }
