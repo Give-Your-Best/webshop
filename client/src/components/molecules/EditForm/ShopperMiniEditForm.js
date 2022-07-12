@@ -32,6 +32,23 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         </FieldContainerHalf>
 
         <FieldContainerHalf>
+          <StyledLabel>Address Line 1
+          <StyledInput name="deliveryAddress.firstLine" disabled={editingKey !== recordId} />
+          <StyledError name="deliveryAddress.firstLine" component="div" /></StyledLabel>
+          <StyledLabel>Address Line 2
+          <StyledInput name="deliveryAddress.secondLine" disabled={editingKey !== recordId} />
+          <StyledError name="deliveryAddress.secondLine" component="div" /></StyledLabel>
+          </FieldContainerHalf>
+          <FieldContainerHalf>
+          <StyledLabel>City
+          <StyledInput name="deliveryAddress.city" disabled={editingKey !== recordId} />
+          <StyledError name="deliveryAddress.city" component="div" /></StyledLabel>
+          <StyledLabel>Post Code
+          <StyledInput name="deliveryAddress.postcode" disabled={editingKey !== recordId} />
+          <StyledError name="deliveryAddress.postcode" component="div" /></StyledLabel>
+        </FieldContainerHalf>
+
+        <FieldContainerHalf>
         <StyledLabel>Current Status
         <StyledSelect name="currentStatus" disabled={editingKey !== recordId} >
         {currentStatus.map((d)=>{

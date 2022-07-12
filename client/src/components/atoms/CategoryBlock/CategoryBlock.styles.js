@@ -12,10 +12,10 @@ export const Card = styled(AntCard)`
 
   .ant-card-meta-title {
     font-size: 20px;
-    text-align: center;
+    margin: 0 auto;
+    width: fit-content;
     color: ${({ theme }) => theme.colorMappings.blush};
     background: ${({ theme }) => theme.colorMappings.background};
-    margin: 0;
     font-weight: bold;
   }
 
@@ -44,7 +44,6 @@ export const Card = styled(AntCard)`
 
     .ant-card-meta-title {
       font-size: 18px;
-      text-align: center;
     }
   }
 `;

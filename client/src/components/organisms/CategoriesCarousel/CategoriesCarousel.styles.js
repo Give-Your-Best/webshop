@@ -38,7 +38,7 @@ export const StyledCarousel = styled(Carousel)`
 export const StyledCarouselMobile = styled(Carousel)`
   border: none;
   margin: 1rem auto;
-  max-width: 70%;
+  max-width: 65%;
   display: none !important;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
