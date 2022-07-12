@@ -33,12 +33,12 @@ export const CategoriesCarousel = ({categories}) => {
 
   return (
     <>
-      <StyledCarousel slidesToShow={4} autoplay arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
+      <StyledCarousel slidesToShow={4} arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
         {categories.map((d) => {
           return (<CategoryBlock key={d.id} category={d}/>);
         })}
       </StyledCarousel>
-      <StyledCarouselMobile slidesToShow={1} autoplay arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
+      <StyledCarouselMobile slidesToShow={1} arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
         {categories.map((d) => {
           return (<CategoryBlock key={d.id} category={d}/>);
         })}

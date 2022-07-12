@@ -2,15 +2,15 @@ import React from "react";
 import { Space } from 'antd';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
+import { categories } from '../../../utils/constants';
 
 export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin}) => {
-  console.log(admin)
 
   var columns = [
     {
       title: 'Name',
       dataIndex: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.name.localeCompare(b.name)
     }
   ]
 
@@ -21,9 +21,22 @@ export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin
     })
   }
 
+
+  if (admin) {
+    columns.push({
+      title:'Category',
+      dataIndex: 'category',
+      sorter: (a, b) => a.category.localeCompare(b.category),
+      filters: categories.map((c) => { return {text: c.name, value: c.id}}),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.category.startsWith(value),
+    })
+  }
+
   if (handleDelete) {
     columns.push({
-        title: 'Action',
+        title: '',
         key: 'action',
         width: 20,
         render: (record) => (
@@ -38,12 +51,12 @@ export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin
     <ListWrapper>
       <StyledTable
         pagination={{hideOnSinglePage: true}}
-        showHeader={false}
         columns={columns}
         rowKey={(record) => record._id || 0}
+        showHeader={ (!admin)? false: true}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: (!admin)? 2: 1,
+          expandIconColumnIndex: 2,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
                 <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>

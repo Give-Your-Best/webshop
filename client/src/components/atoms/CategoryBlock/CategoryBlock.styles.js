@@ -13,7 +13,7 @@ export const Card = styled(AntCard)`
   .ant-card-meta-title {
     font-size: 20px;
     margin: 0 auto;
-    width: fit-content;
+    width: max-content;
     color: ${({ theme }) => theme.colorMappings.blush};
     background: ${({ theme }) => theme.colorMappings.background};
     font-weight: bold;

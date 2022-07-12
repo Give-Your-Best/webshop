@@ -29,6 +29,7 @@ export const Item = () => {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     const fetchItemDetails = async () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;

@@ -61,7 +61,7 @@ export const StyledForm = styled(Form)`
 export const Accordian = styled(Collapse)`
     background: none;
     border: none;
-    width: fit-content;
+    width: max-content;
     min-width: 200px;
     color: ${({ theme }) => theme.colorMappings.primary};
 

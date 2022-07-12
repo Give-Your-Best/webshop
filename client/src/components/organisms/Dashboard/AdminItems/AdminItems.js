@@ -32,7 +32,6 @@ export const AdminItems = () => {
   };
 
 const editForm = (record) => {
-  console.log(record)
   let shippedDate = '';
   if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && !record.statusUpdateDates.shopperShippedDate) {
     shippedDate = (new Date(record.statusUpdateDates.gybShippedDate)).toLocaleString()
