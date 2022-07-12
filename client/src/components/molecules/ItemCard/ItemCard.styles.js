@@ -48,8 +48,8 @@ export const Card = styled(AntCard)`
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    margin: 0.5rem auto;
-    width: 80%;
+    margin: 0.75rem auto;
+    width: 70%;
     height: auto;
 
     .ant-card-meta-title {

@@ -8,6 +8,10 @@ export const FiltersWrapper = styled.div`
   width: 100%;
   padding: 1em;
   display: flex;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    display: block;
+  }
 `;
 
 export const ClearFilters = styled.p`
@@ -32,11 +36,25 @@ export const StyledForm = styled(Form)`
   .ant-collapse {
     display: flex;
     width: 100%;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      display: block;
+
+      button {
+        display: flex;
+      }
+    }
   }
 
   button {
     max-width: 170px;
     max-height: 46px;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      float: unset;
+      margin-top: 10px;
+      max-height: 44px;
+    }
   }
 `
 
@@ -59,6 +77,15 @@ export const Accordian = styled(Collapse)`
       position: absolute;
       z-index: 999;
 
+      @media (max-width: ${({ theme }) => theme.mobile}) {
+        margin-top: 0;
+        width: 96.6%;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 2px;
+      }
+
       .ant-checkbox-group {
         display: inline-grid;
       }
@@ -76,6 +103,10 @@ export const Accordian = styled(Collapse)`
           margin-right: 0.5em;
           font-size: 20px !important;
           padding: 2px 5px 4px 2px !important;
+        }
+
+        @media (max-width:${({ theme }) => theme.mobile}) {
+          margin-bottom: 7px;
         }
     }
 `

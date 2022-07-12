@@ -22,6 +22,7 @@ export const DonorItems = () => {
   const handleDelete = (id) => {
     confirm({
       title: `Are you sure you want to delete this item?`,
+      className: "modalStyle",
       onOk() {
         deleteItem(id, token)
         .then(() => {
@@ -136,7 +137,7 @@ export const DonorItems = () => {
       </StyledTabListHidden>
 
       <StyledTabPanel>
-        <H2>My Orders</H2>
+        <H2>My Available Items</H2>
         <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} editItem={editItem} />
         <Button primary small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
         <Button primary small onClick={() => openHiddenTab('item')}>Add Item</Button>

@@ -16,6 +16,9 @@ const DeleteButton = styled.span`
 
 const StyledTable = styled((props) => <Table {...props} />)`
    margin-bottom: 2em;
+   table {
+    background: ${({ theme }) => theme.colorMappings.background};
+  }
 
     .ant-table-empty {
       background: inherit;
@@ -30,6 +33,9 @@ const StyledTable = styled((props) => <Table {...props} />)`
       color: ${({ theme }) => theme.colorMappings.primary};
       @media (max-width:${({ theme }) => theme.mid}) {
         font-size: 20px;
+      }
+      @media (max-width:${({ theme }) => theme.mobile}) {
+        font-size: 18px;
       }
     }
 

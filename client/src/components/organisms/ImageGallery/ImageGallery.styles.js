@@ -5,12 +5,19 @@ export const ImagesWrapper = styled.div`
     display:flex;
     width: 50%;
 
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+        width: 100%;
+    }
+
     > img {
         width: 80%;
         height:fit-content;
         margin-left: 10px;
         border-radius: 10px;
         background: white;
+        @media (max-width: ${({ theme }) => theme.mobile}) {
+            width: 100%;
+        }
     }
 `
 

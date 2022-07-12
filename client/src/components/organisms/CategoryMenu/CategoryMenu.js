@@ -14,7 +14,7 @@ export const CategoryMenu = () => {
               <SubMenuNav>
                 {subCategories.map((d) => {
                   if (d.parentCategory === c.id && c.id !== 'other') {
-                    return (<li><SubMenuItem key={d.id} to={"/products/" + c.id + "/" + d.id}>{d.name}</SubMenuItem></li>);
+                    return (<li key={d.id}><SubMenuItem key={d.id} to={"/products/" + c.id + "/" + d.id}>{d.name}</SubMenuItem></li>);
                   } else {
                     return ''
                   }

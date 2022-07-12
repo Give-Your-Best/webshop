@@ -58,6 +58,7 @@ export const Images = (data) => {
     </Upload>
     <Modal
       visible={previewVisible}
+      className= "modalStyle"
       title={previewTitle}
       footer={null}
       onCancel={handleCancel}

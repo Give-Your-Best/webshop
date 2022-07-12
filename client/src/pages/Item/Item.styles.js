@@ -18,11 +18,19 @@ export const ItemWrapper = styled(Box)`
     display: flex;
     justify-content: space-between;
     margin: 3em 0 4em 0;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      display: block;
+    }
 `;
 
 export const ImagesWrapper = styled.div`
     display:flex;
     width: 50%;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      width: 100% !important;
+    }
 
     > img {
         width: 80%;
@@ -30,6 +38,10 @@ export const ImagesWrapper = styled.div`
         margin-left: 10px;
         border-radius: 1em !important;
         border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+
+        @media (max-width: ${({ theme }) => theme.mobile}) {
+          width: 100%;
+        }
     }
 `
 
@@ -52,13 +64,18 @@ export const ItemDetailsWrapper = styled.div`
   width: 50%;
   margin-left: 3rem;
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100%;
+    margin-left: 0;
+  }
+
   h1 {
     text-align: left;
     font-family: lato;
     font-size: 48px;
     font-weight: bold;
     @media (max-width: ${({ theme }) => theme.mobile}) {
-      font-size: 20px;
+      font-size: 26px;
     }
   }
 
@@ -67,5 +84,10 @@ export const ItemDetailsWrapper = styled.div`
     font-size: 24px;
     color: ${({ theme }) => theme.colorMappings.primary};
     margin-bottom: 5px;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
   }
 `;

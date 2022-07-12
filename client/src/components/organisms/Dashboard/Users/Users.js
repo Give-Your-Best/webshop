@@ -21,6 +21,7 @@ export const Users = () => {
   const handleDelete = (id, kind) => {
     confirm({
       title: `Are you sure you want to delete this ${kind}?`,
+      className: "modalStyle",
       content: 'This will remove the user',
       onOk() {
         deleteUser(id, token)

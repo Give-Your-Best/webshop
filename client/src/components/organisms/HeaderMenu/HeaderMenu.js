@@ -14,6 +14,7 @@ export const HeaderMenu = () => {
       history.push(`/basket`);
     } else {
       confirm({
+        className: "modalStyle",
         title: `Please sign up as a shopper to shop!`
       });
     }

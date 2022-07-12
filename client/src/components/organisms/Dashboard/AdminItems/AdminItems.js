@@ -16,6 +16,7 @@ export const AdminItems = () => {
   const handleDelete = (id, type) => {
     confirm({
       title: `Are you sure you want to delete this item?`,
+      className: "modalStyle",
       onOk() {
         deleteItem(id, token)
         .then(() => {

@@ -54,6 +54,7 @@ export const ApproveRequests = () => {
             markAsTrusted([record._id]);
             confirm({
               title: `You have marked this donor as trusted!`,
+              className: "modalStyle",
               content: 'If you wish to continue to approve their items, please uncheck their trusted donor status in the user panel'
             });
 

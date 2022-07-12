@@ -75,6 +75,9 @@ const StyledSubmitButton = styled(SubmitButton)`
     font-size: 18px;
     min-height: 46px;
   }
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    min-height: 44px;
+  }
 `
 const StyledInput = styled(Input)`
   width: 100%;

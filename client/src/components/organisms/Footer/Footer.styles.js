@@ -17,6 +17,10 @@ export const FooterWrapper = styled.div`
   @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 1em;
     display: block;
+
+    h4 {
+      margin-top: 1em;  
+    }
   }
 `;
 
@@ -39,11 +43,19 @@ export const SocialWrapper = styled.div`
     border: 3px solid ${({ theme }) => theme.colorMappings.primary};
     border-radius: 100%;
     width: fit-content;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      margin: 5px auto;
+    }
   }
 
   img {
     width: 50px !important;
     padding: 10px;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      width: 40px !important;
+    }
   }
 `
 
@@ -58,6 +70,11 @@ export const FooterItem = styled.div`
     width: 148px;
     display: block;
     margin: auto;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      width: 100px;
+    }
+  
   }
 
   p {
@@ -95,6 +112,11 @@ export const FooterItemWider = styled.div`
   p {
     font-size: 14px !important;
     text-align: left;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      text-align: center;
+      margin-bottom: 0.1em;
+    }
 
     a {
       color: ${({ theme }) => theme.colorMappings.primary};

@@ -29,8 +29,6 @@ export const AdminMessages = () => {
   }
 
   const viewConversation = (conversation) => {
-    console.log('convo')
-    console.log(conversation)
 
     const markAsRead = async () => {
       let unread = checkUnread('admin', '', conversation.messages);

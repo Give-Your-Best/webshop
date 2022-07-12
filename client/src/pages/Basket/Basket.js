@@ -14,7 +14,6 @@ export const Basket = () => {
   const { setBasket, basket, user, token, setUser } = useContext(AppContext);
   let history = useHistory();
   const { confirm } = Modal;
-  console.log(basket)
 
   const address = (
     <div>
@@ -30,6 +29,7 @@ export const Basket = () => {
   const removeFromBasket = (itemId) => {
     confirm({
       title: `Are you sure you wish to remove from your basket?`,
+      className: "modalStyle",
       onOk() {
         setBasket(basket.filter(item => {
           return item._id !== itemId
@@ -43,7 +43,7 @@ export const Basket = () => {
       return (
         <div>
         {basket.map((b)=>{
-          return (<ItemCardBasket key={b._id} item={b} actionText={'Remove from basket'} action={removeFromBasket} />);
+          return (<ItemCardBasket key={b._id} item={b} actionText={'Remove'} action={removeFromBasket} />);
         })}
         </div>
       )
@@ -56,13 +56,15 @@ export const Basket = () => {
     //if no address
     if (!user.deliveryAddress.firstLine || user.deliveryAddress.firstLine === '') {
       confirm({
-        title: `Please update your account with a delivery address!`
+        title: `Please update your account with a delivery address!`,
+        className: "modalStyle",
       });
       //otherwise confirm address and continue
     } else {
       confirm({
         title: `Is this your address?`,
         content: address,
+        className: "modalStyle",
         okText: 'Continue to checkout',
         onOk() {
           const promises = basket.map((item) => {

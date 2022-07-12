@@ -15,6 +15,7 @@ export const ShippingLocationsList = (data) => {
     {
       title: 'Location',
       dataIndex: 'firstLine',
+      className: 'hideOnMobile',
       sorter: (a, b) => a.firstLine.length - b.firstLine.length,
     },
     {
@@ -27,6 +28,7 @@ export const ShippingLocationsList = (data) => {
     {
       title: 'Action',
       key: 'action',
+      width: 20,
       render: (record) => (
         <Space size="middle">
           <DeleteButton onClick={() => data.handleDelete(record._id, record.kind)}>Delete</DeleteButton>

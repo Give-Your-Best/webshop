@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const CategoryMenuWrapper = styled.nav`
@@ -20,12 +19,12 @@ export const CategoryMenuItem = styled.li`
   width: 100%;
   line-height: 3;
 
-  :hover > ul {
+  &.open > ul {
     display: inline-block;
   }
 `;
 
-export const CategoryMenuLink = styled(Link)`
+export const CategoryMenuLink = styled.div`
   color:  ${({ theme }) => theme.colorMappings.primary};
   display: flex;
   padding: 0 10px;
@@ -34,6 +33,8 @@ export const CategoryMenuLink = styled(Link)`
   font-weight: bold;
   font-size: 20px;
   padding: 2.5px 20px;
+  position: relative;
+  cursor: pointer;
 
   :hover {
     color:  ${({ theme }) => theme.colorMappings.primary};
@@ -48,13 +49,13 @@ export const CategoryMenuLink = styled(Link)`
   }
 `;
 
-export const SubMenuItem = styled(Link)`
+export const SubMenuItem = styled.div`
   color: ${({ theme }) => theme.colorMappings.buttonBorder}; !important;
   padding: 0 20px;
   display: inline-block;
   font-size: 20px;
-  letter-spacing: 0.5px;
   line-height: 1;
+  cursor: pointer;
   :hover {
     text-decoration: underline;
     font-weight: bold;
@@ -83,6 +84,19 @@ export const SubMenuNav = styled.ul`
   border: 1px solid ${({ theme }) => theme.colorMappings.yellow};
   z-index: 99;
   width: 100%
+`
+
+
+export const Down = styled.span`
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid ${({ theme }) => theme.colorMappings.primary};;
+  width: 20px;
+  cursor: pointer;
 `
 
 export const Cross = styled.span`

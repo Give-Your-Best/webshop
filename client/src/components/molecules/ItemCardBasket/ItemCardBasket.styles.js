@@ -8,10 +8,18 @@ export const CardLongWithBackground = styled(AntCard)`
   border-radius: 30px;
   padding: 1.5em;
   background: ${({ theme }) => theme.colorMappings.secondary} !important;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    padding: 1em;
+  }
   
   .ant-card-body {
     padding: 0 0 0 15px;
     width: 100%;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      padding: 0 0 0 5px;
+    }
 
     button {
       margin-top: 5px !important;
@@ -47,4 +55,9 @@ export const CardLongImageWithBackground = styled.img`
   min-width: 200px;
   min-height: 120px;
   border-radius: 20px;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    max-width: 100%;
+    min-width: 100%;
+  }
 `;

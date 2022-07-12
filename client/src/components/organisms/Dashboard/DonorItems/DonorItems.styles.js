@@ -36,6 +36,10 @@ const StyledTab = styled(Tab).attrs({
   max-width: max-content;
   font-size: 22px;
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    font-size: 18px;
+  }
+
   &.selected {
     color: ${({ theme }) => theme.colorMappings.white};
     background: ${({ theme }) => theme.colorMappings.primary};
@@ -78,6 +82,10 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
   padding: 10px 20px;
   &.selected {
     display: block;
+  }
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    padding: 0px 2px;
   }
 `;
 

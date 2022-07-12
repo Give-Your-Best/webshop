@@ -75,13 +75,15 @@ export const Item = () => {
 
     if (!user || user.type !== 'shopper') { //if not signed in
       confirm({
-        title: `Please sign up as a shopper to shop!`
+        title: `Please sign up as a shopper to shop!`,
+        className: "modalStyle"
       });
       return;
     }
 
     if (isShopped) { //if alerady in basket
       confirm({
+        className: "modalStyle",
         title: `This item is already in your basket`
       });
       return;
@@ -89,6 +91,7 @@ export const Item = () => {
 
     if (cannotShop) { //if limit reached
       confirm({
+        className: "modalStyle",
         title: `You have reached your weekly shopping limit!`,
         content: 'Please check your current orders on your account profile.'
       });
@@ -99,6 +102,7 @@ export const Item = () => {
 
     confirm({
       title: `Item added to basket.`,
+      className: "modalStyle",
       onOk() { history.push('/basket');},
       okText: 'View Basket',
       onCancel() {history.push(`/products`);},
