@@ -7,6 +7,10 @@ const StyledSelect = styled(Select)`
     min-width: 400px;
     color: ${({ theme }) => theme.colorMappings.primary};
 
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      min-width: 100%;
+    }
+
     .ant-select-selector {
       color: ${({ theme }) => theme.colorMappings.primary};
       border: 1px solid ${({ theme }) => theme.colorMappings.primary} !important;

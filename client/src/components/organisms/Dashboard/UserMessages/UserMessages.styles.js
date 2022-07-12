@@ -6,6 +6,18 @@ const StyledForm = styled(Form)`
   font-size: 20px;
   display: flex;
   color: ${({ theme }) => theme.colorMappings.primary};
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    display: block;
+
+    textarea {
+      margin-bottom: 5px;
+    }
+
+    button {
+      margin-right: 0;
+    }
+  }
 `
 
 
@@ -19,6 +31,11 @@ justify-content: start;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 10px;
     box-shadow: 0px 3px 6px #BA191A29;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      width: 75%;
+      margin-bottom: 10px;
+    }
     
     p {
       color: ${({ theme }) => theme.colorMappings.primary};
@@ -48,6 +65,11 @@ justify-content: end;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 10px;
     box-shadow: 0px 3px 6px #BA191A29;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      width: 75%;
+      margin-bottom: 10px;
+    }
 
     p {
       color: ${({ theme }) => theme.colorMappings.primary};
@@ -104,6 +126,10 @@ const StyledTab = styled(Tab).attrs({
   color: ${({ theme }) => theme.colorMappings.primary};
   max-width: max-content;
   font-size: 22px;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    font-size: 18px;
+  }
 
   &.selected {
     color: ${({ theme }) => theme.colorMappings.white};

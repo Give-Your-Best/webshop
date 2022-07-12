@@ -22,6 +22,7 @@ export const ShippingLocations = () => {
   const handleDelete = (id) => {
     confirm({
       title: `Are you sure you want to delete this location?`,
+      className: "modalStyle",
       onOk() {
         deleteLocation(id, token)
         .then(() => {

@@ -30,6 +30,10 @@ const StyledTab = styled(Tab).attrs({
   font-size: 22px;
   max-width: max-content;
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    font-size: 18px;
+  }
+
   &.selected {
     color: ${({ theme }) => theme.colorMappings.white};
     background: ${({ theme }) => theme.colorMappings.primary};

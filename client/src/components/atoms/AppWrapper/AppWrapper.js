@@ -11,6 +11,21 @@ export const AppWrapper = styled.div`
     font-size: 60px;
     @media (max-width: ${({ theme }) => theme.mobile}) {
       font-size: 26px;
+      margin-top: 1em;
+    }
+  }
+
+  .hideOnMobile {
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      display: none;
+    }
+  }
+
+  .fixedOnMobile {
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      max-width: 120px;
     }
   }
 

@@ -58,6 +58,10 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
     display: block;
   }
 
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    padding: 0px 2px;
+  }
+
   @media (max-width:${({ theme }) => theme.mid}) {
     padding: 10px 5px;
   }

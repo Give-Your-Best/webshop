@@ -8,12 +8,14 @@ export const UsersList = (data) => {
     {
       title: 'Name',
       dataIndex: 'firstName',
-      key: 'name'
+      key: 'name',
+      className: 'hideOnMobile'
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      key: 'email'
+      key: 'email',
+      className: 'fixedOnMobile'
     }
   ]
 
@@ -21,7 +23,6 @@ export const UsersList = (data) => {
     columns.push({
         title: 'Action',
         key: 'action',
-        width: 20,
         render: (record) => (
           <Space size="middle">
             <DeleteButton onClick={() => data.handleDelete(record._id, record.kind)}>Delete</DeleteButton>
@@ -35,6 +36,7 @@ export const UsersList = (data) => {
       <StyledTable
         pagination={{hideOnSinglePage: true}}
         showHeader={false}
+        scroll={{ x: '100%' }}
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{

@@ -71,6 +71,7 @@ export const Notifications = () => {
 
       confirm({
         title: `Are you sure you want to do this?`,
+        className: "modalStyle",
         onOk() {
           return new Promise((resolve, reject) => {
             updateItem(itemId, updateData, token)
@@ -95,6 +96,7 @@ export const Notifications = () => {
 
       confirm({
         title: `Are you sure you want to do this?`,
+        className: "modalStyle",
         onOk() {
           return new Promise((resolve, reject) => {
             updateItem(itemId, updateData, token)

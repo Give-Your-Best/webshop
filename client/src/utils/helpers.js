@@ -5,6 +5,7 @@ import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashb
 export const hideMobileMenu = () => {
     document.getElementById('mobileMenu').style.display = 'none';
     document.getElementById('cross').style.display = 'none';
+    document.querySelectorAll('#mobileMenu li.open').forEach((i) => {i.classList.remove('open')})
     return
 }
 

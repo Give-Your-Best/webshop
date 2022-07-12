@@ -5,6 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+}
+
+.modalStyle .ant-modal-confirm-title, .modalStyle .ant-modal-confirm-content {
+  font-size: 20px !important;
+}
+
+.modalStyle .anticon {
+  margin-top: 5px;
+}
+
+.modalStyle .ant-btn {
+  font-size: 18px;
+  height: 40px;
+}
+
+.ant-notification .ant-notification-notice-message,
+.ant-notification .ant-notification-notice-description {
+  font-size: 18px !important;
 }
 
 code {

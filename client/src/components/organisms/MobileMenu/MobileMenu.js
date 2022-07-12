@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AppContext } from '../../../context/app-context';
-import { CategoryMenuWrapper, CategoryMenuLink, CategoryMenuItem, MainMenuNav, SubMenuItem, SubMenuNav, Cross } from './MobileMenu.styles';
+import { CategoryMenuWrapper, CategoryMenuLink, CategoryMenuItem, MainMenuNav, SubMenuItem, SubMenuNav, Cross, Down } from './MobileMenu.styles';
 import { categories, subCategories } from '../../../utils/constants';
 import { tabList, hideMobileMenu } from '../../../utils/helpers';
 import { Icon } from '../HeaderMenu/HeaderMenu.styles';
@@ -20,9 +20,15 @@ export const MobileMenu = () => {
       hideMobileMenu();
     } else {
       confirm({
+        className: "modalStyle",
         title: `Please sign up as a shopper to shop!`
       });
     }
+  }
+
+  const openSubNav = (e) => {
+    e.stopPropagation();
+    e.target.parentNode.parentNode.classList.toggle('open');
   }
 
   return (
@@ -30,13 +36,13 @@ export const MobileMenu = () => {
     <CategoryMenuWrapper id='mobileMenu'>
       <MainMenuNav>
             <CategoryMenuItem key={'account icon'}>
-              <CategoryMenuLink to="/dashboard" onClick={hideMobileMenu}><Icon src='/GYB-account.svg' alt='account icon' /> Account</CategoryMenuLink>
+              <CategoryMenuLink onClick={() => { history.push('/dashboard'); hideMobileMenu()} }><Icon src='/GYB-account.svg' alt='account icon' /> Account{(tabs.length)? <Down onClick={openSubNav}></Down>: ''}</CategoryMenuLink>
               {(tabs.length)? 
                 <SubMenuNav>
                 {tabs.map((d)=>{
                   return (
                     (d.name === 'Dashboard')? ''
-                    : <li><SubMenuItem key={d.id} to={"/dashboard/" + d.id} onClick={hideMobileMenu}>{d.name}</SubMenuItem></li>
+                    : <li key={d.id}><SubMenuItem key={d.id} onClick={() => { history.push('/dashboard/' + d.id); hideMobileMenu()} }>{d.name}</SubMenuItem></li>
                   )
                 })}
               </SubMenuNav>
@@ -44,16 +50,16 @@ export const MobileMenu = () => {
             }
             </CategoryMenuItem>
             <CategoryMenuItem key={'basket icon'}>
-              <CategoryMenuLink to="#" onClick={basketCheck}><Icon src='/GYB-basket.svg' alt='account icon' />Basket</CategoryMenuLink>
+              <CategoryMenuLink onClick={basketCheck}><Icon src='/GYB-basket.svg' alt='account icon' />Basket</CategoryMenuLink>
             </CategoryMenuItem>
         {categories.map((c) => {
           return (
             <CategoryMenuItem key={c.id}>
-              <CategoryMenuLink to={"/products/" + c.id} key={'link-' + c.id} onClick={hideMobileMenu}>{c.name}</CategoryMenuLink>
+              <CategoryMenuLink key={'link-' + c.id} onClick={() => { history.push('/products/' + c.id); hideMobileMenu()} }>{c.name} <Down onClick={openSubNav}></Down></CategoryMenuLink>
               <SubMenuNav>
                 {subCategories.map((d) => {
                   if (d.parentCategory === c.id && c.id !== 'other') {
-                    return (<li><SubMenuItem key={d.id} to={"/products/" + c.id + "/" + d.id} onClick={hideMobileMenu}>{d.name}</SubMenuItem></li>);
+                    return (<li key={d.id}><SubMenuItem key={d.id} onClick={() => { history.push("/products/" + c.id + "/" + d.id); hideMobileMenu()} }>{d.name}</SubMenuItem></li>);
                   } else {
                     return ''
                   }

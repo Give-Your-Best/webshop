@@ -26,7 +26,7 @@ export const Card = styled(AntCard)`
       width: 150px;
     }
     @media (max-width:${({ theme }) => theme.mobile}) {
-      width: 250px;
+      width: 230px;
       margin: auto;
     }
   }
@@ -38,8 +38,9 @@ export const Card = styled(AntCard)`
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin: 0.5rem 0.3rem;
-    width: 250px;
-    width: 250px;
+    width: 240px;
+    width: 240px;
+    margin: auto;
 
     .ant-card-meta-title {
       font-size: 18px;

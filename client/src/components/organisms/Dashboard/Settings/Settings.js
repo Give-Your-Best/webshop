@@ -26,6 +26,7 @@ export const Settings = () => {
   const handleDelete = (id) => {
     confirm({
       title: `Are you sure you want to delete this team member?`,
+      className: "modalStyle",
       content: 'This will remove the user',
       onOk() {
         deleteUser(id, token)

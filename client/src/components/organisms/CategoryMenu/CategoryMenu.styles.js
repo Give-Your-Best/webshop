@@ -50,7 +50,6 @@ export const SubMenuItem = styled(Link)`
   padding: 5px 1em;
   display: block;
   font-size: 20px;
-  letter-spacing: 0.5px;
   :hover {
     text-decoration: underline;
     font-weight: bold;

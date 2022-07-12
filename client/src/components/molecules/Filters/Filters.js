@@ -19,7 +19,9 @@ export const Filters = ({setClothingSizes, setColours, setShoeSizes, setFilters}
 
         //collapse filters accordian
         document.querySelectorAll('.ant-collapse-header').forEach((c) => {
-            c.click();
+            if (c.getAttribute('aria-expanded') === 'true') {
+                c.click()
+            }
         })
 
         return true

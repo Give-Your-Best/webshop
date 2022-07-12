@@ -8,7 +8,7 @@ export const MessagesList = (data) => {
   const getName = (value) => {
     let result = '';
     if (data.type !== 'admin') {
-      result = 'GYB administrator';
+      result = 'GYB admin';
     } else {
       result = name(value);
     }
@@ -28,6 +28,7 @@ export const MessagesList = (data) => {
     {
       title: 'Subject',
       dataIndex: 'subject',
+      className: 'hideOnMobile',
       key: 'subject',
       sorter: (a, b) => a.email.length - b.email.length,
     },

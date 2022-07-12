@@ -7,6 +7,10 @@ export const AccountWelcomeWrapper = styled.div`
     margin: 0.5em 0 2em 0;
     font-family: Lato;
     font-size: 24px;
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      margin: 0.5em 0 0.5em 0;
+    }
   }
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -37,6 +41,5 @@ export const AccountWelcomeIcon = styled.div`
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;
-    height: auto;
   }
 `;

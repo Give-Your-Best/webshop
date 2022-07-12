@@ -10,6 +10,7 @@ export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, 
         visible={visible}
         title="Please select a team members location from the menu below"
         onOk={handleOk}
+        className= "modalStyle"
         onCancel={handleCancel}
         footer={[]}
         confirmLoading={loading}

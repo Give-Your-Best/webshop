@@ -18,6 +18,10 @@ export const Button = styled.button`
       min-height: 46px;
     }
 
+    @media (max-width:${({ theme }) => theme.mobile}) {
+      min-height: 44px;
+    }
+
     ${left &&
     css`
       float: left;
