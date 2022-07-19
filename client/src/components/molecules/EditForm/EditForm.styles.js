@@ -56,7 +56,7 @@ const StyledSubmitButton = styled(SubmitButton)`
   border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder} !important;
   min-height: 52px;
   color: ${({ theme }) => theme.colorMappings.primary};
-  margin: 0 5px 1em 0;
+  margin: 0 5px 0 0;
   padding: 0.3rem 1rem;
   border-width: 0.1rem;
   :hover {
@@ -246,6 +246,17 @@ const StyledLabel = styled.label`
   font-size: 22px !important;
 `
 
+const NewPasswordLink = styled.label`
+  width: 100%;
+  display: inline-block;
+  margin: 1px 0;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 0;
+  color: ${({ theme }) => theme.colorMappings.primary};
+  font-size: 15px !important;
+`
+
 const StyledForm = styled(Form)`
   font-size: 20px;
   position: relative;
@@ -307,5 +318,6 @@ export { StyledInput,
   StyledInputArea,
   FieldContainerHalf,
   FieldContainerUneven,
-  StyledInputAreaInLine
+  StyledInputAreaInLine,
+  NewPasswordLink
 };

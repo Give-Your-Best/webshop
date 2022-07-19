@@ -5,6 +5,9 @@ const Authentication = require('../../controllers/authentication');
 // api/auth/login
 router.post('/login', Authentication.login);
 
+//api/auth/resetPassword
+router.post('/passwordreset', Authentication.passwordReset);
+
 // api/auth/authenticate
 router.post('/authenticate', Authentication.authenticate);
 

@@ -15,6 +15,11 @@ export const showMobileMenu = () => {
     return
 }
 
+export const getDate = () => {
+    const d = new Date();
+    return d.toISOString();
+}
+
 export const name = (userDetails) => {
     if (userDetails.firstName && userDetails.lastName) {
         return userDetails.firstName + ' ' + userDetails.lastName
@@ -105,9 +110,11 @@ const emailItems = (items) => {
     return (`<section><p style="margin:30px;">Order Summary</p>`+grid+`</section>`)
 };
 
-const deliveryAddressContent = (deliveryAddress) => {
+const deliveryAddressContent = (deliveryAddress, name) => {
     return (`<section>
             <p style="margin:30px;">Delivery Address</p>`
+            + ((deliveryAddress.name)? `<p style="margin: 0;">` + deliveryAddress.name + `</p>`: ``)
+            + ((name)? `<p style="margin: 0;">` + name + `</p>`: ``)
             + ((deliveryAddress.firstLine)? `<p style="margin: 0;">` + deliveryAddress.firstLine + `</p>`: ``)
             + ((deliveryAddress.secondLine)? `<p style="margin: 0;">` + deliveryAddress.secondLine + `</p>`: ``)
             + ((deliveryAddress.city)? `<p style="margin: 0;">` + deliveryAddress.city + `</p>`: ``)
@@ -136,7 +143,7 @@ export const emailTemplate = (content) => {
                         font-size: 20px;
                         color: #BA191A;
                         font-family: Lato;
-                        background-color: #7ed4f7;
+                        background-color: #FAD22A;
                         margin: 30px auto;
                         width: 150px;
                         text-align: center;
@@ -149,12 +156,14 @@ export const emailTemplate = (content) => {
                 <div style="height:125px;background-color:#FAD6DF;padding:10px 0 50px 0;display:block;width:100%;">
                     <img style=" width:100px;height:100px;margin:auto;display:block;" alt='logo' src='https://res.cloudinary.com/hnlrfgzzh/image/upload/v1655378744/GYB_Logos_copy-07_z1ke0l_td1xmj.png' />
                 </div>
-                <div style="width:20%;margin:0;display:block"></div>
-                <div style="width:60%;display:block;margin:-40px auto 0 auto;background-color:white;border:2px solid #A21010;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:center;">
+                <div style="display:flex">
+                <div style="width:15%;margin:0;display:block"></div>
+                <div style="width:70%;display:block;margin:-40px 0 0 0;background-color:white;border:2px solid #A21010;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:center;">
                 ` + content + `
                 ` + emailFooter + `
                 </div>
-                <div style="width:20%;margin:0;display:block"></div>
+                <div style="width:15%;margin:0;display:block"></div>
+                </div>
             </body>
         </html>
     `)
@@ -172,11 +181,13 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
     const recipientName = (userDetails)? userDetails.firstName + ' ' + userDetails.lastName: 'Admin';
     const password = (userDetails && userDetails.password)? userDetails.password: '';
 
-    if (type === 'order_placed' || type === 'item_shopped_with_address') {
-        console.log('?')
+    if (type === 'order_placed') {
         emailContent += emailItems(items);
         emailContent += deliveryAddressContent(deliveryAddress);
-    } else if (type === 'item_shopped_pending_address') {
+    } else if (type === 'item_shopped_with_address') {
+        emailContent += emailItems(items);
+        emailContent += deliveryAddressContent(deliveryAddress, name(userDetails));
+    } else if (type === 'item_shopped_pending_address' || type === 'item_received') {
         emailContent += emailItems(items);
     }
 
@@ -195,4 +206,9 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
         console.log('error', res.message);
       }
       return
+}
+
+export const getAutoEmailContent = (type) => {
+    var emailContent = autoEmails.filter((e) => {return e.type === type})[0].content;
+    return emailTemplate(emailContent);
 }

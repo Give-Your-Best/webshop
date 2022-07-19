@@ -4,18 +4,20 @@ import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { AppContext } from '../../context/app-context';
-import { login } from '../../services/user';
-import { StyledInput, StyledError, StyledSubmitButton, StyledLabel, StyledInputPassword } from '../../components/molecules/EditForm/EditForm.styles';
+import { login, passwordReset } from '../../services/user';
+import { StyledInput, StyledError, StyledSubmitButton, StyledLabel, StyledInputPassword, NewPasswordLink } from '../../components/molecules/EditForm/EditForm.styles';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, SignUpStyledTab, StyledForm } from './Login.styles';
 import { Container } from '../../components';
-import { SignUpContainer } from '../../components/atoms';
-import { DonorSignUpForm, ShopperSignUpForm } from '../../components/molecules';
+import { SignUpContainer, Notification } from '../../components/atoms';
+import { DonorSignUpForm, ShopperSignUpForm, ResetPassword } from '../../components/molecules';
 
 export const Login = () => {
   const [, setCookie] = useCookies();
   const { setUser, setToken } = useContext(AppContext);
   let history = useHistory();
   const [errorMessage, setStyledError] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLoginSubmit = async (values, {setSubmitting}) => {
     setSubmitting(true);
@@ -31,6 +33,23 @@ export const Login = () => {
     }
   };
 
+  const handleReset = async (values) => {
+    setLoading(true);
+    const pwreset = await passwordReset(values.email);
+    if (pwreset.success) {
+      Notification('Success!', 'Your password has been reset. Please check your email.', 'success');
+    } else {
+      Notification('Error!', 'Error resetting password. Please check your email address.', 'error');
+    }
+    setLoading(false);
+    setVisible(false)
+  }
+
+  const handleCancelReset = () => {
+    setVisible(false);
+    setLoading(false);
+  }
+
   return (
     <Container data-id="LoginRoute">
       <StyledTabs forceRenderTabPanel={true} defaultIndex={1}>
@@ -45,6 +64,7 @@ export const Login = () => {
           <SignUpContainer />
         </StyledTabPanel>
         <StyledTabPanel>
+        <ResetPassword visible={visible} handleOk={handleReset} handleCancel={handleCancelReset} loading={loading} />
           <Formik
           initialValues={{ email: '', password: '' }}
           validationSchema= { loginSchema }
@@ -59,6 +79,7 @@ export const Login = () => {
               <StyledLabel>Password</StyledLabel>
               <StyledInputPassword name="password" placeholder='Enter password' />
               <StyledError name="password" component="div" />
+              <NewPasswordLink onClick={() => {setVisible(true)}}>Request a new password</NewPasswordLink>
               </div>
 
               <StyledSubmitButton>Log In</StyledSubmitButton>

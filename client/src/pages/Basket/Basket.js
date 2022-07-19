@@ -8,14 +8,14 @@ import { BasketSidebar, BasketDetails, BasketWrapper } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
 import { updateItem } from '../../services/items';
 import { getUser } from '../../services/user';
-import { sendAutoEmail } from '../../utils/helpers';
+import { sendAutoEmail, getDate } from '../../utils/helpers';
 
 export const Basket = () => {
-  const { setBasket, basket, user, token, setUser } = useContext(AppContext);
+  const { setBasket, basket, user, token, setUser, basketTimer, setBasketTimer } = useContext(AppContext);
   let history = useHistory();
   const { confirm } = Modal;
 
-  const address = (
+  const address = (user)? (
     <div>
     <p>Confirm address</p>
     {user.deliveryAddress.firstLine && <p>First line: {user.deliveryAddress.firstLine}</p>}
@@ -23,7 +23,7 @@ export const Basket = () => {
     {user.deliveryAddress.city && <p>City: {user.deliveryAddress.city}</p>}
     {user.deliveryAddress.postcode && <p>Postcode: {user.deliveryAddress.postcode}</p>}
     </div>
-)
+): '';
 
 
   const removeFromBasket = (itemId) => {
@@ -31,7 +31,11 @@ export const Basket = () => {
       title: `Are you sure you wish to remove from your basket?`,
       className: "modalStyle",
       onOk() {
+        clearTimeout(basketTimer);
         setBasket(basket.filter(item => {
+          if (item._id === itemId) {
+            updateItem(item._id, {'inBasket': false, 'statusUpdateDates.inBasketDate': ''}, token);
+          }
           return item._id !== itemId
         }));
       }
@@ -68,8 +72,6 @@ export const Basket = () => {
         okText: 'Continue to checkout',
         onOk() {
           const promises = basket.map((item) => {
-            const d = new Date();
-            let date = d.toISOString();
             // add to recent items
               setUser(user => ({
                 ...user,
@@ -80,26 +82,26 @@ export const Basket = () => {
               }));
   
               //get donor details
-              const donorDetails = getUser(item.donorId, token)
+              getUser(item.donorId, token)
               .then((donor) => {
-                console.log('got item donor')
-                console.log(donorDetails)
                 if (user.deliveryPreference === 'direct') { 
-                  console.log('direct send')
                   //send address directly in email
+
                   sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
                 } else if (user.deliveryPreference === 'via-gyb') {
-                  console.log('indirect send')
                   //send email without address - to be sent later with gyb address
+
                   sendAutoEmail('item_shopped_pending_address', donor, [item]);
+                  sendAutoEmail('new_item_to_assign_location')
                 }
               })
-             return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': date}, token)
+             return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': getDate()}, token)
           });
           Promise.all(promises)
           .then(() => {
             sendAutoEmail('order_placed', user, basket, user.deliveryAddress);
             setBasket(null);
+            setBasketTimer(null)
             //TO DO Email Notification to donor that item has been shopped
             Notification('Items shopped!', 'You will receive updates on your item delivery soon!', 'success');
             history.push(`/`);

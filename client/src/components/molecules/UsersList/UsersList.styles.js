@@ -21,6 +21,11 @@ const StyledTable = styled((props) => <Table {...props} />)`
     background: ${({ theme }) => theme.colorMappings.background};
   }
 
+  .ant-table-thead > tr > th {
+    background: ${({ theme }) => theme.colorMappings.background};
+    padding: 0.1em 0.5em;
+  }
+
   .ant-table-empty {
     background: inherit;
   }

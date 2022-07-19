@@ -3,8 +3,9 @@ import { Space } from 'antd';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 import { categories } from '../../../utils/constants';
+import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
-export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin}) => {
+export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin }) => {
 
   var columns = [
     {
@@ -16,57 +17,70 @@ export const ItemsCollapsedList = ({data, handleDelete, expandRow, reOpen, admin
 
   if (!admin) {
     columns.push({
-      title:'Approved Status',
+      title: 'Approved Status',
       key: 'approvedStatus'
     })
   }
 
-
   if (admin) {
     columns.push({
-      title:'Category',
+      title: 'Category',
       dataIndex: 'category',
       sorter: (a, b) => a.category.localeCompare(b.category),
-      filters: categories.map((c) => { return {text: c.name, value: c.id}}),
+      filters: categories.map((c) => { return { text: c.name, value: c.id } }),
       filterMode: 'tree',
       filterSearch: true,
       onFilter: (value, record) => record.category.startsWith(value),
+    })
+    columns.push({
+      title: 'Status',
+      dataIndex: 'status',
+      className: 'hideOnMobile',
+      sorter: (a, b) => a.status.localeCompare(b.status),
+      filters: adminAllItemStatus.map((c) => { return { text: c.statusText, value: c.status } }),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.status.startsWith(value),
+      render: (record) => {
+        let value = adminAllItemStatus.find(x => x.status === record)
+        return value.statusText
+      }
     })
   }
 
   if (handleDelete) {
     columns.push({
-        title: '',
-        key: 'action',
-        width: 20,
-        render: (record) => (
-          <Space size="middle">
-            <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
-          </Space>
-        )
+      title: '',
+      key: 'action',
+      width: 20,
+      render: (record) => (
+        <Space size="middle">
+          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
+        </Space>
+      )
     })
   }
 
   return (
     <ListWrapper>
       <StyledTable
-        pagination={{hideOnSinglePage: true}}
+        pagination={{ hideOnSinglePage: true }}
         columns={columns}
         rowKey={(record) => record._id || 0}
-        showHeader={ (!admin)? false: true}
+        showHeader={(!admin) ? false : true}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: 2,
+          expandIconColumnIndex: (admin)? 3 : 2,
           expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
-              ) : (
-                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
-              )
-          }}
+            expanded ? (
+              <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
+            ) : (
+              <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
+            )
+        }}
         dataSource={data}
       />
-      {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button>: ''}
+      {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button> : ''}
     </ListWrapper>
   );
 };

@@ -43,7 +43,8 @@ const itemSchema = new Schema(
       "gybShippedDate": Date,
       "gybReceivedDate": Date,
       "shopperShippedDate": Date,
-      "shopperReceivedDate": Date
+      "shopperReceivedDate": Date,
+      "inBasketDate": Date
     },
     shopperId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -52,7 +53,8 @@ const itemSchema = new Schema(
     sendVia: {
         type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then location is
         ref: 'Location' 
-    }
+    },
+    inBasket: Boolean
   },
   options
 );

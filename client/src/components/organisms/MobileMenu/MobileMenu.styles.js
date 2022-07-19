@@ -50,7 +50,7 @@ export const CategoryMenuLink = styled.div`
 `;
 
 export const SubMenuItem = styled.div`
-  color: ${({ theme }) => theme.colorMappings.buttonBorder}; !important;
+  color: ${({ theme }) => theme.colorMappings.primary}; !important;
   padding: 0 20px;
   display: inline-block;
   font-size: 20px;

@@ -263,10 +263,6 @@ export const autoEmails = [
         'content': "<p>Hi {{name}}!<p><p>We’re sorry, but your account has been declined at this time. If you think this is a mistake, contact us here to let us know why!</p><a href='"+homeLink+"/dashboard'>Contact Us</a>"
     },
     {
-        'type': 'shopper_account_declined',
-        'content': "<p>Hi {{name}}!<p><p>We’re sorry, but your account has been declined at this time. If you think this is a mistake, contact us here to let us know why!</p><a href='"+homeLink+"/dashboard'>Contact Us</a>"
-    },
-    { // need tyo add order placed html grid
         'type': 'order_placed',
         'content': "<p>Hi {{name}}!<p><p>Thank you for your order! Please see a summary below.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
@@ -278,13 +274,13 @@ export const autoEmails = [
         'type': 'new_message',
         'content': "<p>Hi {{name}}!<p><p>You have 1 new message waiting on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
-    { // need tyo add order placed html grid
+    { 
         'type': 'item_shopped_with_address',
         'content': "<p>Hi {{name}}!<p><p>You have 1 new order waiting to be dispatched.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
-    { // need tyo add order placed html grid
+    { 
         'type': 'item_shopped_pending_address',
-        'content': "<p>Hi {{name}}!<p><p>You have 1 new order waiting to be dispatched. You will hear from us with a delivery address soon.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+        'content': "<p>Hi {{name}}!<p><p>You’ve had an item shopped which will be sent via a Give Your Best admin member. We will send you another email shortly with all of the details you will need in regards to sending this on. </p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
         'type': 'new_signup',
@@ -299,6 +295,10 @@ export const autoEmails = [
         'content': "<p>Hi Admin!<p><p>You have 1 new notification waiting on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
+        'type': 'new_item_to_assign_location',
+        'content': "<p>Hi Admin!<p><p>You have a new order to assign on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
         'type': 'new_item_approve',
         'content': "<p>Hi Admin!<p><p>You have new items to approve on the Give Your Best Webshop.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
@@ -310,4 +310,12 @@ export const autoEmails = [
         'type': 'item_on_the_way',
         'content': "<p>Hi {{name}}!<p><p>Great news, your order is on it’s way! Don’t forget to let us know when it arrives.</p><p>We hope you love it.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
+    {
+        'type': 'item_received',
+        'content': "<p>Hi {{name}}!<p><p>Your item was successfully received by the recipient. Thank you again for your donation.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'password_reset',
+        'content': "<p>Hi {{name}}!<p><p>Your account password has been reset. </p>Your temporary password is: </p><p>{{password}}</p></p>Follow this link to log in and update your password.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    }
 ]

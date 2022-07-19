@@ -2,15 +2,16 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
-import { getItem } from '../../services/items';
+import { getItem, updateItem } from '../../services/items';
 import { ItemDetailsWrapper, ItemWrapper, DonorLink } from './Item.styles';
 import { Container, ImageGallery, CategoryBreadcrumbs } from '../../components';
-import { ColourCircles, Button }from '../../components/atoms';
+import { ColourCircles, Button, Notification }from '../../components/atoms';
 import { useHistory } from 'react-router-dom';
 import { getSetting } from '../../services/settings';
+import { getDate } from '../../utils/helpers';
 
 export const Item = () => {
-  const { user, setBasket, basket, token } = useContext(AppContext);
+  const { user, setBasket, basket, token, basketTimer, setBasketTimer } = useContext(AppContext);
   const { itemId } = useParams();
   const [itemDetails, setItemDetails] = useState({});
   const [mainImage, setMainImage] = useState({})
@@ -26,6 +27,23 @@ export const Item = () => {
 
   const size = () => {
     return (itemDetails.category === 'shoes')? (itemDetails.shoeSize)? itemDetails.shoeSize.join(', '): '' : (itemDetails.clothingSize)? itemDetails.clothingSize.join(', '): '';
+  }
+
+  const basketReset = (itemDetails) => {
+    clearTimeout(basketTimer);
+    setBasketTimer(setTimeout(() => {
+      if (basket && basket.length) {
+        //clear basket from db
+        basket.concat(itemDetails).forEach(async (b) => {
+          await updateItem(b._id, {'inBasket': false, 'statusUpdateDates.inBasketDate': ''}, token);
+        });
+        Notification('Items expired!', 'The items in your basket have expired.', 'warning');
+      }
+
+      setBasket(null);
+      setBasketTimer(null);
+
+      }, 3600000)) //expires after an hour
   }
 
   useEffect(() => {
@@ -48,7 +66,6 @@ export const Item = () => {
       setLimit(settingValue);
     }
   
-
     fetchItemDetails();
     fetchSetting();
 
@@ -99,7 +116,18 @@ export const Item = () => {
       return;
     }
 
+    updateItem(itemId, {'inBasket': true, 'statusUpdateDates.inBasketDate': getDate()}, token);
+    //update basket date for each item in basket
+    if (basket && basket.length) {
+      basket.forEach(b => {
+        updateItem(b._id, {'inBasket': true, 'statusUpdateDates.inBasketDate': getDate()}, token);
+      });
+    }
+
     setBasket((basket && basket.length)? basket.concat([itemDetails]): [itemDetails]);
+
+    // set up timer for resetting the basket - to expire 
+    basketReset(itemDetails);
 
     confirm({
       title: `Item added to basket.`,
@@ -123,7 +151,7 @@ export const Item = () => {
           <p>Brand: {itemDetails.brand || ''}</p>
           <p>Size: {size()}</p>
           <DonorLink to={'/donorproducts/' + itemDetails.donorId}>See other items by this donor</DonorLink>
-          <Button primary left small onClick={() => {addToBasket(itemDetails._id)}}>Add to Basket</Button>
+          {itemDetails.status === 'in-shop' && <Button primary left small onClick={() => {addToBasket(itemDetails._id)}}>Add to Basket</Button>}
         </ItemDetailsWrapper>
       </ItemWrapper>
     </Container>
