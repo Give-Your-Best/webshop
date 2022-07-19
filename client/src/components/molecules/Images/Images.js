@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from "formik";
-import heic2any from "heic2any";
+// import heic2any from "heic2any";
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
