@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { adminSchema } from '../../../utils/validation';
 import { createUser } from '../../../services/user';
 import { Button, Notification } from '../../atoms';
-import { reopenTab } from '../../../utils/helpers';
+import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
 import { StyledSubmitButton, StyledInput, StyledError } from './EditForm.styles';
 
 export const AdminCreateForm = (data) => {
@@ -14,6 +14,7 @@ export const AdminCreateForm = (data) => {
     const handleSubmit = async (values, {resetForm}) => {
         const res = await createUser(values, token);
         if (res.success) {
+            sendAutoEmail('new_user', values);
             Notification('Success!', 'New team member created', 'success');
             resetForm();
             reopenTab('team');

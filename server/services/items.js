@@ -2,8 +2,8 @@ const Item = require('../models/Item');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
-    console.log('create item service');
     var new_photos = [];
+    var success = true;
     const promises = data.photos.map((photo) => {
       if (photo.status !== 'removed') {
         return cloudinary.uploader.upload(
@@ -14,14 +14,20 @@ const createItem = async (data) => {
                overwrite: false
            }).then((result) => {
                console.log("*** Success: Cloudinary Upload: ", result.url);
-               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid });
+               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true });
            }).catch((err) => {
-               console.error(err);
-               console.log("*** Error: Cloudinary Upload");
+              console.error(err);
+              console.log("*** Error: Cloudinary Upload");
+              success = false;
+              return;
+               
            });
       }
     });
-    await Promise.all(promises)
+    await Promise.all(promises);
+    if (!success) {
+      return { success: false, message: 'Failed to upload one or more of your images' }
+    }
     data.photos = new_photos;
     try {
       const item = new Item(data)
@@ -36,7 +42,7 @@ const createItem = async (data) => {
 const updateItem = async (id, updateData) => {
     var results = {}
     var new_photos = [];
-    if (updateData.photos) {
+    if (updateData.photos) { //if there are images to add to the item then upload to cloudianary and add cloudinary links to the update data
         const promises = updateData.photos.map(async (photo) => {
         if (photo.status == 'removed' && photo.publicId) {
           return cloudinary.uploader.destroy(photo.publicId);
@@ -72,7 +78,7 @@ const updateItem = async (id, updateData) => {
           console.log(err);
           return { success: false, message: err }
       }
-    } else {
+    } else { //if no new images to add then remove the empty photos list and continue updating
       delete updateData.photos;
       try {
         const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
@@ -91,7 +97,6 @@ const updateItem = async (id, updateData) => {
 
 
 const deleteItem = async (id) => {
-    console.log('delete item service');
     try {
         const item = await Item.findByIdAndRemove(id, { useFindAndModify: false });
         if (item) {
@@ -106,7 +111,7 @@ const deleteItem = async (id) => {
 };
 
 const getDonorItems = async (userId, itemStatus) => {
-  console.log('get donor items')
+
   var conditions = {}
   try {
     if (itemStatus !== '') {
@@ -130,15 +135,23 @@ const getDonorItems = async (userId, itemStatus) => {
   }
 }
 
-const getShopperItems = async (userId) => {
-  console.log('get shopper items')
-  console.log(userId)
+const getShopperItems = async (userId, itemStatus) => {
+  var conditions = {}
   try {
-    const conditions = { 
-      approvedStatus: 'approved', 
-      shopperId: userId, 
-      "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
-    };
+    if (itemStatus) {
+      conditions = { 
+        approvedStatus: 'approved', 
+        shopperId: userId, 
+        status: itemStatus
+      };
+    } else {
+      conditions = { 
+        approvedStatus: 'approved', 
+        shopperId: userId, 
+        "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
+      };
+    }
+
     var items = await Item.find(conditions).lean();
     return items;
   } catch (error) {
@@ -149,8 +162,6 @@ const getShopperItems = async (userId) => {
 
 const getAdminItems = async (isCurrent) => {
   //here type is current or past
-  console.log('get admin items items')
-  console.log(isCurrent)
   var conditions = {};
 
   try {
@@ -175,9 +186,16 @@ const getAdminItems = async (isCurrent) => {
 }
 
 const getAllItems = async (page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours) => {
-  console.log('getting alll items')
+  
+  let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
+
   try {
-    const conditions = { approvedStatus: approvedStatus, status: itemStatus };
+    const conditions = { approvedStatus: approvedStatus, status: itemStatus, "$or": [
+      // if item not in basket or item in basket is more than an hour old
+      {"inBasket":  null}, 
+      {"inBasket":  false}, 
+      {"$and": [{"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, {"inBasket":  true} ]} ]
+    };
     const limiti = parseInt(limit);
     const pagei = parseInt(page);
     const skipIndex = (pagei - 1) * limiti;
@@ -291,7 +309,6 @@ const getShopNotificationItems = async () => {
 }
 
 const getItem = async (id) => {
-    console.log('get item')
     try {
         const item = await Item.findById(id);
         if (item) {
@@ -306,7 +323,6 @@ const getItem = async (id) => {
 };
 
 const deleteDonorItems = async (id) => {
-  console.log('delete donor items');
   if (!id || id === '') {
     throw Error('No donor id provided');
   }

@@ -7,7 +7,7 @@ export const Button = styled.button`
     border-radius: 0.1rem;
     border: 2px solid ${theme.colorMappings.buttonBorders};
     color: ${theme.colorMappings.primary};
-    margin: 0 5px 1em 0;
+    margin: 0 5px 0 0;
     padding: 0.3rem 1rem;
     float: right;
     min-height: 52px;

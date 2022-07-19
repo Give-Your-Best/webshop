@@ -38,7 +38,7 @@ export const Card = styled(AntCard)`
     font-size: 16px;
     border: 2px solid ${({ theme }) => theme.colorMappings.primary};
     position: absolute;
-    bottom: 0;
+    bottom: 15px;
     right: 10px;
     @media (max-width: ${({ theme }) => theme.mobile}) {
       position:relative;

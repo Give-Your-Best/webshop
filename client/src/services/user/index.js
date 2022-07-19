@@ -1,4 +1,5 @@
 export { login } from './login';
+export { passwordReset } from './passwordReset';
 export { register } from './register';
 export { createUser } from './createUser';
 export { getUser } from './getUser';

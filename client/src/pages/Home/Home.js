@@ -51,14 +51,15 @@ export const Home = () => {
         </CategoriesWrapper>
           <H1>Women's Clothing</H1>
         <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
-        {items.map((item) => {
+        {(items.length)?
+        items.map((item) => {
           if (item.photos.length) {
             return (<ItemCard key={item._id} item={item} />)
           } else {
             return '';
           }
         }
-        )}
+        ): ''}
       </ItemsWrapper>
       <ButtonWrapper>
         <Button center primary onClick={() => history.push(`/products/`)}>{'Browse All >'}</Button>

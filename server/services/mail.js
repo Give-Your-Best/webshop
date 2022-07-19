@@ -2,9 +2,7 @@ const { mailjet } = require('../utils/mailjet');
 const { getSetting } = require('../services/settings');
 
 const sendMail = async (subject, emailHTML, recipient, recipientName) => {
-  console.log('send mail service');
   const gybEmail = await getSetting('shop_email');
-  console.log(gybEmail)
 
   const request = await mailjet
   .post("send", {'version': 'v3.1'})

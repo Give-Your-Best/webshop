@@ -92,5 +92,10 @@ export const shopperItemStatus = [
         'status': 'shipped-to-shopper',
         'progress': '60',
         'statusText': 'On its way'
+    },
+    {
+        'status': 'received',
+        'progress': '100',
+        'statusText': 'Received by you!'
     }
 ]

@@ -14,7 +14,7 @@ export const CardLongWithBackground = styled(AntCard)`
   }
   
   .ant-card-body {
-    padding: 0 0 0 15px;
+    padding: 7px 7px 7px 15px;
     width: 100%;
 
     @media (max-width: ${({ theme }) => theme.mobile}) {

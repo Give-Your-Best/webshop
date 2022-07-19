@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from "formik";
+// import heic2any from "heic2any";
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -9,9 +10,35 @@ export const Images = (data) => {
   const [previewTitle, setPreviewTitle] = useState('');
   const formikProps = useFormikContext();
 
+  const checkFileType = (file) => {
+    console.log('checking...')
+    console.log(file)
+    const reader = new FileReader();
+    reader.readAsText(file);
+    console.log(reader)
+  }
+
   const handleCancel = () => setPreviewVisible(false);
   const handleChange = ({ file, fileList }) => {
-    data.setUploadedImages(fileList);
+    console.log(fileList);
+    data.setUploadedImages(fileList)
+    // data.setUploadedImages(fileList.map((f) => {
+    //   if (f.name.includes('.heic')) {
+    //     //this is a heic file type
+    //     console.log('cpnvert?')
+    //     heic2any({
+    //       blob: f,
+    //       toType: "image/jpg"
+    //     })
+    //     .then((result) => {
+    //       console.log(result)
+    //       console.log('did this works')
+    //     })
+    //     return {}
+    //   } else {
+    //     return f
+    //   }
+    // }));
     if (data.handleChange) {
       data.handleChange(data.uploadedImages)
     }
@@ -49,6 +76,8 @@ export const Images = (data) => {
     <Upload
       action="/api/items/dummy"
       listType="picture-card"
+      multiple={true}
+      beforeUpload={checkFileType}
       fileList={data.uploadedImages || []}
       onPreview={handlePreview}
       disabled={data.editingKey !== data.recordId}

@@ -1,10 +1,9 @@
 require('dotenv').config();
 const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-const Role = require('../models/Role');
 const User_ = require('../models/User');
 const Item = require('../models/Item');
-const UserService = require('../services/users');
+const Mail = require('../services/mail');
 
 const today = new Date();
 var sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
@@ -27,6 +26,41 @@ const setRefreshTokenCookie = (res) => {
 
   return refreshToken;
 };
+
+const setUserDetails = (user) => {
+  let UserDetails = { 
+    email: user.email, 
+    type: user.kind || 'no-access', 
+    id: user._id, 
+    firstName: user.firstName, 
+    lastName: user.lastName,
+    recentItems: user.recentItems || [],
+    deliveryAddress: user.deliveryAddress || {}
+  }
+
+  if (user.kind === 'donor') {
+    UserDetails.trustedDonor = user.trustedDonor || false
+  }
+
+  if (user.kind === 'shopper') {
+    UserDetails.deliveryAddress = user.deliveryAddress || {}
+    UserDetails.deliveryPreference = user.deliveryPreference || 'direct'
+  }
+
+  return UserDetails
+}
+
+const name = (userDetails) => {
+  if (userDetails.firstName && userDetails.lastName) {
+      return userDetails.firstName + ' ' + userDetails.lastName
+  } else if (userDetails.firstName && !userDetails.lastName) {
+      return userDetails.firstName
+  } else if (!userDetails.firstName && userDetails.lastName) {
+      return userDetails.lastName
+  } else {
+      return userDetails.email
+  }
+}
 
 const login = async (req, res) => {
   try {
@@ -67,34 +101,14 @@ const login = async (req, res) => {
     }
     const token = tokenForUser({
       _id: user._id,
-      email: user.email,
-      // password: user.password, // do not use password here since we're saving this to the cookies
+      email: user.email
     });
     setRefreshTokenCookie(res); // currently not used
-
-    var userRes = { 
-      email: user.email, 
-      type: user.kind || 'no-access', 
-      id: user._id, 
-      firstName: user.firstName, 
-      lastName: user.lastName,
-      recentItems: user.recentItems || [],
-      deliveryAddress: user.deliveryAddress || {}
-    }
-
-    if (user.kind === 'donor') {
-      userRes.trustedDonor = user.trustedDonor || false
-    }
-
-    if (user.kind === 'shopper') {
-      userRes.deliveryAddress = user.deliveryAddress || {}
-      userRes.deliveryPreference = user.deliveryPreference || 'direct'
-    }
 
     return res.json({
       success: true,
       message: 'Enjoy your token!',
-      user: userRes,
+      user: setUserDetails(user),
       token,
     });
   } catch (err) {
@@ -106,8 +120,49 @@ const login = async (req, res) => {
   }
 };
 
+const passwordReset = async (req, res) => {
+  const temp = Math.random().toString(36).slice(2, 10);
+
+  try {
+    const user = await User_.User.findOne({
+      email: req.body.email,
+      approvedStatus: 'approved'
+    });
+
+    if (!user) {
+      console.log('no user found')
+      return res
+        .status(401)
+        .send({ success: false, message: 'No account found.' });
+    }
+
+    try {
+      //update user password with temp
+      await user.updatePassword(user._id, temp);
+      //send email with new password
+      await Mail.sendMail('', req.body.emailContent.replace('{{name}}', name(user)).replace('{{password}}', temp), req.body.email, name(user));
+
+      return res.json({
+        success: true,
+        message: 'password updated!'
+      });
+    } catch (err) {
+      return res.json({
+        success: false,
+        message: 'password failed to update'
+      });
+    }
+  } catch (err) {
+    console.error(`Error in Authentication.updatePassword() : ${err}`);
+    return res.json({
+      success: false,
+      message: `Something went wrong: ${err}`,
+    });
+  }
+
+}
+
 const verifyToken = (req, res, next) => {
-  console.log('verifying token')
   // check header or url parameters or post parameters for token
   const token =
     req.body.token || req.query.token || req.headers['x-access-token'];
@@ -167,10 +222,11 @@ const authenticate = async (req, res) => {
         .send({ success: false, message: 'Authentication failed.' });
     }
     req.decoded = decoded;
+
     return res.json({
       success: true,
       message: 'Authenticated!',
-      user: { email: user.email, type: user.kind, id: user._id },
+      user: setUserDetails(user),
       token,
     });
   } catch (err) {
@@ -183,8 +239,6 @@ const authenticate = async (req, res) => {
 };
 
 const updatePassword = async (req, res) => {
-  console.log('update pass controller');
-  console.log(req.body)
   try {
     const user = await User_.User.findOne({
       email: req.body.email,
@@ -236,5 +290,6 @@ module.exports = {
   verifyToken,
   refreshToken,
   authenticate,
-  updatePassword
+  updatePassword,
+  passwordReset
 };

@@ -12,7 +12,6 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
     const authenticate = async (cookie) => {
         const res = await authenticateUser(cookie);
         if (res.success) {
-            console.log('success')
           setUser(res.user);
           setToken(res.token);
           isAuthenticated = true;

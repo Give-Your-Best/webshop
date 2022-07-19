@@ -4,15 +4,14 @@ const Item = require('../models/Item');
 const ItemService = require('../services/items');
 
 const createItem = async (req, res) => {
-  console.log('create item controller')
   if (!req.body.name) {
     return res.status(400).send({message: "Service error: new item details are required"});
   }
   try {
-    const response = await ItemService.createItem(req.body)
+    const response = await ItemService.createItem(req.body);
     return res.status(200).send({
-      success: true,
-      message: `Item created`,
+      success: response.success,
+      message: response.message,
       item: response.item || {}
     });
   } catch (err) {
@@ -22,7 +21,6 @@ const createItem = async (req, res) => {
 };
 
 const updateItem = async (req, res) => {
-  console.log('update Item controller');
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: Item details are required"});
   }

@@ -9,19 +9,21 @@ export const UsersList = (data) => {
       title: 'Name',
       dataIndex: 'firstName',
       key: 'name',
-      className: 'hideOnMobile'
+      className: 'hideOnMobile',
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      className: 'fixedOnMobile'
+      className: 'fixedOnMobile',
+      sorter: (a, b) => a.email.localeCompare(b.email),
     }
   ]
 
   if (data.handleDelete) {
     columns.push({
-        title: 'Action',
+        title: '',
         key: 'action',
         render: (record) => (
           <Space size="middle">
@@ -35,7 +37,7 @@ export const UsersList = (data) => {
     <ListWrapper>
       <StyledTable
         pagination={{hideOnSinglePage: true}}
-        showHeader={false}
+        showHeader={true}
         scroll={{ x: '100%' }}
         columns={columns}
         rowKey={(record) => record._id}
