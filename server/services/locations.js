@@ -1,7 +1,6 @@
 const Location = require('../models/Location');
 
 const updateLocation = async (id, updateData) => {
-    console.log('update locationa service');
     try {
         const location = await Location.findOneAndUpdate({'_id': id}, updateData, { useFindAndModify: false, returnDocument: 'after'});
         if (location) {
@@ -17,7 +16,6 @@ const updateLocation = async (id, updateData) => {
 
 const getAllLocations = async (status) => {
   const values = (status === 'available')? {"available": true}: {};
-  console.log('get all locs')
   try {
     const locations = await Location.find(values);
     return locations;
@@ -28,8 +26,6 @@ const getAllLocations = async (status) => {
 };
 
 const createLocation = async (data) => {
-  console.log('create location service');
-  console.log(data);
   try {
       const location = new Location(data)
       let saveLocation = await location.save();
@@ -41,7 +37,6 @@ const createLocation = async (data) => {
 };
 
 const getLocation = async (id) => {
-    console.log('get location')
     try {
         const location = await Location.find({'_id': id});
         if (location) {
@@ -56,7 +51,6 @@ const getLocation = async (id) => {
 };
 
 const deleteLocation = async (id) => {
-  console.log('delete location service');
   try {
       const location = await Location.findByIdAndRemove(id, { useFindAndModify: false });
       if (location) {

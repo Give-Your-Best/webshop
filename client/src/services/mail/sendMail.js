@@ -1,5 +1,4 @@
 export const sendMail = async ( values, token ) => {
-    console.log('send email service');
     try {
       const response = await fetch('/api/mail/', {
         method: 'post',

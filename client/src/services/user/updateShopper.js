@@ -1,6 +1,4 @@
 export const updateShopper = async (id, updateData, token) => {
-  console.log('id')
-  console.log(id)
     //call api to update user details
     try {
       const response = await fetch(`/api/users/shopper/${id}`, {

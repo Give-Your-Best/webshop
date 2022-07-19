@@ -44,7 +44,6 @@ export const Products = () => {
   useEffect(() => {
 
     const fetchItems = async () => {
-      console.log('fetch')
         const items = await getItems(page, 8, 'approved', 'in-shop', category, subCategory, '', clothingSizes, shoeSizes, colours); 
         setItems(items);
         setNoItems((items.length> 0)? false: true);

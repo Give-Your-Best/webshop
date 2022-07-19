@@ -1,5 +1,4 @@
 export const getItem = async (id) => {
-    console.log(id);
     const response = await fetch(`/api/items/${id}`, {
       headers: {
         'Content-Type': 'application/json'

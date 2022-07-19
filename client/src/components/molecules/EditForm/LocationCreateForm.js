@@ -10,7 +10,6 @@ import { UserSelect } from '../../atoms/UserSelect';
 import { StyledSubmitButton, StyledInput, StyledError, StyledLabel } from './EditForm.styles';
 
 export const LocationCreateForm = (data) => {
-    console.log(data.users)
     const { token } = useContext(AppContext);
 
     const handleSubmit = async (values, {resetForm}) => {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from "formik";
-// import heic2any from "heic2any";
+import { Notification } from '../../atoms';
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -11,37 +11,24 @@ export const Images = (data) => {
   const formikProps = useFormikContext();
 
   const checkFileType = (file) => {
-    console.log('checking...')
-    console.log(file)
-    const reader = new FileReader();
-    reader.readAsText(file);
-    console.log(reader)
+
+    //do not upload if not in accepted file types
+    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
+    if (!acceptedFormats.includes(file.name.split('.')[1])) {
+      Notification('Error!', 'Error uploading image. Please make sure your file is an image type', 'error');
+      return Upload.LIST_IGNORE
+    }
   }
 
   const handleCancel = () => setPreviewVisible(false);
+
   const handleChange = ({ file, fileList }) => {
-    console.log(fileList);
     data.setUploadedImages(fileList)
-    // data.setUploadedImages(fileList.map((f) => {
-    //   if (f.name.includes('.heic')) {
-    //     //this is a heic file type
-    //     console.log('cpnvert?')
-    //     heic2any({
-    //       blob: f,
-    //       toType: "image/jpg"
-    //     })
-    //     .then((result) => {
-    //       console.log(result)
-    //       console.log('did this works')
-    //     })
-    //     return {}
-    //   } else {
-    //     return f
-    //   }
-    // }));
+
     if (data.handleChange) {
       data.handleChange(data.uploadedImages)
     }
+
     //update dummy field for image validation
     formikProps.setFieldValue("photos", data.uploadedImages)
   }
@@ -83,7 +70,7 @@ export const Images = (data) => {
       disabled={data.editingKey !== data.recordId}
       onChange={handleChange}
     >
-      {data.uploadedImages.length >= 3 ? null : uploadButton}
+      {data.uploadedImages.length >= 4 ? null : uploadButton}
     </Upload>
     <Modal
       visible={previewVisible}

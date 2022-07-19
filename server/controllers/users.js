@@ -3,19 +3,6 @@ const uuidv4 = require('uuid').v4;
 const UserService = require('../services/users');
 
 const createUser = async (req, res) => {
-    console.log('create user controller');
-    console.log(req.body);
-    // console.log(mg)
-    // mg.messages.create('sandboxfa5f0a6a1c8c44c69488b2e0311bb84e.mailgun.org', {
-    //   from: "Excited User <mailgun@sandboxfa5f0a6a1c8c44c69488b2e0311bb84e.mailgun.org>",
-    //   to: ["zahra.8d@gmail.com"],
-    //   subject: "Hello",
-    //   text: "Testing some Mailgun awesomness!",
-    //   html: "<h1>Testing some Mailgun awesomness!</h1>"
-    // })
-    // .then(msg => console.log(msg)) // logs response data
-    // .catch(err => console.log(err)); // logs any error
-
     if (!req.body.email) {
       return res.status(400).send({message: "Service error: new user details are required"});
     }
@@ -34,8 +21,6 @@ const createUser = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  console.log('register user controller')
-  console.log(req.body);
   if (!req.body.email) {
     return res.status(400).send({message: "Service error: new user details are required"});
   }
@@ -57,8 +42,7 @@ const registerUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  console.log('update user controller');
-  console.log(req.body);
+
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: User details are required"});
   }
@@ -79,8 +63,6 @@ const updateUser = async (req, res) => {
 };
 
 const updateDonor = async (req, res) => {
-  console.log('update donor controller');
-  console.log(req.body);
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: User details are required"});
   }
@@ -100,8 +82,6 @@ const updateDonor = async (req, res) => {
 };
 
 const updateShopper = async (req, res) => {
-  console.log('update shopper controller');
-  console.log(req.body);
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: User details are required"});
   }
@@ -121,8 +101,6 @@ const updateShopper = async (req, res) => {
 };
 
 const updateAdmin = async (req, res) => {
-  console.log('update donor controller');
-  console.log(req.body);
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: User details are required"});
   }

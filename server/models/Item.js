@@ -60,9 +60,7 @@ const itemSchema = new Schema(
 );
 
 itemSchema.post('update', function () {
-  console.log('post update')
   const modifiedFields = this.getUpdate().$set;
-  console.log(modifiedFields);
 });
 
 // Before saving set approved status to approved if donor is a trusted donor (default is in-progress)

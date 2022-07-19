@@ -19,13 +19,13 @@ export const OrdersList = () => {
         setItems(items.filter(item => {
             if (item._id === itemId) {
                 getUser(item.donorId, token)
-                .then((donor) => {
-                  sendAutoEmail('item_received', donor, [item]);
-                })
+                    .then((donor) => {
+                        sendAutoEmail('item_received', donor, [item]);
+                    })
             }
             return item._id !== itemId;
         }));
-        return updateItem(itemId, {'status': 'received', 'statusUpdateDates.shopperReceivedDate': getDate()}, token);
+        return updateItem(itemId, { 'status': 'received', 'statusUpdateDates.shopperReceivedDate': getDate() }, token);
     }
 
     const markAsSent = (itemId) => {
@@ -41,15 +41,15 @@ export const OrdersList = () => {
             // send via exists (location assigned)
 
             sendAutoEmail('item_on_the_way_admin');
-            return updateItem(itemId, {'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': getDate()}, token)
+            return updateItem(itemId, { 'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': getDate() }, token)
         } else {
             //send via does not exist (location not assigned or shopper has shared address
 
             getUser(item.shopperId, token)
-            .then((shopper) => {
-              sendAutoEmail('item_on_the_way', shopper, [item]);
-            })
-            return updateItem(itemId, {'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': getDate()}, token)
+                .then((shopper) => {
+                    sendAutoEmail('item_on_the_way', shopper, [item]);
+                })
+            return updateItem(itemId, { 'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': getDate() }, token)
         }
     }
 
@@ -72,17 +72,17 @@ export const OrdersList = () => {
         };
 
         const fetchShopperPastItems = async () => {
-            const items = await getShopperItems(user.id, 'received');
+            const pastItems = await getShopperItems(user.id, 'received');
             if (!mountedRef.current) return null;
-            setPastItems(items);
-          };
+            setPastItems(pastItems);
+        };
 
         const fetchDonorItems = async () => {
             const items = await getDonorItems(user.id);
             if (!mountedRef.current) return null;
             setItems(items);
         };
-    
+
         if (user.type === 'shopper') {
             fetchShopperItems();
             fetchShopperPastItems();
@@ -91,8 +91,8 @@ export const OrdersList = () => {
         }
 
         return () => {
-          // cleanup
-          mountedRef.current = false;
+            // cleanup
+            mountedRef.current = false;
         };
 
     }, [token, user]);
@@ -101,28 +101,28 @@ export const OrdersList = () => {
         <ListWrapper>
             <StyledTabs forceRenderTabPanel={true}>
                 <StyledTabListHidden>
-                <HiddenStyledTab className='itemslist'>{user.type === 'shopper'? 'My Orders': 'Item Processing'}</HiddenStyledTab>
-                <HiddenStyledTab className='pastitemslist'>My Past Items</HiddenStyledTab>
+                    <HiddenStyledTab className='itemslist'></HiddenStyledTab>
+                    <HiddenStyledTab className='pastitemslist'>My Past Items</HiddenStyledTab>
                 </StyledTabListHidden>
-        
+
                 <StyledTabPanel>
-                    <H2>{user.type === 'shopper'? 'My Orders': 'Item Processing'}</H2>
-                    {(items && items.length)? 
+                    <H2>{user.type === 'shopper' ? 'My Orders' : 'Item Processing'}</H2>
+                    {(items && items.length) ?
 
                         items.map((item) => {
                             let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'))
-                                return (
-                                    <div key={item._id}>
-                                        <ItemCardLong 
-                                            item={item} 
-                                            type={user.type} 
-                                            actionText={(noAction)? '': actionText}
-                                            action={(noAction)? '': action}
-                                        />
-                                    </div>)
-                            }
+                            return (
+                                <div key={item._id}>
+                                    <ItemCardLong
+                                        item={item}
+                                        type={user.type}
+                                        actionText={(noAction) ? '' : actionText}
+                                        action={(noAction) ? '' : action}
+                                    />
+                                </div>)
+                        }
                         )
-                    : <p>{user.type === 'shopper'? 'Your items will be here when you start shopping!': 'Your items will appear here when they have been shopped'}</p>
+                        : <p>{user.type === 'shopper' ? 'Your items will be here when you start shopping!' : 'Your items will appear here when they have been shopped'}</p>
                     }
                     {user.type === 'shopper' && <Button primary small onClick={() => reopenTab('pastitems')}>View Past Orders</Button>}
                 </StyledTabPanel>
@@ -130,11 +130,10 @@ export const OrdersList = () => {
                 <StyledTabPanel>
                     <H2>Past Items</H2>
                     {pastItems.map((item) => {
-                        console.log(item)
                         return (
                             <div key={item._id}>
-                                <ItemCardLong 
-                                    item={item} 
+                                <ItemCardLong
+                                    item={item}
                                     type={user.type}
                                 />
                             </div>)
@@ -142,7 +141,7 @@ export const OrdersList = () => {
                     )}
                     {user.type === 'shopper' && <Button primary small onClick={() => reopenTab('items')}>Back to Current Orders</Button>}
                 </StyledTabPanel>
-          </StyledTabs>
+            </StyledTabs>
         </ListWrapper>
     );
 };

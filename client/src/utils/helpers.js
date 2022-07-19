@@ -1,5 +1,6 @@
 import { sendMail } from '../services/mail';
 import { autoEmails } from '../utils/constants';
+import heic2any from "heic2any";
 import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashboard/Tabs/constants';
 
 export const hideMobileMenu = () => {
@@ -76,6 +77,38 @@ export const trunc = (str) => {
     return (str.length > 61)? str.substring(0, 61) + '...': str;
 }
 
+const blobToData = (blob) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.readAsDataURL(blob)
+    })
+  }
+
+
+export const convertHeic = async (fileList) => {
+    //if a file in the filelist is of type heic then use heic2any to convert to a png
+    const newList = await Promise.all(fileList.map(async (f) => {
+        if (f.name.includes('.heic') && f.originFileObj) { //will skip if no file object
+          //this is a heic file type
+          //convert to jpg
+          const c = await heic2any({
+            blob: f.originFileObj,
+            toType: "image/png",
+            quality: 0.5
+          })
+
+        const resData = await blobToData(c);
+        f.thumbUrl = resData //update with dataurl to pass to cloudinary in the backend
+        f.name = f.name.split('.heic')[0] + '.png' //update ext
+        return f
+        } else {
+          return f
+        }
+      }))
+    return newList
+}
+
 export const checkUnread = (type, userId, messages) => {
     let unread = [];
     messages.filter((m) => {
@@ -114,7 +147,7 @@ const deliveryAddressContent = (deliveryAddress, name) => {
     return (`<section>
             <p style="margin:30px;">Delivery Address</p>`
             + ((deliveryAddress.name)? `<p style="margin: 0;">` + deliveryAddress.name + `</p>`: ``)
-            + ((name)? `<p style="margin: 0;">` + name + `</p>`: ``)
+            + ((!deliveryAddress.name && name)? `<p style="margin: 0;">` + name + `</p>`: ``)
             + ((deliveryAddress.firstLine)? `<p style="margin: 0;">` + deliveryAddress.firstLine + `</p>`: ``)
             + ((deliveryAddress.secondLine)? `<p style="margin: 0;">` + deliveryAddress.secondLine + `</p>`: ``)
             + ((deliveryAddress.city)? `<p style="margin: 0;">` + deliveryAddress.city + `</p>`: ``)

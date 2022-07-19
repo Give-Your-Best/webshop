@@ -1,5 +1,4 @@
 export const getDonations = async (approvedStatus, token) => {
-  console.log(approvedStatus)
   const response = await fetch(`/api/users/donations?approvedStatus=${approvedStatus}`, {
     headers: {
       'Content-Type': 'application/json',

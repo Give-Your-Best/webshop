@@ -1,6 +1,4 @@
 export const updatePassword = async (updateData, token) => {
-  console.log('update [asswprd service')
-  console.log(updateData)
   try {
     const response = await fetch('/api/auth/updatepass', {
       method: 'put',
