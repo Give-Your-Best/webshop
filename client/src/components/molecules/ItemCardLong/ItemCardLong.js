@@ -21,7 +21,7 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate }) =>
     return (
       <>
       <ExpandedAddress>{deliveryAddress.name}</ExpandedAddress>
-      <ExpandedAddress>{deliveryAddress.firstLine + ((deliveryAddress.secondLine && deliveryAddress.secondLine != '')? (', ' + deliveryAddress.secondLine): '')}</ExpandedAddress>
+      <ExpandedAddress>{deliveryAddress.firstLine + ((deliveryAddress.secondLine && deliveryAddress.secondLine !== '')? (', ' + deliveryAddress.secondLine): '')}</ExpandedAddress>
       <ExpandedAddress>{(deliveryAddress.city? deliveryAddress.city + ', ' + deliveryAddress.postcode: deliveryAddress.postcode)}</ExpandedAddress>
       </>
     )

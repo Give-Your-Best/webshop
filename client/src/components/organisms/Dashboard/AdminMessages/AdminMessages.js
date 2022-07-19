@@ -33,7 +33,7 @@ export const AdminMessages = () => {
     const markAsRead = async () => {
       let unread = checkUnread('admin', '', conversation.messages);
       if (unread[0] > 0) {
-        const res = await markMessageAsViewed(conversation._id, unread[1], token);
+        await markMessageAsViewed(conversation._id, unread[1], token);
       }
     }
 

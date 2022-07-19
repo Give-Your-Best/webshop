@@ -34,6 +34,7 @@ export const Notifications = () => {
           const donorDetails = getUser(item.donorId, token)
           .then((donor) => {
             sendAutoEmail('item_shopped_with_address', donor, [item], locationDetails);
+            console.log(donorDetails._id)
           })
 
           setAssignAddressId('');
