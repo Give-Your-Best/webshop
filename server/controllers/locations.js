@@ -4,7 +4,7 @@ const Location = require('../models/Location');
 const LocationsService = require('../services/locations');
 
 const updateLocation = async (req, res) => {
-  console.log('update location controller');
+
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: location details are required"});
   }
@@ -25,8 +25,7 @@ const updateLocation = async (req, res) => {
 };
 
 const createLocation = async (req, res) => {
-  console.log('create location controller')
-  console.log(req.body);
+
   if (!req.body.name) {
     return res.status(400).send({message: "Service error: new location details are required"});
   }

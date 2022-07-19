@@ -33,8 +33,6 @@ export const Notifications = () => {
           //get donor details
           const donorDetails = getUser(item.donorId, token)
           .then((donor) => {
-            console.log(donorDetails)
-            console.log(item)
             sendAutoEmail('item_shopped_with_address', donor, [item], locationDetails);
           })
 

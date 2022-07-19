@@ -5,7 +5,6 @@ import { DashboardTabs } from '../../components/';
 
 export const Dashboard = () => {
   const { itemId } = useParams();
-  console.log(itemId);
 
   return (
     <Container data-testid="Dashboard">

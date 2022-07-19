@@ -13,6 +13,8 @@ export const Card = styled(AntCard)`
   img {
     border-radius: 10px;
     border: 1px solid ${({ theme }) => theme.colorMappings.lightPink};
+    min-height: 230px;
+    object-fit: contain;
   }
 
   .ant-card-body {
@@ -44,6 +46,7 @@ export const Card = styled(AntCard)`
       position:relative;
       margin: 7px 10px;
       right: 0;
+      bottom: 0;
     }
   }
 

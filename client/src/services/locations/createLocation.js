@@ -1,6 +1,5 @@
 export const createLocation = async ( values, token ) => {
     //call api to create location
-    console.log('location service')
     try {
       const response = await fetch('/api/locations/', {
         method: 'post',

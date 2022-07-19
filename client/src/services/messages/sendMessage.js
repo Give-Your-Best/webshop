@@ -1,6 +1,5 @@
 export const sendMessage = async ( values, token ) => {
     //call api to send message
-    console.log('send message service')
     try {
       const response = await fetch('/api/messages/', {
         method: 'post',

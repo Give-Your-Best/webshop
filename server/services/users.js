@@ -3,8 +3,6 @@ const Item = require('../models/Item');
 const User_ = require('../models/User');
 
 const createUser = async (data) => {
-    console.log('create user serviceee');
-    console.log(data)
     try {
         var user = await User_.User.findOne({
           email: data.email,
@@ -15,13 +13,11 @@ const createUser = async (data) => {
           if (data.type == 'donor') {
             user = new User_.Donor(data);
           } else if (data.type == "shopper") {
-            console.log('saving')
             user = new User_.Shopper(data);
           } else if (data.type == "admin") {
             user = new User_.Admin(data);
           }
           let saveUser = await user.save();
-          console.log(saveUser)
           return { success: true, message: `User created`, user: user }
         }
     } catch (err) {
@@ -31,7 +27,6 @@ const createUser = async (data) => {
 };
 
 const updateUser = async (id, updateData) => {
-    console.log('update user service');
     try {
         const user = await User_.User.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
         if (user) {
@@ -46,7 +41,6 @@ const updateUser = async (id, updateData) => {
 };
 
 const updateDonor = async (id, updateData) => {
-  console.log('update donor service');
   if (updateData.trustedDonor === true) {
     const update = await Item.updateMany({ donorId: id.toString(), approvedStatus: 'in-progress' }, { $set: { 'approvedStatus': 'approved' } });
   }
@@ -64,7 +58,6 @@ const updateDonor = async (id, updateData) => {
 };
 
 const updateShopper = async (id, updateData) => {
-  console.log('update shopper service');
   try {
       const user = await User_.Shopper.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
       if (user) {
@@ -79,7 +72,6 @@ const updateShopper = async (id, updateData) => {
 };
 
 const updateAdmin = async (id, updateData) => {
-  console.log('update admin service');
   try {
       const user = await User_.Admin.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
       if (user) {
@@ -95,7 +87,6 @@ const updateAdmin = async (id, updateData) => {
 
 
 const deleteUser = async (id) => {
-    console.log('delete user service');
     try {
         const user = await User_.User.findByIdAndRemove(id, { useFindAndModify: false });
         if (user) {
@@ -126,7 +117,6 @@ const getAllUsers = async (type, approvedStatus) => {
 };
 
 const getDonations = async (approvedStatus) => {
-  console.log('get donations');
   try {
     const donations = await User_.Donor.aggregate([
       {
@@ -169,8 +159,7 @@ const getDonations = async (approvedStatus) => {
         }
       }
     ]).exec();
-    console.log('?')
-    console.log(donations)
+
     return donations;
   } catch (error) {
     console.error(`Error in get donations: ${error}`);
@@ -179,10 +168,9 @@ const getDonations = async (approvedStatus) => {
 }
 
 const getUser = async (id) => {
-    console.log('getuser')
     try {
         const user = await User_.User.findById(id);
-        if (user || approvedStatus != 'approved') {
+        if (user && user.approvedStatus == 'approved') {
             return user
         } else {
           throw Error('Cannot find user');

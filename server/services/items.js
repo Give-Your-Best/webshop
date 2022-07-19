@@ -138,7 +138,7 @@ const getDonorItems = async (userId, itemStatus) => {
 const getShopperItems = async (userId, itemStatus) => {
   var conditions = {}
   try {
-    if (itemStatus) {
+    if (itemStatus && itemStatus != 'undefined') {
       conditions = { 
         approvedStatus: 'approved', 
         shopperId: userId, 
@@ -207,7 +207,6 @@ const getAllItems = async (page, limit, approvedStatus, itemStatus, category, su
     if (shoeSizes) conditions.shoeSize = { $in: shoeSizes.split(',') }
     if (colours) conditions.colors = { $in: colours.split(',') }
 
-    console.log(conditions)
     var items = await Item.find(conditions)
       .sort({createdAt: -1})
       .limit(limiti)

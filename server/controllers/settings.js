@@ -4,8 +4,6 @@ const Setting = require('../models/Settings');
 const SettingsService = require('../services/settings');
 
 const updateSetting = async (req, res) => {
-  console.log('update Setting controller');
-  console.log(req.body);
   if (Object.keys(req.body).length === 0) {
     return res.status(400).send({message: "Service error: Setting details are required"});
   }

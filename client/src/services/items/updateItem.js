@@ -1,5 +1,9 @@
+import { convertHeic } from '../../utils/helpers'
+
 export const updateItem = async (id, updateData, token) => {
-  console.log('???')
+  if (updateData.photos) {
+    updateData.photos = await convertHeic(updateData.photos);
+  }
     //call api to update item details
     try {
       const response = await fetch(`/api/items/${id}`, {

@@ -1,7 +1,4 @@
 export const updateUser = async (id, updateData, token) => {
-  console.log('id')
-  console.log(id)
-  console.log(updateData)
     //call api to update user details
     try {
       const response = await fetch(`/api/users/${id}`, {

@@ -24,11 +24,9 @@ const getMessages = async (type, userId) => {
 
 
 const markMessageAsViewed = async (id, messageIds) => {
-  console.log('update messages service');
   try {
       const thread = await Message.findOneAndUpdate({'_id': id, 'messages._id': { $in: messageIds }},{$set: {"messages.$.viewed": true}}, { useFindAndModify: false, returnDocument: 'after'});
       if (thread) {
-        console.log(thread)
           return { success: true, message: 'marked as viewed', thread: thread }
       } else {
         throw Error('Cannot update message');
@@ -40,8 +38,6 @@ const markMessageAsViewed = async (id, messageIds) => {
 };
 
 const createMessage = async (data) => {
-  console.log('create message service');
-  console.log(data);
   if (!data.threadId || data.threadId === '') {
     //if no thread id then add a new one
     data.threadId = new BSON.ObjectId();

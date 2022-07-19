@@ -41,7 +41,6 @@ export const ShippingLocationsList = (data) => {
   const rowSelection = {
     selectedRowKeys,
     onChange: selectedRowKeys => {
-      console.log(selectedRowKeys)
       setSelectedRowKeys( selectedRowKeys );
     }
   };

@@ -34,7 +34,6 @@ export const AdminMessages = () => {
       let unread = checkUnread('admin', '', conversation.messages);
       if (unread[0] > 0) {
         const res = await markMessageAsViewed(conversation._id, unread[1], token);
-        console.log(res)
       }
     }
 
@@ -78,7 +77,6 @@ export const AdminMessages = () => {
       <div>
         <MessagesContainer>
         {conversation.messages.map((m)=>{
-          console.log(m)
           if (!m.recipient || m.recipient.kind === 'admin') {
             return (<MessageSent key={m.threadId}><div><p>{m.message}</p><InfoNote>{name(m.sender) + ' ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageSent>);
           } else {

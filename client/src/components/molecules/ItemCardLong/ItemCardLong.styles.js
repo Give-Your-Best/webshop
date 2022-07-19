@@ -58,3 +58,12 @@ export const CardLongImage = styled.img`
     min-width: 100%;
   }
 `;
+
+export const ExpandLink = styled.p`
+  font-size: 15px !important;
+  cursor: pointer;
+`;
+
+export const ExpandedAddress = styled.p`
+  font-size: 15px !important;
+`;

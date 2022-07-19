@@ -25,14 +25,11 @@ export const ApproveItemList = (data) => {
   const rowSelection = {
     selectedRowKeys,
     onChange: selectedRowKeys => {
-      console.log(selectedRowKeys)
       setSelectedRowKeys( selectedRowKeys );
     }
   };
 
   const markAsTrusted = () => {
-    console.log('mark as trusted')
-    console.log(selectedRowKeys)
     data.markAsTrusted(selectedRowKeys);
     setSelectedRowKeys([]);
   }
