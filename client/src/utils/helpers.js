@@ -99,12 +99,14 @@ export const convertHeic = async (fileList) => {
           })
 
         const resData = await blobToData(c);
-        f.thumbUrl = resData //update with dataurl to pass to cloudinary in the backend
+        f.imageUrl = resData //update with dataurl to pass to cloudinary in the backend
         f.name = f.name.split('.heic')[0] + '.png' //update ext
         return f
-        } else {
+        } else if (f.originFileObj) {
+            const resData = await blobToData(f.originFileObj);
+            f.imageUrl = resData //update with dataurl to pass to cloudinary in the backend
           return f
-        }
+        } else return {}
       }))
     return newList
 }

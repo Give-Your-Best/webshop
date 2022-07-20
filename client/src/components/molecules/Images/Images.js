@@ -17,6 +17,8 @@ export const Images = (data) => {
     if (!acceptedFormats.includes(file.name.split('.')[1])) {
       Notification('Error!', 'Error uploading image. Please make sure your file is an image type', 'error');
       return Upload.LIST_IGNORE
+    } else {
+      return true
     }
   }
 
@@ -58,10 +60,15 @@ export const Images = (data) => {
     </div>
   );
 
+  const custom = ({ onSuccess, onError, file, onProgress }) => {
+    console.log('rtets');
+    onSuccess("Ok");
+  }
+
   return (
     <>
     <Upload
-      action="/api/items/dummy"
+      customRequest={custom}
       listType="picture-card"
       multiple={true}
       beforeUpload={checkFileType}

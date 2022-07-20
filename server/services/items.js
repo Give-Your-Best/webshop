@@ -7,7 +7,7 @@ const createItem = async (data) => {
     const promises = data.photos.map((photo) => {
       if (photo.status !== 'removed') {
         return cloudinary.uploader.upload(
-           photo.thumbUrl,
+           photo.imageUrl,
            {
                resource_type: "auto",
                public_id: photo.uid,
@@ -46,9 +46,9 @@ const updateItem = async (id, updateData) => {
         const promises = updateData.photos.map(async (photo) => {
         if (photo.status == 'removed' && photo.publicId) {
           return cloudinary.uploader.destroy(photo.publicId);
-        } else if (!photo.url && photo.thumbUrl) {
+        } else if (!photo.url && photo.imageUrl) {
           return cloudinary.uploader.upload(
-            photo.thumbUrl,
+            photo.imageUrl,
             {
                 resource_type: "auto",
                 public_id: photo.uid,

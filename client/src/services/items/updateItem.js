@@ -1,6 +1,7 @@
 import { convertHeic } from '../../utils/helpers'
 
 export const updateItem = async (id, updateData, token) => {
+  console.log('am i u[dating?')
   if (updateData.photos) {
     updateData.photos = await convertHeic(updateData.photos);
   }
