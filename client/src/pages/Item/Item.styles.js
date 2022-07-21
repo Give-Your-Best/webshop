@@ -38,10 +38,6 @@ export const ImagesWrapper = styled.div`
         margin-left: 10px;
         border-radius: 1em !important;
         border: 1px solid ${({ theme }) => theme.colorMappings.borders};
-
-        @media (max-width: ${({ theme }) => theme.mobile}) {
-          width: 100%;
-        }
     }
 `
 

@@ -1,7 +1,6 @@
 import { convertHeic } from '../../utils/helpers'
 
 export const createItem = async ( values, token ) => {
-  console.log('am, i creaeting??')
     //call api to create item
     if (values.photos) {
       values.photos = await convertHeic(values.photos);

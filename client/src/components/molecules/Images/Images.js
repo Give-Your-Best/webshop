@@ -60,8 +60,7 @@ export const Images = (data) => {
     </div>
   );
 
-  const custom = ({ onSuccess, onError, file, onProgress }) => {
-    console.log('rtets');
+  const custom = ({ onSuccess }) => {
     onSuccess("Ok");
   }
 

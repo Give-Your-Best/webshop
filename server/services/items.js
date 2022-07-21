@@ -60,13 +60,17 @@ const updateItem = async (id, updateData) => {
                 console.error(err);
                 console.log("*** Error: Cloudinary Upload");
             });
-        } else {
+        } else if (Object.keys(photo).length) {
           new_photos.push(photo);
           return true
         }
       })
       await Promise.all(promises)
-      updateData.photos = new_photos;
+      if (new_photos.length) {
+        updateData.photos = new_photos;
+      } else {
+        delete updateData.photos
+      }
       try {
           const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
           if (item) {

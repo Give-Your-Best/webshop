@@ -89,7 +89,7 @@ const blobToData = (blob) => {
 export const convertHeic = async (fileList) => {
     //if a file in the filelist is of type heic then use heic2any to convert to a png
     const newList = await Promise.all(fileList.map(async (f) => {
-        if (f.name.includes('.heic') && f.originFileObj) { //will skip if no file object
+        if (f.name && f.name.includes('.heic') && f.originFileObj) { //will skip if no file object
           //this is a heic file type
           //convert to jpg
           const c = await heic2any({
@@ -102,11 +102,11 @@ export const convertHeic = async (fileList) => {
         f.imageUrl = resData //update with dataurl to pass to cloudinary in the backend
         f.name = f.name.split('.heic')[0] + '.png' //update ext
         return f
-        } else if (f.originFileObj) {
+        } else if (f.name && f.originFileObj) {
             const resData = await blobToData(f.originFileObj);
             f.imageUrl = resData //update with dataurl to pass to cloudinary in the backend
           return f
-        } else return {}
+        } else return f //return object as is (this will be an existing image)
       }))
     return newList
 }
@@ -205,11 +205,6 @@ export const emailTemplate = (content) => {
 }
 
 export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) => {
-
-    console.log('user');
-    console.log(userDetails)
-    console.log(items)
-    console.log(deliveryAddress)
 
     const subject = autoEmails.filter((e) => {return e.type === type})[0].subject;
     var emailContent = autoEmails.filter((e) => {return e.type === type})[0].content;
