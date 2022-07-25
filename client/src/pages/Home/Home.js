@@ -38,7 +38,7 @@ export const Home = () => {
   }, []);
 
   return (
-    <div data-testid="HomeRoute">
+    <div>
         <CoverWrapper to="/">
           <h1>Give Your Best Shop</h1>
           <p>Browse items from 100s of besties</p>
