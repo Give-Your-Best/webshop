@@ -9,8 +9,7 @@
     "start:dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "start:server": "nodemon server.js",
     "start:client": "cd client && npm start",
-    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-    "test:client": "cd client && npm run test"
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "repository": {
     "type": "git",
