@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { Recaptcha } from 'react-recaptcha';
 import { Formik } from 'formik';
 import { loginSchema } from '../../utils/validation';
 import { useHistory } from 'react-router-dom';
@@ -84,6 +83,7 @@ export const Login = () => {
               </div>
 
               <StyledSubmitButton>Log In</StyledSubmitButton>
+
             </StyledForm>
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
