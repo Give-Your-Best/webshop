@@ -5,18 +5,18 @@ const createItem = async (data) => {
     var new_photos = [];
     var success = true;
     const promises = data.photos.map((photo) => {
-      console.log(photo.name)
       if (photo.status !== 'removed') {
         return cloudinary.uploader.upload(
            photo.imageUrl,
            {
                resource_type: "auto",
                public_id: photo.uid,
-               overwrite: false
+               overwrite: false,
+               secure: true
            }).then((result) => {
-               console.log("*** Success: Cloudinary Upload: ", result.url);
-               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true, front: (photo.front)? true: false });
-               console.log(new_photos);
+             console.log(result)
+               console.log("*** Success: Cloudinary Upload: ", result.secure_url);
+               new_photos.push({ url: result.secure_url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true, front: (photo.front)? true: false });
            }).catch((err) => {
               console.error(err);
               console.log("*** Error: Cloudinary Upload");
@@ -54,10 +54,11 @@ const updateItem = async (id, updateData) => {
             {
                 resource_type: "auto",
                 public_id: photo.uid,
-                overwrite: false
+                overwrite: false,
+                secure: true
             }).then((result) => {
-                console.log("*** Success: Cloudinary Upload: ", result.url);
-                new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, front: (photo.front)? true: false });
+                console.log("*** Success: Cloudinary Upload: ", result.secure_url);
+                new_photos.push({ url: result.secure_url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, front: (photo.front)? true: false });
             }).catch((err) => {
                 console.error(err);
                 console.log("*** Error: Cloudinary Upload");
