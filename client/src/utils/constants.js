@@ -255,6 +255,10 @@ export const autoEmails = [
         'content': "<p>Hi {{name}}!<p><p>Thanks for signing up, your application has been sent to our admin team and we’ll get back to you as soon as possible.</p>"
     },
     {
+        'type': 'sign_up_donor',
+        'content': "<p>Hi {{name}}!<p><p>Thanks for signing up! You can start uploading items and we'll add them to the shop as soon as possible!</p>"
+    },
+    {
         'type': 'account_approved',
         'content': "<p>Hi {{name}}!<p><p>Great news! Your account has been approved. Follow this link to log in and view your dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },

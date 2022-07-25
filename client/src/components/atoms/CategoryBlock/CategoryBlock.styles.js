@@ -19,15 +19,20 @@ export const Card = styled(AntCard)`
     font-weight: bold;
   }
 
+  .ant-card-meta-detail {
+    width: 100%;
+  }
+
   .ant-card-cover img {
     background: ${({ theme }) => theme.colorMappings.background};
     width: 200px;
+    margin: auto;
+
     @media (max-width:${({ theme }) => theme.mid}) {
       width: 150px;
     }
     @media (max-width:${({ theme }) => theme.mobile}) {
       width: 230px;
-      margin: auto;
     }
   }
 

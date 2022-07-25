@@ -1,6 +1,5 @@
 export const createUser = async ( values, token ) => {
     //call api to create user
-    console.log('user service')
     try {
       const response = await fetch('/api/users/', {
         method: 'post',

@@ -6,7 +6,7 @@ import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 
 export const ItemMiniEditForm = ({ editingKey, recordId, photos, handleImageUpdate }) => {
-  const [uploadedImages, setUploadedImages] = useState(photos);
+  const [uploadedImages, setUploadedImages] = useState(photos.sort((a, b) => b.front - a.front));
 
   return (
     <Form>

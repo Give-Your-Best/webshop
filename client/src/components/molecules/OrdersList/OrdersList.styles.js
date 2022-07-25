@@ -98,4 +98,11 @@ const ListWrapper = styled.div`
   width: 100%;
 `
 
-export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, StyledTabListHidden };
+const InfoNote = styled.p`
+  font-size: 16px !important;
+  margin-bottom: 1em;
+  color: ${({ theme }) => theme.colorMappings.primary};
+  text-decoration: italic;
+`
+
+export { ListWrapper, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, StyledTabListHidden, InfoNote };

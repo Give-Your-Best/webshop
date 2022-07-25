@@ -11,7 +11,6 @@ export const Images = (data) => {
   const formikProps = useFormikContext();
 
   const checkFileType = (file) => {
-
     //do not upload if not in accepted file types
     const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
     if (!acceptedFormats.includes(file.name.split('.')[1])) {
@@ -25,6 +24,8 @@ export const Images = (data) => {
   const handleCancel = () => setPreviewVisible(false);
 
   const handleChange = ({ file, fileList }) => {
+
+    fileList[0].front = true; //set first image to front image
     data.setUploadedImages(fileList)
 
     if (data.handleChange) {
