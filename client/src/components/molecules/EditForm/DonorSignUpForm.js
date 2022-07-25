@@ -1,22 +1,38 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Form } from 'formik-antd';
 import { useHistory } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { AppContext } from '../../../context/app-context';
 import { Formik } from 'formik';
 import { donorCreateSchema, passwordSchema } from '../../../utils/validation';
 import { sendAutoEmail } from '../../../utils/helpers';
-import { register } from '../../../services/user';
+import { register, login } from '../../../services/user';
 import { Notification } from '../../atoms';
 import { StyledSubmitButton, SubHead } from './EditForm.styles';
 import { UserEditForm } from './UserEditForm';
 
 export const DonorSignUpForm = () => {
+    const [, setCookie] = useCookies();
+    const { setUser, setToken } = useContext(AppContext);
     let history = useHistory();
+
+    const handleLoginSubmit = async (values) => {
+        const res = await login(values);
+        if (res.success) {
+          setUser(res.user);
+          setToken(res.token);
+          setCookie('jwt_user', res.token, { path: '/' });
+        } else {
+          console.log(res.message);
+        }
+      };
 
     const handleSubmit = async (values) => {
         const res = await register(values);
         if (res.success) {
-            Notification('Success!', 'Signed Up! You will hear from us soon', 'success');
-            sendAutoEmail('sign_up', values);
+            Notification('Success!', 'Signed Up! Visit your account page to add items!', 'success');
+            handleLoginSubmit({email: values.email, password: values.password})
+            sendAutoEmail('sign_up_donor', values);
             sendAutoEmail('new_signup');
             history.push('/');
         } else {
@@ -28,7 +44,7 @@ export const DonorSignUpForm = () => {
         <div>
             <SubHead>Donor Sign Up</SubHead>
             <Formik
-                initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'donor' }}
+                initialValues={{ firstName: '', lastName: '', password: '', email: '', type: 'donor', approvedStatus: 'approved' }}
                 validationSchema= {donorCreateSchema.concat(passwordSchema)}
                 onSubmit={handleSubmit}
                 >

@@ -5,6 +5,7 @@ const createItem = async (data) => {
     var new_photos = [];
     var success = true;
     const promises = data.photos.map((photo) => {
+      console.log(photo.name)
       if (photo.status !== 'removed') {
         return cloudinary.uploader.upload(
            photo.imageUrl,
@@ -14,13 +15,13 @@ const createItem = async (data) => {
                overwrite: false
            }).then((result) => {
                console.log("*** Success: Cloudinary Upload: ", result.url);
-               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true });
+               new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true, front: (photo.front)? true: false });
+               console.log(new_photos);
            }).catch((err) => {
               console.error(err);
               console.log("*** Error: Cloudinary Upload");
               success = false;
               return;
-               
            });
       }
     });
@@ -29,6 +30,7 @@ const createItem = async (data) => {
       return { success: false, message: 'Failed to upload one or more of your images' }
     }
     data.photos = new_photos;
+    console.log(data.photos)
     try {
       const item = new Item(data)
       let saveItem = await item.save();
@@ -55,7 +57,7 @@ const updateItem = async (id, updateData) => {
                 overwrite: false
             }).then((result) => {
                 console.log("*** Success: Cloudinary Upload: ", result.url);
-                new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid });
+                new_photos.push({ url: result.url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, front: (photo.front)? true: false });
             }).catch((err) => {
                 console.error(err);
                 console.log("*** Error: Cloudinary Upload");

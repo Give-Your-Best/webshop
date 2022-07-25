@@ -83,9 +83,15 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
   }
 `;
 
+const ItemBox = styled.div`
+  display: inline-block;
+  margin-bottom: 1em;
+  width: 100%;
+`
+
 StyledTab.tabsRole = 'Tab';
 StyledTabs.tabsRole = 'Tabs';
 StyledTabPanel.tabsRole = 'TabPanel';
 StyledTabList.tabsRole = 'TabList';
 
-export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab };
+export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, ItemBox };

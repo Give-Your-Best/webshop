@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './ApproveRequests.styles';
+import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, ItemBox } from './ApproveRequests.styles';
 import { getUsers, updateDonor, updateUser, getDonations } from '../../../../services/user';
 import { updateItem } from '../../../../services/items';
 import { getSetting } from "../../../../services/settings";
@@ -94,7 +94,7 @@ export const ApproveRequests = () => {
       return (
         <div>
         {record.donationItems.map((item) => (
-          <div key={item._id}><ItemCardLong item={item} /><Button centre primary small data-item-id={item._id} onClick={approve}>Approve</Button><Button centre small data-item-id={item._id} onClick={reject}>Reject</Button></div>
+          <ItemBox key={item._id}><ItemCardLong item={item} /><Button primary small data-item-id={item._id} onClick={approve}>Approve</Button><Button small primary data-item-id={item._id} onClick={reject}>Reject</Button></ItemBox>
         ))}
         </div>
       )      

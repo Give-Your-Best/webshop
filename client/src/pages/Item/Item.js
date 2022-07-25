@@ -51,7 +51,6 @@ export const Item = () => {
     const fetchItemDetails = async () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;
-      console.log(itemDetails)
       setItemDetails(itemDetails);
       setMainImage(itemDetails.photos[0]);
 

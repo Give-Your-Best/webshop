@@ -1,17 +1,19 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
-import { ListWrapper, HiddenStyledTab, StyledTabPanel, StyledTabs, StyledTabListHidden } from './OrdersList.styles';
+import { ListWrapper, HiddenStyledTab, StyledTabPanel, StyledTabs, StyledTabListHidden, InfoNote } from './OrdersList.styles';
 import { getShopperItems, getDonorItems, updateItem } from '../../../services/items';
 import { H2, Button } from '../../atoms';
 import { getUser } from '../../../services/user';
+import { getSetting } from '../../../services/settings';
 import { sendAutoEmail, getDate, reopenTab } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
 
 export const OrdersList = () => {
-    const { token, user } = useContext(AppContext);
+    const { token, user, basket } = useContext(AppContext);
     const [items, setItems] = useState([]);
     const [pastItems, setPastItems] = useState([]);
     const mountedRef = useRef(true);
+    const [shopRemaining, setShopRemaining] = useState(0);
     var actionText = '';
     var action;
 
@@ -77,6 +79,14 @@ export const OrdersList = () => {
             setPastItems(pastItems);
         };
 
+        const fetchSetting = async () => {
+            if (!token) return null;
+            const settingValue = await getSetting('shopItemLimit', token);
+            if (!mountedRef.current) return null;
+            let count = settingValue - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
+            setShopRemaining(count);
+          }
+
         const fetchDonorItems = async () => {
             const items = await getDonorItems(user.id);
             if (!mountedRef.current) return null;
@@ -86,6 +96,7 @@ export const OrdersList = () => {
         if (user.type === 'shopper') {
             fetchShopperItems();
             fetchShopperPastItems();
+            fetchSetting();
         } else if (user.type === 'donor') {
             fetchDonorItems();
         }
@@ -95,7 +106,7 @@ export const OrdersList = () => {
             mountedRef.current = false;
         };
 
-    }, [token, user]);
+    }, [token, user, basket]);
 
     return (
         <ListWrapper>
@@ -107,6 +118,7 @@ export const OrdersList = () => {
 
                 <StyledTabPanel>
                     <H2>{user.type === 'shopper' ? 'My Orders' : 'Item Processing'}</H2>
+                    <InfoNote>{user.type === 'shopper' ? 'You have ' + shopRemaining + ' items left to shop!' : ''}</InfoNote>
                     {(items && items.length) ?
 
                         items.map((item) => {
@@ -122,7 +134,7 @@ export const OrdersList = () => {
                                 </div>)
                         }
                         )
-                        : <p>{user.type === 'shopper' ? 'Your items will be here when you start shopping!' : 'Your items will appear here when they have been shopped'}</p>
+                        : <InfoNote>{user.type === 'shopper' ? '' : 'Your items will appear here when they have been shopped'}</InfoNote>
                     }
                     {user.type === 'shopper' && <Button primary small onClick={() => reopenTab('pastitems')}>View Past Orders</Button>}
                 </StyledTabPanel>

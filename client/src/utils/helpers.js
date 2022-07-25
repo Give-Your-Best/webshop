@@ -1,7 +1,7 @@
 import { sendMail } from '../services/mail';
 import { autoEmails } from '../utils/constants';
-import heic2any from "heic2any";
 import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashboard/Tabs/constants';
+import heic2any from "heic2any";
 
 export const hideMobileMenu = () => {
     document.getElementById('mobileMenu').style.display = 'none';

@@ -15,9 +15,6 @@ export const ImagesWrapper = styled.div`
         margin-left: 10px;
         border-radius: 10px;
         background: white;
-        @media (max-width: ${({ theme }) => theme.mobile}) {
-            width: 100%;
-        }
     }
 `
 
