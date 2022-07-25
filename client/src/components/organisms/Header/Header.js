@@ -8,6 +8,7 @@ import logo from './gyb_logo_2.svg';
 import { HeaderWrapper, LogoWrapper } from './Header.styles';
 
 export const Header = () => {
+  console.log('test')
   return (
     <div>
     <HeaderWrapper data-testid="Header">
