@@ -125,7 +125,6 @@ export const checkUnread = (type, userId, messages) => {
 }
 
 export const getFrontImageUrl = (images) => {
-    console.log(images)
     let imagesList = (images.length)? images.filter(i => i.front === true): [];
     let image_url = (imagesList.length)? imagesList[0].url.replace('http://', 'https://'): (images.length)? images[0].url.replace('http://', 'https://'): '';
 
