@@ -4,6 +4,7 @@ import { ListWrapper, HiddenStyledTab, StyledTabPanel, StyledTabs, StyledTabList
 import { getShopperItems, getDonorItems, updateItem } from '../../../services/items';
 import { H2, Button } from '../../atoms';
 import { getUser } from '../../../services/user';
+import { getLocation } from '../../../services/locations';
 import { getSetting } from '../../../services/settings';
 import { sendAutoEmail, getDate, reopenTab } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
@@ -42,7 +43,16 @@ export const OrdersList = () => {
         if (typeof item.sendVia === 'string') {
             // send via exists (location assigned)
 
-            sendAutoEmail('item_on_the_way_admin');
+            //get location assigned and associated admin user to send them an email
+            getLocation(item.sendVia, token)
+            .then((location) => {
+                if (location.length && location[0].adminUser) {
+                    getUser(location[0].adminUser, token)
+                    .then((admin) => {
+                        sendAutoEmail('item_on_the_way_admin', admin);
+                    })
+                }
+            })
             return updateItem(itemId, { 'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': getDate() }, token)
         } else {
             //send via does not exist (location not assigned or shopper has shared address

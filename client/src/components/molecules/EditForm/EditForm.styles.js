@@ -247,7 +247,7 @@ const StyledLabel = styled.label`
 `
 
 const NewPasswordLink = styled.label`
-  width: 100%;
+  width: auto;
   display: inline-block;
   margin: 1px 0;
   text-decoration: underline;
