@@ -16,6 +16,10 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate }) =>
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
+  let image = '';
+  if (item.photos.length) {
+    image = item.photos.filter(i => i.front === true)[0].url.replace('http://', 'https://')
+  }
 
   const getDeliveryAddress = () => {
     return (
@@ -45,11 +49,12 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate }) =>
   };
 
   return (
+      //some of the olf cloudinary images are not secure urls so forcing the change here
     <CardLong
     hoverable
     onClick={() => history.push(`/item/${item._id}`)}
       cover={
-        <CardLongImage alt={`front of ${item.name}`} src={(item.photos.length)? item.photos[0].url: ''} width='200' />
+        <CardLongImage alt={`front of ${item.name}`} src={image} width='200' />
       }
     >
       <Meta bordered={'false'}

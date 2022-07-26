@@ -9,11 +9,16 @@ const { Meta } = AntCard;
 
 export const ItemCard = ({ item }) => {
   let history = useHistory();
+  let image = '';
+  if (item.photos.length) {
+    image = item.photos.filter(i => i.front === true)[0].url.replace('http://', 'https://')
+  }
+  //some of the olf cloudinary images are not secure urls so forcing the change here
   return (
     <Card
       hoverable
       cover={
-        <img alt={`front of ${item.name}`} src={(item.photos.length)? item.photos[0].url: ''} />
+        <img alt={`front of ${item.name}`} src={image} />
       }
       onClick={() => history.push(`/item/${item._id}`)}
     >
@@ -21,7 +26,7 @@ export const ItemCard = ({ item }) => {
         title={item.name}
         description={trunc(item.description)}
       />
-      <Button primary small right>Take a look ></Button>
+      <Button primary small right>{'Take a look >'}</Button>
     </Card>
   );
 };

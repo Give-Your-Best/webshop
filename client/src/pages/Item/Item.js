@@ -52,7 +52,7 @@ export const Item = () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;
       setItemDetails(itemDetails);
-      setMainImage(itemDetails.photos[0]);
+      setMainImage(itemDetails.photos.filter(i => i.front ===true )[0]);
 
       if (itemDetails.photos.length > 1) {
         setOtherImages(itemDetails.photos.slice(1))

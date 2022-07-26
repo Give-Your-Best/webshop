@@ -7,10 +7,10 @@ export const ImageGallery = ({changeMainImage, mainImage, otherImages}) => {
     <ImagesWrapper>
         <MiniImagesWrapper>
         {otherImages.map((image) => (
-            <img key={image._id} onClick={changeMainImage} data-id={image._id} alt={`other images`} src={image.url} />
+            <img key={image._id} onClick={changeMainImage} data-id={image._id} alt={`other images`} src={image.url.replace('http://', 'https://')} />
         ))}
         </MiniImagesWrapper>
-        <img alt={`main`} src={(mainImage && mainImage.url)? mainImage.url : '/product-placeholder.jpeg'} />
+        <img alt={`main`} src={(mainImage && mainImage.url)? mainImage.url.replace('http://', 'https://') : '/product-placeholder.jpeg'} />
     </ImagesWrapper>
     );
 };
