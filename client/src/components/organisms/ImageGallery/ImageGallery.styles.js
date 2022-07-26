@@ -11,7 +11,7 @@ export const ImagesWrapper = styled.div`
 
     > img {
         width: 80%;
-        height:fit-content;
+        height: auto;
         margin-left: 10px;
         border-radius: 10px;
         background: white;
@@ -25,6 +25,7 @@ export const MiniImagesWrapper = styled(Box)`
 
     > img {
     width: 100%;
+    height: auto;
     max-height: 200px;
     border-radius: 10px;
     background: white;
