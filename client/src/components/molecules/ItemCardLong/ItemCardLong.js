@@ -7,7 +7,7 @@ import { Button } from '../../atoms';
 import { getLocation } from '../../../services/locations';
 import { getUser } from '../../../services/user';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
-import { trunc, name } from '../../../utils/helpers';
+import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
@@ -16,10 +16,7 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate }) =>
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
-  let image = '';
-  if (item.photos.length) {
-    image = item.photos.filter(i => i.front === true)[0].url.replace('http://', 'https://')
-  }
+  let imageUrl = getFrontImageUrl(item.photos);
 
   const getDeliveryAddress = () => {
     return (
@@ -54,7 +51,7 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate }) =>
     hoverable
     onClick={() => history.push(`/item/${item._id}`)}
       cover={
-        <CardLongImage alt={`front of ${item.name}`} src={image} width='200' />
+        <CardLongImage alt={`front of ${item.name}`} src={imageUrl} width='200' />
       }
     >
       <Meta bordered={'false'}

@@ -124,6 +124,14 @@ export const checkUnread = (type, userId, messages) => {
     return [unread.length, unread];
 }
 
+export const getFrontImageUrl = (images) => {
+    console.log(images)
+    let imagesList = (images.length)? images.filter(i => i.front === true): [];
+    let image_url = (imagesList.length)? imagesList[0].url.replace('http://', 'https://'): (images.length)? images[0].url.replace('http://', 'https://'): '';
+
+    return image_url
+}
+
 const emailFooter = `
     <div style="margin-top:30px;">
     <p>Thanks!</p>

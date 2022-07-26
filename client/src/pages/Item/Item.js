@@ -52,10 +52,13 @@ export const Item = () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;
       setItemDetails(itemDetails);
-      setMainImage(itemDetails.photos.filter(i => i.front ===true )[0]);
+
+      //get front image or just the first in the list
+      let frontImage = itemDetails.photos.filter(i => i.front === true);
+      setMainImage((frontImage.length)? frontImage[0]: itemDetails.photos[0]);
 
       if (itemDetails.photos.length > 1) {
-        setOtherImages(itemDetails.photos.slice(1))
+        setOtherImages((frontImage.length)? itemDetails.photos.filter(i => i.front !== true): itemDetails.photos.slice(1))
       }
     };
     const fetchSetting = async () => {
