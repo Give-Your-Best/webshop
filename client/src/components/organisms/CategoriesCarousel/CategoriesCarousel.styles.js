@@ -43,6 +43,7 @@ export const StyledCarouselMobile = styled(Carousel)`
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     display: block !important;
+    max-width: 70%;
   }
   > .slick-dots {
     display: none !important;

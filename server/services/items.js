@@ -46,8 +46,12 @@ const updateItem = async (id, updateData) => {
     var new_photos = [];
     if (updateData.photos) { //if there are images to add to the item then upload to cloudianary and add cloudinary links to the update data
         const promises = updateData.photos.map(async (photo) => {
-        if (photo.status == 'removed' && photo.publicId) {
-          return cloudinary.uploader.destroy(photo.publicId);
+        if (photo.status == 'removed') {
+          try {
+            return cloudinary.uploader.destroy(photo.publicId);
+          } catch (err) {
+              return {}
+          }
         } else if (!photo.url && photo.imageUrl) {
           return cloudinary.uploader.upload(
             photo.imageUrl,
@@ -123,7 +127,7 @@ const getDonorItems = async (userId, itemStatus) => {
   try {
     if (itemStatus !== '') {
       conditions = { 
-        "$or": [{"approvedStatus": "approved"}, {"approvedStatus": "rejected"}],
+        "$or": [{"approvedStatus": "approved"}, {"approvedStatus": "in-progress"}],
         donorId: userId, 
         status: itemStatus
       }
@@ -184,6 +188,7 @@ const getAdminItems = async (isCurrent) => {
     }
     var items = await Item.find(conditions)
       .sort({createdAt: -1})
+      .populate('shopperId')
       .exec();
     return items;
   } catch (error) {

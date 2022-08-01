@@ -5,7 +5,7 @@ import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLo
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
 import { getUser } from '../../../../services/user';
-import { sendAutoEmail } from "../../../../utils/helpers";
+import { sendAutoEmail, tabList } from "../../../../utils/helpers";
 import { Modal } from 'antd';
 
 export const Notifications = () => {
@@ -55,6 +55,15 @@ export const Notifications = () => {
   };
 
   useEffect(() => {
+
+    //add to url history (added for back button to work)
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      if (t.id === 'adminNotif') {
+        window.history.pushState({}, '','/dashboard/' + t.id)
+      }
+    })
+
     const { confirm } = Modal;
 
     const assignAddress = async (itemId) => {

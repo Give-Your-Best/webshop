@@ -3,7 +3,7 @@ import { Card as AntCard } from 'antd';
 
 export const Card = styled(AntCard)`
   width: 250px;
-  height: 440px;
+  height: 450px;
   margin: 1rem;
   padding: 7px;
   background: ${({ theme }) => theme.colorMappings.secondary};
@@ -54,14 +54,43 @@ export const Card = styled(AntCard)`
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin: 0.75rem auto;
-    width: 80%;
-    height: auto;
+    width: 45%;
+    height: 450px;
+    img {
+      min-height: 300px;
+      height: 300px;
+    }
 
     .ant-card-meta-title {
       font-size: 0.8rem;
     }
     .ant-card-meta-description {
       font-size: 0.6rem;
+    }
+
+    button {
+      position: absolute;
+    }
+  }
+
+  @media (max-width: 500px) {
+    margin: 0.75rem auto;
+    width: 45%;
+    height: 390px;
+    img {
+      min-height: 200px;
+      height: 200px;
+    }
+
+    .ant-card-meta-title {
+      font-size: 0.8rem;
+    }
+    .ant-card-meta-description {
+      font-size: 0.6rem;
+    }
+
+    button {
+      position: absolute;
     }
   }
 `;

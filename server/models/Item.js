@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User_ = require('./User');
+const Tag = require('./Tag');
 
 //categories ["Dresses", "Knitwear", "Trousers", "Jeans", "Skirts", "Shorts", "Coats", "Jackets", "Tops", "Tshirts", "Sleepwear and Loungewear", "Accessories", "Shoes", "Other"]
 
@@ -54,7 +55,8 @@ const itemSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then location is
         ref: 'Location' 
     },
-    inBasket: Boolean
+    inBasket: Boolean,
+    tags: [Tag.schema]
   },
   options
 );

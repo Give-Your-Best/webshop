@@ -29,16 +29,13 @@ const StyledTab = styled(Tab).attrs({
   color: ${({ theme }) => theme.colorMappings.primary};
   max-width: max-content;
   font-size: 22px;
-
   @media (max-width: ${({ theme }) => theme.mobile}) {
     font-size: 18px;
   }
-
   &.selected {
     color: ${({ theme }) => theme.colorMappings.white};
     background: ${({ theme }) => theme.colorMappings.primary};
   }
-
   &.disabled {
     color: #e0e0e0;
     cursor: not-allowed;
@@ -58,11 +55,9 @@ const HiddenStyledTab = styled(Tab).attrs({
   color: #888;
   border-left: 2px solid ${({ theme }) => theme.colorMappings.borders};
   border-bottom: 2px solid ${({ theme }) => theme.colorMappings.borders};
-
   &.selected {
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-
   &.disabled {
     color: #e0e0e0;
     cursor: not-allowed;
@@ -77,7 +72,6 @@ const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })
   &.selected {
     display: block;
   }
-
   @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 0px 2px;
   }

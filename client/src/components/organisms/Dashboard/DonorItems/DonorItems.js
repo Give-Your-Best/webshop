@@ -6,7 +6,7 @@ import { ItemsCollapsedList, ItemMiniEditForm, ItemCreateForm } from '../../../m
 import { StyledTabListHidden, StyledTabs, StyledTabPanel, HiddenStyledTab } from './DonorItems.styles';
 import { getDonorItems, updateItem, deleteItem } from '../../../../services/items';
 import { Button, H2 } from '../../../atoms';
-import { openHiddenTab, reopenTab } from "../../../../utils/helpers";
+import { openHiddenTab, reopenTab, tabList } from "../../../../utils/helpers";
 import { itemCreateschema } from "../../../../utils/validation";
 
 export const DonorItems = () => {
@@ -52,6 +52,13 @@ export const DonorItems = () => {
   }
 
   useEffect(() => {
+    //add to url history (added for back button to work)
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      if (t.id === 'donorItems') {
+        window.history.pushState({}, '','/dashboard/' + t.id)
+      }
+    })
 
     const fetchItems = async () => {
         const items = await getDonorItems(user.id, 'in-shop');

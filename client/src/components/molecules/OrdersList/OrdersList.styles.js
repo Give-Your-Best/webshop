@@ -99,7 +99,7 @@ const ListWrapper = styled.div`
 `
 
 const InfoNote = styled.p`
-  font-size: 16px !important;
+  font-size: 20px !important;
   margin-bottom: 1em;
   color: ${({ theme }) => theme.colorMappings.primary};
   text-decoration: italic;

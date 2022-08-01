@@ -4,14 +4,14 @@ import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, ItemBox } from '.
 import { getUsers, updateDonor, updateUser, getDonations } from '../../../../services/user';
 import { updateItem } from '../../../../services/items';
 import { getSetting } from "../../../../services/settings";
-import { sendAutoEmail } from '../../../../utils/helpers';
+import { sendAutoEmail, tabList } from '../../../../utils/helpers';
 import { ShopperMiniEditForm, DonorMiniEditForm, ApproveItemList, UsersList, ItemCardLong } from "../../../molecules";
 import { Button } from '../../../atoms';
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 
 export const ApproveRequests = () => {
-    const { token } = useContext(AppContext);
+    const { token, user } = useContext(AppContext);
     const mountedRef = useRef(true);
     const [shoppers, setShoppers] = useState([]);
     const [donors, setDonors] = useState([]);
@@ -171,6 +171,14 @@ export const ApproveRequests = () => {
 
     useEffect(() => {
 
+          //add to url history (added for back button to work)
+          var tabs = tabList(user);
+          tabs.forEach((t) => {
+            if (t.id === 'adminApprove') {
+              window.history.pushState({}, '','/dashboard/' + t.id)
+            }
+          })
+
         const fetchShoppers = async () => {
           const users = await getUsers('shopper', 'in-progress', token);
           if (!mountedRef.current) return null;
@@ -208,7 +216,7 @@ export const ApproveRequests = () => {
         return () => {
           mountedRef.current = false;
         };
-    }, [token]);
+    }, [token, user]);
 
     return (
         <StyledTabs>

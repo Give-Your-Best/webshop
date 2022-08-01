@@ -7,6 +7,10 @@ export const CardLong = styled(AntCard)`
   border: none !important;
   background: inherit !important;
 
+  .ant-card-meta {
+    cursor: pointer;
+  }
+
   @media (max-width: ${({ theme }) => theme.mobile}) {
     display: block;
     border: 1px solid ${({ theme }) => theme.colorMappings.primary} !important;

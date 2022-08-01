@@ -7,7 +7,7 @@ export const Button = styled.button`
     border-radius: 0.1rem;
     border: 2px solid ${theme.colorMappings.buttonBorders};
     color: ${theme.colorMappings.primary};
-    margin: 0 5px 0 0;
+    margin: 5px;
     padding: 0.3rem 1rem;
     float: right;
     min-height: 52px;
@@ -47,6 +47,10 @@ export const Button = styled.button`
     css`
       font-size: 20px !important;
       float: left;
+
+      @media (max-width: ${({ theme }) => theme.mobile}) {
+        font-size: 18px !important;
+      }
     `};
 
     ${center &&

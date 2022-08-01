@@ -6,7 +6,7 @@ import { H2, Button } from '../../atoms';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import { getSetting } from '../../../services/settings';
-import { sendAutoEmail, getDate, reopenTab } from "../../../utils/helpers";
+import { sendAutoEmail, getDate, reopenTab, tabList } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
 
 export const OrdersList = () => {
@@ -76,6 +76,14 @@ export const OrdersList = () => {
     }
 
     useEffect(() => {
+        //add to url history (added for back button to work)
+        var tabs = tabList(user);
+        tabs.forEach((t) => {
+        let url = '/dashboard/' + t.id;
+        if ((t.id === 'shopperOrders' || t.id === 'donorProcessing')  && window.location !== url ) {
+            window.history.pushState({}, '', url)
+        }
+        })
 
         const fetchShopperItems = async () => {
             const items = await getShopperItems(user.id);
