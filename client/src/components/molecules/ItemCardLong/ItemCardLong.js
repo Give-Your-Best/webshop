@@ -50,14 +50,14 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
 
   useEffect(() => {
 
-    const fetchAllTags = async () => {
-        //get all tags
-        const tags = await getTags(token);
-        if (!mountedRef.current) return null;
-        // setAllTags(tags);
-    };
+    // const fetchAllTags = async () => {
+    //     //get all tags
+    //     const tags = await getTags(token);
+    //     if (!mountedRef.current) return null;
+    //     // setAllTags(tags);
+    // };
 
-    fetchAllTags();
+    // fetchAllTags();
 
     return () => {
       // cleanup
