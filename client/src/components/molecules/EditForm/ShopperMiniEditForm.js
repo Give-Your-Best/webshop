@@ -21,7 +21,7 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <StyledLabel>Email
         <StyledInput name="email" disabled={editingKey !== recordId} />
         <StyledError name="email" component="div" /></StyledLabel>
-        <StyledLabel>Delivery preference
+        <StyledLabel>Share address with donors
         <div>
           <StyledRadio.Group name="deliveryPreference" disabled={editingKey !== recordId}>
           <StyledRadio value={"direct"}>yes</StyledRadio>

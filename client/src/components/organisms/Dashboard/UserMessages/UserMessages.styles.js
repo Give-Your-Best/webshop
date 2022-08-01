@@ -25,6 +25,7 @@ const MessageSent = styled.div`
 width: 100%;
 display: flex;
 justify-content: start;
+margin-bottom: 10px;
   div {
     display: block;
     width: 45%;
@@ -58,7 +59,7 @@ const MessageReceived = styled.div`
 width: 100%;
 display: flex;
 justify-content: end;
-
+margin-bottom: 10px; 
   div {
     display: block;
     width: 45%;

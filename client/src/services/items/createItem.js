@@ -3,6 +3,8 @@ import { convertHeic } from '../../utils/helpers'
 export const createItem = async ( values, token ) => {
     //call api to create item
     if (values.photos) {
+      console.log(values.photos.length)
+      console.log(values.photos)
       values.photos = await convertHeic(values.photos);
     }
     try {

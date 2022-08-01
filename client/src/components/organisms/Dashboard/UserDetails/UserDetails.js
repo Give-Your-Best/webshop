@@ -16,7 +16,6 @@ export const UserDetails = () => {
   const [errorMessage, setErrorMessage] = useState([]);
   const type = user.type;
 
-
   const updateCurrentUserWrapper = async (values) => {
     if (type === 'donor') {
       const res = await updateDonor(user.id, values, token);

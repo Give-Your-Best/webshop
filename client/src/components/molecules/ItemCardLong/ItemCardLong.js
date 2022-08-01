@@ -20,11 +20,13 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
+  const [FAOshopperName, setFAOShopperName] = useState('');
   // const [allTags, setAllTags] = useState([]);
 
   const getDeliveryAddress = () => {
     return (
       <>
+      {(FAOshopperName)? <ExpandedAddress>FAO {FAOshopperName}</ExpandedAddress>: ''}
       <ExpandedAddress>{deliveryAddress.name}</ExpandedAddress>
       <ExpandedAddress>{deliveryAddress.firstLine + ((deliveryAddress.secondLine && deliveryAddress.secondLine !== '')? (', ' + deliveryAddress.secondLine): '')}</ExpandedAddress>
       <ExpandedAddress>{(deliveryAddress.city? deliveryAddress.city + ', ' + deliveryAddress.postcode: deliveryAddress.postcode)}</ExpandedAddress>
@@ -33,17 +35,17 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
   }
 
   const handleViewAddress = async (e) => {
-    if (item.sendVia) {
+    const shopper = await getUser(item.shopperId, token);
+
+    if (shopper.deliveryPreference === 'via-gyb' && item.sendVia) {
       const location = await getLocation(item.sendVia, token);
+      setFAOShopperName(name(shopper));
       setDeliveryAddress(location[0])
+    } else if (shopper.deliveryPreference !== 'via-gyb' && shopper.deliveryAddress) {
+      shopper.deliveryAddress.name = name(shopper);
+      setDeliveryAddress(shopper.deliveryAddress)
     } else {
-      const shopper = await getUser(item.shopperId, token);
-      if (shopper.deliveryAddress) {
-        shopper.deliveryAddress.name = name(shopper);
-        setDeliveryAddress(shopper.deliveryAddress)
-      } else {
-        setAddressFound(true)
-      }
+      setAddressFound(true)
     }
 
   };
@@ -81,7 +83,7 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
       {/* show progress bar depending on type of user logged in */}
       {(type)? <ProgressBar type={type} status={item.status} />: ''}
    
-      {(type === 'all' && shoppedBy)? <span>{'Shopped by: ' +  shoppedBy}<br /></span>: ''}
+      {(shoppedBy)? <span>{'Shopped by: ' +  shoppedBy}<br /></span>: ''}
 
       {/* show item shipped date */}
       {(type === 'all' && shippedDate)? <span>{'Shipped on: ' +  shippedDate}</span>: ''}
@@ -89,7 +91,8 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
       {/* If donor logged in then show expandable view delivery address button */}
       {(type === 'donor' && !Object.keys(deliveryAddress).length && !addressFound)? <ExpandLink onClick={handleViewAddress}>View delivery address</ExpandLink>: ''}
       {(type === 'donor' && Object.keys(deliveryAddress).length)? getDeliveryAddress(): ''}
-      {(type === 'donor' && addressFound)? <ExpandedAddress>No user found</ExpandedAddress>: ''}
+      {(type === 'donor' && addressFound)? <ExpandedAddress>Address not yet assigned</ExpandedAddress>: ''}
+
       {/* {(type === 'all')? <Tags tagList={['Tag 1', 'Tag 2', 'Tag 3']} availableTags={allTags}/>: ''} */}
 
         {/* if item action passed into component then add a button for it */}

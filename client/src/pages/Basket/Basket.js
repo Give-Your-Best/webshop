@@ -8,7 +8,7 @@ import { BasketSidebar, BasketDetails, BasketWrapper } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
 import { updateItem } from '../../services/items';
 import { getUser } from '../../services/user';
-import { sendAutoEmail, getDate } from '../../utils/helpers';
+import { sendAutoEmail, getDate, name } from '../../utils/helpers';
 
 export const Basket = () => {
   const { setBasket, basket, user, token, setUser, basketTimer, setBasketTimer } = useContext(AppContext);
@@ -86,6 +86,7 @@ export const Basket = () => {
               .then((donor) => {
                 if (user.deliveryPreference === 'direct') { 
                   //send address directly in email
+                  user.deliveryAddress.name = name(user);
 
                   sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
                 } else if (user.deliveryPreference === 'via-gyb') {

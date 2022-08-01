@@ -1,16 +1,19 @@
 import React from 'react';
 import { Space } from 'antd';
 import { ListWrapper, ExpandButton, StyledTable, DeleteButton } from './UsersList.styles';
+import { name } from '../../../utils/helpers';
 
 export const UsersList = (data) => {
 
   var columns = [
     {
       title: 'Name',
-      dataIndex: 'firstName',
       key: 'name',
       className: 'hideOnMobile',
       sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+      render: (record) => {
+        return name(record)
+      }
     },
     {
       title: 'Email',

@@ -5,7 +5,7 @@ import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLo
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
 import { getUser } from '../../../../services/user';
-import { sendAutoEmail, tabList } from "../../../../utils/helpers";
+import { sendAutoEmail, tabList, name } from "../../../../utils/helpers";
 import { Modal } from 'antd';
 
 export const Notifications = () => {
@@ -30,6 +30,7 @@ export const Notifications = () => {
 
           const item = shopNotificationsPendingAssign.items.filter((i) => {return assignAddressId === i._id})[0];
           const locationDetails = adminLocations.filter((l) => {return values.location === l._id})[0];
+          locationDetails.FAO = name(item.shopperId);
           //get donor details
           const donorDetails = getUser(item.donorId, token)
           .then((donor) => {
@@ -114,8 +115,8 @@ export const Notifications = () => {
               .then((item) => {
                 const shopperDetails = getUser(item.shopperId, token)
                 .then((shopper) => {
-                  console.log(itemDet)
-                  console.log(shopperDetails)
+                  console.log(itemDet._id)
+                  console.log(shopperDetails.kind)
                   sendAutoEmail('item_on_the_way', shopper);
                 })
               })
@@ -195,11 +196,18 @@ export const Notifications = () => {
   const editForm = (record) => {
     return (
       <div>
-      {record.items.map((item) => (
-        <div key={item._id}>
-          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} />
+      {record.items.map((item) => {
+        let shoppedBy = '';
+        if (item.shopperId && item.shopperId.firstName) {
+          shoppedBy = name(item.shopperId);
+        }
+        return (
+          <div key={item._id}>
+          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} shoppedBy={shoppedBy} />
           </div>
-      ))}
+        )
+      }
+      )}
       </div>
     )      
   };

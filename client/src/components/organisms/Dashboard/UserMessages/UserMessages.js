@@ -26,8 +26,7 @@ export const UserMessages = () => {
     const markAsRead = async () => {
       let unread = checkUnread(type, user.id, conversation.messages);
       if (unread[0] > 0) {
-        const res = await markMessageAsViewed(conversation._id, unread[1], token);
-        console.log(res);
+        await markMessageAsViewed(conversation._id, unread[1], token);
       }
     }
 

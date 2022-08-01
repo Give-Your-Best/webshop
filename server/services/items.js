@@ -14,7 +14,6 @@ const createItem = async (data) => {
                overwrite: false,
                secure: true
            }).then((result) => {
-             console.log(result)
                console.log("*** Success: Cloudinary Upload: ", result.secure_url);
                new_photos.push({ url: result.secure_url, name: photo.name, createdAt: result.created_at, publicId: photo.uid, success: true, front: (photo.front)? true: false });
            }).catch((err) => {
@@ -30,7 +29,6 @@ const createItem = async (data) => {
       return { success: false, message: 'Failed to upload one or more of your images' }
     }
     data.photos = new_photos;
-    console.log(data.photos)
     try {
       const item = new Item(data)
       let saveItem = await item.save();
@@ -255,11 +253,11 @@ const getAccountNotificationItems = async (adminUserId) => {
     const pendingReceive = await Item.find(pendingReceiveQuery).populate({
       "path": "sendVia",
       "match": { "adminUser": adminUserId }
-    });
+    }).populate('shopperId');
     const pendingSent = await Item.find(pendingSentQuery).populate({
       "path": "sendVia",
       "match": { "adminUser": adminUserId }
-    });
+    }).populate('shopperId');
 
     results.push(pendingReceive.filter((i) => {
       return i.sendVia !== null

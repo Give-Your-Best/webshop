@@ -87,8 +87,11 @@ const blobToData = (blob) => {
 
 
 export const convertHeic = async (fileList) => {
+    console.log('con')
+    console.log(fileList.length)
     //if a file in the filelist is of type heic then use heic2any to convert to a png
     const newList = await Promise.all(fileList.map(async (f) => {
+        console.log('test')
         if (f.name && f.name.includes('.heic') && f.originFileObj) { //will skip if no file object
           //this is a heic file type
           //convert to jpg
@@ -103,6 +106,7 @@ export const convertHeic = async (fileList) => {
         f.name = f.name.split('.heic')[0] + '.png' //update ext
         return f
         } else if (f.name && f.originFileObj) {
+            console.log('else')
             const resData = await blobToData(f.originFileObj);
             f.imageUrl = resData //update with dataurl to pass to cloudinary in the backend
           return f
@@ -155,8 +159,8 @@ const emailItems = (items) => {
 const deliveryAddressContent = (deliveryAddress, name) => {
     return (`<section>
             <p style="margin:30px;">Delivery Address</p>`
+            + ((deliveryAddress.FAO)? `<p style="margin: 0;">FAO ` + deliveryAddress.FAO + `</p>`: ``)
             + ((deliveryAddress.name)? `<p style="margin: 0;">` + deliveryAddress.name + `</p>`: ``)
-            + ((!deliveryAddress.name && name)? `<p style="margin: 0;">` + name + `</p>`: ``)
             + ((deliveryAddress.firstLine)? `<p style="margin: 0;">` + deliveryAddress.firstLine + `</p>`: ``)
             + ((deliveryAddress.secondLine)? `<p style="margin: 0;">` + deliveryAddress.secondLine + `</p>`: ``)
             + ((deliveryAddress.city)? `<p style="margin: 0;">` + deliveryAddress.city + `</p>`: ``)
@@ -223,7 +227,7 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
         emailContent += deliveryAddressContent(deliveryAddress);
     } else if (type === 'item_shopped_with_address') {
         emailContent += emailItems(items);
-        emailContent += deliveryAddressContent(deliveryAddress, name(userDetails));
+        emailContent += deliveryAddressContent(deliveryAddress);
     } else if (type === 'item_shopped_pending_address' || type === 'item_received') {
         emailContent += emailItems(items);
     }

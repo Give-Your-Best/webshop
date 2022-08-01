@@ -28,7 +28,7 @@ export const AccountWelcomeIcon = styled.div`
   text-transform: uppercase;
 
   p {
-    font-size: 50px;
+    font-size: 50px !important;
     font-weight: bold;
     margin: 0;
     position: absolute;
