@@ -6,7 +6,7 @@ import { Card as AntCard } from 'antd';
 import { Button } from '../../atoms';
 import { getLocation } from '../../../services/locations';
 import { getUser } from '../../../services/user';
-import { getTags } from '../../../services/tags';
+// import { getTags } from '../../../services/tags';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
 // import { Tags } from "../../organisms";
 import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
