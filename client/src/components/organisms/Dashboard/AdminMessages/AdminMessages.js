@@ -3,7 +3,7 @@ import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, MessageReceived, MessageSent, MessagesContainer, StyledForm } from './AdminMessages.styles';
 import { StyledInputAreaInLine, StyledSubmitButton, StyledError, InfoNote } from '../../../molecules/EditForm/EditForm.styles';
 import { getMessages, sendMessage, markMessageAsViewed } from '../../../../services/messages';
-import { sendAutoEmail, checkUnread, name } from '../../../../utils/helpers';
+import { sendAutoEmail, checkUnread, name, tabList } from '../../../../utils/helpers';
 import { getUsers } from '../../../../services/user';
 import { MessagesList, StartMessageThreadAdmin } from '../../../molecules';
 import { Notification } from '../../../atoms';
@@ -103,6 +103,13 @@ export const AdminMessages = () => {
 
     useEffect(() => {
 
+      var tabs = tabList(user);
+      tabs.forEach((t) => {
+        if (t.name === 'Messaging') {
+          window.history.pushState({}, '','/dashboard/' + t.id)
+        }
+      })
+
     const fetchMessagesShoppers = async () => {
       const messages = await getMessages('shopper', 'all', token);
 
@@ -139,7 +146,7 @@ export const AdminMessages = () => {
       // cleanup
       mountedRef.current = false;
     };
-  }, [token]);
+  }, [token, user]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>

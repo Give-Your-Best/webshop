@@ -1,6 +1,6 @@
 import { Users } from '../Users';
 import { Notifications } from '../Notifications';
-import { ApproveRequests } from '../AprroveRequests/ApproveRequests';
+import { ApproveRequests } from '../ApproveRequests/ApproveRequests';
 import { ShippingLocations } from '../ShippingLocations/ShippingLocations';
 import { Settings } from '../Settings/Settings';
 import { Logout } from '../../Logout/Logout';

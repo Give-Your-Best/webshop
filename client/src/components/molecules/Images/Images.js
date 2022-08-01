@@ -33,7 +33,7 @@ export const Images = (data) => {
     }
 
     //update dummy field for image validation
-    formikProps.setFieldValue("photos", data.uploadedImages)
+    formikProps.setFieldValue("photos", fileList)
   }
 
   const handlePreview = async file => {

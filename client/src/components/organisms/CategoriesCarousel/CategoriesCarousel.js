@@ -38,7 +38,7 @@ export const CategoriesCarousel = ({categories}) => {
           return (<CategoryBlock key={d.id} category={d}/>);
         })}
       </StyledCarousel>
-      <StyledCarouselMobile slidesToShow={1} arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
+      <StyledCarouselMobile slidesToShow={2} arrows nextArrow={<SlickArrowRight />} prevArrow={<SlickArrowLeft />}>
         {categories.map((d) => {
           return (<CategoryBlock key={d.id} category={d}/>);
         })}

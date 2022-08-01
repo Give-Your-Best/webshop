@@ -18,4 +18,8 @@ export const Container = styled.div`
   @media (max-width:${({ theme }) => theme.mid}) {
     padding: 1rem 1rem;
   }
+
+  @media (max-width:${({ theme }) => theme.mobile}) {
+    padding: 0.5rem 0.5rem;
+  }
 `;

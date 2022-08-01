@@ -32,7 +32,15 @@ export const Card = styled(AntCard)`
       width: 150px;
     }
     @media (max-width:${({ theme }) => theme.mobile}) {
-      width: 230px;
+      width: 150px !important;
+    }
+
+    @media (max-width: 500px) {
+      width: 130px !important;
+    }
+
+    @media (max-width: 400px) {
+      width: 110px !important;
     }
   }
 
@@ -49,6 +57,11 @@ export const Card = styled(AntCard)`
 
     .ant-card-meta-title {
       font-size: 18px;
+
+      @media (max-width:${({ theme }) => theme.mobile}) {
+        font-size: 16px;
+      }
+  
     }
   }
 `;

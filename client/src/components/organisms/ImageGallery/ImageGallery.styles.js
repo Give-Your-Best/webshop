@@ -18,7 +18,7 @@ export const ImagesWrapper = styled.div`
     }
 `
 
-export const MiniImagesWrapper = styled(Box)`
+export const MiniImagesWrapper = styled(props => <Box {...props} />)`
     display:inline;
     max-width: 20%;
     min-width: 20%;

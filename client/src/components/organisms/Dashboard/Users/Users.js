@@ -7,11 +7,11 @@ import { Modal } from 'antd';
 import { Formik } from 'formik';
 import { DonorMiniEditForm, ShopperMiniEditForm, UsersList, DonorCreateForm, ShopperCreateForm } from '../../../molecules';
 import { Button } from '../../../atoms';
-import { openHiddenTab } from '../../../../utils/helpers';
+import { openHiddenTab, tabList } from '../../../../utils/helpers';
 
 export const Users = () => {
   const { confirm } = Modal;
-  const { token } = useContext(AppContext);
+  const { token, user } = useContext(AppContext);
   const mountedRef = useRef(true);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
@@ -110,6 +110,13 @@ export const Users = () => {
 
     useEffect(() => {
 
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      if (t.id === 'adminUsers') {
+        window.history.pushState({}, '','/dashboard/' + t.id)
+      }
+    })
+
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'approved', token);
       if (!mountedRef.current) return null;
@@ -129,7 +136,7 @@ export const Users = () => {
       // cleanup
       mountedRef.current = false;
     };
-  }, [token]);
+  }, [token, user]);
 
   const submitFunction = (user, type) => {
     if (user.kind === 'donor') {

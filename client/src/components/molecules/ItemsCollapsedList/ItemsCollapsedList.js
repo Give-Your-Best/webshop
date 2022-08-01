@@ -18,7 +18,12 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   if (!admin) {
     columns.push({
       title: 'Approved Status',
-      key: 'approvedStatus'
+      dataIndex: 'approvedStatus',
+      key: 'approvedStatus',
+      render: (record) => {
+        let value = (record === 'in-progress')? 'Awaiting approval': '';
+        return value
+      }
     })
   }
 

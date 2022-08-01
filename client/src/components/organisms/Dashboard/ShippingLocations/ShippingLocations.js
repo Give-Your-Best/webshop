@@ -7,10 +7,10 @@ import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab }
 import { getAdminLocations, updateLocation, deleteLocation } from '../../../../services/locations';
 import { getUsers } from '../../../../services/user';
 import { Button } from '../../../atoms';
-import { openHiddenTab } from "../../../../utils/helpers";
+import { openHiddenTab, tabList } from "../../../../utils/helpers";
 
 export const ShippingLocations = () => {
-  const { token } = useContext(AppContext);
+  const { token, user } = useContext(AppContext);
   const mountedRef = useRef(true);
   const [adminLocations, setAdminLocations] = useState([]);
   const [adminUsers, setAdminUsers] = useState([]);
@@ -53,6 +53,15 @@ export const ShippingLocations = () => {
 
   useEffect(() => {
 
+    //add to url history (added for back button to work)
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      let url = '/dashboard/' + t.id;
+      if (t.id === 'adminLocations' && window.location !== url) {
+        window.history.pushState({}, '', url)
+      }
+    })
+
     const fetchAdminLocations = async () => {
       const locations = await getAdminLocations('', token);
       if (!mountedRef.current) return null;
@@ -73,7 +82,7 @@ export const ShippingLocations = () => {
       mountedRef.current = false;
     };
 
-  }, [token]);
+  }, [token, user]);
 
   const editForm = (record) => {
     const handleEditSave = (newRecord) => {

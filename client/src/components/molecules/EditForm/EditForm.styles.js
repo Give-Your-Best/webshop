@@ -56,7 +56,7 @@ const StyledSubmitButton = styled(SubmitButton)`
   border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder} !important;
   min-height: 52px;
   color: ${({ theme }) => theme.colorMappings.primary};
-  margin: 0 5px 0 0;
+  margin: 5px;
   padding: 0.3rem 1rem;
   border-width: 0.1rem;
   :hover {
@@ -264,10 +264,9 @@ const StyledForm = styled(Form)`
 `
 
 const InfoNote = styled.p`
-  font-size: 14px !important;
+  font-size: 20px !important;
   margin-bottom: 0;
   color: ${({ theme }) => theme.colorMappings.primary};
-  text-decoration: italic;
 `
 
 const SubHead = styled.p`

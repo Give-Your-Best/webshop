@@ -6,6 +6,7 @@ import { H2 } from '../../../atoms';
 import { StyledTabListHidden, StyledTabs, StyledTabPanel, HiddenStyledTab } from './UserDetails.styles';
 import { getUsers, updateDonor, updateShopper } from '../../../../services/user';
 import { donorCreateSchema, shopperCreateSchema, adminSchema } from '../../../../utils/validation';
+import { tabList } from '../../../../utils/helpers';
 
 export const UserDetails = () => {
   const { token, user, setUser } = useContext(AppContext);
@@ -49,6 +50,13 @@ export const UserDetails = () => {
   };
 
   useEffect(() => {
+    //add to url history (added for back button to work)
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      if (t.name === 'My Details') {
+        window.history.pushState({}, '','/dashboard/' + t.id)
+      }
+    })
 
     const fetchUsers = async () => {
       const users = await getUsers(type, 'approved', token);

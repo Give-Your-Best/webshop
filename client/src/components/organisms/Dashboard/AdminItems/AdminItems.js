@@ -4,6 +4,7 @@ import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from "../../../molecules";
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './AdminItems.styles';
 import { getAdminItems, deleteItem } from '../../../../services/items';
+import { name, tabList } from '../../../../utils/helpers';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
@@ -32,7 +33,8 @@ export const AdminItems = () => {
   };
 
 const editForm = (record) => {
-  let shippedDate = '';
+  let shippedDate = '',
+    shoppedBy = '';
   if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && !record.statusUpdateDates.shopperShippedDate) {
     shippedDate = (new Date(record.statusUpdateDates.gybShippedDate)).toLocaleString()
   } else if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && record.statusUpdateDates.shopperShippedDate) {
@@ -40,12 +42,23 @@ const editForm = (record) => {
   } else if (record.statusUpdateDates && record.statusUpdateDates.shopperShippedDate) {
     shippedDate = (new Date(record.statusUpdateDates.shopperShippedDate)).toLocaleString()
   }
+
+  if (record.shopperId && record.shopperId.firstName) {
+    shoppedBy = name(record.shopperId);
+  }
   return (
-    <div key={record._id}><ItemCardLong item={record} type='all' shippedDate={shippedDate} /></div>
+    <div key={record._id}><ItemCardLong item={record} type='all' shippedDate={shippedDate} shoppedBy={shoppedBy}/></div>
   )      
 };
 
   useEffect(() => {
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      let url = '/dashboard/' + t.id;
+      if (t.id === 'adminItems' && window.location !== 'url') {
+        window.history.pushState({}, '',url)
+      }
+    })
 
     const fetchItems = async () => {
         //current items

@@ -8,8 +8,9 @@ export const ItemsWrapper = styled(Box)`
   justify-content: center;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
-    margin-left: -0.4rem;
-    margin-right: -0.4rem;
+    margin: auto;
+    width: 100%;
+    min-width: 100%;
   }
 `;
 

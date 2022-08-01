@@ -41,8 +41,8 @@ export const Home = () => {
     <div>
         <CoverWrapper to="/">
           <h1>Give Your Best Shop</h1>
-          <p>Browse items from 100s of besties</p>
-          <p>shopping up to {shopItemLimit} items per week for free!</p>
+          <p>Browse our catalogue of gifted items and</p>
+          <p>shop up to {shopItemLimit} items per week for free!</p>
           <img alt="give-your-best-cover" src={logo} />
         </CoverWrapper>
         <CategoriesWrapper>

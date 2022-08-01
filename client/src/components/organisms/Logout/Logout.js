@@ -25,6 +25,7 @@ export const Logout = () => {
     removeCookie('jwt_user', { path: '/' });
     history.push(`/`)
   };
+
   return (
     <div>
       <H2>Thanks for stopping by!</H2>

@@ -196,6 +196,11 @@ export const subCategories = [
         'parentCategory': 'accessories'
     },
     {
+        'name': 'Swimwear',
+        'id': 'swimwear',
+        'parentCategory': 'accessories'
+    },
+    {
         'name': 'Other',
         'id': 'other',
         'parentCategory': 'accessories'
@@ -243,6 +248,20 @@ export const permissions = [
     'Adjust shop settings',
     'Edit users',
     'Add team members'
+]
+
+export const tagColours = [
+    'magenta',
+    'red',
+    'volcano',
+    'orange',
+    'gold',
+    'lime',
+    'green',
+    'cyan',
+    'blue',
+    'geekblue',
+    'purple',
 ]
 
 export const autoEmails = [

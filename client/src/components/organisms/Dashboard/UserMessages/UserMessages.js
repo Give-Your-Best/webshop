@@ -8,7 +8,7 @@ import { MessagesList, StartMessageThreadUser } from '../../../molecules';
 import { Notification, H2 } from '../../../atoms';
 import { Button } from '../../../atoms';
 import { Formik } from 'formik';
-import { checkUnread, name } from '../../../../utils/helpers';
+import { checkUnread, name, tabList } from '../../../../utils/helpers';
 
 export const UserMessages = () => {
   const { token, user } = useContext(AppContext);
@@ -84,6 +84,14 @@ export const UserMessages = () => {
   }
 
     useEffect(() => {
+
+      var tabs = tabList(user);
+      tabs.forEach((t) => {
+        if (t.name === 'Messaging') {
+          window.history.pushState({}, '','/dashboard/' + t.id)
+        }
+      })
+
       const fetchMessages = async () => {
         const messages = await getMessages('shopper', user.id, token);
         if (!mountedRef.current) return null;
@@ -104,7 +112,7 @@ export const UserMessages = () => {
       mountedRef.current = false;
     };
 
-  }, [token, user.id]);
+  }, [token, user]);
 
   return (
     <>
