@@ -7,15 +7,15 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 const app = express();
-app.use('/', httpsRedirect());
-app.use(function forceLiveDomain(req, res, next) {
-  // Don't allow user to hit Heroku now that we have a domain
-  var host = req.get('Host');
-  if (host === 'give-your-best-webshop.herokuapp.com') {
-    return res.redirect(301, 'https://shop.giveyourbest.uk');
-  }
-  return next();
-});
+// app.use('/', httpsRedirect());
+// app.use(function forceLiveDomain(req, res, next) {
+//   // Don't allow user to hit Heroku now that we have a domain
+//   var host = req.get('Host');
+//   if (host === 'give-your-best-webshop.herokuapp.com') {
+//     return res.redirect(301, 'https://shop.giveyourbest.uk');
+//   }
+//   return next();
+// });
 
 const port = process.env.PORT || 5000;
 
