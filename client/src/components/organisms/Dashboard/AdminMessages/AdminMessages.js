@@ -157,12 +157,12 @@ export const AdminMessages = () => {
 
     <StyledTabPanel>
       <MessagesList data={shoppersMessages} expandRow={viewConversation} type='admin' />
-      {!newShopperThread && <Button primary onClick={() => {setNewShopperThread(true)}}>Start a Thread</Button>}
+      {!newShopperThread && <Button primary onClick={() => {setNewShopperThread(true)}}>Start New Conversation</Button>}
       {newShopperThread && <StartMessageThreadAdmin users={shoppers} cancelFunction={setNewShopperThread} submitFunction={handleSubmit} type='shopper'></StartMessageThreadAdmin>}
     </StyledTabPanel>
     <StyledTabPanel>
       <MessagesList data={donorsMessages} expandRow={viewConversation} type='admin' />
-      {!newDonorThread && <Button primary onClick={() => {setNewDonorThread(true)}}>Start a Thread</Button>}
+      {!newDonorThread && <Button primary onClick={() => {setNewDonorThread(true)}}>Start New Conversation</Button>}
       {newDonorThread && <StartMessageThreadAdmin users={donors} cancelFunction={setNewDonorThread} submitFunction={handleSubmit} type='donor'></StartMessageThreadAdmin>}
     </StyledTabPanel>
 

@@ -117,14 +117,18 @@ export const convertHeic = async (fileList) => {
 
 export const checkUnread = (type, userId, messages) => {
     let unread = [];
+    if (!messages.length) {
+        return [0, []]
+    }
     messages.filter((m) => {
-      if (type === 'admin' && m.recipient.kind === 'admin' && m.viewed === false) {
+      if (type === 'admin' && m.recipient != null && m.recipient.kind === 'admin' && m.viewed === false) {
         unread.push(m._id);
-      } else if (m.recipient._id === userId && m.viewed === false) {
+      } else if (m.recipient != null && m.recipient._id === userId && m.viewed === false) {
         unread.push(m._id);
       }
       return ''
     })
+    
     return [unread.length, unread];
 }
 

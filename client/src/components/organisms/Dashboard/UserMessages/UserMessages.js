@@ -117,7 +117,7 @@ export const UserMessages = () => {
     <>
     <H2>Messaging</H2>
     <MessagesList data={messages || []} userId={user.id} expandRow={viewConversation} />
-      {!newThread && <Button primary onClick={() => {setNewThread(true)}}>Start a Thread</Button>}
+      {!newThread && <Button primary onClick={() => {setNewThread(true)}}>Start New Conversation</Button>}
       {newThread && <StartMessageThreadUser cancelFunction={setNewThread} submitFunction={handleSubmit} emailId={emailId}></StartMessageThreadUser>}
     </>
   );

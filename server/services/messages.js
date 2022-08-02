@@ -6,13 +6,13 @@ const getMessages = async (type, userId) => {
     if (userId === 'all') { //if all then admin user viewing all messages by user type
 
       let values = {type: type}
-      const messages = await Message.find(values).populate('user').populate('messages.sender').populate('messages.recipient');
+      const messages = await Message.find(values).populate('user').populate('messages.sender').populate('messages.recipient').sort({updatedAt: -1});
       return messages;
 
     } else if (userId!== '') { //if userId exists then get messages for individual user
 
       let values = {user: userId}
-      const messages = await Message.find(values).populate('user').populate('messages.sender').populate('messages.recipient');
+      const messages = await Message.find(values).populate('user').populate('messages.sender').populate('messages.recipient').sort({updatedAt: -1});
 
       return messages;
     }

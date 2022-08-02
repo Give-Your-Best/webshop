@@ -117,12 +117,7 @@ export const MessagesList = (data) => {
       dataIndex: 'messages',
       key: 'messages',
       render: (value) => {
-        if (data.type && data.userId && value.length) {
-          return <Note>{(checkUnread(data.type, data.userId, value)[0] > 0)? checkUnread(data.type, data.userId, value)[0] + ' new': ''}</Note>
-        } else {
-          return ''
-        }
-        
+        return (<Note>{(checkUnread(data.type, data.userId, value)[0] > 0)? checkUnread(data.type, data.userId, value)[0] + ' new': ''}</Note>)
       }
     }
   ]
