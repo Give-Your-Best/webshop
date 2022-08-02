@@ -58,6 +58,7 @@ export const MobileMenu = () => {
               <CategoryMenuLink key={'link-' + c.id} onClick={() => { history.push('/products/' + c.id); hideMobileMenu()} }>{c.name} <Down onClick={openSubNav}></Down></CategoryMenuLink>
               <SubMenuNav>
                 {subCategories.map((d) => {
+                  d.id = d.id.replace('/', '-');
                   if (d.parentCategory === c.id && c.id !== 'other') {
                     return (<li key={d.id}><SubMenuItem key={d.id} onClick={() => { history.push("/products/" + c.id + "/" + d.id); hideMobileMenu()} }>{d.name}</SubMenuItem></li>);
                   } else {
