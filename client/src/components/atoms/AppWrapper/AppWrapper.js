@@ -29,6 +29,13 @@ export const AppWrapper = styled.div`
     }
   }
 
+  .fixedOnMobileSmall {
+
+    @media (max-width: ${({ theme }) => theme.mobile}) {
+      max-width: 100px;
+    }
+  }
+
   h2 {
     font-family: 'Alfa Slab One', cursive;
     color: ${({ theme }) => theme.colorMappings.primary};

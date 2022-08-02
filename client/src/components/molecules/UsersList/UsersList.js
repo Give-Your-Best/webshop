@@ -1,19 +1,88 @@
-import React from 'react';
-import { Space } from 'antd';
+import React, { useRef } from 'react';
+import { Input, Space, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { ListWrapper, ExpandButton, StyledTable, DeleteButton } from './UsersList.styles';
 import { name } from '../../../utils/helpers';
 
 export const UsersList = (data) => {
+  const searchInput = useRef(null);
+
+  const rows = data.data.map((d) => {
+    return {
+      ...d,
+      name: name(d)
+    };
+  })
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters({closeDropDown: true, confirm: true});
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm)}
+            icon={<SearchOutlined />}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    onFilter: (value, record) =>
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => (text)
+  });
 
   var columns = [
     {
       title: 'Name',
       key: 'name',
-      className: 'hideOnMobile',
-      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+      className: 'fixedOnMobile',
+      dataIndex: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (record) => {
         return name(record)
-      }
+      },
+      ...getColumnSearchProps('name'),
     },
     {
       title: 'Email',
@@ -21,6 +90,7 @@ export const UsersList = (data) => {
       key: 'email',
       className: 'fixedOnMobile',
       sorter: (a, b) => a.email.localeCompare(b.email),
+      ...getColumnSearchProps('email'),
     }
   ]
 
@@ -54,7 +124,7 @@ export const UsersList = (data) => {
                 <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
               )
           }}
-        dataSource={data.data}
+        dataSource={rows}
       />
     </ListWrapper>
   );

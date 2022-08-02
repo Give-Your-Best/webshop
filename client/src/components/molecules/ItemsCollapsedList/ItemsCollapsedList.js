@@ -31,6 +31,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
     columns.push({
       title: 'Category',
       dataIndex: 'category',
+      className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.category.localeCompare(b.category),
       filters: categories.map((c) => { return { text: c.name, value: c.id } }),
       filterMode: 'tree',
@@ -40,7 +41,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
     columns.push({
       title: 'Status',
       dataIndex: 'status',
-      className: 'hideOnMobile',
+      className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.status.localeCompare(b.status),
       filters: adminAllItemStatus.map((c) => { return { text: c.statusText, value: c.status } }),
       filterMode: 'tree',

@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
+var httpsRedirect = require('express-https-redirect');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+app.use('/', httpsRedirect());
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json({ limit: "50mb" }));

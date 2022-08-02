@@ -1,29 +1,101 @@
-import React from 'react';
-import { Space } from 'antd';
+import React, { useRef } from 'react';
+import { Input, Space, Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { ListWrapper, ExpandButton, StyledTable, DeleteButton, Note } from './MessagesList.styles';
 import { checkUnread, name } from '../../../utils/helpers';
 
 export const MessagesList = (data) => {
+  const searchInput = useRef(null);
 
   const getName = (value) => {
     let result = '';
     if (data.type !== 'admin') {
       result = 'GYB admin';
-    } else {
+    } else if (value != null) {
       result = name(value);
     }
     return result;
   }
 
+  //map name onto the result as antd table search does not work otherwise
+  const rows = data.data.map((d) => {
+    return {
+      ...d,
+      name: getName(d.user)
+    };
+  })
+
+  console.log(rows)
+
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters({closeDropDown: true, confirm: true});
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm)}
+            icon={<SearchOutlined />}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    onFilter: (value, record) =>
+    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1890ff' : undefined,
+        }}
+      />
+    ),
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) => (text)
+  });
+
   var columns = [
     {
       title: 'Name',
-      dataIndex: 'user',
-      key: 'user',
+      key: 'name',
+      dataIndex: 'name',
       width: 200,
       render: (value) => {
         return getName(value)
-      }
+      },
+      ...getColumnSearchProps('name'),
     },
     {
       title: 'Subject',
@@ -33,7 +105,7 @@ export const MessagesList = (data) => {
       sorter: (a, b) => a.email.length - b.email.length,
     },
     {
-      title: 'Message count',
+      title: '',
       dataIndex: 'messages',
       key: 'messages',
       render: (value) => {
@@ -41,11 +113,16 @@ export const MessagesList = (data) => {
       }
     },
     {
-      title: 'Unread',
+      title: '',
       dataIndex: 'messages',
       key: 'messages',
       render: (value) => {
-        return <Note>{(checkUnread(data.type, data.userId, value)[0] > 0)? checkUnread(data.type, data.userId, value)[0] + ' new': ''}</Note>
+        if (data.type && data.userId && value.length) {
+          return <Note>{(checkUnread(data.type, data.userId, value)[0] > 0)? checkUnread(data.type, data.userId, value)[0] + ' new': ''}</Note>
+        } else {
+          return ''
+        }
+        
       }
     }
   ]
@@ -67,7 +144,6 @@ export const MessagesList = (data) => {
     <ListWrapper>
       <StyledTable
         pagination={{hideOnSinglePage: true}}
-        showHeader={false}
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{
@@ -80,7 +156,7 @@ export const MessagesList = (data) => {
                 <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
               )
           }}
-        dataSource={data.data}
+        dataSource={rows}
       />
     </ListWrapper>
   );
