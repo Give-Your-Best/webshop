@@ -8,6 +8,14 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use('/', httpsRedirect());
+app.all(/.*/, function(req, res, next) {
+  var host = req.header("host");
+  if (host.match(/^herokuapp\..*/i)) {
+    res.redirect(301, "https://shop.giveyourbest.uk"); 
+  } else {
+    next();
+  }
+}); 
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json({ limit: "50mb" }));

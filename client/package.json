@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "homepage": "https://give-your-best-webshop.herokuapp.com/",
+  "homepage": "https://shop.giveyourbest.uk/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
