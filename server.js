@@ -9,8 +9,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 app.use('/', httpsRedirect());
 app.all(/.*/, function(req, res, next) {
-  var host = req.header("host");
-  if (host.match(/^herokuapp\..*/i)) {
+  if (host === 'give-your-best-webshop.herokuapp.com/') {
     res.redirect(301, "https://shop.giveyourbest.uk"); 
   } else {
     next();

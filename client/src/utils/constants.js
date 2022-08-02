@@ -1,4 +1,4 @@
-const homeLink = 'https://give-your-best-webshop.herokuapp.com';
+const homeLink = 'https://shop.giveyourbest.uk';
 
 export const clothingSizeOptions = [
     '6',
