@@ -8,13 +8,15 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use('/', httpsRedirect());
-app.all(/.*/, function(req, res, next) {
-  if (host === 'give-your-best-webshop.herokuapp.com/') {
-    res.redirect(301, "https://shop.giveyourbest.uk"); 
-  } else {
-    next();
+app.use(function forceLiveDomain(req, res, next) {
+  // Don't allow user to hit Heroku now that we have a domain
+  var host = req.get('Host');
+  if (host === 'give-your-best-webshop.herokuapp.com') {
+    return res.redirect(301, 'https://shop.giveyourbest.uk');
   }
-}); 
+  return next();
+});
+
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json({ limit: "50mb" }));
