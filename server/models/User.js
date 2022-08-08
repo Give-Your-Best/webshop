@@ -80,6 +80,7 @@ const Shopper = User.discriminator("shopper", new Schema({
     default : 'direct'
   },
   currentStatus: String,
+  organisation: String,
   referredBy: String,
   shoppingFor: {
     type: Number,

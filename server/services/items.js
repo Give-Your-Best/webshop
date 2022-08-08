@@ -187,6 +187,7 @@ const getAdminItems = async (isCurrent) => {
     var items = await Item.find(conditions)
       .sort({createdAt: -1})
       .populate('shopperId')
+      .populate('donorId')
       .exec();
     return items;
   } catch (error) {

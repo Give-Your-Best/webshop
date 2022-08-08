@@ -6,6 +6,7 @@ export const ShopperFields = () => {
   return (
     <div>
       <StyledLabel>Share address with donors</StyledLabel>
+      <InfoNote>If you are staying in a hotel please select 'no'</InfoNote>
       <div>
         <StyledRadio.Group name="deliveryPreference">
         <StyledRadio value={"direct"}>yes</StyledRadio>
@@ -22,12 +23,16 @@ export const ShopperFields = () => {
         </StyledSelect>
       <StyledError name="currentStatus" component="div" />
 
+      <StyledLabel>Case workers: state your organisation</StyledLabel>
+        <StyledInput name="organisation" />
+        <StyledError name="organisation" component="div" />
+
       <StyledLabel>Referred By</StyledLabel>
         <InfoNote>! - If you weren't referred, please type N/A</InfoNote>
         <StyledInput name="referredBy" />
         <StyledError name="referredBy" component="div" />
       
-      <StyledLabel>Are you shopping for more than one person? If so how many?</StyledLabel>
+      <StyledLabel>How many people are you shopping for?</StyledLabel>
       <StyledInputNumber name="shoppingFor" />
       <StyledError name="shoppingFor" component="div" />
 
