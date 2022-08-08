@@ -23,6 +23,10 @@ export const ShopperFields = () => {
         </StyledSelect>
       <StyledError name="currentStatus" component="div" />
 
+      <StyledLabel>Case workers: state your organisation</StyledLabel>
+        <StyledInput name="organisation" />
+        <StyledError name="organisation" component="div" />
+
       <StyledLabel>Referred By</StyledLabel>
         <InfoNote>! - If you weren't referred, please type N/A</InfoNote>
         <StyledInput name="referredBy" />
