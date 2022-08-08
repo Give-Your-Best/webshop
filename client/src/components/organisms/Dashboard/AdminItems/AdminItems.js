@@ -34,7 +34,8 @@ export const AdminItems = () => {
 
 const editForm = (record) => {
   let shippedDate = '',
-    shoppedBy = '';
+    shoppedBy = '',
+    donatedBy = '';
   if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && !record.statusUpdateDates.shopperShippedDate) {
     shippedDate = (new Date(record.statusUpdateDates.gybShippedDate)).toLocaleString()
   } else if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && record.statusUpdateDates.shopperShippedDate) {
@@ -46,8 +47,12 @@ const editForm = (record) => {
   if (record.shopperId && record.shopperId.firstName) {
     shoppedBy = name(record.shopperId);
   }
+
+  if (record.donorId && record.donorId.firstName) {
+    donatedBy = name(record.donorId);
+  }
   return (
-    <div key={record._id}><ItemCardLong item={record} type='all' shippedDate={shippedDate} shoppedBy={shoppedBy}/></div>
+    <div key={record._id}><ItemCardLong item={record} type='all' shippedDate={shippedDate} shoppedBy={shoppedBy} donatedBy={donatedBy}/></div>
   )      
 };
 

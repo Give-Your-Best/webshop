@@ -13,8 +13,8 @@ import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
-export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy }) => {
-
+export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy, donatedBy }) => {
+console.log(item)
   const { token } = useContext(AppContext);
   const mountedRef = useRef(true);
   let history = useHistory();
@@ -82,6 +82,8 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
       />
       {/* show progress bar depending on type of user logged in */}
       {(type)? <ProgressBar type={type} status={item.status} />: ''}
+
+      {(donatedBy)? <span>{'Donated by: ' +  donatedBy}<br /></span>: ''}
    
       {(shoppedBy)? <span>{'Shopped by: ' +  shoppedBy}<br /></span>: ''}
 

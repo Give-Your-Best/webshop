@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form } from 'formik-antd';
-import { StyledSubmitButton, StyledInput, StyledInputNumber, StyledLabel, StyledError, FieldContainerHalf, StyledRadio, StyledSelect } from './EditForm.styles';
+import { StyledSubmitButton, StyledInput, StyledInputNumber, InfoNote, StyledLabel, StyledError, FieldContainerHalf, StyledRadio, StyledSelect } from './EditForm.styles';
 import { Button } from '../../atoms/Button';
 import { currentStatus } from '../../../utils/constants';
 
@@ -22,6 +22,7 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <StyledInput name="email" disabled={editingKey !== recordId} />
         <StyledError name="email" component="div" /></StyledLabel>
         <StyledLabel>Share address with donors
+        <InfoNote>If you are staying in a hotel please select 'no'</InfoNote>
         <div>
           <StyledRadio.Group name="deliveryPreference" disabled={editingKey !== recordId}>
           <StyledRadio value={"direct"}>yes</StyledRadio>
@@ -61,7 +62,7 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <StyledInput name="referredBy" disabled={editingKey !== recordId} />
         <StyledError name="referredBy" component="div" /></StyledLabel>
         </FieldContainerHalf>
-        <StyledLabel>Shopping for how many
+        <StyledLabel>How many people are you shopping for?
         <StyledInputNumber name="shoppingFor" disabled={editingKey !== recordId} />
         <StyledError name="shoppingFor" component="div" /></StyledLabel>
 

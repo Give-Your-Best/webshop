@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Statistic } from './StatisticsCard.styles';
 
-export const StatisticsCard = ({ statistic }) => {
+export const StatisticsCard = ({ name, value }) => {
   return (
     <Statistic
-      title={statistic.name}
-      value={statistic.value}
+      title={value}
+      value={name}
     />
   );
 };

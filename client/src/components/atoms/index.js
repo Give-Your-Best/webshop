@@ -14,3 +14,6 @@ export { StyledCheckbox } from './Checkbox';
 export { ColourCircles } from './ColourCircles';
 export { SignUpContainer } from './SignUpContainer';
 export { CategoryBreadcrumbs } from './CategoryBreadcrumbs';
+export { StatisticsCard } from './StatisticsCard';
+export { UsersChart } from './UsersChart';
+export { ItemsChart } from './ItemsChart';

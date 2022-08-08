@@ -64,6 +64,7 @@ export const currentStatus = [
     'Destitute',
     'No recourse to public funds',
     'Prefer not to say',
+    'Case Worker',
     'Other'
 ]
 

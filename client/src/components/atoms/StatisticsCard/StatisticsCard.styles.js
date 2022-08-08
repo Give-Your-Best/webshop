@@ -2,24 +2,32 @@ import styled from 'styled-components';
 import { Statistic as AntStatistic } from 'antd';
 
 export const Statistic = styled(AntStatistic)`
-  flex: 1;
-  max-width: 13rem;
-  min-width: 13rem;
-  margin: 1rem;
+  width: 31%;
+  margin: 6px;
   border: 1px solid ${({ theme }) => theme.colorMappings.borders};
   padding: 1em;
   text-align: center;
 
+  .ant-statistic-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: ${({ theme }) => theme.colorMappings.primary};
+  }
+
+  .ant-statistic-content {
+    font-size: 18px;
+    color: ${({ theme }) => theme.colorMappings.primary};
+  }
+
   @media (max-width: ${({ theme }) => theme.mobile}) {
     margin: 0.5rem 0.3rem;
-    max-width: 9rem;
-    min-width: 9rem;
+    width: 45%;
 
     .ant-card-meta-title {
-      font-size: 0.8rem;
+      font-size: 17px;
     }
     .ant-card-meta-description {
-      font-size: 0.6rem;
+      font-size: 16px;
     }
   }
 `;

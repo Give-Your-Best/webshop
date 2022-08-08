@@ -1,0 +1,1 @@
+export { UsersChart } from './UsersChart';

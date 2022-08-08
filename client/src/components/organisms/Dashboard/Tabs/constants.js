@@ -9,6 +9,7 @@ import { AdminMessages } from '../AdminMessages';
 import { UserMessages } from '../UserMessages';
 import { DonorItems } from '../DonorItems';
 import { AdminItems } from '../AdminItems';
+import { Statistics } from '../Statistics';
 import { OrdersList } from '../../../molecules/OrdersList';
 import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 
@@ -17,6 +18,11 @@ export const adminTabs = [
       name: 'Dashboard',
     content: <DashboardImage />,
     id:'adminImage'
+    },
+    {
+      name: 'Statistics',
+    content: <Statistics />,
+    id:'statistics'
     },
     {
       name: 'Items',

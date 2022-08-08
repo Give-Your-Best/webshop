@@ -1,7 +1,6 @@
 export { ItemCard } from './ItemCard';
 export { ItemCardLong } from './ItemCardLong';
 export { ItemCardBasket } from './ItemCardBasket';
-export { StatisticsCard } from './StatisticsCard';
 export { UsersList } from './UsersList';
 export { MessagesList } from './MessagesList';
 export { RolesList } from './RolesList';
