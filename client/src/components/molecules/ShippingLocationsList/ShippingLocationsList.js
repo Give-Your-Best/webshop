@@ -22,7 +22,7 @@ export const ShippingLocationsList = (data) => {
       title: 'No. items',
       dataIndex: 'items',
       render: (c) => {
-        return c + ' items'
+        return (!c)? 'no current items': c + ' current items'
       }
     },
     {

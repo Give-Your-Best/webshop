@@ -22,7 +22,7 @@ export const AssignLocationModal = ({ visible, handleOk, handleCancel, loading, 
                 <Form>
                 <StyledSelect name="location" placeholder="Select a location">
                     {locations.map((d)=>{
-                        return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.firstLine + ', ' + d.postcode}</StyledSelect.Option>);
+                        return (<StyledSelect.Option key={d._id} value={d._id}>{d.name + ', ' + d.firstLine + ', ' + d.postcode + ' (' + d.items + ' current items)'}</StyledSelect.Option>);
                         })}
                 </StyledSelect>
                 <Space />
