@@ -19,6 +19,13 @@ export const ShippingLocationsList = (data) => {
       sorter: (a, b) => a.firstLine.length - b.firstLine.length,
     },
     {
+      title: 'No. items',
+      dataIndex: 'items',
+      render: (c) => {
+        return c + ' items'
+      }
+    },
+    {
       title: 'Availability',
       dataIndex: 'available',
       render: (item) => {
@@ -55,7 +62,7 @@ export const ShippingLocationsList = (data) => {
         rowKey={(record) => record._id}
         expandable={{
           expandedRowRender: data.expandRow,
-          expandIconColumnIndex: 4,
+          expandIconColumnIndex: 5,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (
                 <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>

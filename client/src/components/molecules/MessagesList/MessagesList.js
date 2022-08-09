@@ -25,8 +25,6 @@ export const MessagesList = (data) => {
     };
   })
 
-  console.log(rows)
-
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
