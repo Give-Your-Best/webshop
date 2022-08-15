@@ -255,11 +255,11 @@ const getAccountNotificationItems = async (adminUserId) => {
     const pendingReceive = await Item.find(pendingReceiveQuery).populate({
       "path": "sendVia",
       "match": { "adminUser": adminUserId }
-    }).populate('shopperId');
+    }).populate('shopperId').populate('donorId');
     const pendingSent = await Item.find(pendingSentQuery).populate({
       "path": "sendVia",
       "match": { "adminUser": adminUserId }
-    }).populate('shopperId');
+    }).populate('shopperId').populate('donorId');
 
     results.push(pendingReceive.filter((i) => {
       return i.sendVia !== null
@@ -288,7 +288,7 @@ const getShopNotificationItems = async () => {
   const shoppedQuery = {
     "$and": [
       {"approvedStatus": "approved"}, 
-      {"status": "shopped"},
+      {"$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}]},
       {"sendVia": { $ne: null }}
     ]
   }
@@ -298,11 +298,11 @@ const getShopNotificationItems = async () => {
     const pendingAssign = await Item.find(pendingAssignQuery).populate({
       "path": "shopperId",
       "match": { "deliveryPreference": "via-gyb" }
-    });
+    }).populate('donorId');
     const shopped = await Item.find(shoppedQuery).populate({
       "path": "shopperId",
       "match": { "deliveryPreference": "via-gyb" }
-    });
+    }).populate('donorId');
 
     results.push(pendingAssign.filter((i) => {
       return i.shopperId !== null
@@ -310,7 +310,7 @@ const getShopNotificationItems = async () => {
     results.push(shopped.filter((i) => {
       return i.shopperId !== null
     }))
-    
+    console.log(results[1])
     return results
 
   } catch (error) {

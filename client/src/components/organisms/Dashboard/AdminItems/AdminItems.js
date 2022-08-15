@@ -38,6 +38,7 @@ const editForm = (record) => {
   let shippedDate = '',
     shoppedBy = '',
     donatedBy = '';
+    
   if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && !record.statusUpdateDates.shopperShippedDate) {
     shippedDate = (new Date(record.statusUpdateDates.gybShippedDate)).toLocaleString()
   } else if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && record.statusUpdateDates.shopperShippedDate) {

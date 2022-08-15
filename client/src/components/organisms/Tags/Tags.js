@@ -32,7 +32,7 @@ export const Tags = ({updateId, updateType, tagList, availableTags}) => {
       if (tagId && !tags.some(t=>t._id === tagId) && !tags.some(t=>t.value === tagId)) {
 
         if (updateType === 'item') {
-          let test = await updateItemTags(updateId, tagId, token);
+          await updateItemTags(updateId, tagId, token);
         } else if (updateType === 'user') {
           await updateUserTags(updateId, tagId, token);
         }

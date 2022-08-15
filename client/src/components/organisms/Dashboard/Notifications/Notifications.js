@@ -197,13 +197,17 @@ export const Notifications = () => {
     return (
       <div>
       {record.items.map((item) => {
-        let shoppedBy = '';
+        let shoppedBy = '',
+          donatedBy = '';
         if (item.shopperId && item.shopperId.firstName) {
           shoppedBy = name(item.shopperId);
         }
+        if (item.donorId && item.donorId.firstName) {
+          donatedBy = name(item.donorId);
+        }
         return (
           <div key={item._id}>
-          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} shoppedBy={shoppedBy} />
+          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} shoppedBy={shoppedBy} donatedBy={donatedBy} />
           </div>
         )
       }

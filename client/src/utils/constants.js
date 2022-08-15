@@ -334,7 +334,7 @@ export const autoEmails = [
     },
     {
         'type': 'item_on_the_way',
-        'content': "<p>Hi {{name}}!<p><p>Great news, your order is on it’s way! Don’t forget to let us know when it arrives.</p><p>We hope you love it.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+        'content': "<p>Hi {{name}}!<p><p>Great news, your order is on it’s way! Don’t forget to let us know when it arrives by logging into your account and marking your order as received.</p><p>We hope you love it.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
         'type': 'item_received',

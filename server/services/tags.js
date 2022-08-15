@@ -3,7 +3,6 @@ const Item = require('../models/Item');
 const User_ = require('../models/User');
 
 const getTags = async () => {
-  console.log('get')
   try {
     const tags = await Tag.find({}).populate('items').populate('users');
     return tags;
