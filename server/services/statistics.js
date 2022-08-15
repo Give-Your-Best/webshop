@@ -2,7 +2,6 @@ const Item = require('../models/Item');
 const User_ = require('../models/User');
 
 const getAllStatistics = async () => {
-  console.log('service to pull all stats');
   const now = new Date();
   var sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
   var thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));

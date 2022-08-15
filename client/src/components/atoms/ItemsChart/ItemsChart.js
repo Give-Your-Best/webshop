@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { theme } from '../../../theme';
 import { Bar } from 'react-chartjs-2';
+import { StyledBar, StyledMobileBar } from './ItemsChart.styles';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
@@ -19,6 +20,29 @@ export const ItemsChart = ({ stats }) => {
       },
     },
     responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
+
+  const mobileOptions = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Items',
+        color: theme.colorMappings.primary,
+        font: {
+          size: 24
+        }
+      },
+    },
+    responsive: false,
+    maintainAspectRatio: false,
     scales: {
       x: {
         stacked: true,
@@ -57,5 +81,8 @@ export const ItemsChart = ({ stats }) => {
     ],
   };
 
-  return <Bar options={options} data={data} />;
+  return <>
+  <StyledMobileBar><Bar options={mobileOptions} data={data} width={300} height={350}/></StyledMobileBar>
+  <StyledBar><Bar options={options} data={data} /></StyledBar>
+  </>;
 };

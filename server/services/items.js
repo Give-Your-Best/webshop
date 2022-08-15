@@ -188,6 +188,7 @@ const getAdminItems = async (isCurrent) => {
       .sort({createdAt: -1})
       .populate('shopperId')
       .populate('donorId')
+      .populate('tags')
       .exec();
     return items;
   } catch (error) {

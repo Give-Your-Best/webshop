@@ -4,12 +4,14 @@ import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from "../../../molecules";
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './AdminItems.styles';
 import { getAdminItems, deleteItem } from '../../../../services/items';
+import { getTags } from '../../../../services/tags';
 import { name, tabList } from '../../../../utils/helpers';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
   const mountedRef = useRef(true);
   const [items, setItems] = useState([]);
+  const [tags, setTags] = useState([]);
   const [pastItems, setPastItems] = useState([]);
 
   const { confirm } = Modal;
@@ -78,8 +80,15 @@ const editForm = (record) => {
       setPastItems(items);
     };
 
+    const fetchAllTags = async () => {
+      const tags = await getTags(token);
+      if (!mountedRef.current) return null;
+      setTags(tags);
+    }
+
     fetchItems();
     fetchPastItems();
+    fetchAllTags();
 
     return () => {
       // cleanup
@@ -96,10 +105,10 @@ const editForm = (record) => {
       </StyledTabList>
 
       <StyledTabPanel>
-        <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} admin={true} />
+        <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} admin={true} allTags={tags} />
       </StyledTabPanel>
       <StyledTabPanel>
-        <ItemsCollapsedList data={pastItems} expandRow={editForm} handleDelete={handleDelete} admin={true}  />
+        <ItemsCollapsedList data={pastItems} expandRow={editForm} handleDelete={handleDelete} admin={true} allTags={tags}  />
       </StyledTabPanel>
 
     </StyledTabs>

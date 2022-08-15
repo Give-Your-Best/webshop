@@ -91,7 +91,9 @@ export const Item = () => {
 
   const addToBasket = (itemId) => {
     const isShopped = basket && basket.some(i=>i._id === itemId);
-    const cannotShop = ((user)? user.recentItems.length: 0) + ((basket)? basket.length: 0) >= limit;
+
+    //recent items shopped count and items in basket count needs to be within limit. Limit is calculated from the shop settings and multiplied by the number of people the user is shopping for
+    const cannotShop = ((user)? user.recentItems.length: 0) + ((basket)? basket.length: 0) >= (limit * ((user)? user.shoppingFor: 1));
 
     if (!user || user.type !== 'shopper') { //if not signed in
       confirm({

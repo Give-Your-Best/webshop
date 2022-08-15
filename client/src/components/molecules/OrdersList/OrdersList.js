@@ -101,7 +101,7 @@ export const OrdersList = () => {
             if (!token) return null;
             const settingValue = await getSetting('shopItemLimit', token);
             if (!mountedRef.current) return null;
-            let count = settingValue - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
+            let count = (settingValue * ((user)? user.shoppingFor: 1)) - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
             setShopRemaining(count);
           }
 

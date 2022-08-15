@@ -3,14 +3,21 @@ import { AppContext } from '../../../../context/app-context';
 import { StatisticsCard, UsersChart, ItemsChart, Space } from '../../../atoms';
 import { StatsTopWrapper } from './Statistics.styles';
 import { getStatistics } from "../../../../services/statistics";
+import { tabList } from "../../../../utils/helpers";
 
 export const Statistics = () => {
-  const { token } = useContext(AppContext);
+  const { token, user } = useContext(AppContext);
   const mountedRef = useRef(true);
   const [stats, setStats] = useState({});
 
     useEffect(() => {
-      console.log('load stats');
+      //add to url history (added for back button to work)
+      var tabs = tabList(user);
+      tabs.forEach((t) => {
+        if (t.id === 'adminSettings') {
+          window.history.pushState({}, '','/dashboard/' + t.id)
+        }
+      })
 
       const fetchStats = async () => {
         const statistics = await getStatistics(token);
@@ -26,7 +33,7 @@ export const Statistics = () => {
         mountedRef.current = false;
       };
 
-    }, [token]);
+    }, [token, user]);
 
   return (
     <>

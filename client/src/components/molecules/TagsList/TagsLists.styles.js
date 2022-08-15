@@ -13,21 +13,11 @@ const ExpandButton = styled.span`
 const DeleteButton = styled.span`
   cursor: pointer;
 `
-
 const StyledTable = styled((props) => <Table {...props} />)`
   margin-bottom: 2em;
 
   table {
     background: ${({ theme }) => theme.colorMappings.background};
-
-    td.onlyHeading {
-      display: none;
-    }
-  }
-
-  .ant-table-thead > tr > th {
-    background: ${({ theme }) => theme.colorMappings.background};
-    padding: 0.1em 0.5em;
   }
 
   .ant-table-empty {
@@ -63,5 +53,6 @@ const StyledTable = styled((props) => <Table {...props} />)`
       transition: background .3s;
     }
 `
+
 
 export { ListWrapper, ExpandButton, StyledTable, DeleteButton };

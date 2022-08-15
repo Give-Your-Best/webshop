@@ -1,7 +1,6 @@
 const Role = require('../models/Role');
 
 const getAllRoles = async () => {
-  console.log('get all roles')
   try {
     const roles = await Role.find();
     return roles;
