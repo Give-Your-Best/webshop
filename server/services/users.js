@@ -103,9 +103,9 @@ const deleteUser = async (id) => {
 const getAllUsers = async (type, approvedStatus) => {
     try {
       if (type == 'donor') {
-        var users = await User_.Donor.find({approvedStatus: approvedStatus}).lean();
+        var users = await User_.Donor.find({approvedStatus: approvedStatus}).populate('tags');
       } else if (type == "shopper") {
-        var users = await User_.Shopper.find({approvedStatus: approvedStatus}).lean();
+        var users = await User_.Shopper.find({approvedStatus: approvedStatus}).populate('tags');
       } else if (type == "admin") {
         var users = await User_.Admin.find({approvedStatus: approvedStatus}).lean();
       }

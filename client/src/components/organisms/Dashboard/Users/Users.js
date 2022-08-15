@@ -3,10 +3,12 @@ import { AppContext } from '../../../../context/app-context';
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Users.styles';
 import { getUsers, deleteUser, updateDonor, updateShopper } from '../../../../services/user';
 import { deleteDonorItems } from '../../../../services/items';
+import { getTags } from "../../../../services/tags";
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import { DonorMiniEditForm, ShopperMiniEditForm, UsersList, DonorCreateForm, ShopperCreateForm } from '../../../molecules';
-import { Button } from '../../../atoms';
+import { Button, Space } from '../../../atoms';
+import { Tags } from '../../../organisms';
 import { openHiddenTab, tabList } from '../../../../utils/helpers';
 
 export const Users = () => {
@@ -15,6 +17,7 @@ export const Users = () => {
   const mountedRef = useRef(true);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
+  const [tags, setTags] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -90,6 +93,8 @@ export const Users = () => {
 
     return (
       <div>
+        <Tags updateId={record._id} tagList={record.tags || []} availableTags={tags} updateType='user'/>
+        <Space />
         <Formik
         initialValues={record}
         onSubmit={handleSubmit}
@@ -129,8 +134,15 @@ export const Users = () => {
       setDonors(users);
     };
 
+    const fetchAllTags = async () => {
+      const tags = await getTags(token);
+      if (!mountedRef.current) return null;
+      setTags(tags);
+    }
+
     fetchShoppers();
     fetchDonors();
+    fetchAllTags();
 
     return () => {
       // cleanup
@@ -156,11 +168,11 @@ export const Users = () => {
     </StyledTabList>
 
     <StyledTabPanel>
-      <UsersList data={shoppers} handleDelete={handleDelete} expandRow={editForm} />
+      <UsersList data={shoppers} handleDelete={handleDelete} expandRow={editForm} allTags={tags} />
       <Button primary small onClick={() => {openHiddenTab('shopper')}}>Create</Button>
     </StyledTabPanel>
     <StyledTabPanel>
-      <UsersList data={donors} handleDelete={handleDelete} expandRow={editForm} />
+      <UsersList data={donors} handleDelete={handleDelete} expandRow={editForm} allTags={tags} />
       <Button primary small onClick={() => {openHiddenTab('donor')}}>Create</Button>
     </StyledTabPanel>
     <StyledTabPanel>

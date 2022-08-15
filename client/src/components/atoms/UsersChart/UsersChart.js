@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { theme } from '../../../theme';
 import { Bar } from 'react-chartjs-2';
+import { StyledBar, StyledMobileBar } from './UsersChart.styles';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
@@ -28,6 +29,30 @@ export const UsersChart = ({ stats }) => {
       },
     },
   };
+
+  const mobileOptions = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'User Sign Ups',
+        color: theme.colorMappings.primary,
+        font: {
+          size: 24
+        }
+      },
+    },
+    responsive: false,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
+
 
   const labels = ['Donor', 'Shopper'];
 
@@ -57,5 +82,8 @@ export const UsersChart = ({ stats }) => {
     ],
   };
 
-  return <Bar options={options} data={data} />;
+  return <>
+  <StyledMobileBar><Bar options={mobileOptions} data={data} width={300} height={350}/></StyledMobileBar>
+  <StyledBar><Bar options={options} data={data} /></StyledBar>
+  </>;
 };

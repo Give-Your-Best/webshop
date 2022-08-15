@@ -1,5 +1,7 @@
 export const createTag = async ( name, token ) => {
     //call api to create tag
+    console.log('make tag')
+    console.log(name)
     try {
       const response = await fetch('/api/tags/', {
         method: 'post',

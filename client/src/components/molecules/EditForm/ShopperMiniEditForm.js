@@ -59,7 +59,7 @@ export const ShopperMiniEditForm = ({ editingKey, recordId, approvalAction }) =>
         <StyledError name="currentStatus" component="div" /></StyledLabel>
 
         <StyledLabel>Case workers: state your organisation</StyledLabel>
-        <StyledInput name="organisation" />
+        <StyledInput name="organisation" disabled={editingKey !== recordId} />
         <StyledError name="organisation" component="div" />
 
         <StyledLabel>Referred by

@@ -19,6 +19,11 @@ export const donorCreateSchema = yup.object().shape({
     email: yup.string().email().required('Please enter an email address'),
 });
 
+
+export const tagCreateSchema = yup.object().shape({
+    name: yup.string().min(3).required('Enter a tag name'),
+});
+
 export const resetPassword = yup.object().shape({
     email: yup.string().email().required('Please enter an email address'),
 });

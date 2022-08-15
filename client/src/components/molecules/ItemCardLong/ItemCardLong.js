@@ -6,22 +6,22 @@ import { Card as AntCard } from 'antd';
 import { Button } from '../../atoms';
 import { getLocation } from '../../../services/locations';
 import { getUser } from '../../../services/user';
-// import { getTags } from '../../../services/tags';
+import { getTags } from '../../../services/tags';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
-// import { Tags } from "../../organisms";
+import { Tags } from "../../organisms";
 import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
 export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy, donatedBy }) => {
-console.log(item)
+
   const { token } = useContext(AppContext);
   const mountedRef = useRef(true);
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
   const [FAOshopperName, setFAOShopperName] = useState('');
-  // const [allTags, setAllTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
 
   const getDeliveryAddress = () => {
     return (
@@ -52,14 +52,13 @@ console.log(item)
 
   useEffect(() => {
 
-    // const fetchAllTags = async () => {
-    //     //get all tags
-    //     const tags = await getTags(token);
-    //     if (!mountedRef.current) return null;
-    //     // setAllTags(tags);
-    // };
+    const fetchAllTags = async () => {
+      const tags = await getTags(token);
+      if (!mountedRef.current) return null;
+      setAllTags(tags);
+    }
 
-    // fetchAllTags();
+    fetchAllTags();
 
     return () => {
       // cleanup
@@ -95,7 +94,7 @@ console.log(item)
       {(type === 'donor' && Object.keys(deliveryAddress).length)? getDeliveryAddress(): ''}
       {(type === 'donor' && addressFound)? <ExpandedAddress>Address not yet assigned</ExpandedAddress>: ''}
 
-      {/* {(type === 'all')? <Tags tagList={['Tag 1', 'Tag 2', 'Tag 3']} availableTags={allTags}/>: ''} */}
+      {(type === 'all')? <Tags updateId={item._id} tagList={item.tags || []} availableTags={allTags} updateType='item'/>: ''}
 
         {/* if item action passed into component then add a button for it */}
       {actionText && <Button primary small onClick={(e) => {e.stopPropagation();action(item._id);}}>{actionText}</Button>}

@@ -1,11 +1,11 @@
-export const updateItemTags = async (itemId, tagId, token) => {
+export const deleteTagFromItem = async (itemId, tagId, token) => {
   console.log('call serv')
   console.log(itemId)
   console.log(tagId)
-    //call api to updat item with tag
+    //call api to remove tag from item details
     try {
       const response = await fetch(`/api/tags/item`, {
-        method: 'put',
+        method: 'delete',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ export const updateItemTags = async (itemId, tagId, token) => {
       const jsonres = await response.json();
       return jsonres;
     } catch (error) {
-      console.error(`Error in updating item with tag: ${error}`);
+      console.error(`Error in delte tag from item: ${error}`);
       return error;
     }
 };

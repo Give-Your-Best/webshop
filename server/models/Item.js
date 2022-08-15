@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User_ = require('./User');
-const Tag = require('./Tag');
 
 //categories ["Dresses", "Knitwear", "Trousers", "Jeans", "Skirts", "Shorts", "Coats", "Jackets", "Tops", "Tshirts", "Sleepwear and Loungewear", "Accessories", "Shoes", "Other"]
 
@@ -56,7 +55,7 @@ const itemSchema = new Schema(
         ref: 'Location' 
     },
     inBasket: Boolean,
-    tags: [Tag.schema]
+    tags: [{ type: Schema.ObjectId, ref: 'Tag' }]
   },
   options
 );

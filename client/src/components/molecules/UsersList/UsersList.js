@@ -4,10 +4,11 @@ import { SearchOutlined } from '@ant-design/icons';
 import { ListWrapper, ExpandButton, StyledTable, DeleteButton } from './UsersList.styles';
 import { name } from '../../../utils/helpers';
 
-export const UsersList = (data) => {
+export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
+
   const searchInput = useRef(null);
 
-  const rows = data.data.map((d) => {
+  const rows = data.map((d) => {
     return {
       ...d,
       name: name(d)
@@ -94,13 +95,31 @@ export const UsersList = (data) => {
     }
   ]
 
-  if (data.handleDelete) {
+    //additional tag column if shopper and donor list
+    if (allTags) {
+      columns.push({
+        title: 'Tags',
+        dataIndex: 'tags',
+        render: (record) => {
+            return record.map((r) => { 
+              return <span>r.name</span>
+            }).join();
+        },
+        className: 'onlyHeading',
+        filters: allTags.map((c) => { return { text: c.name, value: c._id } }),
+        filterMode: 'tree',
+        filterSearch: true,
+        onFilter: (value, record) => record.tags.some(t=>t._id === value)
+      })
+    }
+
+  if (handleDelete) {
     columns.push({
         title: '',
         key: 'action',
         render: (record) => (
           <Space size="middle">
-            <DeleteButton onClick={() => data.handleDelete(record._id, record.kind)}>Delete</DeleteButton>
+            <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
           </Space>
         )
     })
@@ -115,7 +134,7 @@ export const UsersList = (data) => {
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{
-          expandedRowRender: data.expandRow,
+          expandedRowRender: expandRow,
           expandIconColumnIndex: 2,
           expandIcon: ({ expanded, onExpand, record }) =>
           expanded ? (

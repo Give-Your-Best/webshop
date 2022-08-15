@@ -16,7 +16,8 @@ const userSchema = new Schema({
     type: String,
     enum: ['in-progress', 'approved', 'rejected'],
     default : 'in-progress'
-  }
+  },
+  tags: [{ type: Schema.ObjectId, ref: 'Tag' }]
 }, options);
 
 // On save hook, encrypt password

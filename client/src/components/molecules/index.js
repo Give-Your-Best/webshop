@@ -4,6 +4,7 @@ export { ItemCardBasket } from './ItemCardBasket';
 export { UsersList } from './UsersList';
 export { MessagesList } from './MessagesList';
 export { RolesList } from './RolesList';
+export { TagsList } from './TagsList';
 export { AssignLocationModal } from './AssignLocationModal';
 export { ShopNotificationsList } from './ShopNotificationsList';
 export { AccountNotificationsList } from './AccountNotificationsList';

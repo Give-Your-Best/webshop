@@ -18,6 +18,10 @@ const StyledTable = styled((props) => <Table {...props} />)`
   margin-bottom: 2em;
   table {
     background: ${({ theme }) => theme.colorMappings.background};
+
+    td.onlyHeading {
+      display: none;
+    }
   }
 
   .ant-table-thead > tr > th {
