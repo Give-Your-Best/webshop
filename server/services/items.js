@@ -302,7 +302,7 @@ const getShopNotificationItems = async () => {
     const shopped = await Item.find(shoppedQuery).populate({
       "path": "shopperId",
       "match": { "deliveryPreference": "via-gyb" }
-    }).populate('donorId');
+    }).populate('donorId').populate('sendVia');
 
     results.push(pendingAssign.filter((i) => {
       return i.shopperId !== null

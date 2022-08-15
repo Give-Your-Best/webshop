@@ -13,7 +13,7 @@ import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
-export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy, donatedBy }) => {
+export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy, donatedBy, locationName }) => {
 
   const { token } = useContext(AppContext);
   const mountedRef = useRef(true);
@@ -85,6 +85,8 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
       {(donatedBy)? <span>{'Donated by: ' +  donatedBy}<br /></span>: ''}
    
       {(shoppedBy)? <span>{'Shopped by: ' +  shoppedBy}<br /></span>: ''}
+
+      {(locationName)? <span>{'Assigned to location: ' +  locationName}<br /></span>: ''}
 
       {/* show item shipped date */}
       {(type === 'all' && shippedDate)? <span>{'Shipped on: ' +  shippedDate}</span>: ''}
