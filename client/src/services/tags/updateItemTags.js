@@ -1,7 +1,4 @@
 export const updateItemTags = async (itemId, tagId, token) => {
-  console.log('call serv')
-  console.log(itemId)
-  console.log(tagId)
     //call api to updat item with tag
     try {
       const response = await fetch(`/api/tags/item`, {

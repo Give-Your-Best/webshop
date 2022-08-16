@@ -21,9 +21,9 @@ export const Notifications = () => {
   const [assignAddressId, setAssignAddressId] = useState('');
 
   const handleOk = (values) => {
-
       setLoading(true);
       let updateData = {'sendVia': values.location}
+
       return new Promise((resolve, reject) => {
         updateItem(assignAddressId, updateData, token)
         .then(() => {
@@ -31,12 +31,14 @@ export const Notifications = () => {
           const item = shopNotificationsPendingAssign.items.filter((i) => {return assignAddressId === i._id})[0];
           const locationDetails = adminLocations.filter((l) => {return values.location === l._id})[0];
           locationDetails.FAO = name(item.shopperId);
-          //get donor details
-          const donorDetails = getUser(item.donorId, token)
-          .then((donor) => {
-            sendAutoEmail('item_shopped_with_address', donor, [item], locationDetails);
-            console.log(donorDetails._id)
-          })
+
+          //send donor an email with the location address
+          sendAutoEmail('item_shopped_with_address', item.donorId, [item], locationDetails);
+
+          //send admin user an email with the shopper address
+          let shopperAddress = item.shopperId.deliveryAddress;
+          shopperAddress.name = name(item.shopperId)
+          sendAutoEmail('item_assigned', locationDetails.adminUser, [item], shopperAddress);
 
           setAssignAddressId('');
           setVisible(false);
@@ -50,6 +52,11 @@ export const Notifications = () => {
       })
       .catch(() => console.log('Oops errors!'));
   };
+
+  // mongosh "mongodb+srv://prod.bem4h.mongodb.net/webshop" --apiVersion 1 --username app
+
+
+  // mongodump --uri "mongodb+srv://app:cR5J7Ho563vDJmt2@prod.bem4h.mongodb.net/webshop"
 
   const handleCancel = () => {
       setVisible(false);
@@ -111,12 +118,11 @@ export const Notifications = () => {
             updateItem(itemId, updateData, token)
             .then(() => {
 
-              const itemDet = getItem(itemId)
+              getItem(itemId)
               .then((item) => {
-                const shopperDetails = getUser(item.shopperId, token)
+                getUser(item.shopperId, token)
                 .then((shopper) => {
-                  console.log(itemDet._id)
-                  console.log(shopperDetails.kind)
+                  //send email to shopper that item is on its way to them
                   sendAutoEmail('item_on_the_way', shopper);
                 })
               })

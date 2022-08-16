@@ -310,7 +310,7 @@ const getShopNotificationItems = async () => {
     results.push(shopped.filter((i) => {
       return i.shopperId !== null
     }))
-    console.log(results[1])
+
     return results
 
   } catch (error) {

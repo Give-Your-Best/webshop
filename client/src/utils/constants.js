@@ -333,6 +333,10 @@ export const autoEmails = [
         'content': "<p>Hi Admin!<p><p>Great news, an order is on it’s way to you! Don’t forget to update the tracking on your admin dashboard.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
+        'type': 'item_assigned',
+        'content': "<p>Hi Admin!<p><p>You have an item assigned to you!</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
         'type': 'item_on_the_way',
         'content': "<p>Hi {{name}}!<p><p>Great news, your order is on it’s way! Don’t forget to let us know when it arrives by logging into your account and marking your order as received.</p><p>We hope you love it.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },

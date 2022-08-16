@@ -1,7 +1,4 @@
 export const deleteTagFromItem = async (itemId, tagId, token) => {
-  console.log('call serv')
-  console.log(itemId)
-  console.log(tagId)
     //call api to remove tag from item details
     try {
       const response = await fetch(`/api/tags/item`, {

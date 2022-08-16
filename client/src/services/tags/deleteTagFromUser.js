@@ -1,7 +1,4 @@
 export const deleteTagFromUser = async (userId, tagId, token) => {
-  console.log('call serv')
-  console.log(userId)
-  console.log(tagId)
     //call api to remove tag from user details
     try {
       const response = await fetch(`/api/tags/user`, {

@@ -17,7 +17,7 @@ const updateLocation = async (id, updateData) => {
 const getAllLocations = async (status) => {
   const values = (status === 'available')? {"available": true}: {};
   try {
-    const locations = await Location.find(values).populate('items');
+    const locations = await Location.find(values).populate('items').populate('adminUser');
 
     return locations;
   } catch (error) {

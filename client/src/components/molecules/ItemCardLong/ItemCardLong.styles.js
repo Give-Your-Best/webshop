@@ -64,10 +64,11 @@ export const CardLongImage = styled.img`
 `;
 
 export const ExpandLink = styled.p`
-  font-size: 15px !important;
+  font-size: 18px !important;
   cursor: pointer;
+  margin: 10px 0 !important;
 `;
 
 export const ExpandedAddress = styled.p`
-  font-size: 15px !important;
+  font-size: 18px !important;
 `;

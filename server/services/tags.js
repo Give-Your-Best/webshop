@@ -27,8 +27,7 @@ const deleteTag = async (id) => {
 };
 
 const updateTag = async (id, updateData) => {
-  console.log('update service')
-  console.log(updateData)
+
   try {
       const tag = await Tag.findOneAndUpdate({'_id': id}, updateData, { useFindAndModify: false, returnDocument: 'after'});
       if (tag) {

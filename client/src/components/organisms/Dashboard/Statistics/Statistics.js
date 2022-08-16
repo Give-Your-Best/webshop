@@ -22,7 +22,6 @@ export const Statistics = () => {
       const fetchStats = async () => {
         const statistics = await getStatistics(token);
         if (!mountedRef.current) return null;
-        console.log(statistics)
         setStats(statistics);
       }
 

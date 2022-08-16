@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
+import { Modal } from 'antd';
 import { ListWrapper, HiddenStyledTab, StyledTabPanel, StyledTabs, StyledTabListHidden, InfoNote } from './OrdersList.styles';
 import { getShopperItems, getDonorItems, updateItem } from '../../../services/items';
 import { H2, Button } from '../../atoms';
@@ -17,8 +18,10 @@ export const OrdersList = () => {
     const [shopRemaining, setShopRemaining] = useState(0);
     var actionText = '';
     var action;
+    const { confirm } = Modal;
 
     const markAsReceived = (itemId) => {
+        
         setItems(items.filter(item => {
             if (item._id === itemId) {
                 getUser(item.donorId, token)
@@ -32,37 +35,45 @@ export const OrdersList = () => {
     }
 
     const markAsSent = (itemId) => {
-        const item = items.filter(i => {
-            return i._id === itemId
-        })[0];
 
-        setItems(items.filter(item => {
-            return item._id !== itemId;
-        }));
-
-        if (typeof item.sendVia === 'string') {
-            // send via exists (location assigned)
-
-            //get location assigned and associated admin user to send them an email
-            getLocation(item.sendVia, token)
-            .then((location) => {
-                if (location.length && location[0].adminUser) {
-                    getUser(location[0].adminUser, token)
-                    .then((admin) => {
-                        sendAutoEmail('item_on_the_way_admin', admin);
+        confirm({
+            title: `Are you sure you want to mark your item as sent?`,
+            className: "modalStyle",
+            onOk() {
+                const item = items.filter(i => {
+                    return i._id === itemId
+                })[0];
+        
+                setItems(items.filter(item => {
+                    return item._id !== itemId;
+                }));
+        
+                if (typeof item.sendVia === 'string') {
+                    // send via exists (location assigned)
+        
+                    //get location assigned and associated admin user to send them an email
+                    getLocation(item.sendVia, token)
+                    .then((location) => {
+                        if (location.length && location[0].adminUser) {
+                            getUser(location[0].adminUser, token)
+                            .then((admin) => {
+                                sendAutoEmail('item_on_the_way_admin', admin);
+                            })
+                        }
                     })
+                    return updateItem(itemId, { 'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': getDate() }, token)
+                } else {
+                    //send via does not exist (location not assigned or shopper has shared address
+        
+                    getUser(item.shopperId, token)
+                        .then((shopper) => {
+                            sendAutoEmail('item_on_the_way', shopper, [item]);
+                        })
+                    return updateItem(itemId, { 'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': getDate() }, token)
                 }
-            })
-            return updateItem(itemId, { 'status': 'shipped-to-gyb', 'statusUpdateDates.gybShippedDate': getDate() }, token)
-        } else {
-            //send via does not exist (location not assigned or shopper has shared address
+            }
+          });
 
-            getUser(item.shopperId, token)
-                .then((shopper) => {
-                    sendAutoEmail('item_on_the_way', shopper, [item]);
-                })
-            return updateItem(itemId, { 'status': 'shipped-to-shopper', 'statusUpdateDates.shopperShippedDate': getDate() }, token)
-        }
     }
 
     if (user.type === 'shopper') {

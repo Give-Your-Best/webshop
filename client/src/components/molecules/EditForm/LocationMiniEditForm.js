@@ -4,6 +4,7 @@ import { StyledSubmitButton, StyledInput, StyledError, StyledLabel } from './Edi
 import { UserSelect, Space } from '../../atoms';
 
 export const LocationMiniEditForm = ({ editingKey, recordId, users }) => {
+  console.log(recordId)
   return (
     <Form>
         <StyledLabel>Name:
@@ -19,7 +20,7 @@ export const LocationMiniEditForm = ({ editingKey, recordId, users }) => {
         <StyledInput name="postcode" disabled={editingKey !== recordId} />
         <StyledError name="postcode" component="div" /></StyledLabel>
         <StyledLabel>Give your best member:
-        <UserSelect users={users} selectName="adminUser" disabled={editingKey !== recordId}/>
+        <UserSelect users={users} selectName="adminUser._id" disabled={editingKey !== recordId}/>
         <Space />
         <StyledError name="adminUser" component="div" /></StyledLabel>
         {editingKey === recordId &&<StyledSubmitButton>Save</StyledSubmitButton>} 

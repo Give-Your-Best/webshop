@@ -1,7 +1,4 @@
 export const updateUserTags = async (userId, tagId, token) => {
-  console.log('call serv')
-  console.log(userId)
-  console.log(tagId)
     //call api to update user with tag
     try {
       const response = await fetch(`/api/tags/user`, {

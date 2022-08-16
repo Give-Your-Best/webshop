@@ -14,13 +14,11 @@ export const Footer = () => {
       </FooterItem>
       <FooterItemWider>
       <h4>Contact Us</h4>
-      <p>To Give: <a href="mailto:give@giveyourbest.uk">give@giveyourbest.uk</a> </p>
-      <p>To Shop: <a href="mailto:shop@giveyourbest.uk">shop@giveyourbest.uk</a> </p>
-      <p>To Enquire: <a href="mailto:enquire@giveyourbest.uk">enquire@giveyourbest.uk</a> </p>
-      <p>To Volunteer: <a href="mailto:volunteer@giveyourbest.uk">volunteer@giveyourbest.uk</a> </p>
-      <p>For Partnerships: <a href="mailto:partnerships@giveyourbest.uk">partnerships@giveyourbest.uk</a> </p>
-      <p>For Press and Media: <a href="mailto:press@giveyourbest.uk">press@giveyourbest.uk</a> </p>
+      <p>To give us your feedback: fill in this <a target="_blank" rel="noreferrer" href="https://forms.gle/Tf2A4LbrNiPJ7fTLA">form</a> </p>
+      <p>For general enquiries <a href="mailto:enquire@giveyourbest.uk">enquire@giveyourbest.uk</a> </p>
       <p>For safeguarding concerns: <a href="mailto:safeguarding@giveyourbest.uk">safeguarding@giveyourbest.uk</a> </p>
+      <p>Find help with donating <a target="_blank" rel="noreferrer" href="https://www.canva.com/design/DAFH-_xFQlI/ySjyg9G2R9K2GgGN-LulMw/view?utm_content=DAFH-_xFQlI&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu">here</a> </p>
+      <p>Find help with shopping <a target="_blank" rel="noreferrer" href="https://www.canva.com/design/DAFH6b3HBuk/Q5jma4-dEzuXQGmE2oPpsw/view?utm_content=DAFH6b3HBuk&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu">here</a> </p>
       </FooterItemWider>
       <FooterItem>
       <h4>Follow Us</h4>
