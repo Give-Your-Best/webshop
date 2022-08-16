@@ -53,11 +53,6 @@ export const Notifications = () => {
       .catch(() => console.log('Oops errors!'));
   };
 
-  // mongosh "mongodb+srv://prod.bem4h.mongodb.net/webshop" --apiVersion 1 --username app
-
-
-  // mongodump --uri "mongodb+srv://app:cR5J7Ho563vDJmt2@prod.bem4h.mongodb.net/webshop"
-
   const handleCancel = () => {
       setVisible(false);
   };
