@@ -3,6 +3,24 @@ import { autoEmails } from '../utils/constants';
 import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashboard/Tabs/constants';
 import heic2any from "heic2any";
 
+export const downloadWorkbook = async (workbook) => {
+    console.log('helper to download workbook');
+    const uint8Array = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([uint8Array], {type: 'application/octet-binary'});
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = workbook.name + `.xlsx`;
+    a.click();
+    a.remove();
+}
+
+export const formatDate = (date) => {
+    let newDate = new Date(date);
+
+    return newDate.getDate() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getFullYear()
+}
+
 export const hideMobileMenu = () => {
     document.getElementById('mobileMenu').style.display = 'none';
     document.getElementById('cross').style.display = 'none';

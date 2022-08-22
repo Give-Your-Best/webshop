@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.1.9",
     "antd": "^4.17.0",
     "chart.js": "^3.9.1",
+    "exceljs": "^4.3.0",
     "formik": "^2.2.9",
     "formik-antd": "^2.0.4",
     "heic2any": "^0.0.3",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { AppContext } from '../../../../context/app-context';
 import { StatisticsCard, UsersChart, ItemsChart, Space } from '../../../atoms';
+import { Report } from "../../../molecules";
 import { StatsTopWrapper } from './Statistics.styles';
 import { getStatistics } from "../../../../services/statistics";
 import { tabList } from "../../../../utils/helpers";
@@ -44,6 +45,9 @@ export const Statistics = () => {
         <UsersChart stats={stats.usersChart} />
         <Space />
         <ItemsChart stats={stats.itemsChart} />
+        <Space />
+
+        <Report />
     </>
   );
 };
