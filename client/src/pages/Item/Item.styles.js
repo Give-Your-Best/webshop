@@ -81,6 +81,13 @@ export const ItemDetailsWrapper = styled.div`
     color: ${({ theme }) => theme.colorMappings.primary};
     margin-bottom: 5px;
 
+    a {
+      font-family: lato;
+      font-size: 17px;
+      margin-left: 20px;
+      text-decoration: underline;
+    }
+
     @media (max-width: ${({ theme }) => theme.mobile}) {
       margin-bottom: 10px;
       font-size: 20px;

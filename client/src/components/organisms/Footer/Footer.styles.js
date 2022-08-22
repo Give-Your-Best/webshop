@@ -4,9 +4,8 @@ export const FooterWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  min-height: 400px;
   background:  ${({ theme }) => theme.colorMappings.secondary};
-  padding: 30px 10rem 30px;
+  padding: 20px 7rem 20px;
   flex-shrink: 0;
   border-top: 15px solid #152f45;
   margin-top: 2rem;
@@ -111,7 +110,7 @@ export const FooterItemWider = styled.div`
 
   p {
     font-size: 14px !important;
-    text-align: left;
+    text-align: center;
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
       text-align: center;

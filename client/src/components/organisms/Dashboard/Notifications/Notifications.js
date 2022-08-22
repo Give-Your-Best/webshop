@@ -144,7 +144,7 @@ export const Notifications = () => {
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
         "key": 1,
-        "name": "Item coming to you!", //approved items where the shopper has marked as send via gyb and item sendVia is empty
+        "name": "Item coming via GYB!", //approved items where the shopper has marked as send via gyb and item sendVia is empty
         "message": "Please view and assign an address for you donor",
         "itemsCount": (items[0])? items[0].length: 0,
         "items": (items[0])? items[0]: [],

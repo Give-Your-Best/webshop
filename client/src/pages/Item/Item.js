@@ -153,7 +153,7 @@ export const Item = () => {
           <p>{itemDetails.description || ''}</p>
           <p>Colour: {colours()}</p>
           <p>Brand: {itemDetails.brand || ''}</p>
-          <p>Size: {size()}</p>
+          <p>Size: {size()} <a target="_blank" rel="noreferrer" href="https://www.calculator.com.my/shoe-clothing-size">size guide</a></p>
           <DonorLink to={'/donorproducts/' + itemDetails.donorId}>See other items by this donor</DonorLink>
           {itemDetails.status === 'in-shop' && <Button primary left small onClick={() => {addToBasket(itemDetails._id)}}>Add to Basket</Button>}
         </ItemDetailsWrapper>
