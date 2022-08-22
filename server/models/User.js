@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs');
 
 const Schema = mongoose.Schema;
 
-const options = { discriminatorKey: 'kind', timestamps: true };
+const options = { discriminatorKey: 'kind', timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } };
+
 
 // define the shared mongoose user model
 const userSchema = new Schema({
@@ -57,6 +58,20 @@ userSchema.methods.updatePassword = async (id, candidatePassword) => {
     });
   });
 };
+
+userSchema.virtual('shoppedItems', {
+  ref: 'Item',
+  localField: '_id',
+  foreignField: 'shopperId',
+  count: true
+});
+
+userSchema.virtual('donatedItems', {
+  ref: 'Item',
+  localField: '_id',
+  foreignField: 'donorId',
+  count: true
+});
 
 // create the model class
 const User = mongoose.model('User', userSchema);
