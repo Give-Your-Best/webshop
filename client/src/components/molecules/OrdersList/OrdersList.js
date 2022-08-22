@@ -112,8 +112,11 @@ export const OrdersList = () => {
             if (!token) return null;
             const settingValue = await getSetting('shopItemLimit', token);
             if (!mountedRef.current) return null;
+            console.log(settingValue)
+            console.log(user.shoppingFor)
+            console.log(user.recentItems);
             let count = (settingValue * ((user)? user.shoppingFor: 1)) - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
-            setShopRemaining(count);
+            setShopRemaining((count < 0)? 0: count);
           }
 
         const fetchDonorItems = async () => {

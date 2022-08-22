@@ -5,6 +5,7 @@ import { ListWrapper, ExpandButton, StyledTable, DeleteButton } from './UsersLis
 import { name } from '../../../utils/helpers';
 
 export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
+  console.log(data)
 
   const searchInput = useRef(null);
 
