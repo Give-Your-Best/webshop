@@ -4,7 +4,7 @@ import { Statistic } from './StatisticsCard.styles';
 export const StatisticsCard = ({ name, value }) => {
   return (
     <Statistic
-      title={value.toString()} //requied tostring for 0 scenario
+      title={(value)? value: '0'}
       value={name}
     />
   );

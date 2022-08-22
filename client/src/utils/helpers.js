@@ -22,9 +22,6 @@ export const getDate = () => {
 }
 
 export const name = (userDetails) => {
-    console.log('user details')
-    console.log(userDetails)
-
     if (!userDetails) {
         return ''
     }
