@@ -116,7 +116,6 @@ export const Report = () => {
             // category worksheet rows
 
             res.data.category.forEach(c => {
-                console.log(c.shopperUnique)
                 sheetTwo.addRow({category: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
             });
 

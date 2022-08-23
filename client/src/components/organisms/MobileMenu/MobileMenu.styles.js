@@ -5,7 +5,7 @@ export const CategoryMenuWrapper = styled.nav`
   background: ${({ theme }) => theme.colorMappings.secondary};
   width: 270px;
   height: 100%;
-  padding: 30px 0;
+  padding: 45px 0;
   box-shadow: 0px 3px 10px #EF7C9829;
   position: absolute;
   left: 0;
@@ -90,12 +90,12 @@ export const SubMenuNav = styled.ul`
 export const Down = styled.span`
   position: absolute;
   right: 20px;
-  top: 22px;
+  top: 25px;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid ${({ theme }) => theme.colorMappings.primary};;
-  width: 20px;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid ${({ theme }) => theme.colorMappings.primary};;
+  width: 25px;
   cursor: pointer;
 `
 
