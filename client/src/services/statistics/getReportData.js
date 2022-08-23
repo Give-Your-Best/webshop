@@ -1,5 +1,5 @@
 export const getReportData = async (from, to, token) => {
-    console.log(from)
+
     const response = await fetch(`/api/statistics/report?from=${from}&to=${to}`, {
       headers: {
         'Content-Type': 'application/json',

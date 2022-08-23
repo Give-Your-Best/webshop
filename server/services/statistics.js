@@ -3,20 +3,23 @@ const User_ = require('../models/User');
 
 const getReportData = async (from, to) => {
 
+  //get dates with time 0
   var fromDate = new Date(new Date(from).getFullYear(), new Date(from).getMonth(), new Date(from).getDate());
   var toDate = new Date(new Date(to).getFullYear(), new Date(to).getMonth(), new Date(to).getDate());
 
   var reportData = {}
+  //shopped statuses
   const statuses = ["shopped", "shipped-to-gyb", "received-by-gyb", "shipped-to-shopper", "received"];
 
   try {
 
     //run queries to pull data with date restrictions
     if (from && to) {
-      console.log('restrict dates')
+
       const shoppers = await User_.User.find({approvedStatus: 'approved', kind: 'shopper', createdAt: {$gt:fromDate, $lt:toDate }}).populate('shoppedItems');
       reportData['shopperCount'] = shoppers.length;
       reportData['shopperConvertedCount'] = shoppers.filter((s) => s.shoppedItems > 0).length;
+      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor, 0);
   
       const donors = await User_.User.find({approvedStatus: 'approved', kind: 'donor', createdAt: {$gt:fromDate, $lt:toDate }}).populate('donatedItems');
       reportData['donorCount'] = donors.length;
@@ -26,58 +29,57 @@ const getReportData = async (from, to) => {
       const itemsShopped = await Item.find({'statusUpdateDates.shoppedDate': {$gt:fromDate, $lt:toDate }, status: { $in: statuses } });
       reportData['itemsCount'] = items.length;
       reportData['itemsShopped'] = itemsShopped.length;
-      reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
-      const category = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$category',
-                "total": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", fromDate ] }, { $lt: [ "$createdAt", toDate ] }] }, 1, 0]}},
-                "shopped": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }, { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['categories'] = category;
 
-      const subCategory = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$subCategory',
-                "total": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", fromDate ] }, { $lt: [ "$createdAt", toDate ] }] }, 1, 0]}},
-                "shopped": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }, { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['subCategories'] = subCategory;
+      const groupTypes = ['category', 'subCategory', 'clothingSize', 'shoeSize', 'tags'];
 
-      const sizes = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$clothingSize',
-                "total": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", fromDate ] }, { $lt: [ "$createdAt", toDate ] }] }, 1, 0]}},
-                "shopped": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }, { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['clothingSizes'] = sizes;
-
-      const shoeSizes = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$shoeSize',
-                "total": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", fromDate ] }, { $lt: [ "$createdAt", toDate ] }] }, 1, 0]}},
-                "shopped": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }, { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['shoeSizes'] = shoeSizes;
+      for (const g of groupTypes) {
+        let group = (g !== 'tags')? '$' + g: '$tag.name';
+        let d =  await Item.aggregate(
+          [
+              {
+                "$unwind": '$' + g,
+              },
+              { "$lookup": {
+                "from": "tags",
+                "localField": "tags",
+                "foreignField": "_id",
+                "as": "tag"
+              }},
+              { "$lookup": {
+                "from": "users",
+                "localField": "shopperId",
+                "foreignField": "_id",
+                "as": "shopper"
+              }},
+              { "$group": {
+                  "_id": group,
+                  "total": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", fromDate ] }, { $lt: [ "$createdAt", toDate ] }] }, 1, 0]}},
+                  "shopped": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }, { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }] }, 1, 0]}},
+                  "shopperUnique": { 
+                    "$addToSet": { 
+                        "shopperFirstName":{ "$cond": [ {$and : [ { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }, { $in: [ "$status", statuses] }] }, "$shopper.firstName", '' ] },
+                        "shopperLastName":{ "$cond": [ {$and : [ { $gte: [ "$statusUpdateDates.shoppedDate", fromDate ] }, { $lt: [ "$statusUpdateDates.shoppedDate", toDate ] }, { $in: [ "$status", statuses] }] }, "$shopper.lastName", '' ] },
+                    }
+                  }
+              }},
+              {
+                "$sort": {"_id": 1}
+              }
+          ]
+        ).collation({locale:"en_US", numericOrdering:true});
+        reportData[g] = d;
+      }
 
     //run queries to pull data with no date restrictions (all data)
     } else {
-      console.log('no date restriction')
+
       const shoppers = await User_.User.find({approvedStatus: 'approved', kind: 'shopper'}).populate('shoppedItems');
       reportData['shopperCount'] = shoppers.length;
+
       reportData['shopperConvertedCount'] = shoppers.filter((s) => s.shoppedItems > 0).length;
+      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce((a, s) =>  a + ((s.shoppedItems > 0)? s.shoppingFor: 0), 0);
+      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor, 0);
   
       const donors = await User_.User.find({approvedStatus: 'approved', kind: 'donor'}).populate('donatedItems');
       reportData['donorCount'] = donors.length;
@@ -89,53 +91,46 @@ const getReportData = async (from, to) => {
       reportData['itemsShopped'] = itemsShopped.length;
       reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
-      const category = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$category',
-                "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved' ] }, 1, 0 ] } },
-                "shopped": { "$sum": { "$cond": [ { $in: [ "$status", statuses ] }, 1, 0 ] } },
-                "available": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $eq: [ "$status","in-shop"] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['categories'] = category;
+      const groupTypes = ['category', 'subCategory', 'clothingSize', 'shoeSize', 'tags'];
 
-      const subCategory = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$subCategory',
-                "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved' ] }, 1, 0 ] } },
-                "shopped": { "$sum": { "$cond": [ { $in: [ "$status", statuses ] }, 1, 0 ] } },
-                "available": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $eq: [ "$status","in-shop"] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['subCategories'] = subCategory;
-
-      const sizes = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$clothingSizes',
-                "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved' ] }, 1, 0 ] } },
-                "shopped": { "$sum": { "$cond": [ { $in: [ "$status", statuses ] }, 1, 0 ] } },
-                "available": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $eq: [ "$status","in-shop"] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['clothingSizes'] = sizes;
-
-      const shoeSizes = await Item.aggregate(
-        [
-            { "$group": {
-                "_id": '$shoeSize',
-                "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved' ] }, 1, 0 ] } },
-                "shopped": { "$sum": { "$cond": [ { $in: [ "$status", statuses ] }, 1, 0 ] } },
-                "available": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $eq: [ "$status","in-shop"] }] }, 1, 0]}}
-            }}
-        ]
-      );
-      reportData['shoeSizes'] = shoeSizes;
+      for (const g of groupTypes) {
+        let group = (g !== 'tags')? '$' + g: '$tag.name';
+        let d =  await Item.aggregate(
+          [
+              {
+                "$unwind": '$' + g,
+              },
+              { "$lookup": {
+                "from": "tags",
+                "localField": "tags",
+                "foreignField": "_id",
+                "as": "tag"
+              }},
+              { "$lookup": {
+                "from": "users",
+                "localField": "shopperId",
+                "foreignField": "_id",
+                "as": "shopper"
+              }},
+              { "$group": {
+                  "_id": group,
+                  "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved' ] }, 1, 0 ] } },
+                  "shopped": { "$sum": { "$cond": [ { $in: [ "$status", statuses ] }, 1, 0 ] } },
+                  "available": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $eq: [ "$status","in-shop"] }] }, 1, 0]}},
+                  "shopperUnique": { 
+                    "$addToSet": { 
+                        "shopperFirstName":{ "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }] }, "$shopper.firstName", ''] },
+                        "shopperLastName":{ "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $in: [ "$status", statuses] }] }, "$shopper.lastName", ''] },
+                    }
+                  }
+              }},
+              {
+                "$sort": {"_id": 1}
+              }
+          ]
+        ).collation({locale:"en_US", numericOrdering:true});
+        reportData[g] = d;
+      }
 
     }
 

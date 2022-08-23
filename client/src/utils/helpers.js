@@ -4,7 +4,6 @@ import { adminTabs, donorTabs, shopperTabs } from '../components/organisms/Dashb
 import heic2any from "heic2any";
 
 export const downloadWorkbook = async (workbook) => {
-    console.log('helper to download workbook');
     const uint8Array = await workbook.xlsx.writeBuffer();
     const blob = new Blob([uint8Array], {type: 'application/octet-binary'});
     const url = window.URL.createObjectURL(blob);

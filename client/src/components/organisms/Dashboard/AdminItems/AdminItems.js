@@ -73,7 +73,7 @@ const editForm = (record) => {
         const items = await getAdminItems(true);
         if (!mountedRef.current) return null;
         setItems(items);
-        console.log(items)
+
     };
 
     const fetchPastItems = async () => {

@@ -4,7 +4,7 @@ import { StyledSubmitButton, StyledInput, StyledError, StyledLabel } from './Edi
 import { UserSelect, Space } from '../../atoms';
 
 export const LocationMiniEditForm = ({ editingKey, recordId, users }) => {
-  console.log(recordId)
+
   return (
     <Form>
         <StyledLabel>Name:
