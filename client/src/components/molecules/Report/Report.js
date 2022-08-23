@@ -116,34 +116,35 @@ export const Report = () => {
             // category worksheet rows
 
             res.data.category.forEach(c => {
-                sheetTwo.addRow({category: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.length || 0, available: c.available || ''});
+                console.log(c.shopperUnique)
+                sheetTwo.addRow({category: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
             });
 
             sheetTwo.addRow({category: '', uploaded: '', shopped: '', available: '', unqiue: ''});
             sheetTwo.addRow({category: '', uploaded: '', shopped: '', available: '', unique: ''});
 
             res.data.subCategory.forEach(c => {
-                sheetTwo.addRow({category: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.length || 0, available: c.available || ''});
+                sheetTwo.addRow({category: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
             });
 
             // size worksheet rows
 
             res.data.clothingSize.forEach(c => {
-                sheetThree.addRow({size: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.length || 0, available: c.available || ''});
+                sheetThree.addRow({size: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
             });
 
             sheetThree.addRow({size: '', uploaded: '', shopped: '', available: ''});
             sheetThree.addRow({size: '', uploaded: '', shopped: '', available: ''});
 
             res.data.shoeSize.forEach(c => {
-                sheetThree.addRow({size: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.length || 0, available: c.available || ''});
+                sheetThree.addRow({size: c._id, uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
             });
 
             // tags worksheet rows
 
             res.data.tags.forEach(c => {
                 if (c._id.length === 1 && c._id[0] !== '') { //deleted tags sometimes return item data
-                    sheetFour.addRow({tag: c._id[0], uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.length || 0, available: c.available || ''});
+                    sheetFour.addRow({tag: c._id[0], uploaded: c.total || 0, shopped: c.shopped || 0, unique: c.shopperUnique.filter(obj => obj.shopperFirstName !== '').length || 0, available: c.available || ''});
                 }
             });
 
