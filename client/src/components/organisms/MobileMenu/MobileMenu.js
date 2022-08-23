@@ -32,12 +32,21 @@ export const MobileMenu = () => {
     e.target.parentNode.classList.toggle('open');
   }
 
+  const toggleAccountMenu = (e) => {
+    if (!tabs.length) {
+      history.push(`/dashboard`);
+      hideMobileMenu();
+    } else {
+      openSubNav(e)
+    }
+  }
+
   return (
     <>
     <CategoryMenuWrapper id='mobileMenu'>
       <MainMenuNav>
             <CategoryMenuItem key={'account icon'}>
-              <CategoryMenuLink onClick={openSubNav}><Icon onClick={openSubNav} src='/GYB-account.svg' alt='account icon' /> Account{(tabs.length)? <Down onClick={openSubNav}></Down>: ''}</CategoryMenuLink>
+              <CategoryMenuLink onClick={toggleAccountMenu}><Icon onClick={toggleAccountMenu} src='/GYB-account.svg' alt='account icon' /> Account{(tabs.length)? <Down onClick={openSubNav}></Down>: ''}</CategoryMenuLink>
               {(tabs.length)? 
                 <SubMenuNav>
                 {tabs.map((d)=>{
