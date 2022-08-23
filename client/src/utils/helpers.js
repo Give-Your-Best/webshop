@@ -241,10 +241,6 @@ export const emailTemplate = (content) => {
 }
 
 export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) => {
-    console.log(type)
-    console.log(userDetails)
-    console.log(items)
-    console.log(deliveryAddress)
 
     const subject = autoEmails.filter((e) => {return e.type === type})[0].subject;
     var emailContent = autoEmails.filter((e) => {return e.type === type})[0].content;
@@ -257,7 +253,7 @@ export const sendAutoEmail = async (type, userDetails, items, deliveryAddress) =
     } else if (type === 'item_shopped_with_address') {
         emailContent += emailItems(items);
         emailContent += deliveryAddressContent(deliveryAddress);
-    } else if (type === 'item_shopped_pending_address' || type === 'item_received') {
+    } else if (type === 'item_shopped_pending_address' || type === 'item_received' || type === 'order_cancelled_donor' || type === 'order_cancelled_shopper') {
         emailContent += emailItems(items);
     } else if (type === 'item_assigned') {
         emailContent += emailItems(items);

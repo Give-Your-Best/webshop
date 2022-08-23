@@ -91,6 +91,7 @@ const updateItem = async (id, updateData) => {
       delete updateData.photos;
       try {
         const item = await Item.findOneAndUpdate({"_id": id}, updateData, { useFindAndModify: false, returnDocument: 'after' });
+
         if (item) {
             results = { success: true, message: 'Item updated',  item: item }
         } else {

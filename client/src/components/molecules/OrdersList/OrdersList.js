@@ -73,7 +73,31 @@ export const OrdersList = () => {
                 }
             }
           });
+    }
 
+    const cancelOrder = (itemId) => {
+
+        confirm({
+            title: `Are you sure you want to cancel your order?`,
+            className: "modalStyle",
+            onOk() {
+                setItems(items.filter(item => {
+                    if (item._id === itemId) {
+                        getUser(item.donorId, token)
+                            .then((donor) => {
+                                //send email to donor that order cancelled
+                                sendAutoEmail('order_cancelled_donor', donor, [item]);
+
+                                //send email to shopper that order cancelled
+                                sendAutoEmail('order_cancelled_shopper', user, [item]);
+
+                                updateItem(item._id, {$unset: { 'shopperId': "" }, 'status': 'in-shop', 'statusUpdateDates.shoppedDate': '', 'inBasket': false, 'statusUpdateDates.inBasketDate': ''}, token)
+                            })
+                    }
+                    return item._id !== itemId;
+                }));
+            }
+          });
     }
 
     if (user.type === 'shopper') {
@@ -152,14 +176,16 @@ export const OrdersList = () => {
                     {(items && items.length) ?
 
                         items.map((item) => {
-                            let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'))
+                            let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'));
+                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper');
+
                             return (
                                 <div key={item._id}>
                                     <ItemCardLong
                                         item={item}
                                         type={user.type}
-                                        actionText={(noAction) ? '' : actionText}
-                                        action={(noAction) ? '' : action}
+                                        actionText={(allowCancel)? 'Cancel Order': (noAction)? '': actionText}
+                                        action={(allowCancel)? cancelOrder: (noAction)? '': action}
                                     />
                                 </div>)
                         }

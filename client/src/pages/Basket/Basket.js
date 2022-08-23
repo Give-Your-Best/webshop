@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 import { Container } from '../../components';
 import { AccountWelcome, ItemCardBasket } from '../../components/molecules';
 import { Button, Notification } from '../../components/atoms';
-import { BasketSidebar, BasketDetails, BasketWrapper } from './Basket.styles';
+import { BasketSidebar, BasketDetails, BasketWrapper, AddressLink } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
 import { updateItem } from '../../services/items';
 import { getUser } from '../../services/user';
@@ -17,11 +17,11 @@ export const Basket = () => {
 
   const address = (user)? (
     <div>
-    <p>Confirm address</p>
     {user.deliveryAddress.firstLine && <p>First line: {user.deliveryAddress.firstLine}</p>}
     {user.deliveryAddress.secondLine && <p>Second line: {user.deliveryAddress.secondLine}</p>}
     {user.deliveryAddress.city && <p>City: {user.deliveryAddress.city}</p>}
     {user.deliveryAddress.postcode && <p>Postcode: {user.deliveryAddress.postcode}</p>}
+    <AddressLink onClick={() => {history.push('/dashboard/shopperDetails');Modal.destroyAll();}}>Edit address</AddressLink>
     </div>
 ): '';
 

@@ -293,6 +293,14 @@ export const autoEmails = [
         'content': "<p>Hi {{name}}!<p><p>Thank you for your order! Please see a summary below.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },
     {
+        'type': 'order_cancelled_donor',
+        'content': "<p>Hi {{name}}!<p><p>Your order was cancelled! Your item will be back in the shop soon.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
+        'type': 'order_cancelled_shopper',
+        'content': "<p>Hi {{name}}!<p><p>Your order has been cancelled! We hope you will be back to shop soon!</p><a href='"+homeLink+"/dashboard'>Log In</a>"
+    },
+    {
         'type': 'message_sent',
         'content': "<p>Hi {{name}}!<p><p>Thank you for your message. An admin will reply to you as soon as possible.</p><a href='"+homeLink+"/dashboard'>Log In</a>"
     },

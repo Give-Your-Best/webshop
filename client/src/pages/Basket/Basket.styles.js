@@ -8,6 +8,11 @@ export const BasketWrapper = styled.div`
   }
 `;
 
+export const AddressLink = styled.p`
+  cursor: pointer;
+  text-decoration: underline;
+`;
+
 export const BasketDetails = styled.div`
     padding: 2em 2em 5em 2em;
     width: 100%;
