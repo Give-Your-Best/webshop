@@ -49,7 +49,7 @@ export const Home = () => {
           <h1>Browse Categories</h1>
           <CategoriesCarousel categories={subCategories.filter((c) => {return c.parentCategory ==='women' && c.image})} />
         </CategoriesWrapper>
-          <H1>Women's Clothing</H1>
+          <H1>All Items</H1>
         <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
         {(items.length)?
         items.map((item) => {

@@ -19,15 +19,7 @@ export const UsersChart = ({ stats }) => {
         }
       },
     },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
+    responsive: true
   };
 
   const mobileOptions = {
@@ -42,15 +34,7 @@ export const UsersChart = ({ stats }) => {
       },
     },
     responsive: false,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
+    maintainAspectRatio: false
   };
 
 

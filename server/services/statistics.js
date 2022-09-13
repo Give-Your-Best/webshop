@@ -186,14 +186,15 @@ const getAllStatistics = async () => {
           }}
       ]
     );
+
     const shopperData = await User_.Shopper.aggregate(
       [
           { "$group": {
               "_id": 'shopper',
-              "total": { "$sum": 1 },
-              "today": { "$sum": { "$cond": [ { $gte: [ "$createdAt", today ] }, 1, 0 ] } },
-              "thisWeek": { "$sum": { "$cond": [ { $gte: [ "$createdAt", sevenDays ] }, 1, 0 ] } },
-              "thisMonth": { "$sum": { "$cond": [ { $gte: [ "$createdAt", month ] }, 1, 0 ] } }
+              "total": { "$sum": { "$cond": [ { $eq: [ "$approvedStatus", 'approved'] }, 1, 0 ] } },
+              "today": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", today ] }] }, 1, 0]}},
+              "thisWeek": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", sevenDays ] }] }, 1, 0]}},
+              "thisMonth": { "$sum": { "$cond": [ {$and : [ { $eq: [ "$approvedStatus", 'approved'] }, { $gte: [ "$createdAt", month ] }] }, 1, 0]}}
           }}
       ]
     );

@@ -1,6 +1,27 @@
 import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
 
+const ItemsList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    > div {
+      width: 48%;
+      margin-right: 5px;
+    }
+  }
+
+  .ant-card {
+    display: block !important;
+
+    .ant-card-body {
+      padding: 7px 7px 7px 0;
+      max-width: 220px;
+    }
+  }
+`;
+
 const StyledTabs = styled(Tabs)`
   background: ${({ theme }) => theme.colorMappings.background};
   display: block;
@@ -88,4 +109,4 @@ StyledTabs.tabsRole = 'Tabs';
 StyledTabPanel.tabsRole = 'TabPanel';
 StyledTabList.tabsRole = 'TabList';
 
-export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab };
+export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, ItemsList };

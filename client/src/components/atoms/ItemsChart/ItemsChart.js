@@ -19,15 +19,7 @@ export const ItemsChart = ({ stats }) => {
         }
       },
     },
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
+    responsive: true
   };
 
   const mobileOptions = {
@@ -42,15 +34,7 @@ export const ItemsChart = ({ stats }) => {
       },
     },
     responsive: false,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-      },
-    },
+    maintainAspectRatio: false
   };
 
   const labels = ['Donated', 'Shopped'];

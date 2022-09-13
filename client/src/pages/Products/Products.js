@@ -19,9 +19,6 @@ export const Products = () => {
 
   let categoryName = '';
 
-  //id has some / in them!!!
-  let subCat = (subCategory)? subCategory.replace('-', '/'): '';
-
   categories.forEach((c) => {
     if (c.id === category) {
       categoryName = c.name;
@@ -29,13 +26,13 @@ export const Products = () => {
   })
 
   subCategories.forEach((c) => {
-    if (c.id === subCat) {
+    if (c.id === subCategory) {
       categoryName = c.name;
     }
   })
 
   const handleLoadMore = async () => {
-    const more = await getItems(page + 1, 12, 'approved', 'in-shop', category, subCat, '', clothingSizes, shoeSizes, colours);
+    const more = await getItems(page + 1, 12, 'approved', 'in-shop', category, subCategory, '', clothingSizes, shoeSizes, colours);
     if (more.length > 0) {
       setItems(items.concat(more));
       setPage(page+1);
@@ -48,7 +45,7 @@ export const Products = () => {
   useEffect(() => {
 
     const fetchItems = async () => {
-        const items = await getItems(page, 12, 'approved', 'in-shop', category, subCat, '', clothingSizes, shoeSizes, colours); 
+        const items = await getItems(page, 12, 'approved', 'in-shop', category, subCategory, '', clothingSizes, shoeSizes, colours); 
         setItems(items);
         setNoItems((items.length> 0)? false: true);
         setNoMoreLoad(false);

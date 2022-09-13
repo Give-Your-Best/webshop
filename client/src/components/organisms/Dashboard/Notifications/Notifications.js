@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './Notifications.styles';
+import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, ItemsList } from './Notifications.styles';
 import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLocationModal } from '../../../molecules';
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
@@ -196,7 +196,7 @@ export const Notifications = () => {
 
   const editForm = (record) => {
     return (
-      <div>
+      <ItemsList>
       {record.items.map((item) => {
         let shoppedBy = '',
           donatedBy = '',
@@ -218,7 +218,7 @@ export const Notifications = () => {
         )
       }
       )}
-      </div>
+      </ItemsList>
     )      
   };
 

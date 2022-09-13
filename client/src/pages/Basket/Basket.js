@@ -72,34 +72,46 @@ export const Basket = () => {
         okText: 'Continue to checkout',
         onOk() {
           const promises = basket.map((item) => {
-            // add to recent items
-              setUser(user => ({
-                ...user,
-                'recentItems': [
-                  ...user.recentItems || [],
-                  item
-                ]
-              }));
-  
-              //get donor details
-              getUser(item.donorId, token)
-              .then((donor) => {
-                if (user.deliveryPreference === 'direct') { 
-                  //send address directly in email
-                  user.deliveryAddress.name = name(user);
-
-                  sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
-                } else if (user.deliveryPreference === 'via-gyb') {
-                  //send email without address - to be sent later with gyb address
-
-                  sendAutoEmail('item_shopped_pending_address', donor, [item]);
-                  sendAutoEmail('new_item_to_assign_location')
-                }
-              })
              return updateItem(item._id, {'shopperId': user.id, 'status': 'shopped', 'statusUpdateDates.shoppedDate': getDate()}, token)
           });
           Promise.all(promises)
+          .catch(error => {
+            Notification('Error shopping items', error, 'error');
+            basket.map((item) => {
+              //revert to inshop if error
+              return updateItem(item._id, {'shopperId': '', 'status': 'in-shop', 'statusUpdateDates.shoppedDate': ''}, token)
+           });
+          })
           .then(() => {
+
+            //moved donor email send once all items were successfully updated. It was causing weird problems
+              basket.map((item) => {
+              // add to recent items
+                setUser(user => ({
+                  ...user,
+                  'recentItems': [
+                    ...user.recentItems || [],
+                    item
+                  ]
+                }));
+    
+                //get donor details
+                getUser(item.donorId, token)
+                .then((donor) => {
+                  if (user.deliveryPreference === 'direct') { 
+                    //send address directly in email
+                    user.deliveryAddress.name = name(user);
+
+                    sendAutoEmail('item_shopped_with_address', donor, [item], user.deliveryAddress);
+                  } else if (user.deliveryPreference === 'via-gyb') {
+                    //send email without address - to be sent later with gyb address
+
+                    sendAutoEmail('item_shopped_pending_address', donor, [item]);
+                    sendAutoEmail('new_item_to_assign_location');
+                  }
+                })
+                return true
+            })
             sendAutoEmail('order_placed', user, basket, user.deliveryAddress);
             setBasket(null);
             setBasketTimer(null)
