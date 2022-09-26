@@ -55,6 +55,7 @@ const itemSchema = new Schema(
         ref: 'Location' 
     },
     inBasket: Boolean,
+    live: Boolean,
     tags: [{ type: Schema.ObjectId, ref: 'Tag' }]
   },
   options

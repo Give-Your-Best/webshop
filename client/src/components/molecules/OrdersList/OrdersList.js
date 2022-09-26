@@ -7,7 +7,7 @@ import { H2, Button } from '../../atoms';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import { getSetting } from '../../../services/settings';
-import { sendAutoEmail, getDate, reopenTab, tabList } from "../../../utils/helpers";
+import { sendAutoEmail, getDate, reopenTab, tabList, lessThanSixHoursAgo } from "../../../utils/helpers";
 import { ItemCardLong } from "../ItemCardLong";
 
 export const OrdersList = () => {
@@ -162,6 +162,7 @@ export const OrdersList = () => {
 
     }, [token, user, basket]);
 
+
     return (
         <ListWrapper>
             <StyledTabs forceRenderTabPanel={true}>
@@ -177,7 +178,7 @@ export const OrdersList = () => {
 
                         items.map((item) => {
                             let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'));
-                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper');
+                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper' && lessThanSixHoursAgo(new Date(item.statusUpdateDates.shoppedDate)));
 
                             return (
                                 <div key={item._id}>

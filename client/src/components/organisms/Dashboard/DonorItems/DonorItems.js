@@ -51,6 +51,23 @@ export const DonorItems = () => {
     return;
   }
 
+  const editItemLiveStatus = (recordIds, status) => {
+    const values = {live: status}
+    recordIds.forEach((recordId) => {
+      updateItem(recordId, values, token)
+      .then(() => {
+        setItems(items.filter(item => {
+          if (item._id !== recordId) {
+            return item
+          } else {
+            return Object.assign(item, {live: status})
+          }
+        }));
+      })
+    });
+    return;
+  }
+
   useEffect(() => {
     //add to url history (added for back button to work)
     var tabs = tabList(user);
@@ -145,7 +162,7 @@ export const DonorItems = () => {
 
       <StyledTabPanel>
         <H2>My Available Items</H2>
-        <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} editItem={editItem} />
+        <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} editItem={editItem} editItemLiveStatus={editItemLiveStatus} />
         <Button primary small onClick={() => reopenTab('pastitems')}>View Past Items</Button>
         <Button primary small onClick={() => openHiddenTab('item')}>Add Item</Button>
       </StyledTabPanel>

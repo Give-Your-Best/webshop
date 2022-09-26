@@ -90,6 +90,13 @@ export const reopenTab = (type) => {
     }
 } 
 
+export const lessThanSixHoursAgo = (date) => {
+    const HOUR = 6 * 1000 * 60 * 60;
+    const sixHoursAgo = Date.now() - HOUR;
+  
+    return date > sixHoursAgo;
+};
+
 export const checkPermission = (permissions, permission) => {
     return permissions.map(p => p.toLowerCase()).includes(permission.toLowerCase());
 }

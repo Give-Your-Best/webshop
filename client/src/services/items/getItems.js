@@ -1,5 +1,5 @@
 export const getItems = async (page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours) => {
-  
+
   let fetchString = `/api/items?page=${page}&limit=${limit}&approvedStatus=${approvedStatus}&itemStatus=${itemStatus}`
   
   if(category) fetchString = fetchString + `&category=${category}`;
@@ -18,5 +18,6 @@ export const getItems = async (page, limit, approvedStatus, itemStatus, category
   if (response.status !== 200) {
     throw Error(body.message);
   }
+
   return body;
 };

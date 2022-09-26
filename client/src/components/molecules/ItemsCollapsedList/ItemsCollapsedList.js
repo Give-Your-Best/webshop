@@ -1,12 +1,13 @@
-import React, { useRef } from 'react';
-import { Input, Space, Button as AntButton } from 'antd';
+import React, { useRef, useState } from 'react';
+import { Input, Space, Button as AntButton, Tooltip } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 import { categories } from '../../../utils/constants';
 import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
-export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin, allTags }) => {
+export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin, allTags, editItemLiveStatus }) => {
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   //functions for the name search
   const searchInput = useRef(null);
@@ -90,6 +91,15 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
         return value
       }
     })
+    columns.push({
+      title: 'Live',
+      dataIndex: 'live',
+      key: 'live',
+      render: (record) => {
+        let value = (record === false)? 'Inactive': 'Active';
+        return value
+      }
+    })
   }
 
   //additional columns if admin
@@ -147,16 +157,24 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
     })
   }
 
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: selectedRowKeys => {
+      setSelectedRowKeys( selectedRowKeys );
+    }
+  };
+
   return (
     <ListWrapper>
       <StyledTable
+        rowSelection={(!admin) ? rowSelection : false}
         pagination={{ hideOnSinglePage: true }}
         columns={columns}
         rowKey={(record) => record._id || 0}
         showHeader={(!admin) ? false : true}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: (admin)? 4 : 2,
+          expandIconColumnIndex: 4,
           expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
               <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
@@ -167,6 +185,11 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
         dataSource={data}
       />
       {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button> : ''}
+
+      {(!admin && !reOpen) ? <Tooltip title="Select items to activate in shop"><Button primary small onClick={() => {editItemLiveStatus(selectedRowKeys, true)}}>Mark as Active</Button></Tooltip>: ''}
+
+      {(!admin && !reOpen) ? <Tooltip title="Select items to remove from shop"><Button primary small onClick={() => {editItemLiveStatus(selectedRowKeys, false)}}>Mark as Inactive</Button></Tooltip>: ''}
+
     </ListWrapper>
   );
 };

@@ -137,7 +137,7 @@ const getDonorItems = async (userId, itemStatus) => {
         "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
       }
     }
-    var items = await Item.find(conditions).lean();
+    var items = await Item.find(conditions).sort({shopperId: -1}).exec();
     return items;
   } catch (error) {
     console.error(`Error in getting donor items: ${error}`);
@@ -206,8 +206,11 @@ const getAllItems = async (page, limit, approvedStatus, itemStatus, category, su
     const conditions = { approvedStatus: approvedStatus, status: itemStatus, "$or": [
       // if item not in basket or item in basket is more than an hour old
       {"inBasket":  null}, 
-      {"inBasket":  false}, 
-      {"$and": [{"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, {"inBasket":  true} ]} ]
+      {"inBasket":  false},
+      {"$and": [{"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, {"inBasket":  true} ]} ], "$or": [
+        // if item not live or live empty
+        {"live":  null}, 
+        {"live":  true}]
     };
     const limiti = parseInt(limit);
     const pagei = parseInt(page);
