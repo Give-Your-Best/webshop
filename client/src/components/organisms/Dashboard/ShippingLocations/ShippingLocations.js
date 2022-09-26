@@ -35,6 +35,7 @@ export const ShippingLocations = () => {
   };
 
   const editLocation = (recordIds, status) => {
+    
     const values = {available: (status==='available')? true: false}
     recordIds.forEach((recordId) => {
       updateLocation(recordId, values, token)
