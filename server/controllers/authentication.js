@@ -82,7 +82,7 @@ const login = async (req, res) => {
         user.recentItems = recentItems;
       }
     }
-
+    
     if (!user) {
       console.log('no user found')
       return res

@@ -28,6 +28,7 @@ export const DonorSignUpForm = () => {
       };
 
     const handleSubmit = async (values) => {
+        values.email = values.email.toLowerCase();
         const res = await register(values);
         if (res.success) {
             Notification('Success!', 'Signed Up! Visit your account page to add items!', 'success');
