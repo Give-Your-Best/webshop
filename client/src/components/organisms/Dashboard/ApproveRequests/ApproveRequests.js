@@ -14,7 +14,6 @@ export const ApproveRequests = () => {
     const { token, user } = useContext(AppContext);
     const mountedRef = useRef(true);
     const [shoppers, setShoppers] = useState([]);
-    const [donors, setDonors] = useState([]);
     const [donations, setDonations] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [ trustedDonorLimit, setTrustedDonorLimit ] = useState(0);
@@ -119,10 +118,6 @@ export const ApproveRequests = () => {
                 setShoppers(shoppers.filter(shopper => {
                   return shopper._id !== record._id;
                 }));
-            } else if (record.kind === 'donor') {
-                setDonors(donors.filter(donor => {
-                    return donor._id !== record._id;
-                }));
             }
         }
 
@@ -185,12 +180,6 @@ export const ApproveRequests = () => {
           setShoppers(users);
         };
     
-        const fetchDonors = async () => {
-          const users = await getUsers('donor', 'in-progress', token);
-          if (!mountedRef.current) return null;
-          setDonors(users);
-        };
-
         const fetchDonations = async () => {
           const donations = await getDonations('in-progress', token);
           if (!mountedRef.current) return null;
@@ -209,7 +198,6 @@ export const ApproveRequests = () => {
       
     
         fetchShoppers();
-        fetchDonors();
         fetchDonations();
         fetchSetting();
     
@@ -222,15 +210,11 @@ export const ApproveRequests = () => {
         <StyledTabs>
         <StyledTabList>
         <StyledTab>Shoppers</StyledTab>
-        <StyledTab>Donors</StyledTab>
         <StyledTab>Items</StyledTab>
         </StyledTabList>
 
         <StyledTabPanel>
             <UsersList data={shoppers} expandRow={editForm} />
-        </StyledTabPanel>
-        <StyledTabPanel>
-            <UsersList data={donors} expandRow={editForm} />
         </StyledTabPanel>
         <StyledTabPanel>
             <ApproveItemList data={donations} expandRow={itemExpand} markAsTrusted={markAsTrusted} />

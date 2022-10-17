@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 import { categories } from '../../../utils/constants';
+import { name, sort } from '../../../utils/helpers';
 import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
 export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin, allTags, editItemLiveStatus }) => {
@@ -103,7 +104,16 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   }
 
   //additional columns if admin
+  
   if (admin) {
+    //get donors from items and make a unique array for filter search
+    let donorsLong = data.map((i) => { return { text: name(i.donorId), value: name(i.donorId) } });
+    let donors = Array.from(new Set(donorsLong.map(JSON.stringify))).map(JSON.parse);
+
+    //get shoppers from items and make a unique array for filter search
+    let shoppersLong = data.map((i) => { return { text: name(i.shopperId), value: name(i.shopperId) } });
+    let shoppers = Array.from(new Set(shoppersLong.map(JSON.stringify))).map(JSON.parse);
+
     columns.push({
       title: 'Category',
       dataIndex: 'category',
@@ -129,6 +139,26 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
       }
     })
     columns.push({
+      title: 'Donor',
+      dataIndex: 'donorId',
+      render: (record) => {
+        return name(record);
+      },
+      filters: sort(donors),
+      filterMode: 'tree',
+      onFilter: (value, record) => name(record.donorId).startsWith(value),
+    })
+    columns.push({
+      title: 'Shopper',
+      dataIndex: 'shopperId',
+      render: (record) => {
+        return name(record);
+      },
+      filters: sort(shoppers),
+      filterMode: 'tree',
+      onFilter: (value, record) => name(record.shopperId).startsWith(value),
+    })
+    columns.push({
       title: 'Tags',
       dataIndex: 'tags',
       render: (record) => {
@@ -139,7 +169,6 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
       className: 'onlyHeading',
       filters: allTags.map((c) => { return { text: c.name, value: c._id } }),
       filterMode: 'tree',
-      filterSearch: true,
       onFilter: (value, record) => record.tags.some(t=>t._id === value)
     })
   }
@@ -174,7 +203,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
         showHeader={(!admin) ? false : true}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: 4,
+          expandIconColumnIndex: (!admin) ? 4 : 6,
           expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
               <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>

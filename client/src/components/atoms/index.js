@@ -12,6 +12,7 @@ export { Space } from './Space';
 export { UserSelect } from './UserSelect';
 export { StyledCheckbox } from './Checkbox';
 export { ColourCircles } from './ColourCircles';
+export { LoadingSpinner } from './LoadingSpinner';
 export { SignUpContainer } from './SignUpContainer';
 export { CategoryBreadcrumbs } from './CategoryBreadcrumbs';
 export { StatisticsCard } from './StatisticsCard';

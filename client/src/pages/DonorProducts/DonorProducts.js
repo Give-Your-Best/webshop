@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
-import { AccountWelcome } from "../../components/molecules";
+import { CategoryBreadcrumbs } from "../../components/atoms";
 import { Container, ItemCard, Button } from '../../components';
 import { getItems } from '../../services/items';
 import { ItemsWrapper, PageWrapper } from './DonorProducts.styles';
@@ -12,7 +12,6 @@ export const DonorProducts = () => {
   const [page, setPage] = useState(1);
   const [noItems, setNoItems] = useState(false);
 
-  
 
   const handleLoadMore = async () => {
     const more = await getItems(page + 1, 8, 'approved', 'in-shop', '', '', donorId);
@@ -40,7 +39,7 @@ export const DonorProducts = () => {
 
   return (
     <Container>
-      <AccountWelcome />
+      <CategoryBreadcrumbs donor={true} />
       {(items.length > 0)? 
         <PageWrapper>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">

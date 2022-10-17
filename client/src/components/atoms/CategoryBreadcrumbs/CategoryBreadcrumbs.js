@@ -3,7 +3,7 @@ import { StyledBreadcrumbs } from './CategoryBreadcrumbs.styles';
 import { categories, subCategories } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 
-export const CategoryBreadcrumbs = ({ category, subCategory }) => {
+export const CategoryBreadcrumbs = ({ category, subCategory, donor }) => {
   let history = useHistory();
 
   let categoryName = '';
@@ -28,6 +28,10 @@ export const CategoryBreadcrumbs = ({ category, subCategory }) => {
           <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}`)}>{categoryName}</StyledBreadcrumbs.Item>
           { (subCategoryName)? <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}/${subCategory}`)}>{subCategoryName}</StyledBreadcrumbs.Item>: ''}
         </StyledBreadcrumbs>
+        : (donor)? <StyledBreadcrumbs separator=">">
+            <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Home</StyledBreadcrumbs.Item>
+            <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Donor Products</StyledBreadcrumbs.Item>
+          </StyledBreadcrumbs>
         : ''
   )
 };
