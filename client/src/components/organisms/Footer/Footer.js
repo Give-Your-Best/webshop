@@ -19,6 +19,8 @@ export const Footer = () => {
       <p>For safeguarding concerns: <a href="mailto:safeguarding@giveyourbest.uk">safeguarding@giveyourbest.uk</a> </p>
       <p>Find help with donating <a target="_blank" rel="noreferrer" href="https://www.canva.com/design/DAFH-_xFQlI/ySjyg9G2R9K2GgGN-LulMw/view?utm_content=DAFH-_xFQlI&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu">here</a> </p>
       <p>Find help with shopping <a target="_blank" rel="noreferrer" href="https://www.canva.com/design/DAFJUR-GbyE/beLl-JUL41S3VNnQWKpl5g/view?utm_content=DAFJUR-GbyE&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu">here</a> </p>
+      <br />
+      <strong><p>Created by <a target="_blank" rel="noreferrer" href="https://code-operative.co.uk/">Code-Operative</a> </p></strong>
       </FooterItemWider>
       <FooterItem>
       <h4>Follow Us</h4>

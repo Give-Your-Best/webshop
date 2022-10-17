@@ -17,6 +17,7 @@ export const Notifications = () => {
   const [shopNotificationsShopped, setShopNotificationsShopped] = useState([]);
   const [accountNotificationsPendingReceive, setAccountNotificationsPendingReceive] = useState([]);
   const [accountNotificationsPendingSent, setAccountNotificationsPendingSent] = useState([]);
+  const [accountNotificationsPendingShopperReceived, setAccountNotificationsPendingShopperReceived] = useState([]);
   const [adminLocations, setAdminLocations] = useState([]);
   const [assignAddressId, setAssignAddressId] = useState('');
 
@@ -153,7 +154,7 @@ export const Notifications = () => {
       });
       setShopNotificationsShopped({
           "key": 2,
-          "name": "Item  shopped!", //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
+          "name": "Item shopped!", //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
           "message": "Address assigned, view for progress update",
           "itemsCount": (items[1])? items[1].length: 0,
           "items": (items[1])? items[1]: []
@@ -164,7 +165,7 @@ export const Notifications = () => {
       const items = await getAccountNotificationsItems(user.id, token);
 
       if (!mountedRef.current) return null;
-
+      console.log(items)
       setAccountNotificationsPendingReceive({
           "key": 1,
           "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
@@ -182,6 +183,13 @@ export const Notifications = () => {
         "items": items[1] || [],
         "action": markSent,
         "actionDesc": "Mark sent"
+      });
+      setAccountNotificationsPendingShopperReceived({
+        "key": 3,
+        "name": "Item sent!", 
+        "message": "Waiting for shopped received notification",
+        "itemsCount": (items[2].length || 0),
+        "items": items[2] || []
       });
     };
 
@@ -234,7 +242,7 @@ export const Notifications = () => {
       <ShopNotificationsList data={[shopNotificationsPendingAssign, shopNotificationsShopped]} expandRow={editForm} />
     </StyledTabPanel>
     <StyledTabPanel>
-      <AccountNotificationsList data={[accountNotificationsPendingReceive, accountNotificationsPendingSent]} expandRow={editForm} />
+      <AccountNotificationsList data={[accountNotificationsPendingReceive, accountNotificationsPendingSent, accountNotificationsPendingShopperReceived]} expandRow={editForm} />
     </StyledTabPanel>
 
   </StyledTabs>

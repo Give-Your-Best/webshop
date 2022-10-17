@@ -13,7 +13,12 @@ export const adminItemStatus = [
         'status': 'received-by-gyb',
         'progress': '60',
         'statusText': 'Awaiting Mark as Sent notification'
-    }
+    },
+    {
+        'status': 'shipped-to-shopper',
+        'progress': '80',
+        'statusText': 'Shipped to shopper'
+    },
 ]
 
 export const adminAllItemStatus = [

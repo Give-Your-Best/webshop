@@ -199,18 +199,22 @@ const getAdminItems = async (isCurrent) => {
 }
 
 const getAllItems = async (page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours) => {
-  
   let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
-
   try {
     const conditions = { approvedStatus: approvedStatus, status: itemStatus, "$or": [
       // if item not in basket or item in basket is more than an hour old
       {"inBasket":  null}, 
       {"inBasket":  false},
-      {"$and": [{"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, {"inBasket":  true} ]} ], "$or": [
-        // if item not live or live empty
-        {"live":  null}, 
-        {"live":  true}]
+      {"$and": [
+        {"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, 
+        {"inBasket":  true}, 
+        {"$or": [
+          // if item not live or live empty
+          {"live":  null}, 
+          {"live":  true}
+        ]}
+      ]}
+    ]
     };
     const limiti = parseInt(limit);
     const pagei = parseInt(page);
@@ -236,7 +240,6 @@ const getAllItems = async (page, limit, approvedStatus, itemStatus, category, su
   }
 };
 
-
 const getAccountNotificationItems = async (adminUserId) => {
   var results = [];
 
@@ -255,6 +258,14 @@ const getAccountNotificationItems = async (adminUserId) => {
     ]
   }
 
+  const pendingShopperReceivedQuery = {
+    "$and": [
+      {"approvedStatus": "approved"}, 
+      {"sendVia": {$exists: true}},
+      {"status": "shipped-to-shopper"}
+    ]
+  }
+
   try {
     const pendingReceive = await Item.find(pendingReceiveQuery).populate({
       "path": "sendVia",
@@ -264,11 +275,18 @@ const getAccountNotificationItems = async (adminUserId) => {
       "path": "sendVia",
       "match": { "adminUser": adminUserId }
     }).populate('shopperId').populate('donorId');
+    const pendingShopperReceived = await Item.find(pendingShopperReceivedQuery).populate({
+      "path": "sendVia",
+      "match": { "adminUser": adminUserId }
+    }).populate('shopperId').populate('donorId');
 
     results.push(pendingReceive.filter((i) => {
       return i.sendVia !== null
     }))
     results.push(pendingSent.filter((i) => {
+      return i.sendVia !== null
+    }))
+    results.push(pendingShopperReceived.filter((i) => {
       return i.sendVia !== null
     }))
 
