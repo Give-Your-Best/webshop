@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button } from "../../atoms";
 import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
 import { categories } from '../../../utils/constants';
-import { name, sort } from '../../../utils/helpers';
+import { name } from '../../../utils/helpers';
 import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
 export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin, allTags, editItemLiveStatus }) => {
