@@ -13,6 +13,8 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   //functions for the name search
   const searchInput = useRef(null);
 
+  let rows = data;
+
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
@@ -83,6 +85,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   ]
 
   if (!admin) {
+
     columns.push({
       title: 'Approved Status',
       dataIndex: 'approvedStatus',
@@ -106,14 +109,15 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   //additional columns if admin
   
   if (admin) {
-    //get donors from items and make a unique array for filter search
-    let donorsLong = data.map((i) => { return { text: name(i.donorId), value: name(i.donorId) } });
-    let donors = Array.from(new Set(donorsLong.map(JSON.stringify))).map(JSON.parse);
-
-    //get shoppers from items and make a unique array for filter search
-    let shoppersLong = data.map((i) => { return { text: name(i.shopperId), value: name(i.shopperId) } });
-    let shoppers = Array.from(new Set(shoppersLong.map(JSON.stringify))).map(JSON.parse);
-
+      //map shopper and donor name onto the result as antd table search does not work otherwise
+      rows = data.map((d) => {
+        return {
+          ...d,
+          shopper: name(d.shopperId),
+          donor: name(d.donorId),
+        };
+      })
+      
     columns.push({
       title: 'Category',
       dataIndex: 'category',
@@ -140,23 +144,19 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
     })
     columns.push({
       title: 'Donor',
-      dataIndex: 'donorId',
+      dataIndex: 'donor',
       render: (record) => {
         return name(record);
       },
-      filters: sort(donors),
-      filterMode: 'tree',
-      onFilter: (value, record) => name(record.donorId).startsWith(value),
+      ...getColumnSearchProps('donor')
     })
     columns.push({
       title: 'Shopper',
-      dataIndex: 'shopperId',
+      dataIndex: 'shopper',
       render: (record) => {
         return name(record);
       },
-      filters: sort(shoppers),
-      filterMode: 'tree',
-      onFilter: (value, record) => name(record.shopperId).startsWith(value),
+      ...getColumnSearchProps('shopper')
     })
     columns.push({
       title: 'Tags',
@@ -211,7 +211,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
               <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
             )
         }}
-        dataSource={data}
+        dataSource={rows}
       />
       {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button> : ''}
 
