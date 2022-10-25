@@ -10,6 +10,12 @@ body {
 
 .modalStyle .ant-modal-confirm-title, .modalStyle .ant-modal-confirm-content {
   font-size: 20px !important;
+  color: #BA191A !important;
+}
+
+.modalStyle .ant-modal-confirm-title{
+  text-align: center;
+  line-height: 1.7;
 }
 
 .modalStyle .anticon {

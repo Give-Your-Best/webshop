@@ -5,7 +5,7 @@ import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLo
 import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
 import { getUser } from '../../../../services/user';
-import { sendAutoEmail, tabList, name } from "../../../../utils/helpers";
+import { sendAutoEmail, tabList, name, getDate } from "../../../../utils/helpers";
 import { Modal } from 'antd';
 
 export const Notifications = () => {
@@ -23,7 +23,7 @@ export const Notifications = () => {
 
   const handleOk = (values) => {
       setLoading(true);
-      let updateData = {'sendVia': values.location}
+      let updateData = {'sendVia': values.location, 'statusUpdateDates.gybAssignedDate': getDate()}
 
       return new Promise((resolve, reject) => {
         updateItem(assignAddressId, updateData, token)
@@ -206,22 +206,9 @@ export const Notifications = () => {
     return (
       <ItemsList>
       {record.items.map((item) => {
-        let shoppedBy = '',
-          donatedBy = '',
-          locationName = '';
-        if (item.shopperId && item.shopperId.firstName) {
-          shoppedBy = name(item.shopperId);
-        }
-        if (item.donorId && item.donorId.firstName) {
-          donatedBy = name(item.donorId);
-        }
-
-        if (item.sendVia && item.sendVia.name) {
-          locationName = item.sendVia.name;
-        }
         return (
           <div key={item._id}>
-          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} shoppedBy={shoppedBy} donatedBy={donatedBy} locationName={locationName} />
+          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} />
           </div>
         )
       }

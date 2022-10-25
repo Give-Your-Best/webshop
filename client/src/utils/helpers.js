@@ -68,6 +68,56 @@ export const sort = (i) => {
       });
 }
 
+export const getItemDetails = (item) => {
+
+    let detailsHtml = '',
+        shippedDate = '',
+        donatedDate = '',
+        shoppedBy = '',
+        shoppedDate = '',
+        donatedBy = '',
+        locationName = '',
+        assignedDate;
+
+    //get donor and donation date
+    if (item.donorId && item.donorId.firstName) {
+        donatedBy = name(item.donorId);
+        donatedDate =  (new Date(item.createdAt)).toLocaleString();
+        detailsHtml += "<span><strong>Donated By:</strong> " + donatedBy + "<br /></span><span><strong>Donated On:</strong> " + donatedDate + "<br /></span>";
+    }
+
+    //get shopper and shopped date
+    if (item.shopperId && item.shopperId.firstName) {
+        shoppedBy = name(item.shopperId);
+        shoppedDate =  (new Date(item.statusUpdateDates.shoppedDate)).toLocaleString();
+        detailsHtml += "<span><strong>Shopped By:</strong> " + shoppedBy + "<br /></span><span><strong>Shopped On:</strong> " + shoppedDate + "<br /></span>";
+    }
+
+    if (item.sendVia && item.sendVia.name) {
+        locationName = item.sendVia.name;
+        detailsHtml += "<span><strong>Assigned To:</strong> " + locationName + "<br /></span>";
+    }
+
+    if (item.statusUpdateDates && item.statusUpdateDates.gybAssignedDate) {
+        assignedDate = (new Date(item.statusUpdateDates.gybAssignedDate)).toLocaleString();
+        detailsHtml += "<span><strong>Assigned At:</strong> " + assignedDate + "<br /></span>";
+    }
+    
+    //get item shipped date
+    if (item.statusUpdateDates && item.statusUpdateDates.gybShippedDate && !item.statusUpdateDates.shopperShippedDate) {
+        shippedDate = (new Date(item.statusUpdateDates.gybShippedDate)).toLocaleString();
+        detailsHtml += "<span><strong>Shipped On:</strong> " + shippedDate + "<br /></span>";
+    } else if (item.statusUpdateDates && item.statusUpdateDates.gybShippedDate && item.statusUpdateDates.shopperShippedDate) {
+        shippedDate = (new Date(item.statusUpdateDates.shopperShippedDate)).toLocaleString();
+        detailsHtml += "<span><strong>Shipped On:</strong> " + shippedDate + "<br /></span>";
+    } else if (item.statusUpdateDates && item.statusUpdateDates.shopperShippedDate) {
+        shippedDate = (new Date(item.statusUpdateDates.shopperShippedDate)).toLocaleString();
+        detailsHtml += "<span><strong>Shipped On:</strong> " + shippedDate + "<br /></span>";
+    }
+
+    return detailsHtml
+}
+
 export const tabList = (user) => {
     var tabs = [];
 

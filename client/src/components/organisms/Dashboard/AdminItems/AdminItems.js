@@ -5,7 +5,7 @@ import { ItemCardLong, ItemsCollapsedList } from "../../../molecules";
 import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './AdminItems.styles';
 import { getAdminItems, deleteItem } from '../../../../services/items';
 import { getTags } from '../../../../services/tags';
-import { name, tabList } from '../../../../utils/helpers';
+import { tabList } from '../../../../utils/helpers';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
@@ -35,27 +35,8 @@ export const AdminItems = () => {
   };
 
 const editForm = (record) => {
-  let shippedDate = '',
-    shoppedBy = '',
-    donatedBy = '';
-    
-  if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && !record.statusUpdateDates.shopperShippedDate) {
-    shippedDate = (new Date(record.statusUpdateDates.gybShippedDate)).toLocaleString()
-  } else if (record.statusUpdateDates && record.statusUpdateDates.gybShippedDate && record.statusUpdateDates.shopperShippedDate) {
-    shippedDate = (new Date(record.statusUpdateDates.shopperShippedDate)).toLocaleString()
-  } else if (record.statusUpdateDates && record.statusUpdateDates.shopperShippedDate) {
-    shippedDate = (new Date(record.statusUpdateDates.shopperShippedDate)).toLocaleString()
-  }
-
-  if (record.shopperId && record.shopperId.firstName) {
-    shoppedBy = name(record.shopperId);
-  }
-
-  if (record.donorId && record.donorId.firstName) {
-    donatedBy = name(record.donorId);
-  }
   return (
-    <div key={record._id}><ItemCardLong item={record} type='all' shippedDate={shippedDate} shoppedBy={shoppedBy} donatedBy={donatedBy}/></div>
+    <div key={record._id}><ItemCardLong item={record} type='all'/></div>
   )      
 };
 

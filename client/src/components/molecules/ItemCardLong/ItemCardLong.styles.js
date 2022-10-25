@@ -72,3 +72,11 @@ export const ExpandLink = styled.p`
 export const ExpandedAddress = styled.p`
   font-size: 18px !important;
 `;
+
+export const MoreInfoButton = styled.p`
+  font-size: 16px !important;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: right;
+`;

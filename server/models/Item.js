@@ -42,6 +42,7 @@ const itemSchema = new Schema(
       "shoppedDate": Date,
       "gybShippedDate": Date,
       "gybReceivedDate": Date,
+      "gybAssignedDate": Date,
       "shopperShippedDate": Date,
       "shopperReceivedDate": Date,
       "inBasketDate": Date

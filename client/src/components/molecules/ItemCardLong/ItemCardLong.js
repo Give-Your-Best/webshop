@@ -1,19 +1,19 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { AppContext } from '../../../context/app-context';
 import { useHistory } from 'react-router-dom';
-import { CardLong, CardLongImage, ExpandLink, ExpandedAddress } from './ItemCardLong.styles';
-import { Card as AntCard } from 'antd';
+import { CardLong, CardLongImage, ExpandLink, ExpandedAddress, MoreInfoButton } from './ItemCardLong.styles';
+import { Card as AntCard, Modal } from 'antd';
 import { Button } from '../../atoms';
 import { getLocation } from '../../../services/locations';
 import { getUser } from '../../../services/user';
 import { getTags } from '../../../services/tags';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
 import { Tags } from "../../organisms";
-import { trunc, name, getFrontImageUrl } from '../../../utils/helpers';
+import { trunc, name, getFrontImageUrl, getItemDetails } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
-export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shoppedBy, donatedBy, locationName }) => {
+export const ItemCardLong = ({ item, actionText, action, type }) => {
 
   const { token } = useContext(AppContext);
   const mountedRef = useRef(true);
@@ -22,6 +22,21 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
   const [addressFound, setAddressFound] = useState(false);
   const [FAOshopperName, setFAOShopperName] = useState('');
   const [allTags, setAllTags] = useState([]);
+
+  const additionalItemDetails = (type === 'all' || type === 'admin')? getItemDetails(item): false;
+
+  const info = () => {
+    Modal.info({
+      title: 'Item Info',
+      content: (
+        <div dangerouslySetInnerHTML={{ __html: additionalItemDetails }}></div>
+      ),
+      okText: 'Close',
+      icon: '',
+      onOk() {},
+      className: 'modalStyle'
+    });
+  };
 
   const getDeliveryAddress = () => {
     return (
@@ -82,14 +97,8 @@ export const ItemCardLong = ({ item, actionText, action, type, shippedDate, shop
       {/* show progress bar depending on type of user logged in */}
       {(type)? <ProgressBar type={type} status={item.status} />: ''}
 
-      {(donatedBy)? <span>{'Donated by: ' +  donatedBy}<br /></span>: ''}
-   
-      {(shoppedBy)? <span>{'Shopped by: ' +  shoppedBy}<br /></span>: ''}
-
-      {(locationName)? <span>{'Assigned to location: ' +  locationName}<br /></span>: ''}
-
-      {/* show item shipped date */}
-      {(type === 'all' && shippedDate)? <span>{'Shipped on: ' +  shippedDate}</span>: ''}
+      {/* <div dangerouslySetInnerHTML={{ __html: additionalItemDetails }}></div> */}
+      {(type === 'all' || type === 'admin')? <MoreInfoButton onClick={info}>View item info</MoreInfoButton>: ''}
 
       {/* If donor logged in then show expandable view delivery address button */}
       {(type === 'donor' && !Object.keys(deliveryAddress).length && !addressFound)? <ExpandLink onClick={handleViewAddress}>View delivery address</ExpandLink>: ''}
