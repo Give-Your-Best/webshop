@@ -83,16 +83,12 @@ export const Basket = () => {
            });
           })
           .then(() => {
-
             //moved donor email send once all items were successfully updated. It was causing weird problems
               basket.map((item) => {
               // add to recent items
                 setUser(user => ({
                   ...user,
-                  'recentItems': [
-                    ...user.recentItems || [],
-                    item
-                  ]
+                  'recentItems': (user.recentItems)? user.recentItems.concat(item): [item]
                 }));
     
                 //get donor details

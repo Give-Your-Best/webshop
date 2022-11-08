@@ -138,6 +138,7 @@ export const OrdersList = () => {
             if (!mountedRef.current) return null;
 
             let count = (settingValue * ((user)? user.shoppingFor: 1)) - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
+            
             setShopRemaining((count < 0)? 0: count);
           }
 
@@ -178,7 +179,7 @@ export const OrdersList = () => {
 
                         items.map((item) => {
                             let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'));
-                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper' && lessThanSixHoursAgo(new Date(item.statusUpdateDates.shoppedDate)));
+                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper');
 
                             return (
                                 <div key={item._id}>
