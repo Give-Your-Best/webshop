@@ -179,7 +179,7 @@ export const OrdersList = () => {
 
                         items.map((item) => {
                             let noAction = ((item.status !== 'shipped-to-shopper' && user.type === 'shopper') || (item.status !== 'shopped' && user.type === 'donor'));
-                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper');
+                            let allowCancel = (item.status === 'shopped' && user.type === 'shopper' && lessThanSixHoursAgo(new Date(item.statusUpdateDates.shoppedDate)));
 
                             return (
                                 <div key={item._id}>
