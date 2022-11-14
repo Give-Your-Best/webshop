@@ -124,7 +124,7 @@ export const Item = () => {
     let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
     let basketDate = (itemDetails.statusUpdateDates && itemDetails.statusUpdateDates.inBasketDate)? (new Date(itemDetails.statusUpdateDates.inBasketDate)):'';
 
-    if ((itemDetails.inBasket === true && basketDate >= anHourAgo) || itemDetails.status != 'in-shop') { //if already added to basket by someone else with the hour
+    if ((itemDetails.inBasket === true && basketDate >= anHourAgo) || itemDetails.status !== 'in-shop') { //if already added to basket by someone else with the hour
       confirm({
         className: "modalStyle",
         title: `Sorry! This item has been shopped.`
