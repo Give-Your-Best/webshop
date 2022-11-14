@@ -45,7 +45,8 @@ const setUserDetails = (user) => {
   if (user.kind === 'shopper') {
     UserDetails.deliveryAddress = user.deliveryAddress || {}
     UserDetails.deliveryPreference = user.deliveryPreference || 'direct'
-    UserDetails.shoppingFor = user.shoppingFor
+    UserDetails.shoppingFor = user.shoppingFor || 1
+    UserDetails.shoppingForChildren = user.shoppingForChildren || 0
   }
 
   return UserDetails
@@ -223,6 +224,19 @@ const authenticate = async (req, res) => {
         .send({ success: false, message: 'Authentication failed.' });
     }
     req.decoded = decoded;
+
+    if ( user && user.kind === 'shopper') {
+      const recentItems = await Item.find({
+        'shopperId': user._id,
+        'statusUpdateDates.shoppedDate': {
+          $gte: new Date(sevenDaysAgo),
+          $lte: new Date(today)
+        }
+      });
+      if (recentItems) {
+        user.recentItems = recentItems;
+      }
+    }
 
     return res.json({
       success: true,
