@@ -89,7 +89,7 @@ export const Item = () => {
     }));
   }
 
-  const addToBasket = (itemId) => {
+  const addToBasket = async (itemId) => {
     const isShopped = basket && basket.some(i=>i._id === itemId);
 
     //recent items shopped count and items in basket count needs to be within limit. Limit is calculated from the shop settings and multiplied by the number of people the user is shopping for
@@ -117,6 +117,19 @@ export const Item = () => {
         title: `You have reached your weekly shopping limit!`,
         content: 'Please check your current orders on your account profile.'
       });
+      return;
+    }
+
+    const itemDetails = await getItem(itemId);
+    let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
+    let basketDate = (itemDetails.statusUpdateDates && itemDetails.statusUpdateDates.inBasketDate)? (new Date(itemDetails.statusUpdateDates.inBasketDate)):'';
+
+    if ((itemDetails.inBasket === true && basketDate >= anHourAgo) || itemDetails.status != 'in-shop') { //if already added to basket by someone else with the hour
+      confirm({
+        className: "modalStyle",
+        title: `Sorry! This item has been shopped.`
+      });
+      history.push(`/`);
       return;
     }
 
