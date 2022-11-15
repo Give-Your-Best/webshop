@@ -52,6 +52,7 @@ export const Item = () => {
       const itemDetails = await getItem(itemId);
       if (!mountedRef.current) return null;
       setItemDetails(itemDetails);
+      console.log(itemDetails)
 
       //get front image or just the first in the list
       let frontImage = itemDetails.photos.filter(i => i.front === true);
@@ -89,11 +90,17 @@ export const Item = () => {
     }));
   }
 
-  const addToBasket = async (itemId) => {
-    const isShopped = basket && basket.some(i=>i._id === itemId);
+  const addToBasket = async (item) => {
+    const isShopped = basket && basket.some(i=>i._id === item._id);
 
     //recent items shopped count and items in basket count needs to be within limit. Limit is calculated from the shop settings and multiplied by the number of people the user is shopping for
-    const cannotShop = ((user)? user.recentItems.length: 0) + ((basket)? basket.length: 0) >= (limit * ((user)? user.shoppingFor: 1));
+    let cannotShop = false; 
+
+    if (item.category === 'children') {
+      cannotShop = ((user)? user.recentItems.filter(i => i.category === 'children').length: 0) + ((basket)? basket.filter(i => i.category === 'children').length: 0) >= (limit * ((user)? user.shoppingForChildren: 0));
+    } else {
+      cannotShop = ((user)? user.recentItems.filter(i => i.category !== 'children').length: 0) + ((basket)? basket.filter(i => i.category !== 'children').length: 0) >= (limit * ((user)? user.shoppingFor: 1));
+    }
 
     if (!user || user.type !== 'shopper') { //if not signed in
       confirm({
@@ -111,7 +118,16 @@ export const Item = () => {
       return;
     }
 
-    if (cannotShop) { //if limit reached
+    if (cannotShop && item.category === 'children') { //if limit reached
+      confirm({
+        className: "modalStyle",
+        title: `You have reached your weekly shopping limit for children's items!`,
+        content: 'Please check your current orders on your account profile or update your profile info!'
+      });
+      return;
+    }
+
+    if (cannotShop && item.category !== 'children') { //if limit reached
       confirm({
         className: "modalStyle",
         title: `You have reached your weekly shopping limit!`,
@@ -120,7 +136,7 @@ export const Item = () => {
       return;
     }
 
-    const itemDetails = await getItem(itemId);
+    const itemDetails = await getItem(item._id);
     let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
     let basketDate = (itemDetails.statusUpdateDates && itemDetails.statusUpdateDates.inBasketDate)? (new Date(itemDetails.statusUpdateDates.inBasketDate)):'';
 
@@ -168,7 +184,7 @@ export const Item = () => {
           <p>Brand: {itemDetails.brand || ''}</p>
           <p>Size: {size()} <a target="_blank" rel="noreferrer" href="https://www.calculator.com.my/shoe-clothing-size">size guide</a></p>
           <DonorLink to={'/donorproducts/' + itemDetails.donorId}>See other items by this donor</DonorLink>
-          {itemDetails.status === 'in-shop' && <Button primary left small onClick={() => {addToBasket(itemDetails._id)}}>Add to Basket</Button>}
+          {itemDetails.status === 'in-shop' && <Button primary left small onClick={() => {addToBasket(itemDetails)}}>Add to Basket</Button>}
         </ItemDetailsWrapper>
       </ItemWrapper>
     </Container>

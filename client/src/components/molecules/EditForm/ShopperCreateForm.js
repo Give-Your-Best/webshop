@@ -33,7 +33,7 @@ export const ShopperCreateForm = (data) => {
     return (
         <div>
             <Formik
-                initialValues={{ firstName: '', lastName: "", password: temp, email: '', type: 'shopper', approvedStatus: 'approved', clothingSize: [], shoeSize: [], currentStatus: '', referredBy: '', shoppingFor: '1', deliveryAddress: {}, deliveryPreference: 'direct', shareAddress: true }}
+                initialValues={{ firstName: '', lastName: "", password: temp, email: '', type: 'shopper', approvedStatus: 'approved', clothingSize: [], shoeSize: [], currentStatus: '', referredBy: '', shoppingFor: '1', shoppingForChildren: '0', deliveryAddress: {}, deliveryPreference: 'direct', shareAddress: true }}
                 validationSchema= {shopperCreateSchema}
                 onSubmit={handleSubmit}
                 >

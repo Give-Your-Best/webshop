@@ -32,9 +32,13 @@ export const ShopperFields = () => {
         <StyledInput name="referredBy" />
         <StyledError name="referredBy" component="div" />
       
-      <StyledLabel>How many people are you shopping for?</StyledLabel>
-      <StyledInputNumber name="shoppingFor" />
+      <StyledLabel>How many adults are you shopping for?</StyledLabel>
+      <StyledInputNumber name="shoppingFor" max={5} min={1} />
       <StyledError name="shoppingFor" component="div" />
+
+      <StyledLabel>How many children are you shopping for?</StyledLabel>
+      <StyledInputNumber name="shoppingForChildren" max={5} min={0} />
+      <StyledError name="shoppingForChildren" component="div" />
 
       <StyledLabel>Clothing sizes
       <StyledCheckboxGroup name="clothingSize" options={clothingSizeOptions}/></StyledLabel>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyledInput, StyledLabel, StyledError, FieldContainerHalf } from './EditForm.styles';
+import { StyledInput, StyledLabel, StyledError, FieldContainerHalf, InfoNote } from './EditForm.styles';
 
 export const AddressFields = () => {
   return (
@@ -9,6 +9,7 @@ export const AddressFields = () => {
       <StyledInput name="deliveryAddress.firstLine" />
       <StyledError name="deliveryAddress.firstLine" component="div" /></StyledLabel>
       <StyledLabel>Address Line 2
+      <InfoNote>If you are staying in a hotel please write your room number</InfoNote>
       <StyledInput name="deliveryAddress.secondLine" />
       <StyledError name="deliveryAddress.secondLine" component="div" /></StyledLabel>
       </FieldContainerHalf>

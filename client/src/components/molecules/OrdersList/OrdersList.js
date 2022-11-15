@@ -16,6 +16,7 @@ export const OrdersList = () => {
     const [pastItems, setPastItems] = useState([]);
     const mountedRef = useRef(true);
     const [shopRemaining, setShopRemaining] = useState(0);
+    const [shopRemainingChildren, setShopRemainingChildren] = useState(0);
     var actionText = '';
     var action;
     const { confirm } = Modal;
@@ -137,9 +138,16 @@ export const OrdersList = () => {
             const settingValue = await getSetting('shopItemLimit', token);
             if (!mountedRef.current) return null;
 
-            let count = (settingValue * ((user)? user.shoppingFor: 1)) - ((user)? user.recentItems.length: 0) - ((basket)? basket.length: 0);
-            
-            setShopRemaining((count < 0)? 0: count);
+            if (user) {
+                let countAdults = (settingValue * user.shoppingFor) - user.recentItems.filter(i => i.category !== 'children').length - ((basket)? basket.filter(i => i.category !== 'children').length: 0);
+                let countChildren = (settingValue * user.shoppingForChildren) - user.recentItems.filter(i => i.category === 'children').length - ((basket)? basket.filter(i => i.category === 'children').length: 0);
+
+                setShopRemaining((countAdults < 0)? 0: countAdults);
+                setShopRemainingChildren((countChildren < 0)? 0: countChildren);
+            } else {
+                setShopRemaining(0);
+                setShopRemainingChildren(0)
+            }
           }
 
         const fetchDonorItems = async () => {
@@ -174,7 +182,7 @@ export const OrdersList = () => {
 
                 <StyledTabPanel>
                     <H2>{user.type === 'shopper' ? 'My Orders' : 'Item Processing'}</H2>
-                    <InfoNote>{user.type === 'shopper' ? 'You have ' + shopRemaining + ' items left to shop!' : ''}</InfoNote>
+                    <InfoNote>{user.type === 'shopper'? 'You have ' + shopRemaining + ' items for adults and ' + shopRemainingChildren + ' items for children left to shop!' : ''}</InfoNote>
                     {(items && items.length) ?
 
                         items.map((item) => {

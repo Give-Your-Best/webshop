@@ -9,7 +9,7 @@ import { getUser } from '../../../services/user';
 import { getTags } from '../../../services/tags';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
 import { Tags } from "../../organisms";
-import { trunc, name, getFrontImageUrl, getItemDetails } from '../../../utils/helpers';
+import { trunc, name, getFrontImageUrl, getItemDetails, getItemShopperAndDonorDetails } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
@@ -24,6 +24,7 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
   const [allTags, setAllTags] = useState([]);
 
   const additionalItemDetails = (type === 'all' || type === 'admin')? getItemDetails(item): false;
+  const itemShopperAndDonorDetails = (type === 'all' || type === 'admin')? getItemShopperAndDonorDetails(item): false;
 
   const info = () => {
     Modal.info({
@@ -97,7 +98,9 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
       {/* show progress bar depending on type of user logged in */}
       {(type)? <ProgressBar type={type} status={item.status} />: ''}
 
-      {/* <div dangerouslySetInnerHTML={{ __html: additionalItemDetails }}></div> */}
+
+      {(type === 'all' || type === 'admin')? <div dangerouslySetInnerHTML={{ __html: itemShopperAndDonorDetails }}></div> : ''}
+
       {(type === 'all' || type === 'admin')? <MoreInfoButton onClick={info}>View item info</MoreInfoButton>: ''}
 
       {/* If donor logged in then show expandable view delivery address button */}

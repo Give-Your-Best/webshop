@@ -20,8 +20,8 @@ const getReportData = async (from, to) => {
       const shoppers = await User_.User.find({approvedStatus: 'approved', kind: 'shopper', createdAt: {$gt:fromDate, $lt:toDate }}).populate('shoppedItems');
       reportData['shopperCount'] = shoppers.length;
       reportData['shopperConvertedCount'] = shoppers.filter((s) => s.shoppedItems > 0).length;
-      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce((a, s) =>  a + ((s.shoppedItems > 0)? s.shoppingFor: 0), 0);
-      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor, 0);
+      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce((a, s) =>  a + ((s.shoppedItems > 0)? s.shoppingFor + s.shoppingForChildren: 0), 0);
+      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor + s.shoppingForChildren, 0);
   
       const donors = await User_.User.find({approvedStatus: 'approved', kind: 'donor', createdAt: {$gt:fromDate, $lt:toDate }}).populate('donatedItems');
       reportData['donorCount'] = donors.length;
@@ -83,8 +83,8 @@ const getReportData = async (from, to) => {
       reportData['shopperCount'] = shoppers.length;
 
       reportData['shopperConvertedCount'] = shoppers.filter((s) => s.shoppedItems > 0).length;
-      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce((a, s) =>  a + ((s.shoppedItems > 0)? s.shoppingFor: 0), 0);
-      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor, 0);
+      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce((a, s) =>  a + ((s.shoppedItems > 0)? s.shoppingFor + s.shoppingForChildren: 0), 0);
+      reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => a + s.shoppingFor + s.shoppingForChildren, 0);
   
       const donors = await User_.User.find({approvedStatus: 'approved', kind: 'donor'}).populate('donatedItems');
       reportData['donorCount'] = donors.length;
@@ -147,6 +147,7 @@ const getReportData = async (from, to) => {
     return { success: false, message: `Error in getting report data: ${error}` }
   }
 }
+
 
 const getAllStatistics = async () => {
   const now = new Date();

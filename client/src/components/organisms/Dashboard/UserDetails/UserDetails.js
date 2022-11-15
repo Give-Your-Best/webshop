@@ -40,7 +40,8 @@ export const UserDetails = () => {
           'lastName': res.user.lastName,
           'deliveryAddress': res.user.deliveryAddress,
           'deliveryPreference': res.user.deliveryPreference,
-          'shoppingFor': res.user.shoppingFor
+          'shoppingFor': res.user.shoppingFor,
+          'shoppingForChildren': res.user.shoppingForChildren
         }));
         return true;
       } else {

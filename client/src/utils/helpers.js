@@ -118,6 +118,33 @@ export const getItemDetails = (item) => {
     return detailsHtml
 }
 
+export const getItemShopperAndDonorDetails = (item) => {
+    let detailsHtml = '',
+    shoppedBy = '',
+    donatedBy = '',
+    locationName = '';
+
+    //get donor and donation date
+    if (item.donorId && item.donorId.firstName) {
+        donatedBy = name(item.donorId);
+        detailsHtml += "<span><strong>Donated By:</strong> " + donatedBy + "<br /></span>";
+    }
+
+    //get shopper and shopped date
+    if (item.shopperId && item.shopperId.firstName) {
+        shoppedBy = name(item.shopperId);
+        detailsHtml += "<span><strong>Shopped By:</strong> " + shoppedBy + "<br /></span>";
+    }
+
+    if (item.sendVia && item.sendVia.name) {
+        locationName = item.sendVia.name;
+        detailsHtml += "<span><strong>Assigned To:</strong> " + locationName + "<br /></span>";
+    }
+
+    return detailsHtml
+}
+
+
 export const tabList = (user) => {
     var tabs = [];
 

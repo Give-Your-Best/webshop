@@ -102,6 +102,10 @@ const Shopper = User.discriminator("shopper", new Schema({
     type: Number,
     default : 1
   }, 
+  shoppingForChildren: {
+    type: Number,
+    default : 0
+  }, 
   deliveryAddress: {
     firstLine: String,
     secondLine: String,
