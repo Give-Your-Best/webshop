@@ -174,13 +174,18 @@ export const subCategories = [
         'parentCategory': 'children'
     },
     {
-        'name': 'Baby bundles',
+        'name': 'Baby Bundles',
         'id': 'baby',
         'parentCategory': 'children'
     },
     {
-        'name': '12 - 36 month bundles',
+        'name': '12 - 36 month Bundles',
         'id': '12/35-month',
+        'parentCategory': 'children'
+    },
+    {
+        'name': 'Toys & Books',
+        'id': 'toys',
         'parentCategory': 'children'
     },
     {
