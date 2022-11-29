@@ -137,7 +137,7 @@ const getDonorItems = async (userId, itemStatus) => {
         "$or": [{"status": "shopped"}, {"status": "shipped-to-gyb"}, {"status": "received-by-gyb"}, {"status": "shipped-to-shopper"}]
       }
     }
-    var items = await Item.find(conditions).sort({shopperId: -1}).exec();
+    var items = await Item.find(conditions).sort({shopperId: -1}).populate('shopperId').exec();
     return items;
   } catch (error) {
     console.error(`Error in getting donor items: ${error}`);
@@ -201,18 +201,13 @@ const getAdminItems = async (isCurrent) => {
 const getAllItems = async (page, limit, approvedStatus, itemStatus, category, subCategory, donorId, clothingSizes, shoeSizes, colours) => {
   let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
   try {
-    const conditions = { approvedStatus: approvedStatus, status: itemStatus, "$or": [
+    const conditions = { approvedStatus: approvedStatus, status: itemStatus, live: true, "$or": [
       // if item not in basket or item in basket is more than an hour old
       {"inBasket":  null}, 
       {"inBasket":  false},
       {"$and": [
         {"statusUpdateDates.inBasketDate": {$lte: new Date(anHourAgo)}}, 
-        {"inBasket":  true}, 
-        {"$or": [
-          // if item not live or live empty
-          {"live":  null}, 
-          {"live":  true}
-        ]}
+        {"inBasket":  true}
       ]}
     ]
     };

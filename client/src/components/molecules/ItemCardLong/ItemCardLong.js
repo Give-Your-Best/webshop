@@ -51,7 +51,14 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
   }
 
   const handleViewAddress = async (e) => {
-    const shopper = await getUser(item.shopperId, token);
+
+    var shopper = {}
+
+    if (typeof item.shopperId === 'string') {
+      shopper = await getUser(item.shopperId, token);
+    } else {
+      shopper = item.shopperId;
+    }
 
     if (shopper.deliveryPreference === 'via-gyb' && item.sendVia) {
       const location = await getLocation(item.sendVia, token);

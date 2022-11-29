@@ -11,6 +11,7 @@ import { DonorItems } from '../DonorItems';
 import { AdminItems } from '../AdminItems';
 import { Statistics } from '../Statistics';
 import { OrdersList } from '../../../molecules/OrdersList';
+import { DonorOrdersList } from '../../../molecules/DonorOrdersList';
 import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 
 export const adminTabs = [
@@ -84,7 +85,7 @@ export const donorTabs = [
     },
     {
       name: 'Item Processing',
-    content: <OrdersList />,
+    content: <DonorOrdersList />,
     id:'donorProcessing'
     },
     {

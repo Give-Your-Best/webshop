@@ -56,8 +56,15 @@ const itemSchema = new Schema(
         ref: 'Location' 
     },
     inBasket: Boolean,
-    live: Boolean,
-    tags: [{ type: Schema.ObjectId, ref: 'Tag' }]
+    live: {
+      type: Boolean,
+      default : true
+    },
+    tags: [{ type: Schema.ObjectId, ref: 'Tag' }],
+    packageId: {
+      type: String,
+      default : ''
+    },
   },
   options
 );

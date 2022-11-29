@@ -265,6 +265,61 @@ const emailFooter = `
     </div>
 `;
 
+export const donorItemsOrdering = (items) => {
+    /* [
+        {
+            'shopper': 'testing shopper name',
+            'shopperId': '1234567',
+            'shopperAddress': ??,
+            'items': [
+                {}, {}, {}
+            ]
+        },
+        {
+            'shopper': 'testing shopper 2',
+            'shopperId': '1234567',
+            'shopperAddress': ??,
+            'items': [
+                {}
+            ]
+        },
+    ]
+
+    */
+    let itemsToSend = [],
+        itemsAwaitingReceived = [];
+
+    items.forEach((i) => {
+        if (i.status === 'shopped') {
+            let foundIndex = itemsToSend.findIndex(u=>u.shopperId === i.shopperId._id);
+
+            if (foundIndex !== -1) {
+                itemsToSend[foundIndex].items.push(i);
+            } else {
+              itemsToSend.push({
+                'shopper': name(i.shopperId),
+                'shopperId': i.shopperId._id,
+                'items': [i]
+              })
+            }
+        } else {
+            let foundIndex = itemsAwaitingReceived.findIndex(u=>u.packageId === i.packageId);
+
+            if (foundIndex !== -1) {
+                itemsAwaitingReceived[foundIndex].items.push(i);
+            } else {
+                itemsAwaitingReceived.push({
+                'shopper': name(i.shopperId),
+                'shopperId': i.shopperId._id,
+                'items': [i],
+                'packageId': i.packageId
+              })
+            }
+        }
+    })
+    return [itemsToSend, itemsAwaitingReceived];
+}
+
 const emailItems = (items) => {
     var grid = items.map((i)=>{
         return (

@@ -165,7 +165,7 @@ export const Notifications = () => {
       const items = await getAccountNotificationsItems(user.id, token);
 
       if (!mountedRef.current) return null;
-      console.log(items)
+
       setAccountNotificationsPendingReceive({
           "key": 1,
           "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
