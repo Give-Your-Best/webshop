@@ -18,6 +18,8 @@ export const clothingSizeOptions = [
   'L',
   'XL',
   'XXL',
+  '3XL',
+  '4XL',
   'Child',
   'Baby',
 ];
