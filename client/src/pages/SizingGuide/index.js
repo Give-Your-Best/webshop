@@ -1,0 +1,1 @@
+export { SizingGuide } from './SizingGuide';

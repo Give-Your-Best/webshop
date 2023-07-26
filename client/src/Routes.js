@@ -9,6 +9,7 @@ import {
   Products,
   Basket,
   DonorProducts,
+  SizingGuide,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -38,6 +39,9 @@ export const Routes = () => {
       </Route>
       <Route path="/register">
         <Register />
+      </Route>
+      <Route path="/sizing-guide">
+        <SizingGuide />
       </Route>
       <ProtectedRoute
         path={`/dashboard/:itemId`}
