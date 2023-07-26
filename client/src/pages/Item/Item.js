@@ -258,11 +258,7 @@ export const Item = () => {
           <p>Brand: {itemDetails.brand || ''}</p>
           <p>
             Size: {size()}{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.calculator.com.my/shoe-clothing-size"
-            >
+            <a target="_blank" rel="noreferrer" href="/sizing-guide">
               size guide
             </a>
           </p>

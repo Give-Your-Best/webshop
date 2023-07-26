@@ -6,3 +6,4 @@ export { Dashboard } from './Dashboard';
 export { Products } from './Products';
 export { DonorProducts } from './DonorProducts';
 export { Basket } from './Basket';
+export { SizingGuide } from './SizingGuide';

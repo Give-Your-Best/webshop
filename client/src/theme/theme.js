@@ -4,7 +4,7 @@ const colors = {
     600: '#A21010',
   },
   pink: {
-    0: '#FFFBFC',
+    50: '#FFFBFC',
     100: '#db709312',
     500: '#FAD6DF',
   },
@@ -41,7 +41,7 @@ export const theme = {
     large: 20,
   },
   colorMappings: {
-    background: colors.pink[0],
+    background: colors.pink[50],
     primary: colors.red[500],
     secondary: colors.pink[500],
     yellow: colors.yellow[500],
