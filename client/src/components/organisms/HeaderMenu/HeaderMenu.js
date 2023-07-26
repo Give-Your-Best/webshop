@@ -14,18 +14,24 @@ export const HeaderMenu = () => {
       history.push(`/basket`);
     } else {
       confirm({
-        className: "modalStyle",
-        title: `Please sign up as a shopper to shop!`
+        className: 'modalStyle',
+        title: `Please sign up as a shopper to shop!`,
       });
     }
-  }
+  };
 
   return (
     <HeaderMenuWrapper>
       <UserMenuItem to="/dashboard">Account</UserMenuItem>
-      <UserMenuItem to='/dashboard'><Icon src='/GYB-account.svg' alt='account icon' /></UserMenuItem>
-      <UserMenuItem to="#" onClick={basketCheck}><Icon src='/GYB-basket.svg' alt='basket icon' /></UserMenuItem>
-      <UserMenuItem to="#" onClick={basketCheck}>Basket</UserMenuItem>
+      <UserMenuItem to="/dashboard">
+        <Icon src="/GYB-account.svg" alt="account icon" />
+      </UserMenuItem>
+      <UserMenuItem to="#" onClick={basketCheck}>
+        <Icon src="/GYB-basket.svg" alt="basket icon" />
+      </UserMenuItem>
+      <UserMenuItem to="#" onClick={basketCheck}>
+        Basket
+      </UserMenuItem>
     </HeaderMenuWrapper>
   );
 };

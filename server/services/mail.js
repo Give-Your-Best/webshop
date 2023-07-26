@@ -4,31 +4,33 @@ const { getSetting } = require('../services/settings');
 const sendMail = async (subject, emailHTML, recipient, recipientName) => {
   const gybEmail = await getSetting('shop_email');
 
-  const request = await mailjet
-  .post("send", {'version': 'v3.1'})
-  .request({
-    "Messages":[
+  const request = await mailjet.post('send', { version: 'v3.1' }).request({
+    Messages: [
       {
-        "From": {
-          "Email": gybEmail,
-          "Name": "Give Your Best"
+        From: {
+          Email: gybEmail,
+          Name: 'Give Your Best',
         },
-        "To": [
+        To: [
           {
-            "Email": (recipient && recipient !== "")? recipient: gybEmail,
-            "Name": recipientName
-          }
+            Email: recipient && recipient !== '' ? recipient : gybEmail,
+            Name: recipientName,
+          },
         ],
-        "Subject": subject || 'New Message on Give Your Best Webshop',
-        "HTMLPart": emailHTML,
-        "CustomID": subject || 'New Message on Give Your Best Webshop',
-      }
-    ]
-  })
+        Subject: subject || 'New Message on Give Your Best Webshop',
+        HTMLPart: emailHTML,
+        CustomID: subject || 'New Message on Give Your Best Webshop',
+      },
+    ],
+  });
   if (request.response.statusCode === 200) {
-    return { success: true, message: `Email sent!` }
+    return { success: true, message: `Email sent!` };
   } else {
-      return { success: false, message: 'Failed to send email', err: request.response.statusCode}
+    return {
+      success: false,
+      message: 'Failed to send email',
+      err: request.response.statusCode,
+    };
   }
 };
 

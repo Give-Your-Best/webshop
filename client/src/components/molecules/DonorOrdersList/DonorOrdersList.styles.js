@@ -7,18 +7,18 @@ const ShopperWrapper = styled.div`
   border-radius: 10px;
   padding: 1em 1em 5em 1em;
   margin: 1em 0;
-`
+`;
 const ShopperWrapperSmall = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.colorMappings.secondary};
   border-radius: 10px;
   padding: 1em;
   margin: 1em 0;
-`
+`;
 
 const ShopperName = styled.p`
   font-weight: bold;
-`
+`;
 
 const StyledTabs = styled(Tabs)`
   background: ${({ theme }) => theme.colorMappings.background};
@@ -26,7 +26,6 @@ const StyledTabs = styled(Tabs)`
   width: 100%;
   font-family: lato;
 `;
-
 
 const StyledTabList = styled(TabList)`
   padding: 0;
@@ -44,7 +43,7 @@ const StyledTabListHidden = styled(TabList)`
 
 const StyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
   flex-grow: 1;
   text-align: center;
@@ -72,9 +71,9 @@ const StyledTab = styled(Tab).attrs({
 
 const HiddenStyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
-  display:none;
+  display: none;
   flex-grow: 1;
   text-align: center;
   padding: 1em;
@@ -94,8 +93,9 @@ const HiddenStyledTab = styled(Tab).attrs({
   }
 `;
 
-
-const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
+const StyledTabPanel = styled(TabPanel).attrs({
+  selectedClassName: 'selected',
+})`
   display: none;
   width: 100%;
   padding: 10px 20px;
@@ -115,23 +115,25 @@ StyledTabList.tabsRole = 'TabList';
 
 const ListWrapper = styled.div`
   width: 100%;
-`
+`;
 
 const InfoNote = styled.p`
   font-size: 20px !important;
   margin-bottom: 1em;
   color: ${({ theme }) => theme.colorMappings.primary};
   text-decoration: italic;
-`
+`;
 
-export { ListWrapper, 
-  StyledTab, 
-  StyledTabList, 
-  StyledTabs, 
-  StyledTabPanel, 
-  HiddenStyledTab, 
-  StyledTabListHidden, 
-  InfoNote, 
+export {
+  ListWrapper,
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  HiddenStyledTab,
+  StyledTabListHidden,
+  InfoNote,
   ShopperWrapper,
   ShopperName,
-  ShopperWrapperSmall };
+  ShopperWrapperSmall,
+};

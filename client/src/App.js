@@ -7,10 +7,9 @@ import { Routes } from './Routes';
 import { AppProvider } from './context/app-context';
 import { ConfigProvider } from 'antd';
 
-
 ConfigProvider.config({
   theme: {
-    primaryColor: theme.colorMappings.primary
+    primaryColor: theme.colorMappings.primary,
   },
 });
 
@@ -21,7 +20,9 @@ const App = () => {
         <BrowserRouter>
           <AllWrapper>
             <Header />
-            <AppWrapper><Routes /></AppWrapper>
+            <AppWrapper>
+              <Routes />
+            </AppWrapper>
             <Footer />
           </AllWrapper>
         </BrowserRouter>

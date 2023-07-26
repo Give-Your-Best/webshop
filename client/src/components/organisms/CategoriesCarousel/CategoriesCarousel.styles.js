@@ -20,20 +20,20 @@ export const StyledCarousel = styled(Carousel)`
     font-family: 'Alfa Slab One', cursive;
     font-size: 40px;
     cursor: pointer;
-    display:inherit;
+    display: inherit;
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-  
+
   .slick-next,
   .slick-next:hover,
   .slick-next:focus {
     font-family: 'Alfa Slab One' !important;
     font-size: 40px;
     cursor: pointer;
-    display:inherit;
+    display: inherit;
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-`
+`;
 
 export const StyledCarouselMobile = styled(Carousel)`
   border: none;
@@ -55,17 +55,17 @@ export const StyledCarouselMobile = styled(Carousel)`
     font-family: 'Alfa Slab One', cursive;
     font-size: 40px;
     cursor: pointer;
-    display:inherit;
+    display: inherit;
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-  
+
   .slick-next,
   .slick-next:hover,
   .slick-next:focus {
     font-family: 'Alfa Slab One' !important;
     font-size: 40px;
     cursor: pointer;
-    display:inherit;
+    display: inherit;
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-`
+`;

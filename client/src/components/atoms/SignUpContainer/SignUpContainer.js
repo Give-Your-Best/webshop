@@ -4,12 +4,12 @@ import { SignUpHeading, SignUpWrapper } from './SignUpContainer.styles';
 
 export const SignUpContainer = () => {
   return (
-      <div>
+    <div>
       <SignUpHeading>Would you like to Sign Up as..</SignUpHeading>
       <SignUpWrapper>
-        <AccountIconBlock type='donor' />
-        <AccountIconBlock type='shopper' />
+        <AccountIconBlock type="donor" />
+        <AccountIconBlock type="shopper" />
       </SignUpWrapper>
-      </div>
+    </div>
   );
 };

@@ -9,5 +9,5 @@ export const BurgerMenu = () => {
       <div />
       <div />
     </StyledBurger>
-  )
-}
+  );
+};

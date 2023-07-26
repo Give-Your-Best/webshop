@@ -9,7 +9,6 @@ export const Card = styled(AntCard)`
   cursor: pointer;
   background: inherit;
 
-
   .ant-card-meta-title {
     font-size: 20px;
     margin: 0 auto;
@@ -28,10 +27,10 @@ export const Card = styled(AntCard)`
     width: 200px;
     margin: auto;
 
-    @media (max-width:${({ theme }) => theme.mid}) {
+    @media (max-width: ${({ theme }) => theme.mid}) {
       width: 150px;
     }
-    @media (max-width:${({ theme }) => theme.mobile}) {
+    @media (max-width: ${({ theme }) => theme.mobile}) {
       width: 150px !important;
     }
 
@@ -58,10 +57,9 @@ export const Card = styled(AntCard)`
     .ant-card-meta-title {
       font-size: 18px;
 
-      @media (max-width:${({ theme }) => theme.mobile}) {
+      @media (max-width: ${({ theme }) => theme.mobile}) {
         font-size: 16px;
       }
-  
     }
   }
 `;

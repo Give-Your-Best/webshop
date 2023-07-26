@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { ListWrapper, StyledTable, ExpandButton } from './ApproveItemList.styles';
+import React, { useState } from 'react';
+import {
+  ListWrapper,
+  StyledTable,
+  ExpandButton,
+} from './ApproveItemList.styles';
 import { Button } from '../../atoms';
 
 export const ApproveItemList = (data) => {
@@ -14,31 +18,32 @@ export const ApproveItemList = (data) => {
     {
       title: 'Items count',
       dataIndex: 'numOfDonationItems',
-      sorter: (a, b) => a.numOfDonationItems.length - b.numOfDonationItems.length,
+      sorter: (a, b) =>
+        a.numOfDonationItems.length - b.numOfDonationItems.length,
       render: (value) => {
-        return value + ' new items'
-      }
-    }
-  ]
+        return value + ' new items';
+      },
+    },
+  ];
 
   const hasSelected = selectedRowKeys.length > 0;
   const rowSelection = {
     selectedRowKeys,
-    onChange: selectedRowKeys => {
-      setSelectedRowKeys( selectedRowKeys );
-    }
+    onChange: (selectedRowKeys) => {
+      setSelectedRowKeys(selectedRowKeys);
+    },
   };
 
   const markAsTrusted = () => {
     data.markAsTrusted(selectedRowKeys);
     setSelectedRowKeys([]);
-  }
+  };
 
   return (
     <ListWrapper>
       <StyledTable
         rowSelection={rowSelection}
-        pagination={{hideOnSinglePage: true}}
+        pagination={{ hideOnSinglePage: true }}
         showHeader={false}
         columns={columns}
         rowKey={(record) => record._id}
@@ -46,15 +51,21 @@ export const ApproveItemList = (data) => {
           expandedRowRender: data.expandRow,
           expandIconColumnIndex: 3,
           expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
-              ) : (
-                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
-              )
-          }}
+            expanded ? (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                Close
+              </ExpandButton>
+            ) : (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                View
+              </ExpandButton>
+            ),
+        }}
         dataSource={data.data}
       />
-      <Button primary small onClick={markAsTrusted} disabled={!hasSelected}>Mark as Trusted Donor</Button>
+      <Button primary small onClick={markAsTrusted} disabled={!hasSelected}>
+        Mark as Trusted Donor
+      </Button>
     </ListWrapper>
   );
 };

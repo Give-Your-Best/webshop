@@ -13,12 +13,12 @@ export const Button = styled.button`
     min-height: 52px;
     font-weight: bold;
 
-    @media (max-width:${({ theme }) => theme.mid}) {
+    @media (max-width: ${({ theme }) => theme.mid}) {
       font-size: 18px;
       min-height: 46px;
     }
 
-    @media (max-width:${({ theme }) => theme.mobile}) {
+    @media (max-width: ${({ theme }) => theme.mobile}) {
       min-height: 44px;
     }
 
@@ -28,9 +28,9 @@ export const Button = styled.button`
     `};
 
     ${right &&
-      css`
-        float: right !important;
-      `};
+    css`
+      float: right !important;
+    `};
 
     ${primary &&
     css`

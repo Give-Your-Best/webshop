@@ -1,3 +1,3 @@
-export { updateSetting } from './updateSetting'; 
+export { updateSetting } from './updateSetting';
 export { getSettings } from './getSettings';
-export { getSetting } from './getSetting'; 
+export { getSetting } from './getSetting';

@@ -18,26 +18,25 @@ const StyledForm = styled(Form)`
       margin-right: 0;
     }
   }
-`
-
+`;
 
 const MessageSent = styled.div`
-width: 100%;
-display: flex;
-justify-content: start;
-margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  margin-bottom: 10px;
   div {
     display: block;
     width: 45%;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 10px;
-    box-shadow: 0px 3px 6px #BA191A29;
+    box-shadow: 0px 3px 6px #ba191a29;
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
       width: 75%;
       margin-bottom: 10px;
     }
-    
+
     p {
       color: ${({ theme }) => theme.colorMappings.primary};
       padding: 7px;
@@ -53,19 +52,19 @@ margin-bottom: 10px;
       padding-bottom: 0;
     }
   }
-`
+`;
 
 const MessageReceived = styled.div`
-width: 100%;
-display: flex;
-justify-content: end;
-margin-bottom: 10px; 
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
   div {
     display: block;
     width: 45%;
     border: 1px solid ${({ theme }) => theme.colorMappings.borders};
     border-radius: 10px;
-    box-shadow: 0px 3px 6px #BA191A29;
+    box-shadow: 0px 3px 6px #ba191a29;
 
     @media (max-width: ${({ theme }) => theme.mobile}) {
       width: 75%;
@@ -87,7 +86,7 @@ margin-bottom: 10px;
       padding-bottom: 0;
     }
   }
-`
+`;
 
 const MessagesContainer = styled.div`
   display: block;
@@ -96,8 +95,7 @@ const MessagesContainer = styled.div`
   max-height: 1000px;
   overflow: scroll;
   margin-bottom: 1em;
-`
-
+`;
 
 const StyledTabs = styled(Tabs)`
   background: ${({ theme }) => theme.colorMappings.background};
@@ -105,7 +103,6 @@ const StyledTabs = styled(Tabs)`
   width: 100%;
   font-family: lato;
 `;
-
 
 const StyledTabList = styled(TabList)`
   padding: 0;
@@ -117,7 +114,7 @@ const StyledTabList = styled(TabList)`
 
 const StyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
   flex-grow: 1;
   text-align: center;
@@ -143,12 +140,11 @@ const StyledTab = styled(Tab).attrs({
   }
 `;
 
-
 const HiddenStyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
-  display:none;
+  display: none;
   flex-grow: 1;
   text-align: center;
   padding: 1em;
@@ -159,7 +155,7 @@ const HiddenStyledTab = styled(Tab).attrs({
   border-bottom: 2px solid ${({ theme }) => theme.colorMappings.borders};
 
   &.selected {
-    color:  ${({ theme }) => theme.colorMappings.primary};
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 
   &.disabled {
@@ -168,8 +164,9 @@ const HiddenStyledTab = styled(Tab).attrs({
   }
 `;
 
-
-const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
+const StyledTabPanel = styled(TabPanel).attrs({
+  selectedClassName: 'selected',
+})`
   display: none;
   width: 100%;
   &.selected {
@@ -182,4 +179,14 @@ StyledTabs.tabsRole = 'Tabs';
 StyledTabPanel.tabsRole = 'TabPanel';
 StyledTabList.tabsRole = 'TabList';
 
-export { StyledForm, StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, MessagesContainer, MessageReceived, MessageSent };
+export {
+  StyledForm,
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  HiddenStyledTab,
+  MessagesContainer,
+  MessageReceived,
+  MessageSent,
+};

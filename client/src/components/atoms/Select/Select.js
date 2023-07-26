@@ -13,7 +13,8 @@ const StyledSelect = styled(Select)`
 
     .ant-select-selector {
       color: ${({ theme }) => theme.colorMappings.primary};
-      border: 1px solid ${({ theme }) => theme.colorMappings.primary} !important;
+      border: 1px solid ${({ theme }) =>
+        theme.colorMappings.primary} !important;
       height: 42px;
     }
 
@@ -29,6 +30,6 @@ const StyledSelect = styled(Select)`
     color: black;
     border: none;spotif
   }
-`
+`;
 
 export { StyledSelect };

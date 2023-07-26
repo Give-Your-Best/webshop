@@ -19,7 +19,7 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 

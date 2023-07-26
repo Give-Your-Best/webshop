@@ -37,7 +37,7 @@ export const CategoriesWrapper = styled(Box)`
   > h1 {
     text-align: center;
   }
-`
+`;
 
 export const CoverWrapper = styled.div`
   display: block;
@@ -63,10 +63,9 @@ export const CoverWrapper = styled.div`
     @media (max-width: ${({ theme }) => theme.mobile}) {
       font-size: 20px;
     }
-
   }
 `;
 
 export const H1 = styled.h1`
- text-align:center;
-`
+  text-align: center;
+`;

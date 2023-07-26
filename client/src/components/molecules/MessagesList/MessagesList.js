@@ -1,7 +1,13 @@
 import React, { useRef } from 'react';
 import { Input, Space, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { ListWrapper, ExpandButton, StyledTable, DeleteButton, Note } from './MessagesList.styles';
+import {
+  ListWrapper,
+  ExpandButton,
+  StyledTable,
+  DeleteButton,
+  Note,
+} from './MessagesList.styles';
 import { checkUnread, name } from '../../../utils/helpers';
 
 export const MessagesList = (data) => {
@@ -15,26 +21,31 @@ export const MessagesList = (data) => {
       result = name(value);
     }
     return result;
-  }
+  };
 
   //map name onto the result as antd table search does not work otherwise
   const rows = data.data.map((d) => {
     return {
       ...d,
-      name: getName(d.user)
+      name: getName(d.user),
     };
-  })
+  });
 
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
 
   const handleReset = (clearFilters) => {
-    clearFilters({closeDropDown: true, confirm: true});
+    clearFilters({ closeDropDown: true, confirm: true });
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -44,7 +55,9 @@ export const MessagesList = (data) => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm)}
           style={{
             marginBottom: 8,
@@ -59,16 +72,12 @@ export const MessagesList = (data) => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-          >
-            Reset
-          </Button>
+          <Button onClick={() => handleReset(clearFilters)}>Reset</Button>
         </Space>
       </div>
     ),
     onFilter: (value, record) =>
-    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
@@ -81,7 +90,7 @@ export const MessagesList = (data) => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    render: (text) => (text)
+    render: (text) => text,
   });
 
   var columns = [
@@ -91,7 +100,7 @@ export const MessagesList = (data) => {
       dataIndex: 'name',
       width: 200,
       render: (value) => {
-        return getName(value)
+        return getName(value);
       },
       ...getColumnSearchProps('name'),
     },
@@ -107,48 +116,62 @@ export const MessagesList = (data) => {
       dataIndex: 'messages',
       key: 'messages',
       render: (value) => {
-        return value.length
-      }
+        return value.length;
+      },
     },
     {
       title: '',
       dataIndex: 'messages',
       key: 'messages',
       render: (value) => {
-        return (<Note>{(checkUnread(data.type, data.userId, value)[0] > 0)? checkUnread(data.type, data.userId, value)[0] + ' new': ''}</Note>)
-      }
-    }
-  ]
+        return (
+          <Note>
+            {checkUnread(data.type, data.userId, value)[0] > 0
+              ? checkUnread(data.type, data.userId, value)[0] + ' new'
+              : ''}
+          </Note>
+        );
+      },
+    },
+  ];
 
   if (data.handleDelete) {
     columns.push({
-        title: 'Action',
-        key: 'action',
-        width: 20,
-        render: (record) => (
-          <Space size="middle">
-            <DeleteButton onClick={() => data.handleDelete(record._id, record.kind)}>Delete</DeleteButton>
-          </Space>
-        )
-    })
+      title: 'Action',
+      key: 'action',
+      width: 20,
+      render: (record) => (
+        <Space size="middle">
+          <DeleteButton
+            onClick={() => data.handleDelete(record._id, record.kind)}
+          >
+            Delete
+          </DeleteButton>
+        </Space>
+      ),
+    });
   }
 
   return (
     <ListWrapper>
       <StyledTable
-        pagination={{hideOnSinglePage: true}}
+        pagination={{ hideOnSinglePage: true }}
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{
           expandedRowRender: data.expandRow,
           expandIconColumnIndex: 4,
           expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
-              ) : (
-                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
-              )
-          }}
+            expanded ? (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                Close
+              </ExpandButton>
+            ) : (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                View
+              </ExpandButton>
+            ),
+        }}
         dataSource={rows}
       />
     </ListWrapper>

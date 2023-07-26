@@ -1,12 +1,29 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab } from './Users.styles';
-import { getUsers, deleteUser, updateDonor, updateShopper } from '../../../../services/user';
+import {
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  HiddenStyledTab,
+} from './Users.styles';
+import {
+  getUsers,
+  deleteUser,
+  updateDonor,
+  updateShopper,
+} from '../../../../services/user';
 import { deleteDonorItems } from '../../../../services/items';
-import { getTags } from "../../../../services/tags";
+import { getTags } from '../../../../services/tags';
 import { Modal } from 'antd';
 import { Formik } from 'formik';
-import { DonorMiniEditForm, ShopperMiniEditForm, UsersList, DonorCreateForm, ShopperCreateForm } from '../../../molecules';
+import {
+  DonorMiniEditForm,
+  ShopperMiniEditForm,
+  UsersList,
+  DonorCreateForm,
+  ShopperCreateForm,
+} from '../../../molecules';
 import { Button, Space } from '../../../atoms';
 import { Tags } from '../../../organisms';
 import { openHiddenTab, tabList } from '../../../../utils/helpers';
@@ -24,53 +41,58 @@ export const Users = () => {
   const handleDelete = (id, kind) => {
     confirm({
       title: `Are you sure you want to delete this ${kind}?`,
-      className: "modalStyle",
+      className: 'modalStyle',
       content: 'This will remove the user',
       onOk() {
-        deleteUser(id, token)
-        .then(() => {
+        deleteUser(id, token).then(() => {
           if (kind === 'shopper') {
-            setShoppers(shoppers.filter(shopper => {
-              return shopper._id !== id;
-            }));
+            setShoppers(
+              shoppers.filter((shopper) => {
+                return shopper._id !== id;
+              })
+            );
           } else if (kind === 'donor') {
             deleteDonorItems(id, token);
-            setDonors(donors.filter(donor => {
-              return donor._id !== id;
-            }));
+            setDonors(
+              donors.filter((donor) => {
+                return donor._id !== id;
+              })
+            );
           }
         });
-      }
+      },
     });
   };
 
   const editForm = (record) => {
     const handleEditSave = (newRecord) => {
       if (newRecord.kind === 'donor') {
-        setDonors(donors.map(donor => {
-          if (donor._id === newRecord._id) {
-            return Object.assign(donor, newRecord);
-          } else { 
-            return donor
-          }
-        }));
-  
+        setDonors(
+          donors.map((donor) => {
+            if (donor._id === newRecord._id) {
+              return Object.assign(donor, newRecord);
+            } else {
+              return donor;
+            }
+          })
+        );
       } else if (newRecord.kind === 'shopper') {
-        setShoppers(shoppers.map(shopper => {
-          if (shopper._id === newRecord._id) {
-            return Object.assign(shopper, newRecord);
-          } else { 
-            return shopper
-          }
-        }));
-  
+        setShoppers(
+          shoppers.map((shopper) => {
+            if (shopper._id === newRecord._id) {
+              return Object.assign(shopper, newRecord);
+            } else {
+              return shopper;
+            }
+          })
+        );
       }
     };
     const handleSubmit = async (values) => {
       if (record.kind === 'donor') {
         const res = await updateDonor(record._id, values, token);
         if (res.success) {
-          handleEditSave(res.user)
+          handleEditSave(res.user);
           setEditingKey('');
           return true;
         } else {
@@ -79,7 +101,7 @@ export const Users = () => {
       } else if (record.kind === 'shopper') {
         const res = await updateShopper(record._id, values, token);
         if (res.success) {
-          handleEditSave(res.user)
+          handleEditSave(res.user);
           setEditingKey('');
           return true;
         } else {
@@ -88,39 +110,45 @@ export const Users = () => {
       }
     };
     const handleEdit = () => {
-      setEditingKey((editingKey)? '': record._id)
-    }
+      setEditingKey(editingKey ? '' : record._id);
+    };
 
     return (
       <div>
-        <Tags updateId={record._id} tagList={record.tags || []} availableTags={tags} updateType='user'/>
+        <Tags
+          updateId={record._id}
+          tagList={record.tags || []}
+          availableTags={tags}
+          updateType="user"
+        />
         <Space />
-        <Formik
-        initialValues={record}
-        onSubmit={handleSubmit}
-        >
-            { record.kind === 'donor'
-              ? <DonorMiniEditForm editingKey={editingKey} recordId={record._id} />
-              : ( record.kind === 'shopper' 
-                ? <ShopperMiniEditForm editingKey={editingKey} recordId={record._id} />
-                : ''
-              )
-            } 
+        <Formik initialValues={record} onSubmit={handleSubmit}>
+          {record.kind === 'donor' ? (
+            <DonorMiniEditForm editingKey={editingKey} recordId={record._id} />
+          ) : record.kind === 'shopper' ? (
+            <ShopperMiniEditForm
+              editingKey={editingKey}
+              recordId={record._id}
+            />
+          ) : (
+            ''
+          )}
         </Formik>
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}  
-        <Button primary onClick={handleEdit}>{editingKey === record._id ? 'Cancel' : 'Edit'}</Button>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        <Button primary onClick={handleEdit}>
+          {editingKey === record._id ? 'Cancel' : 'Edit'}
+        </Button>
       </div>
-    )
-  }
+    );
+  };
 
-    useEffect(() => {
-
+  useEffect(() => {
     var tabs = tabList(user);
     tabs.forEach((t) => {
       if (t.id === 'adminUsers') {
-        window.history.pushState({}, '','/dashboard/' + t.id)
+        window.history.pushState({}, '', '/dashboard/' + t.id);
       }
-    })
+    });
 
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'approved', token);
@@ -138,7 +166,7 @@ export const Users = () => {
       const tags = await getTags(token);
       if (!mountedRef.current) return null;
       setTags(tags);
-    }
+    };
 
     fetchShoppers();
     fetchDonors();
@@ -156,32 +184,57 @@ export const Users = () => {
     } else if (user.kind === 'shopper') {
       setShoppers(shoppers.concat(user));
     }
-  }
-  
+  };
+
   return (
     <StyledTabs forceRenderTabPanel={true}>
-    <StyledTabList>
-      <StyledTab className='shopperlist'>Shoppers</StyledTab>
-      <StyledTab className='donorlist'>Donors</StyledTab>
-      <HiddenStyledTab className='addshopper'>Add Shopper</HiddenStyledTab>
-      <HiddenStyledTab className='adddonor'>Add Donor</HiddenStyledTab>
-    </StyledTabList>
+      <StyledTabList>
+        <StyledTab className="shopperlist">Shoppers</StyledTab>
+        <StyledTab className="donorlist">Donors</StyledTab>
+        <HiddenStyledTab className="addshopper">Add Shopper</HiddenStyledTab>
+        <HiddenStyledTab className="adddonor">Add Donor</HiddenStyledTab>
+      </StyledTabList>
 
-    <StyledTabPanel>
-      <UsersList data={shoppers} handleDelete={handleDelete} expandRow={editForm} allTags={tags} />
-      <Button primary small onClick={() => {openHiddenTab('shopper')}}>Create</Button>
-    </StyledTabPanel>
-    <StyledTabPanel>
-      <UsersList data={donors} handleDelete={handleDelete} expandRow={editForm} allTags={tags} />
-      <Button primary small onClick={() => {openHiddenTab('donor')}}>Create</Button>
-    </StyledTabPanel>
-    <StyledTabPanel>
-      <ShopperCreateForm submitFunction={submitFunction} />
-    </StyledTabPanel>
-    <StyledTabPanel>
-      <DonorCreateForm submitFunction={submitFunction} />
-    </StyledTabPanel>
-
-  </StyledTabs>
+      <StyledTabPanel>
+        <UsersList
+          data={shoppers}
+          handleDelete={handleDelete}
+          expandRow={editForm}
+          allTags={tags}
+        />
+        <Button
+          primary
+          small
+          onClick={() => {
+            openHiddenTab('shopper');
+          }}
+        >
+          Create
+        </Button>
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <UsersList
+          data={donors}
+          handleDelete={handleDelete}
+          expandRow={editForm}
+          allTags={tags}
+        />
+        <Button
+          primary
+          small
+          onClick={() => {
+            openHiddenTab('donor');
+          }}
+        >
+          Create
+        </Button>
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <ShopperCreateForm submitFunction={submitFunction} />
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <DonorCreateForm submitFunction={submitFunction} />
+      </StyledTabPanel>
+    </StyledTabs>
   );
 };

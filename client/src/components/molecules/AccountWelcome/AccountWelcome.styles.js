@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const AccountWelcomeWrapper = styled.div`
-  text-align: center; 
+  text-align: center;
 
   > h3 {
     margin: 0.5em 0 2em 0;
@@ -21,7 +21,7 @@ export const AccountWelcomeWrapper = styled.div`
 export const AccountWelcomeIcon = styled.div`
   width: 175px;
   height: 175px;
-  box-shadow: 0px 3px 6px #BA191A29;
+  box-shadow: 0px 3px 6px #ba191a29;
   border-radius: 100%;
   margin: auto;
   position: relative;
@@ -37,7 +37,6 @@ export const AccountWelcomeIcon = styled.div`
     transform: translate(-50%, -50%);
     letter-spacing: 3px;
   }
-
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     width: 100%;

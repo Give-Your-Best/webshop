@@ -6,13 +6,13 @@ export const CategoryMenuWrapper = styled.nav`
   width: 270px;
   height: 100%;
   padding: 45px 0;
-  box-shadow: 0px 3px 10px #EF7C9829;
+  box-shadow: 0px 3px 10px #ef7c9829;
   position: absolute;
   left: 0;
   top: 0;
   z-index: 500;
   display: none;
-`
+`;
 
 export const CategoryMenuItem = styled.li`
   background: ${({ theme }) => theme.colorMappings.secondary};
@@ -25,7 +25,7 @@ export const CategoryMenuItem = styled.li`
 `;
 
 export const CategoryMenuLink = styled.div`
-  color:  ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
   display: flex;
   padding: 0 10px;
   padding: 0 1.5rem;
@@ -37,14 +37,14 @@ export const CategoryMenuLink = styled.div`
   cursor: pointer;
 
   :hover {
-    color:  ${({ theme }) => theme.colorMappings.primary};
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 
   img {
     margin-right: 10px;
   }
 
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     font-size: 18px;
   }
 `;
@@ -63,7 +63,7 @@ export const SubMenuItem = styled.div`
   @media (max-width:${({ theme }) => theme.mid}) {
     font-size: 18px;
   }
-`
+`;
 
 export const MainMenuNav = styled.ul`
   padding: 0;
@@ -71,10 +71,10 @@ export const MainMenuNav = styled.ul`
   list-style: none;
   position: relative;
   margin: 0 0 0 22px;
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     margin: 0 0 0 0;
   }
-`
+`;
 
 export const SubMenuNav = styled.ul`
   background: ${({ theme }) => theme.colorMappings.yellow};
@@ -83,9 +83,8 @@ export const SubMenuNav = styled.ul`
   padding: 15px;
   border: 1px solid ${({ theme }) => theme.colorMappings.yellow};
   z-index: 99;
-  width: 100%
-`
-
+  width: 100%;
+`;
 
 export const Down = styled.span`
   position: absolute;
@@ -94,42 +93,42 @@ export const Down = styled.span`
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-top: 12px solid ${({ theme }) => theme.colorMappings.primary};;
+  border-top: 12px solid ${({ theme }) => theme.colorMappings.primary};
   width: 25px;
   cursor: pointer;
-`
+`;
 
 export const Cross = styled.span`
   width: 30px;
   height: 30px;
   position: relative;
-  transform:rotate(45deg);
+  transform: rotate(45deg);
   position: absolute;
   left: 235px;
   top: 10px;
-  z-index:9999;
+  z-index: 9999;
   cursor: pointer;
   display: none;
 
-  :before, :after {
-    content: "";
+  :before,
+  :after {
+    content: '';
     position: absolute;
     z-index: -1;
     background: ${({ theme }) => theme.colorMappings.primary};
-   }
+  }
 
-   :before {
+  :before {
     left: 50%;
     width: 20%;
     margin-left: -15%;
     height: 90%;
-   }
+  }
 
-   :after {
+  :after {
     top: 50%;
     height: 20%;
     margin-top: -15%;
     width: 90%;
-   }
-`
-
+  }
+`;

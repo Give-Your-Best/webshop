@@ -20,12 +20,12 @@ export const ReportWrapper = styled.div`
       color: ${({ theme }) => theme.colorMappings.primary};
     }
   }
-`
+`;
 
 export const StyledForm = styled(Form)`
   display: flex;
   align-items: end;
-`
+`;
 
 export const StyledDatePicker = styled(DatePicker)`
   color: ${({ theme }) => theme.colorMappings.primary};
@@ -39,8 +39,7 @@ export const StyledDatePicker = styled(DatePicker)`
   color: ${({ theme }) => theme.colorMappings.primary};
   background: transparent;
   font-size: 20px;
-
-`
+`;
 
 export const StyledSubmitButton = styled(SubmitButton)`
   width: 200px;
@@ -55,15 +54,15 @@ export const StyledSubmitButton = styled(SubmitButton)`
   border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder} !important;
   color: ${({ theme }) => theme.colorMappings.primary};
   padding: 3px 15px 4px 10px !important;
-  margin-left: 10px; 
+  margin-left: 10px;
 
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     font-size: 18px;
   }
 
-    span {
-      line-height: 1.1;
-    }
+  span {
+    line-height: 1.1;
+  }
 
   :hover {
     background: ${({ theme }) => theme.colorMappings.yellow};
@@ -77,4 +76,4 @@ export const StyledSubmitButton = styled(SubmitButton)`
     border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder};
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-`
+`;

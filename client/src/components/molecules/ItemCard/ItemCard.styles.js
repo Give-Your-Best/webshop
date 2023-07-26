@@ -29,7 +29,7 @@ export const Card = styled(AntCard)`
       margin-bottom: 0;
       font-size: 20px;
     }
-  
+
     .ant-card-meta-description {
       color: ${({ theme }) => theme.colorMappings.primary};
       font-family: lato;
@@ -45,7 +45,7 @@ export const Card = styled(AntCard)`
     bottom: 15px;
     right: 10px;
     @media (max-width: ${({ theme }) => theme.mobile}) {
-      position:relative;
+      position: relative;
       margin: 7px 10px;
       right: 0;
       bottom: 0;

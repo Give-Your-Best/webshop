@@ -8,7 +8,6 @@ const StyledTabs = styled(Tabs)`
   font-family: lato;
 `;
 
-
 const StyledTabList = styled(TabList)`
   padding: 0;
   margin: 2em 0;
@@ -19,7 +18,7 @@ const StyledTabList = styled(TabList)`
 
 const StyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
   flex-grow: 1;
   text-align: center;
@@ -44,9 +43,9 @@ const StyledTab = styled(Tab).attrs({
 
 const HiddenStyledTab = styled(Tab).attrs({
   selectedClassName: 'selected',
-  disabledClassName: 'disabled'
+  disabledClassName: 'disabled',
 })`
-  display:none;
+  display: none;
   flex-grow: 1;
   text-align: center;
   padding: 1em;
@@ -64,8 +63,9 @@ const HiddenStyledTab = styled(Tab).attrs({
   }
 `;
 
-
-const StyledTabPanel = styled(TabPanel).attrs({ selectedClassName: 'selected' })`
+const StyledTabPanel = styled(TabPanel).attrs({
+  selectedClassName: 'selected',
+})`
   display: none;
   width: 100%;
   padding: 10px 20px;
@@ -81,11 +81,18 @@ const ItemBox = styled.div`
   display: inline-block;
   margin-bottom: 1em;
   width: 100%;
-`
+`;
 
 StyledTab.tabsRole = 'Tab';
 StyledTabs.tabsRole = 'Tabs';
 StyledTabPanel.tabsRole = 'TabPanel';
 StyledTabList.tabsRole = 'TabList';
 
-export { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, HiddenStyledTab, ItemBox };
+export {
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  HiddenStyledTab,
+  ItemBox,
+};

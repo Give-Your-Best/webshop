@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const StyledBar = styled.div`
-    display: block;
+  display: block;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     display: none;
@@ -9,7 +9,7 @@ export const StyledBar = styled.div`
 `;
 
 export const StyledMobileBar = styled.div`
- display: none;
+  display: none;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
     display: block;

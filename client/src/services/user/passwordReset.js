@@ -1,6 +1,6 @@
 import { getAutoEmailContent } from '../../utils/helpers';
 
-export const passwordReset = async ( email ) => {
+export const passwordReset = async (email) => {
   try {
     const response = await fetch('/api/auth/passwordreset', {
       method: 'post',
@@ -10,7 +10,7 @@ export const passwordReset = async ( email ) => {
       },
       body: JSON.stringify({
         email: email.trim(),
-        emailContent: getAutoEmailContent('password_reset')
+        emailContent: getAutoEmailContent('password_reset'),
       }),
     });
     const jsonres = await response.json();

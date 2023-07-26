@@ -1,9 +1,32 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, MessageReceived, MessageSent, MessagesContainer, StyledForm } from './AdminMessages.styles';
-import { StyledInputAreaInLine, StyledSubmitButton, StyledError, InfoNote } from '../../../molecules/EditForm/EditForm.styles';
-import { getMessages, sendMessage, markMessageAsViewed } from '../../../../services/messages';
-import { sendAutoEmail, checkUnread, name, tabList } from '../../../../utils/helpers';
+import {
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  MessageReceived,
+  MessageSent,
+  MessagesContainer,
+  StyledForm,
+} from './AdminMessages.styles';
+import {
+  StyledInputAreaInLine,
+  StyledSubmitButton,
+  StyledError,
+  InfoNote,
+} from '../../../molecules/EditForm/EditForm.styles';
+import {
+  getMessages,
+  sendMessage,
+  markMessageAsViewed,
+} from '../../../../services/messages';
+import {
+  sendAutoEmail,
+  checkUnread,
+  name,
+  tabList,
+} from '../../../../utils/helpers';
 import { getUsers } from '../../../../services/user';
 import { MessagesList, StartMessageThreadAdmin } from '../../../molecules';
 import { Notification } from '../../../atoms';
@@ -26,20 +49,19 @@ export const AdminMessages = () => {
     } else if (type === 'shopper') {
       setShoppersMessages(shoppersMessages.concat(values));
     }
-  }
+  };
 
   const viewConversation = (conversation) => {
-
     const markAsRead = async () => {
       let unread = checkUnread('admin', '', conversation.messages);
       if (unread[0] > 0) {
         await markMessageAsViewed(conversation._id, unread[1], token);
       }
-    }
+    };
 
     markAsRead();
 
-    const handleSubmit = async (values, {resetForm}) => {
+    const handleSubmit = async (values, { resetForm }) => {
       const d = new Date();
       let date = d.toISOString();
       values.sentDate = date;
@@ -47,68 +69,100 @@ export const AdminMessages = () => {
       const res = await sendMessage(values, token);
 
       if (res.success) {
-          Notification('Success!', 'Message sent', 'success');
-          resetForm();
-          //add to conversdation
-          if (conversation.type === 'shopper') {
-            setShoppersMessages(shoppersMessages.map(msg => {
+        Notification('Success!', 'Message sent', 'success');
+        resetForm();
+        //add to conversdation
+        if (conversation.type === 'shopper') {
+          setShoppersMessages(
+            shoppersMessages.map((msg) => {
               if (msg._id === res.thread._id) {
                 return res.thread;
-              } else { 
-                return msg
+              } else {
+                return msg;
               }
-            }));
-          } else if (conversation.type === 'donor') {
-            setDonorsMessages(donorsMessages.map(msg => {
+            })
+          );
+        } else if (conversation.type === 'donor') {
+          setDonorsMessages(
+            donorsMessages.map((msg) => {
               if (msg._id === res.thread._id) {
                 return res.thread;
-              } else { 
-                return msg
+              } else {
+                return msg;
               }
-            }));
-          }
-          sendAutoEmail('new_message', conversation.user);
+            })
+          );
+        }
+        sendAutoEmail('new_message', conversation.user);
       } else {
-          Notification('Error sending message', res.message, 'success')
+        Notification('Error sending message', res.message, 'success');
       }
     };
 
     return (
       <div>
         <MessagesContainer>
-        {conversation.messages.map((m)=>{
-          if (!m.recipient || m.recipient.kind === 'admin') {
-            return (<MessageSent key={m.threadId}><div><p>{m.message}</p><InfoNote>{name(m.sender) + ' ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageSent>);
-          } else {
-            return (<MessageReceived key={m.threadId}><div><p>{m.message}</p><InfoNote>{'Admin ' + (new Date(m.sentDate)).toLocaleString()}</InfoNote></div></MessageReceived>);
-          }
-        })}
+          {conversation.messages.map((m) => {
+            if (!m.recipient || m.recipient.kind === 'admin') {
+              return (
+                <MessageSent key={m.threadId}>
+                  <div>
+                    <p>{m.message}</p>
+                    <InfoNote>
+                      {name(m.sender) +
+                        ' ' +
+                        new Date(m.sentDate).toLocaleString()}
+                    </InfoNote>
+                  </div>
+                </MessageSent>
+              );
+            } else {
+              return (
+                <MessageReceived key={m.threadId}>
+                  <div>
+                    <p>{m.message}</p>
+                    <InfoNote>
+                      {'Admin ' + new Date(m.sentDate).toLocaleString()}
+                    </InfoNote>
+                  </div>
+                </MessageReceived>
+              );
+            }
+          })}
         </MessagesContainer>
         <Formik
           enableReinitialize={true}
-          initialValues={{ subject: conversation.subject, message: '', recipient: conversation.user, sender: user.id, threadId: conversation.threadId }}
+          initialValues={{
+            subject: conversation.subject,
+            message: '',
+            recipient: conversation.user,
+            sender: user.id,
+            threadId: conversation.threadId,
+          }}
           onSubmit={handleSubmit}
-          >
-            <StyledForm>
-            <StyledInputAreaInLine autosize="true" name="message" placeholder="Your message" />
+        >
+          <StyledForm>
+            <StyledInputAreaInLine
+              autosize="true"
+              name="message"
+              placeholder="Your message"
+            />
             <StyledError name="message" component="div" />
 
             <StyledSubmitButton>{'Send >'}</StyledSubmitButton>
           </StyledForm>
-
         </Formik>
       </div>
-    )
-  }
+    );
+  };
 
-    useEffect(() => {
-
-      var tabs = tabList(user);
-      tabs.forEach((t) => {
-        if (t.name === 'Messaging') {
-          window.history.pushState({}, '','/dashboard/' + t.id)
-        }
-      })
+  useEffect(() => {
+    var tabs = tabList(user);
+    tabs.forEach((t) => {
+      if (t.name === 'Messaging') {
+        window.history.pushState({}, '', '/dashboard/' + t.id);
+      }
+    });
 
     const fetchMessagesShoppers = async () => {
       const messages = await getMessages('shopper', 'all', token);
@@ -127,13 +181,13 @@ export const AdminMessages = () => {
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'approved', token);
       if (!mountedRef.current) return null;
-        setShoppers(users);
+      setShoppers(users);
     };
 
     const fetchDonors = async () => {
       const users = await getUsers('donor', 'approved', token);
       if (!mountedRef.current) return null;
-        setDonors(users);
+      setDonors(users);
     };
 
     fetchShoppers();
@@ -150,22 +204,61 @@ export const AdminMessages = () => {
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
-    <StyledTabList>
-      <StyledTab>Shoppers</StyledTab>
-      <StyledTab>Donors</StyledTab>
-    </StyledTabList>
+      <StyledTabList>
+        <StyledTab>Shoppers</StyledTab>
+        <StyledTab>Donors</StyledTab>
+      </StyledTabList>
 
-    <StyledTabPanel>
-      <MessagesList data={shoppersMessages} expandRow={viewConversation} type='admin' />
-      {!newShopperThread && <Button primary onClick={() => {setNewShopperThread(true)}}>Start New Conversation</Button>}
-      {newShopperThread && <StartMessageThreadAdmin users={shoppers} cancelFunction={setNewShopperThread} submitFunction={handleSubmit} type='shopper'></StartMessageThreadAdmin>}
-    </StyledTabPanel>
-    <StyledTabPanel>
-      <MessagesList data={donorsMessages} expandRow={viewConversation} type='admin' />
-      {!newDonorThread && <Button primary onClick={() => {setNewDonorThread(true)}}>Start New Conversation</Button>}
-      {newDonorThread && <StartMessageThreadAdmin users={donors} cancelFunction={setNewDonorThread} submitFunction={handleSubmit} type='donor'></StartMessageThreadAdmin>}
-    </StyledTabPanel>
-
-  </StyledTabs>
+      <StyledTabPanel>
+        <MessagesList
+          data={shoppersMessages}
+          expandRow={viewConversation}
+          type="admin"
+        />
+        {!newShopperThread && (
+          <Button
+            primary
+            onClick={() => {
+              setNewShopperThread(true);
+            }}
+          >
+            Start New Conversation
+          </Button>
+        )}
+        {newShopperThread && (
+          <StartMessageThreadAdmin
+            users={shoppers}
+            cancelFunction={setNewShopperThread}
+            submitFunction={handleSubmit}
+            type="shopper"
+          ></StartMessageThreadAdmin>
+        )}
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <MessagesList
+          data={donorsMessages}
+          expandRow={viewConversation}
+          type="admin"
+        />
+        {!newDonorThread && (
+          <Button
+            primary
+            onClick={() => {
+              setNewDonorThread(true);
+            }}
+          >
+            Start New Conversation
+          </Button>
+        )}
+        {newDonorThread && (
+          <StartMessageThreadAdmin
+            users={donors}
+            cancelFunction={setNewDonorThread}
+            submitFunction={handleSubmit}
+            type="donor"
+          ></StartMessageThreadAdmin>
+        )}
+      </StyledTabPanel>
+    </StyledTabs>
   );
 };

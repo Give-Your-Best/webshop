@@ -17,8 +17,8 @@ export const ItemsWrapper = styled(Box)`
 export const PageWrapper = styled.div`
   display: grid;
   width: 100%;
-`
+`;
 
 export const Heading = styled.h1`
   margin-bottom: 5px;
-`
+`;

@@ -7,6 +7,6 @@ export const StyledProgress = styled(Progress)`
   .ant-progress-inner {
     background-color: white;
     border-radius: 100px;
-    border: 1px solid ${({ theme }) => theme.colorMappings.primary};;
+    border: 1px solid ${({ theme }) => theme.colorMappings.primary};
   }
 `;

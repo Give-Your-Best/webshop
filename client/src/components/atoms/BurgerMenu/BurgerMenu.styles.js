@@ -22,11 +22,12 @@ export const StyledBurger = styled.button`
   &:focus {
     outline: none;
   }
-  
+
   div {
     width: 2rem;
     height: 0.25rem;
-    background: ${({ theme, open }) => open ? theme.colorMappings.primary : theme.colorMappings.primary};
+    background: ${({ theme, open }) =>
+      open ? theme.colorMappings.primary : theme.colorMappings.primary};
     border-radius: 10px;
     transition: all 0.3s linear;
     position: relative;

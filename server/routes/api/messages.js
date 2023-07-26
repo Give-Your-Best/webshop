@@ -5,10 +5,10 @@ const { getMessages } = require('../../services/messages');
 
 // get messages endpoint api/messages
 router.get('/', async (req, res) => {
-    let type = req.query.type || '';
-    let userId = req.query.id || '';
-    const messages = await getMessages(type, userId);
-    res.json(messages);
+  let type = req.query.type || '';
+  let userId = req.query.id || '';
+  const messages = await getMessages(type, userId);
+  res.json(messages);
 });
 
 // create message endpoint post to api/messages

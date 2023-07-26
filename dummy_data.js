@@ -12,34 +12,34 @@ const items_new = require('./dummy_items.json');
 
 // connect to the db
 mongoose.connect(
-    process.env.DB_CONNECTION_URI,
-    { useNewUrlParser: true },
-    () => {
-      console.log('Connected to the db!');
-    }
-  );
+  process.env.DB_CONNECTION_URI,
+  { useNewUrlParser: true },
+  () => {
+    console.log('Connected to the db!');
+  }
+);
 
 /**************************
 Script to add dummy data
 ***************************/
 
 users_new.forEach((user) => {
-    if (user.type == 'donor') {
-        user = new User.Donor(user);
-    } else if (user.type == "shopper") {
-        user = new User.Shopper(user);
-    } else if (user.type == "admin") {
-        user = new User.Admin(user);
+  if (user.type == 'donor') {
+    user = new User.Donor(user);
+  } else if (user.type == 'shopper') {
+    user = new User.Shopper(user);
+  } else if (user.type == 'admin') {
+    user = new User.Admin(user);
+  }
+  user.save((err) => {
+    if (err) {
+      console.log(err);
+      throw Error(err);
+    } else {
+      return { success: true, message: 'User created' };
     }
-    user.save(err=>{
-        if (err) {
-            console.log(err)
-          throw Error(err);
-        } else {
-          return { success: true, message: 'User created' }
-        }
-    })
-})
+  });
+});
 
 // items_new.forEach((item) => {
 //     item = new Item(item);

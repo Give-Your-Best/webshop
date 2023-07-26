@@ -1,7 +1,7 @@
 const colors = {
   red: {
     500: '#BA191A',
-    600: '#A21010'
+    600: '#A21010',
   },
   pink: {
     0: '#FFFBFC',
@@ -56,5 +56,5 @@ export const theme = {
     frontPanelBackground: colors.pink[100],
   },
   mobile: '768px',
-  mid: '65rem'
+  mid: '65rem',
 };
