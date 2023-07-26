@@ -26,10 +26,6 @@ export const SizesTable = styled(Table)`
     font-size: 22px;
   }
 
-  tr.ant-table-row:hover {
-    background-color: ${({ theme }) => theme.colorMappings.lightPink};
-  }
-
   && tbody > tr > td {
     padding: 10px;
   }
@@ -37,6 +33,11 @@ export const SizesTable = styled(Table)`
   .ant-table-cell {
     font-size: 20px;
     color: ${({ theme }) => theme.colorMappings.primary};
+
+    &.ant-table-cell-row-hover {
+      background-color: ${({ theme }) =>
+        theme.colorMappings.lightPink} !important;
+    }
 
     @media (max-width: ${({ theme }) => theme.mid}) {
       font-size: 20px;
