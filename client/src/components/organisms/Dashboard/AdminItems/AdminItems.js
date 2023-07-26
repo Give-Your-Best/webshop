@@ -1,8 +1,13 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
-import { ItemCardLong, ItemsCollapsedList } from "../../../molecules";
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel } from './AdminItems.styles';
+import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
+import {
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+} from './AdminItems.styles';
 import { getAdminItems, deleteItem } from '../../../../services/items';
 import { getTags } from '../../../../services/tags';
 import { tabList } from '../../../../utils/helpers';
@@ -19,42 +24,46 @@ export const AdminItems = () => {
   const handleDelete = (id, type) => {
     confirm({
       title: `Are you sure you want to delete this item?`,
-      className: "modalStyle",
+      className: 'modalStyle',
       onOk() {
-        deleteItem(id, token)
-        .then(() => {
-            setItems(items.filter(item => {
-            return item._id !== id;
-            }));
-            setPastItems(pastItems.filter(item => {
+        deleteItem(id, token).then(() => {
+          setItems(
+            items.filter((item) => {
               return item._id !== id;
-              }));
+            })
+          );
+          setPastItems(
+            pastItems.filter((item) => {
+              return item._id !== id;
+            })
+          );
         });
-      }
+      },
     });
   };
 
-const editForm = (record) => {
-  return (
-    <div key={record._id}><ItemCardLong item={record} type='all'/></div>
-  )      
-};
+  const editForm = (record) => {
+    return (
+      <div key={record._id}>
+        <ItemCardLong item={record} type="all" />
+      </div>
+    );
+  };
 
   useEffect(() => {
     var tabs = tabList(user);
     tabs.forEach((t) => {
       let url = '/dashboard/' + t.id;
       if (t.id === 'adminItems' && window.location !== 'url') {
-        window.history.pushState({}, '',url)
+        window.history.pushState({}, '', url);
       }
-    })
+    });
 
     const fetchItems = async () => {
-        //current items
-        const items = await getAdminItems(true);
-        if (!mountedRef.current) return null;
-        setItems(items);
-
+      //current items
+      const items = await getAdminItems(true);
+      if (!mountedRef.current) return null;
+      setItems(items);
     };
 
     const fetchPastItems = async () => {
@@ -67,7 +76,7 @@ const editForm = (record) => {
       const tags = await getTags(token);
       if (!mountedRef.current) return null;
       setTags(tags);
-    }
+    };
 
     fetchItems();
     fetchPastItems();
@@ -77,24 +86,34 @@ const editForm = (record) => {
       // cleanup
       mountedRef.current = false;
     };
-// eslint-disable-next-line
-}, [token, user]);
+    // eslint-disable-next-line
+  }, [token, user]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
       <StyledTabList>
-        <StyledTab className='itemslist'>Items</StyledTab>
+        <StyledTab className="itemslist">Items</StyledTab>
         <StyledTab>My Past Items</StyledTab>
       </StyledTabList>
 
       <StyledTabPanel>
-        <ItemsCollapsedList data={items} expandRow={editForm} handleDelete={handleDelete} admin={true} allTags={tags} />
+        <ItemsCollapsedList
+          data={items}
+          expandRow={editForm}
+          handleDelete={handleDelete}
+          admin={true}
+          allTags={tags}
+        />
       </StyledTabPanel>
       <StyledTabPanel>
-        <ItemsCollapsedList data={pastItems} expandRow={editForm} handleDelete={handleDelete} admin={true} allTags={tags}  />
+        <ItemsCollapsedList
+          data={pastItems}
+          expandRow={editForm}
+          handleDelete={handleDelete}
+          admin={true}
+          allTags={tags}
+        />
       </StyledTabPanel>
-
     </StyledTabs>
-
   );
 };

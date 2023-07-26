@@ -3,8 +3,8 @@ import { notification as AntNotify } from 'antd';
 export const Notification = (title, description, type) => {
   AntNotify[type]({
     message: title,
-    className: "notificationStyle",
+    className: 'notificationStyle',
     duration: 40,
-    description: description
+    description: description,
   });
 };

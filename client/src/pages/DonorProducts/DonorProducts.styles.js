@@ -16,4 +16,4 @@ export const ItemsWrapper = styled(Box)`
 
 export const PageWrapper = styled.div`
   width: 100%;
-`
+`;

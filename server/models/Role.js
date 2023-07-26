@@ -10,11 +10,10 @@ const Schema = mongoose.Schema;
 
 // db.roles.insertOne( { name: "First level admin", permissions: [ "Message", "View Notifications", "Assign Locations", "Approve Shoppers", "Approve Donors", " Approve Items", "Upload Products", "Adjust Shop Settings"] } );
 
-
 const roleSchema = new Schema({
   name: String,
   permissions: [String],
 });
-  
+
 //export
 module.exports = mongoose.model('Role', roleSchema);

@@ -16,21 +16,18 @@ export const AppWrapper = styled.div`
   }
 
   .hideOnMobile {
-
     @media (max-width: ${({ theme }) => theme.mobile}) {
       display: none;
     }
   }
 
   .fixedOnMobile {
-
     @media (max-width: ${({ theme }) => theme.mobile}) {
       max-width: 120px;
     }
   }
 
   .fixedOnMobileSmall {
-
     @media (max-width: ${({ theme }) => theme.mobile}) {
       max-width: 100px;
     }

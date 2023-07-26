@@ -10,17 +10,17 @@ import { HeaderWrapper, LogoWrapper } from './Header.styles';
 export const Header = () => {
   return (
     <div>
-    <HeaderWrapper data-testid="Header">
-      <AppHeading>
-        <LogoWrapper to="/">
-          <img alt="give-your-best-logo" src={logo} />
-        </LogoWrapper>
-      </AppHeading>
-      <BurgerMenu />
-      <MobileMenu />
-      <HeaderMenu />
-    </HeaderWrapper>
-    <CategoryMenu />
+      <HeaderWrapper data-testid="Header">
+        <AppHeading>
+          <LogoWrapper to="/">
+            <img alt="give-your-best-logo" src={logo} />
+          </LogoWrapper>
+        </AppHeading>
+        <BurgerMenu />
+        <MobileMenu />
+        <HeaderMenu />
+      </HeaderWrapper>
+      <CategoryMenu />
     </div>
   );
 };

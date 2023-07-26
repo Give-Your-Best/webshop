@@ -17,9 +17,7 @@ export const CategoryBlock = ({ category }) => {
       }
       onClick={() => history.push(`/products/women/${category.id}`)}
     >
-      <Meta
-        title={category.name}
-      />
+      <Meta title={category.name} />
     </Card>
   );
 };

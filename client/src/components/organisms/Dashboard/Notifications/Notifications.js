@@ -1,11 +1,32 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../../context/app-context';
-import { StyledTab, StyledTabList, StyledTabs, StyledTabPanel, ItemsList } from './Notifications.styles';
-import { ShopNotificationsList, AccountNotificationsList, ItemCardLong, AssignLocationModal } from '../../../molecules';
-import { getShopNotificationsItems, getAccountNotificationsItems, updateItem, getItem } from '../../../../services/items';
+import {
+  StyledTab,
+  StyledTabList,
+  StyledTabs,
+  StyledTabPanel,
+  ItemsList,
+} from './Notifications.styles';
+import {
+  ShopNotificationsList,
+  AccountNotificationsList,
+  ItemCardLong,
+  AssignLocationModal,
+} from '../../../molecules';
+import {
+  getShopNotificationsItems,
+  getAccountNotificationsItems,
+  updateItem,
+  getItem,
+} from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
 import { getUser } from '../../../../services/user';
-import { sendAutoEmail, tabList, name, getDate } from "../../../../utils/helpers";
+import {
+  sendAutoEmail,
+  tabList,
+  name,
+  getDate,
+} from '../../../../utils/helpers';
 import { Modal } from 'antd';
 
 export const Notifications = () => {
@@ -13,128 +34,160 @@ export const Notifications = () => {
   const mountedRef = useRef(true);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [shopNotificationsPendingAssign, setShopNotificationsPendingAssign] = useState([]);
+  const [shopNotificationsPendingAssign, setShopNotificationsPendingAssign] =
+    useState([]);
   const [shopNotificationsShopped, setShopNotificationsShopped] = useState([]);
-  const [accountNotificationsPendingReceive, setAccountNotificationsPendingReceive] = useState([]);
-  const [accountNotificationsPendingSent, setAccountNotificationsPendingSent] = useState([]);
-  const [accountNotificationsPendingShopperReceived, setAccountNotificationsPendingShopperReceived] = useState([]);
+  const [
+    accountNotificationsPendingReceive,
+    setAccountNotificationsPendingReceive,
+  ] = useState([]);
+  const [accountNotificationsPendingSent, setAccountNotificationsPendingSent] =
+    useState([]);
+  const [
+    accountNotificationsPendingShopperReceived,
+    setAccountNotificationsPendingShopperReceived,
+  ] = useState([]);
   const [adminLocations, setAdminLocations] = useState([]);
   const [assignAddressId, setAssignAddressId] = useState('');
 
   const handleOk = (values) => {
-      setLoading(true);
-      let updateData = {'sendVia': values.location, 'statusUpdateDates.gybAssignedDate': getDate()}
+    setLoading(true);
+    let updateData = {
+      sendVia: values.location,
+      'statusUpdateDates.gybAssignedDate': getDate(),
+    };
 
-      return new Promise((resolve, reject) => {
-        updateItem(assignAddressId, updateData, token)
-        .then(() => {
+    return new Promise((resolve, reject) => {
+      updateItem(assignAddressId, updateData, token).then(() => {
+        const item = shopNotificationsPendingAssign.items.filter((i) => {
+          return assignAddressId === i._id;
+        })[0];
+        const locationDetails = adminLocations.filter((l) => {
+          return values.location === l._id;
+        })[0];
+        locationDetails.FAO = name(item.shopperId);
 
-          const item = shopNotificationsPendingAssign.items.filter((i) => {return assignAddressId === i._id})[0];
-          const locationDetails = adminLocations.filter((l) => {return values.location === l._id})[0];
-          locationDetails.FAO = name(item.shopperId);
+        //send donor an email with the location address
+        sendAutoEmail(
+          'item_shopped_with_address',
+          item.donorId,
+          [item],
+          locationDetails
+        );
 
-          //send donor an email with the location address
-          sendAutoEmail('item_shopped_with_address', item.donorId, [item], locationDetails);
+        //send admin user an email with the shopper address
+        let shopperAddress = item.shopperId.deliveryAddress;
+        shopperAddress.name = name(item.shopperId);
+        sendAutoEmail(
+          'item_assigned',
+          locationDetails.adminUser,
+          [item],
+          shopperAddress
+        );
 
-          //send admin user an email with the shopper address
-          let shopperAddress = item.shopperId.deliveryAddress;
-          shopperAddress.name = name(item.shopperId)
-          sendAutoEmail('item_assigned', locationDetails.adminUser, [item], shopperAddress);
-
-          setAssignAddressId('');
-          setVisible(false);
-          setShopNotificationsPendingAssign(prevState => {
-            return { ...prevState, itemsCount: prevState.itemsCount - 1, items: (prevState.items).filter(item => {
+        setAssignAddressId('');
+        setVisible(false);
+        setShopNotificationsPendingAssign((prevState) => {
+          return {
+            ...prevState,
+            itemsCount: prevState.itemsCount - 1,
+            items: prevState.items.filter((item) => {
               return item._id !== assignAddressId;
-            }) }
-          });
-          resolve();
-        })
-      })
-      .catch(() => console.log('Oops errors!'));
+            }),
+          };
+        });
+        resolve();
+      });
+    }).catch(() => console.log('Oops errors!'));
   };
 
   const handleCancel = () => {
-      setVisible(false);
+    setVisible(false);
   };
 
   useEffect(() => {
-
     //add to url history (added for back button to work)
     var tabs = tabList(user);
     tabs.forEach((t) => {
       if (t.id === 'adminNotif') {
-        window.history.pushState({}, '','/dashboard/' + t.id)
+        window.history.pushState({}, '', '/dashboard/' + t.id);
       }
-    })
+    });
 
     const { confirm } = Modal;
 
     const assignAddress = async (itemId) => {
       setVisible(true);
       setAssignAddressId(itemId);
-      return
-    }
+      return;
+    };
 
     const markReceived = (itemId) => {
       const d = new Date();
       let date = d.toISOString();
-      const updateData = { "status": "received-by-gyb", 'statusUpdateDates.gybReceivedDate': date};
+      const updateData = {
+        status: 'received-by-gyb',
+        'statusUpdateDates.gybReceivedDate': date,
+      };
 
       confirm({
         title: `Are you sure you want to do this?`,
-        className: "modalStyle",
+        className: 'modalStyle',
         onOk() {
           return new Promise((resolve, reject) => {
-            updateItem(itemId, updateData, token)
-            .then(() => {
-              setAccountNotificationsPendingReceive(prevState => {
-                return { ...prevState, itemsCount: prevState.itemsCount - 1, items: (prevState.items).filter(item => {
-                  return item._id !== itemId;
-                }) }
+            updateItem(itemId, updateData, token).then(() => {
+              setAccountNotificationsPendingReceive((prevState) => {
+                return {
+                  ...prevState,
+                  itemsCount: prevState.itemsCount - 1,
+                  items: prevState.items.filter((item) => {
+                    return item._id !== itemId;
+                  }),
+                };
               });
               resolve();
-            })
-          })
-          .catch(() => console.log('Oops errors!'));
-        }
+            });
+          }).catch(() => console.log('Oops errors!'));
+        },
       });
-    }
+    };
 
     const markSent = (itemId) => {
       const d = new Date();
       let date = d.toISOString();
-      const updateData = { "status": "shipped-to-shopper", 'statusUpdateDates.shopperShippedDate': date};
+      const updateData = {
+        status: 'shipped-to-shopper',
+        'statusUpdateDates.shopperShippedDate': date,
+      };
 
       confirm({
         title: `Are you sure you want to do this?`,
-        className: "modalStyle",
+        className: 'modalStyle',
         onOk() {
           return new Promise((resolve, reject) => {
-            updateItem(itemId, updateData, token)
-            .then(() => {
-
-              getItem(itemId)
-              .then((item) => {
-                getUser(item.shopperId, token)
-                .then((shopper) => {
+            updateItem(itemId, updateData, token).then(() => {
+              getItem(itemId).then((item) => {
+                getUser(item.shopperId, token).then((shopper) => {
                   //send email to shopper that item is on its way to them
                   sendAutoEmail('item_on_the_way', shopper);
-                })
-              })
+                });
+              });
 
-              setAccountNotificationsPendingSent(prevState => {
-                return { ...prevState, itemsCount: prevState.itemsCount - 1, items: (prevState.items).filter(item => {
-                  return item._id !== itemId;
-                }) }
+              setAccountNotificationsPendingSent((prevState) => {
+                return {
+                  ...prevState,
+                  itemsCount: prevState.itemsCount - 1,
+                  items: prevState.items.filter((item) => {
+                    return item._id !== itemId;
+                  }),
+                };
               });
               resolve();
-            })
-          })
-          .catch(() => console.log('Oops errors!'));
-        }
+            });
+          }).catch(() => console.log('Oops errors!'));
+        },
       });
-    }
+    };
 
     const fetchShopItems = async () => {
       const items = await getShopNotificationsItems(token);
@@ -144,20 +197,20 @@ export const Notifications = () => {
 
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
-        "key": 1,
-        "name": "Item coming via GYB!", //approved items where the shopper has marked as send via gyb and item sendVia is empty
-        "message": "Please view and assign an address for you donor",
-        "itemsCount": (items[0])? items[0].length: 0,
-        "items": (items[0])? items[0]: [],
-        "action": assignAddress,
-        "actionDesc": "Assign"
+        key: 1,
+        name: 'Item coming via GYB!', //approved items where the shopper has marked as send via gyb and item sendVia is empty
+        message: 'Please view and assign an address for you donor',
+        itemsCount: items[0] ? items[0].length : 0,
+        items: items[0] ? items[0] : [],
+        action: assignAddress,
+        actionDesc: 'Assign',
       });
       setShopNotificationsShopped({
-          "key": 2,
-          "name": "Item shopped!", //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
-          "message": "Address assigned, view for progress update",
-          "itemsCount": (items[1])? items[1].length: 0,
-          "items": (items[1])? items[1]: []
+        key: 2,
+        name: 'Item shopped!', //Items where the donor is a gyb administrator and item is shopped status shopped, shipped, received?
+        message: 'Address assigned, view for progress update',
+        itemsCount: items[1] ? items[1].length : 0,
+        items: items[1] ? items[1] : [],
       });
     };
 
@@ -167,29 +220,29 @@ export const Notifications = () => {
       if (!mountedRef.current) return null;
 
       setAccountNotificationsPendingReceive({
-          "key": 1,
-          "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
-          "message": "Waiting for received notification",
-          "itemsCount": (items[0].length || 0),
-          "items": items[0] || [],
-          "action": markReceived,
-          "actionDesc": "Mark received"
+        key: 1,
+        name: 'Item coming to you!', //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
+        message: 'Waiting for received notification',
+        itemsCount: items[0].length || 0,
+        items: items[0] || [],
+        action: markReceived,
+        actionDesc: 'Mark received',
       });
       setAccountNotificationsPendingSent({
-        "key": 2,
-        "name": "Item coming to you!", //individual account holder is the sendVia admin on the item and status received by gyb (i.e not sent to shopper yet)
-        "message": "Received, waiting for sent notification",
-        "itemsCount": (items[1].length || 0),
-        "items": items[1] || [],
-        "action": markSent,
-        "actionDesc": "Mark sent"
+        key: 2,
+        name: 'Item coming to you!', //individual account holder is the sendVia admin on the item and status received by gyb (i.e not sent to shopper yet)
+        message: 'Received, waiting for sent notification',
+        itemsCount: items[1].length || 0,
+        items: items[1] || [],
+        action: markSent,
+        actionDesc: 'Mark sent',
       });
       setAccountNotificationsPendingShopperReceived({
-        "key": 3,
-        "name": "Item sent!", 
-        "message": "Waiting for shopped received notification",
-        "itemsCount": (items[2].length || 0),
-        "items": items[2] || []
+        key: 3,
+        name: 'Item sent!',
+        message: 'Waiting for shopped received notification',
+        itemsCount: items[2].length || 0,
+        items: items[2] || [],
       });
     };
 
@@ -199,39 +252,57 @@ export const Notifications = () => {
     return () => {
       mountedRef.current = false;
     };
-
   }, [token, user]);
 
   const editForm = (record) => {
     return (
       <ItemsList>
-      {record.items.map((item) => {
-        return (
-          <div key={item._id}>
-          <ItemCardLong item={item} type={user.type} actionText={record.actionDesc} action={record.action} />
-          </div>
-        )
-      }
-      )}
+        {record.items.map((item) => {
+          return (
+            <div key={item._id}>
+              <ItemCardLong
+                item={item}
+                type={user.type}
+                actionText={record.actionDesc}
+                action={record.action}
+              />
+            </div>
+          );
+        })}
       </ItemsList>
-    )      
+    );
   };
 
   return (
     <StyledTabs>
-    <StyledTabList>
-      <StyledTab>Shop Notifications</StyledTab>
-      <StyledTab>Account Notifications</StyledTab>
-    </StyledTabList>
+      <StyledTabList>
+        <StyledTab>Shop Notifications</StyledTab>
+        <StyledTab>Account Notifications</StyledTab>
+      </StyledTabList>
 
-    <StyledTabPanel>
-      <AssignLocationModal loading={loading} visible={visible} handleOk={handleOk} handleCancel={handleCancel} locations={adminLocations} />
-      <ShopNotificationsList data={[shopNotificationsPendingAssign, shopNotificationsShopped]} expandRow={editForm} />
-    </StyledTabPanel>
-    <StyledTabPanel>
-      <AccountNotificationsList data={[accountNotificationsPendingReceive, accountNotificationsPendingSent, accountNotificationsPendingShopperReceived]} expandRow={editForm} />
-    </StyledTabPanel>
-
-  </StyledTabs>
+      <StyledTabPanel>
+        <AssignLocationModal
+          loading={loading}
+          visible={visible}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          locations={adminLocations}
+        />
+        <ShopNotificationsList
+          data={[shopNotificationsPendingAssign, shopNotificationsShopped]}
+          expandRow={editForm}
+        />
+      </StyledTabPanel>
+      <StyledTabPanel>
+        <AccountNotificationsList
+          data={[
+            accountNotificationsPendingReceive,
+            accountNotificationsPendingSent,
+            accountNotificationsPendingShopperReceived,
+          ]}
+          expandRow={editForm}
+        />
+      </StyledTabPanel>
+    </StyledTabs>
   );
 };

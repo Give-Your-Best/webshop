@@ -11,12 +11,12 @@ const itemSchema = new Schema(
     name: String,
     donorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
     },
     approvedStatus: {
       type: String,
-      enum: ["in-progress", "approved", "rejected"],
-      default : 'in-progress'
+      enum: ['in-progress', 'approved', 'rejected'],
+      default: 'in-progress',
     },
     category: String,
     brand: String,
@@ -27,43 +27,52 @@ const itemSchema = new Schema(
     },
     clothingSize: [String],
     shoeSize: [String],
-    photos: [{
-      url: String
-    }],
+    photos: [
+      {
+        url: String,
+      },
+    ],
     moreInfo: String,
     colors: [String],
     status: {
       type: String,
-      enum: ["in-shop", "shopped", "shipped-to-gyb", "received-by-gyb", "shipped-to-shopper", "received"],
+      enum: [
+        'in-shop',
+        'shopped',
+        'shipped-to-gyb',
+        'received-by-gyb',
+        'shipped-to-shopper',
+        'received',
+      ],
       // in-shop then shopped when a shopper selects it. shipped-to-gyb and received-by-gyb only used if shopper is sending via gyb
-      default : 'in-shop'
+      default: 'in-shop',
     },
     statusUpdateDates: {
-      "shoppedDate": Date,
-      "gybShippedDate": Date,
-      "gybReceivedDate": Date,
-      "gybAssignedDate": Date,
-      "shopperShippedDate": Date,
-      "shopperReceivedDate": Date,
-      "inBasketDate": Date
+      shoppedDate: Date,
+      gybShippedDate: Date,
+      gybReceivedDate: Date,
+      gybAssignedDate: Date,
+      shopperShippedDate: Date,
+      shopperReceivedDate: Date,
+      inBasketDate: Date,
     },
     shopperId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
     },
     sendVia: {
-        type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then location is
-        ref: 'Location' 
+      type: mongoose.Schema.Types.ObjectId, //if shopper selected send via gyb then location is
+      ref: 'Location',
     },
     inBasket: Boolean,
     live: {
       type: Boolean,
-      default : true
+      default: true,
     },
     tags: [{ type: Schema.ObjectId, ref: 'Tag' }],
     packageId: {
       type: String,
-      default : ''
+      default: '',
     },
   },
   options
@@ -74,13 +83,13 @@ itemSchema.post('update', function () {
 });
 
 // Before saving set approved status to approved if donor is a trusted donor (default is in-progress)
-itemSchema.pre('save', async function(next) {
+itemSchema.pre('save', async function (next) {
   const item = this;
   var donor = await User_.User.findOne({
     _id: item.donorId,
   });
   if (donor.trustedDonor) {
-    this.approvedStatus = 'approved'
+    this.approvedStatus = 'approved';
   }
   next();
 });

@@ -6,7 +6,9 @@ export const Container = styled.div`
   padding: 2rem 2rem;
   background: ${({ theme }) => theme.colorMappings.background};
 
-  > h1, h2, h3 {
+  > h1,
+  h2,
+  h3 {
     text-align: center;
   }
 
@@ -15,11 +17,11 @@ export const Container = styled.div`
     font-size: 20px;
   }
 
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     padding: 1rem 1rem;
   }
 
-  @media (max-width:${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({ theme }) => theme.mobile}) {
     padding: 0.5rem 0.5rem;
   }
 `;

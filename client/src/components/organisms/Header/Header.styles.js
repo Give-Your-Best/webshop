@@ -6,7 +6,7 @@ export const HeaderWrapper = styled.div`
   justify-content: space-between;
   width: 100%;
   min-height: 125px;
-  background:  ${({ theme }) => theme.colorMappings.secondary};
+  background: ${({ theme }) => theme.colorMappings.secondary};
   padding: 0 calc((100vw - 80rem) / 2);
   @media (max-width: ${({ theme }) => theme.mobile}) {
     justify-content: center;

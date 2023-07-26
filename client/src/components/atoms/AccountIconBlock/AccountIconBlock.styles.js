@@ -5,7 +5,7 @@ export const AccountIconImage = styled.img`
   margin: auto;
   cursor: pointer;
   margin: 1em 2em;
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     width: 150px;
   }
 `;

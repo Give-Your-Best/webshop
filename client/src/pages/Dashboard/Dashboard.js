@@ -8,7 +8,7 @@ export const Dashboard = () => {
 
   return (
     <Container data-testid="Dashboard">
-        <DashboardTabs itemId={itemId} />
+      <DashboardTabs itemId={itemId} />
     </Container>
   );
 };

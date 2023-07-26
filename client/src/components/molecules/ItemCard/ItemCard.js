@@ -14,16 +14,13 @@ export const ItemCard = ({ item }) => {
   return (
     <Card
       hoverable
-      cover={
-        <img alt={`front of ${item.name}`} src={imageUrl} />
-      }
+      cover={<img alt={`front of ${item.name}`} src={imageUrl} />}
       onClick={() => history.push(`/item/${item._id}`)}
     >
-      <Meta
-        title={item.name}
-        description={trunc(item.description)}
-      />
-      <Button primary small right>{'Take a look >'}</Button>
+      <Meta title={item.name} description={trunc(item.description)} />
+      <Button primary small right>
+        {'Take a look >'}
+      </Button>
     </Card>
   );
 };

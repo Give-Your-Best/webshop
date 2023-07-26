@@ -1,13 +1,26 @@
 import React, { useRef, useState } from 'react';
 import { Input, Space, Button as AntButton, Tooltip } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button } from "../../atoms";
-import { ListWrapper, StyledTable, ExpandButton, DeleteButton } from './ItemsCollapsedList.styles';
+import { Button } from '../../atoms';
+import {
+  ListWrapper,
+  StyledTable,
+  ExpandButton,
+  DeleteButton,
+} from './ItemsCollapsedList.styles';
 import { categories } from '../../../utils/constants';
 import { name } from '../../../utils/helpers';
 import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
-export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admin, allTags, editItemLiveStatus }) => {
+export const ItemsCollapsedList = ({
+  data,
+  handleDelete,
+  expandRow,
+  reOpen,
+  admin,
+  allTags,
+  editItemLiveStatus,
+}) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   //functions for the name search
@@ -20,11 +33,16 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
   };
 
   const handleReset = (clearFilters) => {
-    clearFilters({closeDropDown: true, confirm: true});
+    clearFilters({ closeDropDown: true, confirm: true });
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -34,7 +52,9 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm)}
           style={{
             marginBottom: 8,
@@ -49,16 +69,12 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
           >
             Search
           </AntButton>
-          <AntButton
-            onClick={() => handleReset(clearFilters)}
-          >
-            Reset
-          </AntButton>
+          <AntButton onClick={() => handleReset(clearFilters)}>Reset</AntButton>
         </Space>
       </div>
     ),
     onFilter: (value, record) =>
-    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
@@ -71,7 +87,7 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    render: (text) => (text)
+    render: (text) => text,
   });
 
   //table columns
@@ -80,97 +96,104 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
       title: 'Name',
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name')
-    }
-  ]
+      ...getColumnSearchProps('name'),
+    },
+  ];
 
   if (!admin) {
-
     columns.push({
       title: 'Approved Status',
       dataIndex: 'approvedStatus',
       key: 'approvedStatus',
       render: (record) => {
-        let value = (record === 'in-progress')? 'Awaiting approval': '';
-        return value
-      }
-    })
+        let value = record === 'in-progress' ? 'Awaiting approval' : '';
+        return value;
+      },
+    });
     columns.push({
       title: 'Live',
       dataIndex: 'live',
       key: 'live',
       render: (record) => {
-        let value = (record === false)? 'Inactive': 'Active';
-        return value
-      }
-    })
+        let value = record === false ? 'Inactive' : 'Active';
+        return value;
+      },
+    });
   }
 
   //additional columns if admin
-  
+
   if (admin) {
-      //map shopper and donor name onto the result as antd table search does not work otherwise
-      rows = data.map((d) => {
-        return {
-          ...d,
-          shopper: name(d.shopperId),
-          donor: name(d.donorId),
-        };
-      })
-      
+    //map shopper and donor name onto the result as antd table search does not work otherwise
+    rows = data.map((d) => {
+      return {
+        ...d,
+        shopper: name(d.shopperId),
+        donor: name(d.donorId),
+      };
+    });
+
     columns.push({
       title: 'Category',
       dataIndex: 'category',
       className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.category.localeCompare(b.category),
-      filters: categories.map((c) => { return { text: c.name, value: c.id } }),
+      filters: categories.map((c) => {
+        return { text: c.name, value: c.id };
+      }),
       filterMode: 'tree',
       filterSearch: true,
       onFilter: (value, record) => record.category.startsWith(value),
-    })
+    });
     columns.push({
       title: 'Status',
       dataIndex: 'status',
       className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.status.localeCompare(b.status),
-      filters: adminAllItemStatus.map((c) => { return { text: c.statusText, value: c.status } }),
+      filters: adminAllItemStatus.map((c) => {
+        return { text: c.statusText, value: c.status };
+      }),
       filterMode: 'tree',
       filterSearch: true,
       onFilter: (value, record) => record.status.startsWith(value),
       render: (record) => {
-        let value = adminAllItemStatus.find(x => x.status === record)
-        return value.statusText
-      }
-    })
+        let value = adminAllItemStatus.find((x) => x.status === record);
+        return value.statusText;
+      },
+    });
     columns.push({
       title: 'Donor',
       dataIndex: 'donor',
       render: (record) => {
         return name(record);
       },
-      ...getColumnSearchProps('donor')
-    })
+      ...getColumnSearchProps('donor'),
+    });
     columns.push({
       title: 'Shopper',
       dataIndex: 'shopper',
       render: (record) => {
         return name(record);
       },
-      ...getColumnSearchProps('shopper')
-    })
+      ...getColumnSearchProps('shopper'),
+    });
     columns.push({
       title: 'Tags',
       dataIndex: 'tags',
       render: (record) => {
-        return record.map((r) => { 
-          return <span>r.name</span>
-        }).join();
+        return record
+          .map((r) => {
+            return <span>r.name</span>;
+          })
+          .join();
       },
       className: 'onlyHeading',
-      filters: allTags.map((c) => { return { text: c.name, value: c._id } }),
+      filters: allTags.map((c) => {
+        return { text: c.name, value: c._id };
+      }),
       filterMode: 'tree',
-      onFilter: (value, record) => record.tags.some(t=>t._id === value)
-    })
+      onFilter: (value, record) => record.tags.some((t) => t._id === value),
+    });
   }
 
   if (handleDelete) {
@@ -180,45 +203,84 @@ export const ItemsCollapsedList = ({ data, handleDelete, expandRow, reOpen, admi
       width: 20,
       render: (record) => (
         <Space size="middle">
-          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
+          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>
+            Delete
+          </DeleteButton>
         </Space>
-      )
-    })
+      ),
+    });
   }
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: selectedRowKeys => {
-      setSelectedRowKeys( selectedRowKeys );
-    }
+    onChange: (selectedRowKeys) => {
+      setSelectedRowKeys(selectedRowKeys);
+    },
   };
 
   return (
     <ListWrapper>
       <StyledTable
-        rowSelection={(!admin) ? rowSelection : false}
+        rowSelection={!admin ? rowSelection : false}
         pagination={{ hideOnSinglePage: true }}
         columns={columns}
         rowKey={(record) => record._id || 0}
-        showHeader={(!admin) ? false : true}
+        showHeader={!admin ? false : true}
         expandable={{
           expandedRowRender: expandRow,
-          expandIconColumnIndex: (!admin) ? 4 : 6,
+          expandIconColumnIndex: !admin ? 4 : 6,
           expandIcon: ({ expanded, onExpand, record }) =>
             expanded ? (
-              <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                Close
+              </ExpandButton>
             ) : (
-              <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
-            )
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                View
+              </ExpandButton>
+            ),
         }}
         dataSource={rows}
       />
-      {(reOpen) ? <Button onClick={reOpen} small primary>Back to Current Items</Button> : ''}
+      {reOpen ? (
+        <Button onClick={reOpen} small primary>
+          Back to Current Items
+        </Button>
+      ) : (
+        ''
+      )}
 
-      {(!admin && !reOpen) ? <Tooltip title="Select items to activate in shop"><Button primary small onClick={() => {editItemLiveStatus(selectedRowKeys, true)}}>Mark as Active</Button></Tooltip>: ''}
+      {!admin && !reOpen ? (
+        <Tooltip title="Select items to activate in shop">
+          <Button
+            primary
+            small
+            onClick={() => {
+              editItemLiveStatus(selectedRowKeys, true);
+            }}
+          >
+            Mark as Active
+          </Button>
+        </Tooltip>
+      ) : (
+        ''
+      )}
 
-      {(!admin && !reOpen) ? <Tooltip title="Select items to remove from shop"><Button primary small onClick={() => {editItemLiveStatus(selectedRowKeys, false)}}>Mark as Inactive</Button></Tooltip>: ''}
-
+      {!admin && !reOpen ? (
+        <Tooltip title="Select items to remove from shop">
+          <Button
+            primary
+            small
+            onClick={() => {
+              editItemLiveStatus(selectedRowKeys, false);
+            }}
+          >
+            Mark as Inactive
+          </Button>
+        </Tooltip>
+      ) : (
+        ''
+      )}
     </ListWrapper>
   );
 };

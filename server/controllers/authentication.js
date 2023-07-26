@@ -15,77 +15,77 @@ const tokenForUser = (user) => {
 };
 
 const setRefreshTokenCookie = (res) => {
-  console.log('refresh token cookie')
+  console.log('refresh token cookie');
   const refreshToken = uuidv4();
   res.cookie('refresh_token', refreshToken, {
     httpOnly: true,
     maxAge: 12 * 60 * 60, // 12 hours
     signed: true, // access cookie later with req.signedCookies
-    sameSite: 'strict'
+    sameSite: 'strict',
   });
 
   return refreshToken;
 };
 
 const setUserDetails = (user) => {
-  let UserDetails = { 
-    email: user.email, 
-    type: user.kind || 'no-access', 
-    id: user._id, 
-    firstName: user.firstName, 
+  let UserDetails = {
+    email: user.email,
+    type: user.kind || 'no-access',
+    id: user._id,
+    firstName: user.firstName,
     lastName: user.lastName,
     recentItems: user.recentItems || [],
-    deliveryAddress: user.deliveryAddress || {}
-  }
+    deliveryAddress: user.deliveryAddress || {},
+  };
 
   if (user.kind === 'donor') {
-    UserDetails.trustedDonor = user.trustedDonor || false
+    UserDetails.trustedDonor = user.trustedDonor || false;
   }
 
   if (user.kind === 'shopper') {
-    UserDetails.deliveryAddress = user.deliveryAddress || {}
-    UserDetails.deliveryPreference = user.deliveryPreference || 'direct'
-    UserDetails.shoppingFor = user.shoppingFor || 1
-    UserDetails.shoppingForChildren = user.shoppingForChildren || 0
+    UserDetails.deliveryAddress = user.deliveryAddress || {};
+    UserDetails.deliveryPreference = user.deliveryPreference || 'direct';
+    UserDetails.shoppingFor = user.shoppingFor || 1;
+    UserDetails.shoppingForChildren = user.shoppingForChildren || 0;
   }
 
-  return UserDetails
-}
+  return UserDetails;
+};
 
 const name = (userDetails) => {
   if (userDetails.firstName && userDetails.lastName) {
-      return userDetails.firstName + ' ' + userDetails.lastName
+    return userDetails.firstName + ' ' + userDetails.lastName;
   } else if (userDetails.firstName && !userDetails.lastName) {
-      return userDetails.firstName
+    return userDetails.firstName;
   } else if (!userDetails.firstName && userDetails.lastName) {
-      return userDetails.lastName
+    return userDetails.lastName;
   } else {
-      return userDetails.email
+    return userDetails.email;
   }
-}
+};
 
 const login = async (req, res) => {
   try {
     const user = await User_.User.findOne({
       email: req.body.email,
-      approvedStatus: 'approved'
+      approvedStatus: 'approved',
     });
 
-    if ( user && user.kind === 'shopper') {
+    if (user && user.kind === 'shopper') {
       const recentItems = await Item.find({
-        'shopperId': user._id,
+        shopperId: user._id,
         'statusUpdateDates.shoppedDate': {
           $gte: new Date(sevenDaysAgo),
-          $lte: new Date(today)
-        }
+          $lte: new Date(today),
+        },
       });
       if (recentItems) {
         user.recentItems = recentItems;
       }
     }
-    
+
     if (!user) {
-      console.log('no user found')
+      console.log('no user found');
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });
@@ -96,14 +96,14 @@ const login = async (req, res) => {
       user.password
     );
     if (!isMatch) {
-      console.log('incorrect pass')
+      console.log('incorrect pass');
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });
     }
     const token = tokenForUser({
       _id: user._id,
-      email: user.email
+      email: user.email,
     });
     setRefreshTokenCookie(res); // currently not used
 
@@ -128,11 +128,11 @@ const passwordReset = async (req, res) => {
   try {
     const user = await User_.User.findOne({
       email: req.body.email,
-      approvedStatus: 'approved'
+      approvedStatus: 'approved',
     });
 
     if (!user) {
-      console.log('no user found')
+      console.log('no user found');
       return res
         .status(401)
         .send({ success: false, message: 'No account found.' });
@@ -142,16 +142,23 @@ const passwordReset = async (req, res) => {
       //update user password with temp
       await user.updatePassword(user._id, temp);
       //send email with new password
-      await Mail.sendMail('', req.body.emailContent.replace('{{name}}', name(user)).replace('{{password}}', temp), req.body.email, name(user));
+      await Mail.sendMail(
+        '',
+        req.body.emailContent
+          .replace('{{name}}', name(user))
+          .replace('{{password}}', temp),
+        req.body.email,
+        name(user)
+      );
 
       return res.json({
         success: true,
-        message: 'password updated!'
+        message: 'password updated!',
       });
     } catch (err) {
       return res.json({
         success: false,
-        message: 'password failed to update'
+        message: 'password failed to update',
       });
     }
   } catch (err) {
@@ -161,8 +168,7 @@ const passwordReset = async (req, res) => {
       message: `Something went wrong: ${err}`,
     });
   }
-
-}
+};
 
 const verifyToken = (req, res, next) => {
   // check header or url parameters or post parameters for token
@@ -225,13 +231,13 @@ const authenticate = async (req, res) => {
     }
     req.decoded = decoded;
 
-    if ( user && user.kind === 'shopper') {
+    if (user && user.kind === 'shopper') {
       const recentItems = await Item.find({
-        'shopperId': user._id,
+        shopperId: user._id,
         'statusUpdateDates.shoppedDate': {
           $gte: new Date(sevenDaysAgo),
-          $lte: new Date(today)
-        }
+          $lte: new Date(today),
+        },
       });
       if (recentItems) {
         user.recentItems = recentItems;
@@ -257,11 +263,11 @@ const updatePassword = async (req, res) => {
   try {
     const user = await User_.User.findOne({
       email: req.body.email,
-      approvedStatus: 'approved'
+      approvedStatus: 'approved',
     });
 
     if (!user) {
-      console.log('no user found')
+      console.log('no user found');
       return res
         .status(401)
         .send({ success: false, message: 'Authentication failed.' });
@@ -272,22 +278,25 @@ const updatePassword = async (req, res) => {
       user.password
     );
     if (!isMatch) {
-      console.log('Incorrect current password')
+      console.log('Incorrect current password');
       return res
         .status(401)
         .send({ success: false, message: 'Incorrect current password' });
     }
 
     try {
-      const update = await user.updatePassword(req.body.id, req.body.newPassword);
+      const update = await user.updatePassword(
+        req.body.id,
+        req.body.newPassword
+      );
       return res.json({
         success: true,
-        message: 'password updated!'
+        message: 'password updated!',
       });
     } catch (err) {
       return res.json({
         success: false,
-        message: 'password failed to update'
+        message: 'password failed to update',
       });
     }
   } catch (err) {
@@ -297,8 +306,7 @@ const updatePassword = async (req, res) => {
       message: `Something went wrong: ${err}`,
     });
   }
-
-}
+};
 
 module.exports = {
   login,
@@ -306,5 +314,5 @@ module.exports = {
   refreshToken,
   authenticate,
   updatePassword,
-  passwordReset
+  passwordReset,
 };

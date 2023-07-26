@@ -5,9 +5,7 @@ import { StyledBar, StyledMobileBar } from './ItemsChart.styles';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-
 export const ItemsChart = ({ stats }) => {
-
   const options = {
     plugins: {
       title: {
@@ -15,11 +13,11 @@ export const ItemsChart = ({ stats }) => {
         text: 'Items',
         color: theme.colorMappings.primary,
         font: {
-          size: 24
-        }
+          size: 24,
+        },
       },
     },
-    responsive: true
+    responsive: true,
   };
 
   const mobileOptions = {
@@ -29,12 +27,12 @@ export const ItemsChart = ({ stats }) => {
         text: 'Items',
         color: theme.colorMappings.primary,
         font: {
-          size: 24
-        }
+          size: 24,
+        },
       },
     },
     responsive: false,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
   };
 
   const labels = ['Donated', 'Shopped'];
@@ -44,29 +42,35 @@ export const ItemsChart = ({ stats }) => {
     datasets: [
       {
         label: 'Total',
-        data: (stats)? stats.map((i) => i.total): [],
+        data: stats ? stats.map((i) => i.total) : [],
         backgroundColor: 'rgb(255, 218, 252)',
       },
       {
         label: 'Today',
-        data: (stats)? stats.map((i) => i.today): [],
+        data: stats ? stats.map((i) => i.today) : [],
         backgroundColor: 'rgb(253, 216, 0)',
       },
       {
         label: 'Last Seven Days',
-        data: (stats)? stats.map((i) => i.thisWeek): [],
+        data: stats ? stats.map((i) => i.thisWeek) : [],
         backgroundColor: 'rgb(255, 99, 143)',
       },
       {
         label: 'Last 30 days',
-        data: (stats)? stats.map((i) => i.thisMonth): [],
+        data: stats ? stats.map((i) => i.thisMonth) : [],
         backgroundColor: 'rgb(29, 189, 241)',
       },
     ],
   };
 
-  return <>
-  <StyledMobileBar><Bar options={mobileOptions} data={data} width={300} height={350}/></StyledMobileBar>
-  <StyledBar><Bar options={options} data={data} /></StyledBar>
-  </>;
+  return (
+    <>
+      <StyledMobileBar>
+        <Bar options={mobileOptions} data={data} width={300} height={350} />
+      </StyledMobileBar>
+      <StyledBar>
+        <Bar options={options} data={data} />
+      </StyledBar>
+    </>
+  );
 };

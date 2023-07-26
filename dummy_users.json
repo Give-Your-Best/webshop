@@ -1,4 +1,5 @@
-[{
+[
+  {
     "firstName": "GYB",
     "lastName": "Admin",
     "email": "gyb.developers@gmail.com",
@@ -6,4 +7,5 @@
     "type": "admin",
     "approvedStatus": "approved",
     "assignedRole": "623c8b03b1ce9ed8d506b0ac"
-}]
+  }
+]

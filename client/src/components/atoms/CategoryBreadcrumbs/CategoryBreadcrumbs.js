@@ -13,25 +13,44 @@ export const CategoryBreadcrumbs = ({ category, subCategory, donor }) => {
     if (c.id === category) {
       categoryName = c.name;
     }
-  })
+  });
 
   subCategories.forEach((c) => {
     if (c.id === subCategory) {
       subCategoryName = c.name;
     }
-  })
+  });
 
-  return (
-      (category)?
-        <StyledBreadcrumbs separator=">">
-          <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Home</StyledBreadcrumbs.Item>
-          <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}`)}>{categoryName}</StyledBreadcrumbs.Item>
-          { (subCategoryName)? <StyledBreadcrumbs.Item onClick={() => history.push(`/products/${category}/${subCategory}`)}>{subCategoryName}</StyledBreadcrumbs.Item>: ''}
-        </StyledBreadcrumbs>
-        : (donor)? <StyledBreadcrumbs separator=">">
-            <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Home</StyledBreadcrumbs.Item>
-            <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>Donor Products</StyledBreadcrumbs.Item>
-          </StyledBreadcrumbs>
-        : ''
-  )
+  return category ? (
+    <StyledBreadcrumbs separator=">">
+      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
+        Home
+      </StyledBreadcrumbs.Item>
+      <StyledBreadcrumbs.Item
+        onClick={() => history.push(`/products/${category}`)}
+      >
+        {categoryName}
+      </StyledBreadcrumbs.Item>
+      {subCategoryName ? (
+        <StyledBreadcrumbs.Item
+          onClick={() => history.push(`/products/${category}/${subCategory}`)}
+        >
+          {subCategoryName}
+        </StyledBreadcrumbs.Item>
+      ) : (
+        ''
+      )}
+    </StyledBreadcrumbs>
+  ) : donor ? (
+    <StyledBreadcrumbs separator=">">
+      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
+        Home
+      </StyledBreadcrumbs.Item>
+      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
+        Donor Products
+      </StyledBreadcrumbs.Item>
+    </StyledBreadcrumbs>
+  ) : (
+    ''
+  );
 };

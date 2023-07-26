@@ -4,7 +4,7 @@ export const FooterWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  background:  ${({ theme }) => theme.colorMappings.secondary};
+  background: ${({ theme }) => theme.colorMappings.secondary};
   padding: 20px 7rem 20px;
   flex-shrink: 0;
   border-top: 15px solid #152f45;
@@ -18,7 +18,7 @@ export const FooterWrapper = styled.div`
     display: block;
 
     h4 {
-      margin-top: 1em;  
+      margin-top: 1em;
     }
   }
 `;
@@ -35,7 +35,6 @@ export const SocialWrapper = styled.div`
     display: block;
     width: 50%;
   }
-  
 
   a {
     margin: 10px auto;
@@ -56,7 +55,7 @@ export const SocialWrapper = styled.div`
       width: 40px !important;
     }
   }
-`
+`;
 
 export const FooterItem = styled.div`
   width: 25%;
@@ -73,7 +72,6 @@ export const FooterItem = styled.div`
     @media (max-width: ${({ theme }) => theme.mobile}) {
       width: 100px;
     }
-  
   }
 
   p {

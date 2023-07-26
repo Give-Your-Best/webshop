@@ -1,19 +1,18 @@
 body {
   margin: 0;
-  font-family: lato, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: lato, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
-.modalStyle .ant-modal-confirm-title, .modalStyle .ant-modal-confirm-content {
+.modalStyle .ant-modal-confirm-title,
+.modalStyle .ant-modal-confirm-content {
   font-size: 20px !important;
-  color: #BA191A !important;
+  color: #ba191a !important;
 }
 
-.modalStyle .ant-modal-confirm-title{
+.modalStyle .ant-modal-confirm-title {
   text-align: center;
   line-height: 1.7;
 }

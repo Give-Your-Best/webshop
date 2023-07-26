@@ -15,115 +15,115 @@ import { DonorOrdersList } from '../../../molecules/DonorOrdersList';
 import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 
 export const adminTabs = [
-    {
-      name: 'Dashboard',
+  {
+    name: 'Dashboard',
     content: <DashboardImage />,
-    id:'adminImage'
-    },
-    {
-      name: 'Statistics',
+    id: 'adminImage',
+  },
+  {
+    name: 'Statistics',
     content: <Statistics />,
-    id:'statistics'
-    },
-    {
-      name: 'Items',
+    id: 'statistics',
+  },
+  {
+    name: 'Items',
     content: <AdminItems />,
-    id:'adminItems'
-    },
-    {
-      name: 'Users',
+    id: 'adminItems',
+  },
+  {
+    name: 'Users',
     content: <Users />,
-    id:'adminUsers'
-    },
-    {
-      name: 'Messaging',
+    id: 'adminUsers',
+  },
+  {
+    name: 'Messaging',
     content: <AdminMessages />,
-    id:'adminMessages'
-    },
-    {
-      name: 'Notifications',
+    id: 'adminMessages',
+  },
+  {
+    name: 'Notifications',
     content: <Notifications />,
-    id:'adminNotif'
-    },
-    {
-      name: 'Approve Requests',
+    id: 'adminNotif',
+  },
+  {
+    name: 'Approve Requests',
     content: <ApproveRequests />,
-    id:'adminApprove'
-    },
-    {
-      name: 'Shipping Locations',
+    id: 'adminApprove',
+  },
+  {
+    name: 'Shipping Locations',
     content: <ShippingLocations />,
-    id:'adminLocations'
-    },
-    {
-      name: 'Settings',
+    id: 'adminLocations',
+  },
+  {
+    name: 'Settings',
     content: <Settings />,
-    id:'adminSettings'
-    },
-    {
-      name: 'Logout',
+    id: 'adminSettings',
+  },
+  {
+    name: 'Logout',
     content: <Logout />,
-    id:'logout'
-    },
-]
+    id: 'logout',
+  },
+];
 
 export const donorTabs = [
-    {
-      name: 'Dashboard',
+  {
+    name: 'Dashboard',
     content: <DashboardImage />,
-    id:'adminImage'
-    },
-    {
-      name: 'My Details',
+    id: 'adminImage',
+  },
+  {
+    name: 'My Details',
     content: <UserDetails />,
-    id:'donorDetails'
-    },
-    {
-      name: 'My Items',
+    id: 'donorDetails',
+  },
+  {
+    name: 'My Items',
     content: <DonorItems />,
-    id:'donorItems'
-    },
-    {
-      name: 'Item Processing',
+    id: 'donorItems',
+  },
+  {
+    name: 'Item Processing',
     content: <DonorOrdersList />,
-    id:'donorProcessing'
-    },
-    {
-      name: 'Messaging',
+    id: 'donorProcessing',
+  },
+  {
+    name: 'Messaging',
     content: <UserMessages />,
-    id:'donorMessages'
-    },
-    {
-      name: 'Logout',
+    id: 'donorMessages',
+  },
+  {
+    name: 'Logout',
     content: <Logout />,
-    id:'logout'
-    },
-]
+    id: 'logout',
+  },
+];
 
 export const shopperTabs = [
-    {
-      name: 'Dashboard',
+  {
+    name: 'Dashboard',
     content: <DashboardImage />,
-    id:'adminImage'
-    },
-    {
-        name: 'My Details',
-      content: <UserDetails />,
-      id:'shopperDetails'
-      },
-      {
-        name: 'My Orders',
-      content: <OrdersList />,
-      id:'shopperOrders'
-      },
-      {
-        name: 'Messaging',
-      content: <UserMessages />,
-      id:'shopperMessages'
-      },
-      {
-        name: 'Logout',
-      content: <Logout />,
-      id:'logout'
-      },
-]
+    id: 'adminImage',
+  },
+  {
+    name: 'My Details',
+    content: <UserDetails />,
+    id: 'shopperDetails',
+  },
+  {
+    name: 'My Orders',
+    content: <OrdersList />,
+    id: 'shopperOrders',
+  },
+  {
+    name: 'Messaging',
+    content: <UserMessages />,
+    id: 'shopperMessages',
+  },
+  {
+    name: 'Logout',
+    content: <Logout />,
+    id: 'logout',
+  },
+];

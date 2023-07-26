@@ -3,7 +3,7 @@ import { Box } from '../../components';
 import { Link } from 'react-router-dom';
 
 export const DonorLink = styled(Link)`
-  color:  ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
   padding: 0;
   margin: 1.5em 0;
   font-family: lato;
@@ -14,34 +14,34 @@ export const DonorLink = styled(Link)`
 `;
 
 export const ItemWrapper = styled(Box)`
-    display: flex;
-    justify-content: space-between;
-    margin: 3em 0 4em 0;
+  display: flex;
+  justify-content: space-between;
+  margin: 3em 0 4em 0;
 
-    @media (max-width: ${({ theme }) => theme.mobile}) {
-      display: block;
-    }
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    display: block;
+  }
 `;
 
 export const ImagesWrapper = styled.div`
-    display:flex;
-    width: 50%;
+  display: flex;
+  width: 50%;
 
-    @media (max-width: ${({ theme }) => theme.mobile}) {
-      width: 100% !important;
-    }
+  @media (max-width: ${({ theme }) => theme.mobile}) {
+    width: 100% !important;
+  }
 
-    > img {
-        width: 80%;
-        height:fit-content;
-        margin-left: 10px;
-        border-radius: 1em !important;
-        border: 1px solid ${({ theme }) => theme.colorMappings.borders};
-    }
-`
+  > img {
+    width: 80%;
+    height: fit-content;
+    margin-left: 10px;
+    border-radius: 1em !important;
+    border: 1px solid ${({ theme }) => theme.colorMappings.borders};
+  }
+`;
 
 export const MiniImagesWrapper = styled(Box)`
-  display:inline;
+  display: inline;
   max-width: 20%;
   min-width: 20%;
 

@@ -6,13 +6,13 @@ export const CategoryMenuWrapper = styled.nav`
   width: 100%;
   background: ${({ theme }) => theme.colorMappings.yellow};
   height: 82px;
-  padding: 0 calc((100vw - 80rem)/2);
-  box-shadow: 0px 3px 10px #EF7C9829;
-  
-  @media (max-width:${({ theme }) => theme.mobile}) {
+  padding: 0 calc((100vw - 80rem) / 2);
+  box-shadow: 0px 3px 10px #ef7c9829;
+
+  @media (max-width: ${({ theme }) => theme.mobile}) {
     display: none;
   }
-`
+`;
 
 export const CategoryMenuItem = styled.li`
   background: ${({ theme }) => theme.colorMappings.yellow};
@@ -25,7 +25,7 @@ export const CategoryMenuItem = styled.li`
 `;
 
 export const CategoryMenuLink = styled(Link)`
-  color:  ${({ theme }) => theme.colorMappings.primary};
+  color: ${({ theme }) => theme.colorMappings.primary};
   display: block;
   padding: 0 10px;
   display: table-cell;
@@ -36,10 +36,10 @@ export const CategoryMenuLink = styled(Link)`
   font-size: 20px;
 
   :hover {
-    color:  ${({ theme }) => theme.colorMappings.primary};
+    color: ${({ theme }) => theme.colorMappings.primary};
   }
 
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     padding: 0 0.75rem;
     font-size: 18px;
   }
@@ -58,7 +58,7 @@ export const SubMenuItem = styled(Link)`
     padding: 0 0.75rem;
     font-size: 18px;
   }
-`
+`;
 
 export const MainMenuNav = styled.ul`
   padding: 0;
@@ -66,10 +66,10 @@ export const MainMenuNav = styled.ul`
   list-style: none;
   position: relative;
   margin: 0 0 0 22px;
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     margin: 0 0 0 0;
   }
-`
+`;
 
 export const SubMenuNav = styled.ul`
   background: ${({ theme }) => theme.colorMappings.yellow};
@@ -81,4 +81,4 @@ export const SubMenuNav = styled.ul`
   border: 1px solid ${({ theme }) => theme.colorMappings.yellow};
   z-index: 99;
   width: 300px;
-`
+`;

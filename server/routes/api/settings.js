@@ -5,8 +5,8 @@ const { getAllSettings } = require('../../services/settings');
 
 // get settings endpoint api/settings
 router.get('/', async (req, res) => {
-    const settings = await getAllSettings();
-    res.json(settings);
+  const settings = await getAllSettings();
+  res.json(settings);
 });
 
 // update item endpoint put to api/settings/:name

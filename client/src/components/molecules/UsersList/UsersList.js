@@ -1,29 +1,38 @@
 import React, { useRef } from 'react';
 import { Input, Space, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { ListWrapper, ExpandButton, StyledTable, DeleteButton } from './UsersList.styles';
+import {
+  ListWrapper,
+  ExpandButton,
+  StyledTable,
+  DeleteButton,
+} from './UsersList.styles';
 import { name } from '../../../utils/helpers';
 
-export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
-
+export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
   const searchInput = useRef(null);
 
   const rows = data.map((d) => {
     return {
       ...d,
-      name: name(d)
+      name: name(d),
     };
-  })
+  });
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
 
   const handleReset = (clearFilters) => {
-    clearFilters({closeDropDown: true, confirm: true});
+    clearFilters({ closeDropDown: true, confirm: true });
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -33,7 +42,9 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm)}
           style={{
             marginBottom: 8,
@@ -48,16 +59,12 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
           >
             Search
           </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-          >
-            Reset
-          </Button>
+          <Button onClick={() => handleReset(clearFilters)}>Reset</Button>
         </Space>
       </div>
     ),
     onFilter: (value, record) =>
-    record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
@@ -70,7 +77,7 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    render: (text) => (text)
+    render: (text) => text,
   });
 
   var columns = [
@@ -81,7 +88,7 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (record) => {
-        return name(record)
+        return name(record);
       },
       ...getColumnSearchProps('name'),
     },
@@ -92,43 +99,49 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
       className: 'fixedOnMobile',
       sorter: (a, b) => a.email.localeCompare(b.email),
       ...getColumnSearchProps('email'),
-    }
-  ]
+    },
+  ];
 
-    //additional tag column if shopper and donor list
-    if (allTags) {
-      columns.push({
-        title: 'Tags',
-        dataIndex: 'tags',
-        render: (record) => {
-            return record.map((r) => { 
-              return <span>r.name</span>
-            }).join();
-        },
-        className: 'onlyHeading',
-        filters: allTags.map((c) => { return { text: c.name, value: c._id } }),
-        filterMode: 'tree',
-        filterSearch: true,
-        onFilter: (value, record) => record.tags.some(t=>t._id === value)
-      })
-    }
+  //additional tag column if shopper and donor list
+  if (allTags) {
+    columns.push({
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (record) => {
+        return record
+          .map((r) => {
+            return <span>r.name</span>;
+          })
+          .join();
+      },
+      className: 'onlyHeading',
+      filters: allTags.map((c) => {
+        return { text: c.name, value: c._id };
+      }),
+      filterMode: 'tree',
+      filterSearch: true,
+      onFilter: (value, record) => record.tags.some((t) => t._id === value),
+    });
+  }
 
   if (handleDelete) {
     columns.push({
-        title: '',
-        key: 'action',
-        render: (record) => (
-          <Space size="middle">
-            <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>Delete</DeleteButton>
-          </Space>
-        )
-    })
+      title: '',
+      key: 'action',
+      render: (record) => (
+        <Space size="middle">
+          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>
+            Delete
+          </DeleteButton>
+        </Space>
+      ),
+    });
   }
 
   return (
     <ListWrapper>
       <StyledTable
-        pagination={{hideOnSinglePage: true}}
+        pagination={{ hideOnSinglePage: true }}
         showHeader={true}
         scroll={{ x: '100%' }}
         columns={columns}
@@ -137,12 +150,16 @@ export const UsersList = ({data, handleDelete, expandRow, allTags }) => {
           expandedRowRender: expandRow,
           expandIconColumnIndex: 2,
           expandIcon: ({ expanded, onExpand, record }) =>
-          expanded ? (
-                <ExpandButton onClick={e => onExpand(record, e)}>Close</ExpandButton>
-              ) : (
-                <ExpandButton onClick={e => onExpand(record, e)}>View</ExpandButton>
-              )
-          }}
+            expanded ? (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                Close
+              </ExpandButton>
+            ) : (
+              <ExpandButton onClick={(e) => onExpand(record, e)}>
+                View
+              </ExpandButton>
+            ),
+        }}
         dataSource={rows}
       />
     </ListWrapper>

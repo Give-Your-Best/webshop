@@ -1,13 +1,18 @@
 export const getUsers = async (type, approvedStatus, token) => {
-    const response = await fetch(`/api/users?type=${type}${(approvedStatus)? '&approvedStatus='+ approvedStatus: ''}`, {
+  const response = await fetch(
+    `/api/users?type=${type}${
+      approvedStatus ? '&approvedStatus=' + approvedStatus : ''
+    }`,
+    {
       headers: {
         'Content-Type': 'application/json',
         'x-access-token': token,
       },
-    });
-    const body = await response.json();
-    if (response.status !== 200) {
-      throw Error(body.message);
     }
-    return body;
+  );
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
 };

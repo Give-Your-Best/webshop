@@ -1,5 +1,14 @@
 import styled from 'styled-components';
-import { SubmitButton, Input, Checkbox, InputNumber, Form, Radio, Select, AutoComplete } from 'formik-antd';
+import {
+  SubmitButton,
+  Input,
+  Checkbox,
+  InputNumber,
+  Form,
+  Radio,
+  Select,
+  AutoComplete,
+} from 'formik-antd';
 import { ErrorMessage } from 'formik';
 
 const StyledError = styled(ErrorMessage)`
@@ -9,7 +18,7 @@ const StyledError = styled(ErrorMessage)`
   color: red;
   margin: 5px 0;
   font-size: 20px;
-`
+`;
 
 const StyledSelect = styled(Select)`
   width: 100%;
@@ -42,7 +51,7 @@ const StyledSelect = styled(Select)`
     color: black;
     border: none;
   }
-`
+`;
 
 const StyledSubmitButton = styled(SubmitButton)`
   width: 150px;
@@ -71,14 +80,14 @@ const StyledSubmitButton = styled(SubmitButton)`
     border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder};
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     font-size: 18px;
     min-height: 46px;
   }
-  @media (max-width:${({ theme }) => theme.mobile}) {
+  @media (max-width: ${({ theme }) => theme.mobile}) {
     min-height: 44px;
   }
-`
+`;
 const StyledInput = styled(Input)`
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colorMappings.primary};
@@ -92,7 +101,7 @@ const StyledInput = styled(Input)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
-`
+`;
 
 const StyledInputArea = styled(Input.TextArea)`
   width: 100%;
@@ -108,7 +117,7 @@ const StyledInputArea = styled(Input.TextArea)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
-`
+`;
 const StyledInputAreaInLine = styled(Input.TextArea)`
   width: 100%;
   border: 1px solid ${({ theme }) => theme.colorMappings.primary};
@@ -123,7 +132,7 @@ const StyledInputAreaInLine = styled(Input.TextArea)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
-`
+`;
 
 const StyledAutoComplete = styled(AutoComplete)`
   width: 100%;
@@ -141,13 +150,13 @@ const StyledAutoComplete = styled(AutoComplete)`
   }
   &:disabled {
     background-color: transparent;
-    color:  ${({ theme }) => theme.colorMappings.primary} !important;
+    color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
   &:placeholder {
     background-color: transparent;
-    color:  ${({ theme }) => theme.colorMappings.primary} !important;
+    color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
-`
+`;
 
 const StyledInputPassword = styled(Input.Password)`
   width: 100%;
@@ -171,7 +180,7 @@ const StyledInputPassword = styled(Input.Password)`
   .anticon svg {
     color: ${({ theme }) => theme.colorMappings.primary};
   }
-`
+`;
 
 const StyledInputNumber = styled(InputNumber)`
   width: 70px;
@@ -189,7 +198,7 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
-`
+`;
 
 const StyledCheckbox = styled(Checkbox)`
   margin: 0;
@@ -205,7 +214,7 @@ const StyledCheckbox = styled(Checkbox)`
   & .ant-checkbox-checked .ant-checkbox-inner {
     border: 1px solid ${({ theme }) => theme.colorMappings.primary} !important;
   }
-`
+`;
 
 const StyledCheckboxGroup = styled(Checkbox.Group)`
   color: ${({ theme }) => theme.colorMappings.primary};
@@ -224,8 +233,7 @@ const StyledCheckboxGroup = styled(Checkbox.Group)`
   .ant-checkbox-checked .ant-checkbox-inner::after {
     border: 2px solid ${({ theme }) => theme.colorMappings.primary} !important;
   }
-
-`
+`;
 
 const StyledRadio = styled(Radio)`
   margin: 0;
@@ -233,10 +241,10 @@ const StyledRadio = styled(Radio)`
   font-size: 20px;
   color: ${({ theme }) => theme.colorMappings.primary};
 
-    span {
-      font-size: 20px;
-    }
-`
+  span {
+    font-size: 20px;
+  }
+`;
 
 const StyledLabel = styled.label`
   width: 100%;
@@ -244,7 +252,7 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
-`
+`;
 
 const NewPasswordLink = styled.label`
   width: auto;
@@ -255,57 +263,57 @@ const NewPasswordLink = styled.label`
   margin: 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 15px !important;
-`
+`;
 
 const StyledForm = styled(Form)`
   font-size: 20px;
   position: relative;
   color: ${({ theme }) => theme.colorMappings.primary};
-`
+`;
 
 const InfoNote = styled.p`
   font-size: 20px !important;
   margin-bottom: 0;
   color: ${({ theme }) => theme.colorMappings.primary};
-`
+`;
 
 const SubHead = styled.p`
-    font-size: 24px !important;
-    text-align: center;
-    font-weight: bold;
-`
+  font-size: 24px !important;
+  text-align: center;
+  font-weight: bold;
+`;
 
 const FieldContainerHalf = styled.div`
-    display: flex;
-    label {
-      width: 50%;
-    }
+  display: flex;
+  label {
+    width: 50%;
+  }
 
-    label:first-child {
-      margin-right: 10px;
-    }
-`
+  label:first-child {
+    margin-right: 10px;
+  }
+`;
 
 const FieldContainerUneven = styled.div`
-    display: flex;
+  display: flex;
 
-    label {
-      width: 40%;
-      margin-right: 10px;
-    }
+  label {
+    width: 40%;
+    margin-right: 10px;
+  }
 
+  label:first-child {
+    margin-right: 10px;
+  }
+`;
 
-    label:first-child {
-      margin-right: 10px;
-    }
-`
-
-export { StyledInput, 
-  StyledSubmitButton, 
-  StyledCheckbox, 
+export {
+  StyledInput,
+  StyledSubmitButton,
+  StyledCheckbox,
   SubHead,
-  StyledInputNumber, 
-  StyledLabel, 
+  StyledInputNumber,
+  StyledLabel,
   StyledForm,
   StyledRadio,
   StyledSelect,
@@ -318,5 +326,5 @@ export { StyledInput,
   FieldContainerHalf,
   FieldContainerUneven,
   StyledInputAreaInLine,
-  NewPasswordLink
+  NewPasswordLink,
 };
