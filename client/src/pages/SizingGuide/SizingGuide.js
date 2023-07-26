@@ -26,7 +26,7 @@ export const SizingGuide = () => {
         rowKey={(record) => record._id}
         pagination={false}
         dataSource={shoesSizes}
-      />{' '}
+      />
       <SubHeader>Children Shoes</SubHeader>
       <SizesTable
         showHeader={true}
