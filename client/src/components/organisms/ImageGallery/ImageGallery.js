@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { ImagesWrapper, MiniImagesWrapper } from './ImageGallery.styles';
 
+const setImageSrc = (data) =>
+  data && data.url
+    ? data.url.replace('http://', 'https://')
+    : '/product-placeholder.jpeg';
+
 export const ImageGallery = ({ changeMainImage, mainImage, otherImages }) => {
   return (
     <ImagesWrapper>
@@ -11,18 +16,11 @@ export const ImageGallery = ({ changeMainImage, mainImage, otherImages }) => {
             onClick={changeMainImage}
             data-id={image._id}
             alt={`other images`}
-            src={image.url.replace('http://', 'https://')}
+            src={setImageSrc(image)}
           />
         ))}
       </MiniImagesWrapper>
-      <img
-        alt={`main`}
-        src={
-          mainImage && mainImage.url
-            ? mainImage.url.replace('http://', 'https://')
-            : '/product-placeholder.jpeg'
-        }
-      />
+      <img alt={`main`} src={setImageSrc(mainImage)} />
     </ImagesWrapper>
   );
 };
