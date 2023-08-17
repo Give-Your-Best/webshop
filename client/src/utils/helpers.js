@@ -114,6 +114,28 @@ export const getItemDetails = (item) => {
       '<br /></span>';
   }
 
+  //get shopper delivery address details
+  if (item.shopperId && item.shopperId.deliveryAddress) {
+    const { deliveryAddress } = item.shopperId;
+
+    detailsHtml += `<span><strong>Shopper Address:</strong>
+    <div>${(() => {
+      const { FAO, name, firstLine, secondLine, city, country, postcode } =
+        deliveryAddress;
+
+      const result =
+        (FAO ? `<span>FAO ${FAO}</span><br />` : '') +
+        (name ? `<span>${name}</span><br />` : '') +
+        (firstLine ? `<span>${firstLine}</span><br />` : '') +
+        (secondLine ? `<span>${secondLine}</span><br />` : '') +
+        (city ? `<span>${city}</span><br />` : '') +
+        (country ? `<span>${country}</span><br />` : '') +
+        (postcode ? `<span>${postcode}</span><br />` : '');
+
+      return result;
+    })()}</div>`;
+  }
+
   if (item.sendVia && item.sendVia.name) {
     locationName = item.sendVia.name;
     detailsHtml +=
