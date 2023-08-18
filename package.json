@@ -25,8 +25,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "bson": "^4.6.4",
-    "cloudinary": "",
-    "concurrently": "^6.2.0",
+    "cloudinary": "^1.40.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
     "express": "4.17.1",
@@ -37,9 +36,11 @@
     "mongoose": "^5.13.7",
     "node-mailjet": "^4.0.1",
     "prettier": "2.3.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
+    "concurrently": "^6.2.0",
     "eslint": "^7.28.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
