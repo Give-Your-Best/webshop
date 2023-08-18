@@ -1,12 +1,12 @@
 require('dotenv').config();
 const http = require('http');
 const path = require('path');
-const crypto = require('crypto');
 const express = require('express');
 const mongoose = require('mongoose');
-const { WebSocketServer } = require('ws');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+
+const { init: handleSocketConnection } = require('./server/services/websocket');
 
 const app = express();
 
@@ -49,23 +49,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// TODO
 const server = http.createServer(app);
 
-// Set up a headless websocket server that prints any
-// events that come in.
-const wss = new WebSocketServer({ noServer: true });
-
-server.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
-  });
-});
-
-setInterval(() => {
-  wss.clients.forEach((c) =>
-    c.send(JSON.stringify({ push: crypto.randomBytes(20).toString('hex') }))
-  );
-}, 5000);
+// Register the websocket server on http upgrade events
+server.on('upgrade', handleSocketConnection);
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
