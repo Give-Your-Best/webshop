@@ -1,5 +1,6 @@
 require('dotenv').config();
 const MessagesService = require('../services/messages');
+const WebsocketService = require('../services/websocket');
 
 const createMessage = async (req, res) => {
   if (!req.body.messages && !req.body.message) {
@@ -8,6 +9,12 @@ const createMessage = async (req, res) => {
 
   try {
     const response = await MessagesService.createMessage(req.body);
+    WebsocketService.push(
+      JSON.stringify({
+        event: 'new message',
+        thread: response.thread._id || '',
+      })
+    );
     return res.status(200).send({
       success: true,
       message: `message created`,
