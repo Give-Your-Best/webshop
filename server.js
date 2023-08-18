@@ -1,12 +1,15 @@
 require('dotenv').config();
-const express = require('express');
-var httpsRedirect = require('express-https-redirect');
+const http = require('http');
 const path = require('path');
-const bodyParser = require('body-parser');
+const crypto = require('crypto');
+const express = require('express');
 const mongoose = require('mongoose');
+const { WebSocketServer } = require('ws');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+
 // app.use('/', httpsRedirect());
 // app.use(function forceLiveDomain(req, res, next) {
 //   // Don't allow user to hit Heroku now that we have a domain
@@ -46,4 +49,23 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+// TODO
+const server = http.createServer(app);
+
+// Set up a headless websocket server that prints any
+// events that come in.
+const wss = new WebSocketServer({ noServer: true });
+
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
+  });
+});
+
+setInterval(() => {
+  wss.clients.forEach((c) =>
+    c.send(JSON.stringify({ push: crypto.randomBytes(20).toString('hex') }))
+  );
+}, 5000);
+
+server.listen(port, () => console.log(`Listening on port ${port}`));
