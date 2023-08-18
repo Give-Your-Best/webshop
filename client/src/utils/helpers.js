@@ -114,6 +114,28 @@ export const getItemDetails = (item) => {
       '<br /></span>';
   }
 
+  //get shopper delivery address details
+  if (item.shopperId && item.shopperId.deliveryAddress) {
+    const { deliveryAddress } = item.shopperId;
+
+    detailsHtml += `<span><strong>Shopper Address:</strong>
+    <div>${(() => {
+      const { FAO, name, firstLine, secondLine, city, country, postcode } =
+        deliveryAddress;
+
+      const result =
+        (FAO ? `<span>FAO ${FAO}</span><br />` : '') +
+        (name ? `<span>${name}</span><br />` : '') +
+        (firstLine ? `<span>${firstLine}</span><br />` : '') +
+        (secondLine ? `<span>${secondLine}</span><br />` : '') +
+        (city ? `<span>${city}</span><br />` : '') +
+        (country ? `<span>${country}</span><br />` : '') +
+        (postcode ? `<span>${postcode}</span><br />` : '');
+
+      return result;
+    })()}</div>`;
+  }
+
   if (item.sendVia && item.sendVia.name) {
     locationName = item.sendVia.name;
     detailsHtml +=
@@ -241,7 +263,7 @@ export const checkPermission = (permissions, permission) => {
     .includes(permission.toLowerCase());
 };
 
-export const trunc = (str) => {
+export const trunc = (str = '') => {
   return str.length > 61 ? str.substring(0, 61) + '...' : str;
 };
 
@@ -311,12 +333,17 @@ export const checkUnread = (type, userId, messages) => {
   return [unread.length, unread];
 };
 
+export const setImageSrc = (data) =>
+  data && data.url
+    ? data.url.replace('http://', 'https://')
+    : '/product-placeholder.jpeg';
+
 export const getFrontImageUrl = (images) => {
   let imagesList = images.length ? images.filter((i) => i.front === true) : [];
   let image_url = imagesList.length
-    ? imagesList[0].url.replace('http://', 'https://')
+    ? setImageSrc(imagesList[0])
     : images.length
-    ? images[0].url.replace('http://', 'https://')
+    ? setImageSrc(images[0])
     : '';
 
   return image_url;

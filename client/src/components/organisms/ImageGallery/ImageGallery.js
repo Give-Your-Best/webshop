@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { ImagesWrapper, MiniImagesWrapper } from './ImageGallery.styles';
 
-const setImageSrc = (data) =>
-  data && data.url
-    ? data.url.replace('http://', 'https://')
-    : '/product-placeholder.jpeg';
+import { setImageSrc } from '../../../utils/helpers';
 
 export const ImageGallery = ({ changeMainImage, mainImage, otherImages }) => {
   return (
