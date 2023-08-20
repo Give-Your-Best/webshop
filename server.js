@@ -1,5 +1,4 @@
 require('dotenv').config();
-const http = require('http');
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -49,9 +48,9 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const server = http.createServer(app);
+const server = app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
 
 // Register the websocket server on http upgrade events
 server.on('upgrade', handleSocketConnection);
-
-server.listen(port, () => console.log(`Listening on port ${port}`));
