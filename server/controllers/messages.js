@@ -1,6 +1,8 @@
 require('dotenv').config();
+const Message = require('../models/Message');
 const MessagesService = require('../services/messages');
-const WebsocketService = require('../services/websocket');
+
+const sockets = require('../services/websocket');
 
 const createMessage = async (req, res) => {
   if (!req.body.messages && !req.body.message) {
@@ -8,18 +10,43 @@ const createMessage = async (req, res) => {
   }
 
   try {
-    const response = await MessagesService.createMessage(req.body);
-    WebsocketService.push(
+    const thread = await Message.upsertThread(req.body);
+
+    sockets.push(
       JSON.stringify({
         event: 'new message',
-        thread: response.thread._id || '',
+        messages: thread.messages.length,
+        threadId: thread.threadId,
+        type: thread.type,
       })
     );
+
     return res.status(200).send({
       success: true,
-      message: `message created`,
-      thread: response.thread || {},
+      message: 'message created',
+      thread: thread || {},
     });
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({ message: `Service error: ${err}` });
+  }
+};
+
+// TODO - need to check that this is protected - is it possible for anyone
+// logged-in to access messages of type x?
+const getMessages = async (req, res) => {
+  if (!req.query.id && !req.query.type) {
+    return res.status(400).send({ message: 'Service error: invalid request' });
+  }
+
+  try {
+    const { type, id: user } = req.query;
+
+    const threads = type
+      ? await Message.getAllOfType(type)
+      : await Message.getAllForUser(user);
+
+    res.json(threads);
   } catch (err) {
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
@@ -49,5 +76,6 @@ const markMessageAsViewed = async (req, res) => {
 
 module.exports = {
   createMessage,
+  getMessages,
   markMessageAsViewed,
 };
