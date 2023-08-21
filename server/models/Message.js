@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const BSON = require('bson');
+
+const Schema = mongoose.Schema;
 const options = { timestamps: true };
 
 const messageSchema = new Schema(
@@ -63,15 +64,15 @@ messageSchema.statics.getAllForUser = async function (user) {
 messageSchema.statics.upsertThread = async function (data) {
   const threadId = data.threadId || new BSON.ObjectId();
 
-  const { sender, recipient, sentDate, message, viewed, ...rest } = data;
+  const { messages, ...rest } = data;
 
-  const messages = {
-    message,
-    recipient,
-    sender,
-    sentDate,
-    viewed: false,
-  };
+  // const messages = {
+  //   message,
+  //   recipient,
+  //   sender,
+  //   sentDate,
+  //   viewed: false,
+  // };
 
   const thread = await this.findOneAndUpdate(
     { threadId },
