@@ -143,10 +143,22 @@ export const UserMessages = () => {
     );
   };
 
-  const onMessage = React.useCallback((message) => {
-    const data = JSON.parse(message);
-    console.log({ data });
-  }, []);
+  const onMessage = React.useCallback(
+    (message) => {
+      const data = JSON.parse(message);
+
+      console.log({ data });
+
+      if (data.event === 'new message') {
+        (async () => {
+          const messages = await getMessages('shopper', user.id, token);
+          if (!mountedRef.current) return null;
+          setMessages(messages);
+        })();
+      }
+    },
+    [token, user.id]
+  );
 
   React.useEffect(() => {
     socket.on(onMessage);
