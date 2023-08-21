@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { SocketContext } from '../../../../context/socket-context';
 import {
   MessageReceived,
   MessageSent,
@@ -26,6 +27,7 @@ import { checkUnread, name, tabList } from '../../../../utils/helpers';
 
 export const UserMessages = () => {
   const { token, user } = useContext(AppContext);
+  const socket = useContext(SocketContext);
   const type = user.type;
   const mountedRef = useRef(true);
   const [messages, setMessages] = useState([]);
@@ -140,6 +142,17 @@ export const UserMessages = () => {
       </div>
     );
   };
+
+  const onMessage = React.useCallback((message) => {
+    const data = JSON.parse(message);
+    console.log({ data });
+  }, []);
+
+  React.useEffect(() => {
+    socket.on(onMessage);
+
+    return () => socket.off(onMessage);
+  }, [socket, onMessage]);
 
   useEffect(() => {
     var tabs = tabList(user);

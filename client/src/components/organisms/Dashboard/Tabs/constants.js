@@ -14,6 +14,8 @@ import { OrdersList } from '../../../molecules/OrdersList';
 import { DonorOrdersList } from '../../../molecules/DonorOrdersList';
 import { DashboardImage } from '../../../atoms/DashboardImage/DashboardImage';
 
+import { SocketProvider } from '../../../../context/socket-context';
+
 export const adminTabs = [
   {
     name: 'Dashboard',
@@ -37,7 +39,11 @@ export const adminTabs = [
   },
   {
     name: 'Messaging',
-    content: <AdminMessages />,
+    content: (
+      <SocketProvider>
+        <AdminMessages />
+      </SocketProvider>
+    ),
     id: 'adminMessages',
   },
   {
@@ -90,7 +96,11 @@ export const donorTabs = [
   },
   {
     name: 'Messaging',
-    content: <UserMessages />,
+    content: (
+      <SocketProvider>
+        <UserMessages />
+      </SocketProvider>
+    ),
     id: 'donorMessages',
   },
   {

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { SocketContext } from '../../../../context/socket-context';
 import {
   StyledTab,
   StyledTabList,
@@ -35,6 +36,7 @@ import { Formik } from 'formik';
 
 export const AdminMessages = () => {
   const { token, user } = useContext(AppContext);
+  const socket = useContext(SocketContext);
   const mountedRef = useRef(true);
   const [shoppersMessages, setShoppersMessages] = useState([]);
   const [donorsMessages, setDonorsMessages] = useState([]);
@@ -169,6 +171,17 @@ export const AdminMessages = () => {
       </div>
     );
   };
+
+  const onMessage = React.useCallback((message) => {
+    const data = JSON.parse(message);
+    console.log({ data });
+  }, []);
+
+  React.useEffect(() => {
+    socket.on(onMessage);
+
+    return () => socket.off(onMessage);
+  }, [socket, onMessage]);
 
   useEffect(() => {
     var tabs = tabList(user);
