@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const { init: handleSocketConnection } = require('./server/services/websocket');
+const sockets = require('./server/services/websocket');
 
 const app = express();
 
@@ -53,4 +53,4 @@ const server = app.listen(port, () => {
 });
 
 // Register the websocket server on http upgrade events
-server.on('upgrade', handleSocketConnection);
+server.on('upgrade', sockets.init);

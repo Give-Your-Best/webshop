@@ -66,14 +66,6 @@ messageSchema.statics.upsertThread = async function (data) {
 
   const { messages, ...rest } = data;
 
-  // const messages = {
-  //   message,
-  //   recipient,
-  //   sender,
-  //   sentDate,
-  //   viewed: false,
-  // };
-
   const thread = await this.findOneAndUpdate(
     { threadId },
     { ...rest, $push: { messages } },
