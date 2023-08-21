@@ -49,9 +49,23 @@ export const UserMessages = () => {
     const handleSubmit = async (values, { resetForm }) => {
       const d = new Date();
       let date = d.toISOString();
-      values.sentDate = date;
 
-      const res = await sendMessage(values, token);
+      const { message, recipient, sender, threadId } = values;
+
+      const newMessage = {
+        threadId,
+        messages: [
+          {
+            sender,
+            recipient,
+            message,
+            sentDate: date,
+            viewed: false,
+          },
+        ],
+      };
+
+      const res = await sendMessage(newMessage, token);
       if (res.success) {
         Notification('Success!', 'Message sent', 'success');
         resetForm();
