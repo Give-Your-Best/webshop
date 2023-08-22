@@ -1,9 +1,33 @@
+const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
 
-// Set up a headless websocket server
-const wss = new WebSocketServer({ noServer: true });
+// TODO
+const verifyClient = ({ req }, cb) => {
+  const cookies = new URLSearchParams(req.headers.cookie);
 
-wss.on('connection', () => {
+  if (!cookies.has('jwt_user')) {
+    return cb(false, 401, 'Unauthorized');
+  }
+
+  const token = cookies.get('jwt_user');
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  console.log({ decoded });
+
+  if (!decoded) {
+    return cb(false, 401, 'Unauthorized');
+  }
+
+  cb(true);
+};
+
+// Set up a headless websocket server
+const wss = new WebSocketServer({
+  noServer: true,
+  verifyClient,
+});
+
+wss.on('connection', (socket, req) => {
   // Here we will verify tokens, store connections etc.
   // We may want client subscription 'channels' for different event classes
   // We may want a hearbeat implementation for handling broken connections
@@ -21,7 +45,7 @@ const init = (req, socket, head) => {
   });
 };
 
-// broadcast a message on all connections
+// Broadcast a message on all connections
 const push = (event) => wss.clients.forEach((c) => c.send(event));
 
 exports.init = init;
