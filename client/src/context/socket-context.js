@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-import connectionHandler from '../services/websocket';
-
-const socket = connectionHandler('ws://localhost:8000');
+import { socket } from '../services/websocket';
 
 export const SocketContext = React.createContext(socket);
 

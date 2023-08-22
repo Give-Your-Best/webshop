@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 // import React from 'react';
 
-// const URL = 'ws://localhost:3000';
+const URL = 'ws://localhost:8000';
 
 // https://stackoverflow.com/questions/62768520/reconnecting-web-socket-using-react-hooks
-export default function connectionHandler(url) {
+const connectionHandler = (url) => {
   let client;
-  let poller;
+  // let poller;
   let isConnected = false;
   let reconnectOnClose = true;
   let messageListeners = [];
@@ -28,9 +28,9 @@ export default function connectionHandler(url) {
   };
 
   const start = () => {
-    if (isConnected) {
-      return (poller = clearInterval(poller));
-    }
+    // if (isConnected) {
+    //   return (poller = clearInterval(poller));
+    // }
 
     client = new WebSocket(url);
 
@@ -63,13 +63,27 @@ export default function connectionHandler(url) {
 
       console.log('ws closed by server');
 
-      const logStart = () => {
-        console.log('attempting to connect');
-        start();
-      };
-
-      poller = setInterval(logStart, 2000);
+      setTimeout(start, 5000);
     };
+
+    // client.onclose = () => {
+    //   isConnected = false;
+    //   changeListeners.forEach((fn) => fn(false));
+
+    //   if (!reconnectOnClose) {
+    //     console.log('ws closed by app');
+    //     return;
+    //   }
+
+    //   console.log('ws closed by server');
+
+    //   const logStart = () => {
+    //     console.log('attempting to connect');
+    //     start();
+    //   };
+
+    //   poller = setInterval(logStart, 2000);
+    // };
   };
 
   start();
@@ -82,9 +96,9 @@ export default function connectionHandler(url) {
     getClient: () => client,
     isConnected: () => isConnected,
   };
-}
+};
 
-// const socket = connectionHandler(URL);
+export const socket = connectionHandler(URL);
 
 // export const SocketContext = React.createContext(socket);
 
