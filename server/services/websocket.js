@@ -1,18 +1,18 @@
 const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
 
-// TODO
+// Verify the jwt cookie in the handshake request
 const verifyClient = ({ req }, cb) => {
-  const cookies = new URLSearchParams(req.headers.cookie);
+  const { cookie } = req.headers;
 
-  if (!cookies.has('jwt_user')) {
+  // This will just grab the value of the 'jwt_user' cookie set on login
+  const [, token] = /jwt_user=(.+);?/.exec(cookie);
+
+  if (!token) {
     return cb(false, 401, 'Unauthorized');
   }
 
-  const token = cookies.get('jwt_user');
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  console.log({ decoded });
 
   if (!decoded) {
     return cb(false, 401, 'Unauthorized');
@@ -27,13 +27,9 @@ const wss = new WebSocketServer({
   verifyClient,
 });
 
-wss.on('connection', (socket, req) => {
-  // Here we will verify tokens, store connections etc.
-  // We may want client subscription 'channels' for different event classes
+wss.on('connection', () => {
   // We may want a hearbeat implementation for handling broken connections
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
-  // Currently this is intended as a server push implementation only, so we do
-  // not need to handle the connection socket 'message' events...
 });
 
 // API
