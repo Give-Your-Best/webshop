@@ -61,6 +61,17 @@ messageSchema.statics.getAllForUser = async function (user) {
 };
 
 // TODO
+messageSchema.statics.getThread = async function (threadId, user) {
+  const thread = await this.findOne({ threadId, user })
+    .populate('user')
+    .populate('messages.sender')
+    .populate('messages.recipient')
+    .sort({ updatedAt: -1 });
+
+  return thread;
+};
+
+// TODO
 messageSchema.statics.upsertThread = async function (data) {
   const threadId = data.threadId || new BSON.ObjectId();
 
