@@ -1,20 +1,31 @@
 const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
 
+const clients = new Map();
+
+// This will just grab the value of the 'jwt_user' cookie set on login
+const parseToken = (cookie) => {
+  const [, result] = /jwt_user=(.+);?/.exec(cookie);
+  return result;
+};
+
 // Verify the jwt cookie in the handshake request
 const verifyClient = ({ req }, cb) => {
   const { cookie } = req.headers;
 
-  // This will just grab the value of the 'jwt_user' cookie set on login
-  const [, token] = /jwt_user=(.+);?/.exec(cookie);
+  if (!cookie) {
+    return cb(false, 401, 'Unauthorized');
+  }
+
+  const token = parseToken(cookie);
 
   if (!token) {
     return cb(false, 401, 'Unauthorized');
   }
 
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-  if (!decoded) {
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+  } catch (e) {
     return cb(false, 401, 'Unauthorized');
   }
 
@@ -27,12 +38,20 @@ const wss = new WebSocketServer({
   verifyClient,
 });
 
-wss.on('connection', () => {
+wss.on('connection', (socket, req) => {
   // We may want a hearbeat implementation for handling broken connections
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
-});
 
-// API
+  const { cookie } = req.headers;
+  const token = parseToken(cookie);
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    clients.set(decoded._id, socket);
+  } catch (e) {
+    socket.destroy();
+  }
+});
 
 // Handles the upgrade request to setup a socket connection
 const init = (req, socket, head) => {
@@ -42,7 +61,15 @@ const init = (req, socket, head) => {
 };
 
 // Broadcast a message on all connections
-const push = (event) => wss.clients.forEach((c) => c.send(event));
+const cast = (event) => wss.clients.forEach((c) => c.send(event));
+
+// Broadcast a message on all connections
+const push = (id, event) => clients.get(String(id)).send(event);
+
+/**
+ * API...
+ */
 
 exports.init = init;
+exports.cast = cast;
 exports.push = push;
