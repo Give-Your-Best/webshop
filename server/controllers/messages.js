@@ -1,5 +1,6 @@
 require('dotenv').config();
 const Message = require('../models/Message');
+const Connection = require('../models/Connection');
 const MessagesService = require('../services/messages');
 
 const sockets = require('../services/websocket');
@@ -11,13 +12,17 @@ const createMessage = async (req, res) => {
 
   try {
     const thread = await Message.upsertThread(req.body);
+    const admins = await Connection.getAllOfType('admin');
 
     sockets.push(
+      [thread.user._id, ...admins.map(({ user }) => user)],
       JSON.stringify({
-        event: 'new message',
-        messages: thread.messages.length,
-        threadId: thread.threadId,
-        type: thread.type,
+        event: 'NEW_MESSAGE',
+        data: {
+          threadId: thread.threadId,
+          user: thread.user.id,
+          type: thread.type,
+        },
       })
     );
 
@@ -42,9 +47,10 @@ const getMessages = async (req, res) => {
   try {
     const { type, id: user } = req.query;
 
-    const threads = type
-      ? await Message.getAllOfType(type)
-      : await Message.getAllForUser(user);
+    const threads =
+      user === 'all'
+        ? await Message.getAllOfType(type)
+        : await Message.getAllForUser(user);
 
     res.json(threads);
   } catch (err) {
