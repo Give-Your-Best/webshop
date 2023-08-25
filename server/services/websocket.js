@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
+const Connection = require('../models/Connection');
 
 const clients = new Map();
 
@@ -38,7 +39,7 @@ const wss = new WebSocketServer({
   verifyClient,
 });
 
-wss.on('connection', (socket, req) => {
+wss.on('connection', async (socket, req) => {
   // We may want a hearbeat implementation for handling broken connections
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
 
@@ -47,9 +48,11 @@ wss.on('connection', (socket, req) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    await Connection.upsertClient(decoded);
     clients.set(decoded._id, socket);
   } catch (e) {
-    socket.destroy();
+    console.log(e);
+    // socket.destroy();
   }
 });
 
@@ -64,7 +67,8 @@ const init = (req, socket, head) => {
 const cast = (event) => wss.clients.forEach((c) => c.send(event));
 
 // Broadcast a message on all connections
-const push = (id, event) => clients.get(String(id)).send(event);
+const push = (ids, event) =>
+  ids.forEach((id) => clients.get(String(id)).send(event));
 
 /**
  * API...
