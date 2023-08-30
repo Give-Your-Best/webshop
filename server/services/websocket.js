@@ -1,8 +1,16 @@
+const redis = require('redis');
 const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
-const Connection = require('../models/Connection');
+const { User } = require('../models/User');
 
 const clients = new Map();
+
+const client = redis.createClient();
+const channel = client.duplicate();
+(async () => {
+  await client.connect();
+  await channel.connect();
+})();
 
 // This will just grab the value of the 'jwt_user' cookie set on login
 const parseToken = (cookie) => {
@@ -39,6 +47,30 @@ const wss = new WebSocketServer({
   verifyClient,
 });
 
+// // TODO
+// const ping = setInterval(() => {
+//   wss.clients.forEach(async (socket) => {
+//     // TODO
+//     if (socket.isAlive === false) {
+//       await Connection.deleteClient(xyz);
+//       return socket.terminate();
+//     }
+
+//     socket.isAlive = false;
+//     socket.send('ping');
+//   });
+// }, 30000);
+
+// Handles the upgrade request to setup a socket connection
+const init = (req, socket, head) => {
+  wss.handleUpgrade(req, socket, head, (ws) => {
+    wss.emit('connection', ws, req);
+  });
+};
+
+// TODO
+const push = (id, event) => client.publish(`notify:${id}`, event);
+
 wss.on('connection', async (socket, req) => {
   // We may want a hearbeat implementation for handling broken connections
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
@@ -48,32 +80,33 @@ wss.on('connection', async (socket, req) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    await Connection.upsertClient(decoded);
-    clients.set(decoded._id, socket);
+    const user = await User.findById(decoded._id);
+
+    if (clients.has(user.id)) {
+      null;
+    } else {
+      await channel.pSubscribe(
+        `notify:${user.kind === 'admin' ? '*' : user.id}`,
+        (event) => clients.get(user.id).send(event)
+      );
+    }
+
+    clients.set(user.id, socket);
   } catch (e) {
     console.log(e);
-    // socket.destroy();
+    // socket.terminate();
   }
+
+  // socket.isAlive = true;
+  // socket.on('error', console.error);
+  // socket.on('pong', heartbeat);
 });
 
-// Handles the upgrade request to setup a socket connection
-const init = (req, socket, head) => {
-  wss.handleUpgrade(req, socket, head, (ws) => {
-    wss.emit('connection', ws, req);
-  });
-};
-
-// Broadcast a message on all connections
-const cast = (event) => wss.clients.forEach((c) => c.send(event));
-
-// Broadcast a message on all connections
-const push = (ids, event) =>
-  ids.forEach((id) => clients.get(String(id)).send(event));
+wss.on('close', () => clearInterval(ping));
 
 /**
  * API...
  */
 
 exports.init = init;
-exports.cast = cast;
 exports.push = push;
