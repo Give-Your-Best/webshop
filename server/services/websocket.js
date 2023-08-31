@@ -1,16 +1,9 @@
-const redis = require('redis');
 const jwt = require('jsonwebtoken');
 const { WebSocketServer } = require('ws');
 const { User } = require('../models/User');
+const redis = require('./redis');
 
 const clients = new Map();
-
-const client = redis.createClient();
-const channel = client.duplicate();
-(async () => {
-  await client.connect();
-  await channel.connect();
-})();
 
 // This will just grab the value of the 'jwt_user' cookie set on login
 const parseToken = (cookie) => {
@@ -69,7 +62,7 @@ const init = (req, socket, head) => {
 };
 
 // TODO
-const push = (id, event) => client.publish(`notify:${id}`, event);
+const push = (id, event) => redis.publish(`notify:${id}`, event);
 
 wss.on('connection', async (socket, req) => {
   // We may want a hearbeat implementation for handling broken connections
@@ -78,6 +71,10 @@ wss.on('connection', async (socket, req) => {
   const { cookie } = req.headers;
   const token = parseToken(cookie);
 
+  const adminChannelMap = {
+    admin: '*',
+  };
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded._id);
@@ -85,8 +82,8 @@ wss.on('connection', async (socket, req) => {
     if (clients.has(user.id)) {
       null;
     } else {
-      await channel.pSubscribe(
-        `notify:${user.kind === 'admin' ? '*' : user.id}`,
+      await redis.subscribe(
+        `notify:${adminChannelMap[user.kind] || user.id}`,
         (event) => clients.get(user.id).send(event)
       );
     }
