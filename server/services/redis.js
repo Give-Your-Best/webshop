@@ -21,5 +21,14 @@ const sub = redis.createClient(
  * API...
  */
 
-exports.publish = (channel, message) => pub.publish(channel, message);
-exports.subscribe = (pattern, listener) => sub.pSubscribe(pattern, listener);
+exports.publish = async (channel, message) => {
+  await pub.publish(channel, message);
+};
+
+exports.subscribe = async (pattern, listener) => {
+  await sub.pSubscribe(pattern, listener);
+};
+
+exports.unsubscribe = async (pattern, listener) => {
+  await sub.pUnsubscribe(pattern, listener);
+};
