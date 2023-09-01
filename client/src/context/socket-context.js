@@ -9,6 +9,8 @@ export const SocketProvider = (props) => {
 
   console.log({ token, user });
 
+  // TODO something here to confirm that the user exists else no connection...
+
   const socket = handler('ws://localhost:8000');
 
   return (

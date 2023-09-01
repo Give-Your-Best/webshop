@@ -27,7 +27,7 @@ import { checkUnread, name, tabList } from '../../../../utils/helpers';
 
 export const UserMessages = () => {
   const { token, user } = useContext(AppContext);
-  const socket = useContext(SocketContext);
+  const socket = useContext(SocketContext); // ('ws://localhost:8000');
   const type = user.type;
   const mountedRef = useRef(true);
   const [messages, setMessages] = useState([]);

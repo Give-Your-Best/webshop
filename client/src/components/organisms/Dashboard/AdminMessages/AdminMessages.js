@@ -36,7 +36,7 @@ import { Formik } from 'formik';
 
 export const AdminMessages = () => {
   const { token, user } = useContext(AppContext);
-  const socket = useContext(SocketContext);
+  const socket = useContext(SocketContext); // ('ws://localhost:8000');
   const mountedRef = useRef(true);
   const [shoppersMessages, setShoppersMessages] = useState([]);
   const [donorsMessages, setDonorsMessages] = useState([]);
