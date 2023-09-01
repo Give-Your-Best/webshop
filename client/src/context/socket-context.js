@@ -1,11 +1,19 @@
 import * as React from 'react';
+import { AppContext } from './app-context';
+import handler from '../services/websocket';
 
-import { socket } from '../services/websocket';
+export const SocketContext = React.createContext();
 
-export const SocketContext = React.createContext(socket);
+export const SocketProvider = (props) => {
+  const { token, user } = React.useContext(AppContext);
 
-export const SocketProvider = (props) => (
-  <SocketContext.Provider value={socket}>
-    {props.children}
-  </SocketContext.Provider>
-);
+  console.log({ token, user });
+
+  const socket = handler('ws://localhost:8000');
+
+  return (
+    <SocketContext.Provider value={socket}>
+      {props.children}
+    </SocketContext.Provider>
+  );
+};
