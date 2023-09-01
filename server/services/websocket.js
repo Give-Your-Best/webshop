@@ -34,9 +34,6 @@ const verifyClient = ({ req }, cb) => {
   cb(true);
 };
 
-// TODO
-const heartbeat = (socket) => (socket.isAlive = true);
-
 // Set up a headless websocket server
 const wss = new WebSocketServer({
   noServer: true,
@@ -66,8 +63,8 @@ const init = (req, socket, head) => {
 const push = async (id, event) => await redis.publish(`notify:${id}`, event);
 
 wss.on('connection', async (socket, req) => {
-  // We may want a hearbeat implementation for handling broken connections
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
+  socket.isAlive = true;
 
   const { cookie } = req.headers;
   const token = parseToken(cookie);
@@ -91,11 +88,15 @@ wss.on('connection', async (socket, req) => {
     // Register the client in local memory
     clients.set(user.id, socket);
 
-    socket.isAlive = true;
-
     // Bind client socket events
-    socket.on('pong', heartbeat);
-    socket.on('error', console.error); // TODO better than this
+    socket.on('pong', (socket) => {
+      socket.isAlive = true;
+    });
+
+    socket.on('error', (err) => {
+      console.error(err);
+    });
+
     socket.on('close', async () => {
       clients.delete(user.id);
       await redis.unsubscribe(channel, listener);
