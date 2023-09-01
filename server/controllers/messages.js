@@ -11,6 +11,7 @@ const createMessage = async (req, res) => {
 
   try {
     const thread = await Message.upsertThread(req.body);
+    const message = [...thread.messages].pop();
 
     await sockets.push(
       thread.user._id,
@@ -18,6 +19,7 @@ const createMessage = async (req, res) => {
         event: 'NEW_MESSAGE',
         data: {
           threadId: thread.threadId,
+          sender: message.sender.id,
           user: thread.user.id,
           type: thread.type,
         },

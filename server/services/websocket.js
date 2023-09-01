@@ -40,17 +40,17 @@ const wss = new WebSocketServer({
   verifyClient,
 });
 
-// TODO
-const ping = setInterval(() => {
-  clients.forEach((socket) => {
-    if (socket.isAlive) {
-      socket.isAlive = false;
-      socket.ping();
-    } else {
-      socket.terminate();
-    }
-  });
-}, 30000);
+// // TODO
+// const ping = setInterval(() => {
+//   clients.forEach((socket) => {
+//     if (socket.isAlive) {
+//       socket.isAlive = false;
+//       socket.ping();
+//     } else {
+//       socket.terminate();
+//     }
+//   });
+// }, 30000);
 
 // Handles the upgrade request to setup a socket connection
 const init = (req, socket, head) => {
@@ -64,7 +64,7 @@ const push = async (id, event) => await redis.publish(`notify:${id}`, event);
 
 wss.on('connection', async (socket, req) => {
   // https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
-  socket.isAlive = true;
+  // socket.isAlive = true;
 
   const { cookie } = req.headers;
   const token = parseToken(cookie);
@@ -88,10 +88,10 @@ wss.on('connection', async (socket, req) => {
     // Register the client in local memory
     clients.set(user.id, socket);
 
-    // Bind client socket events
-    socket.on('pong', (socket) => {
-      socket.isAlive = true;
-    });
+    // // Bind client socket events
+    // socket.on('pong', (socket) => {
+    //   socket.isAlive = true;
+    // });
 
     socket.on('error', (err) => {
       console.error(err);
@@ -106,7 +106,7 @@ wss.on('connection', async (socket, req) => {
   }
 });
 
-wss.on('close', () => clearInterval(ping));
+// wss.on('close', () => clearInterval(ping));
 
 /**
  * API...
