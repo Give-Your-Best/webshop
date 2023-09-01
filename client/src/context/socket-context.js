@@ -2,16 +2,15 @@ import * as React from 'react';
 import { AppContext } from './app-context';
 import handler from '../services/websocket';
 
-export const SocketContext = React.createContext();
+export const SocketContext = React.createContext(null);
 
 export const SocketProvider = (props) => {
-  const { token, user } = React.useContext(AppContext);
+  const { user } = React.useContext(AppContext);
 
-  console.log({ token, user });
+  // TODO - will need some logic here for setting the socket uri depending on
+  // current environment etc...s
 
-  // TODO something here to confirm that the user exists else no connection...
-
-  const socket = handler('ws://localhost:8000');
+  const socket = handler(user ? 'ws://localhost:8000' : undefined);
 
   return (
     <SocketContext.Provider value={socket}>
