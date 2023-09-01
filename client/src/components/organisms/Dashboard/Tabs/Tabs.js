@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
-// import { SocketContext } from '../../../../context/socket-context';
+import { SocketContext } from '../../../../context/socket-context';
+import { Badge } from 'antd';
 import {
   StyledTab,
   StyledTabList,
@@ -15,33 +16,44 @@ import { tabList } from '../../../../utils/helpers';
 
 export const Tabs = ({ itemId }) => {
   const { user } = useContext(AppContext);
-  // const socket = useContext(SocketContext); // ('ws://localhost:8000');
+  const socket = useContext(SocketContext);
 
   const [tabIndex, setTabIndex] = useState(0);
-  // const [newMessages, setNewMessages] = useState({});
+  const [newMessages, setNewMessages] = useState({});
 
-  // const [blah, setBlah] = useState(0);
+  const totalUnread = {
+    [`${user.type}Messages`]: Object.values(newMessages).reduce(
+      (a, b) => a + b,
+      0
+    ),
+  };
+
+  console.log({ user, totalUnread });
 
   var tabs = tabList(user);
 
-  // React.useEffect(() => {
-  //   const onMessage = (message) => {
-  //     const { event, data } = JSON.parse(message);
+  React.useEffect(() => {
+    const onMessage = (message) => {
+      const { event, data } = JSON.parse(message);
 
-  //     console.log({ event, data });
+      if (event !== 'NEW_MESSAGE') {
+        return;
+      }
 
-  //     console.log({ x: user.id, y: data.user });
+      if (user.id === data.sender) {
+        return;
+      }
 
-  //     setNewMessages((state) => ({
-  //       [data.threadId]: data,
-  //       ...state,
-  //     }));
-  //   };
+      setNewMessages((state) => ({
+        ...state,
+        [data.threadId]: (state[data.threadId] || 0) + 1,
+      }));
+    };
 
-  //   socket.on(onMessage);
+    socket.on(onMessage);
 
-  //   return () => socket.off(onMessage);
-  // }, [socket]);
+    return () => socket.off(onMessage);
+  }, [newMessages, socket, user.id]);
 
   // console.log({ newMessages });
 
@@ -65,7 +77,9 @@ export const Tabs = ({ itemId }) => {
             return d.name === 'Dashboard' ? (
               <StyledTabHidden key={d.name}>{d.name}</StyledTabHidden>
             ) : (
-              <StyledTab key={d.name}>{d.name}</StyledTab>
+              <Badge count={totalUnread[d.id]}>
+                <StyledTab key={d.name}>{d.name}</StyledTab>
+              </Badge>
             );
           })}
         </StyledTabList>

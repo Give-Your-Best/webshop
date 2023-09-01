@@ -174,14 +174,14 @@ export const AdminMessages = () => {
 
   const onMessage = React.useCallback(
     (message) => {
-      const data = JSON.parse(message);
+      const { data, event } = JSON.parse(message);
 
       console.log({ data });
 
-      if (data.event === 'new message') {
+      if (event === 'NEW_MESSAGE') {
         if (data.type === 'shopper') {
           (async () => {
-            const messages = await getMessages('shopper', user.id, token);
+            const messages = await getMessages('shopper', 'all', token);
             if (!mountedRef.current) return null;
             setShoppersMessages(messages);
           })();
@@ -189,14 +189,14 @@ export const AdminMessages = () => {
 
         if (data.type === 'donor') {
           (async () => {
-            const messages = await getMessages('donor', user.id, token);
+            const messages = await getMessages('donor', 'all', token);
             if (!mountedRef.current) return null;
             setDonorsMessages(messages);
           })();
         }
       }
     },
-    [token, user.id]
+    [token]
   );
 
   React.useEffect(() => {
