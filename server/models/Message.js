@@ -4,6 +4,23 @@ const BSON = require('bson');
 const Schema = mongoose.Schema;
 const options = { timestamps: true };
 
+const messageItem = {
+  message: String,
+  recipient: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  sender: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  viewed: {
+    type: Boolean,
+    default: false,
+  },
+  sentDate: Date,
+};
+
 const messageSchema = new Schema(
   {
     type: {
@@ -16,27 +33,47 @@ const messageSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    messages: [
-      {
-        message: String,
-        recipient: {
-          type: Schema.Types.ObjectId,
-          ref: 'User',
-        },
-        sender: {
-          type: Schema.Types.ObjectId,
-          ref: 'User',
-        },
-        viewed: {
-          type: Boolean,
-          default: false,
-        },
-        sentDate: Date,
-      },
-    ],
+    messages: [messageItem],
   },
   options
 );
+
+// TODO - ALSO RENAME THIS !!! (getUnreadCountByThread ??, getThreadCounts ??)
+messageSchema.statics.countUnreadMessages = async function (user) {
+  console.log({ user });
+  const { kind } = user;
+
+  const $match = {
+    ...(kind === 'admin' ? {} : { user: user._id }),
+  };
+
+  const $project = {
+    threadId: '$_id',
+    userType: '$type',
+    messages: { $size: '$messages' },
+    unviewed: {
+      $size: {
+        $filter: {
+          input: '$messages',
+          cond: {
+            $eq: ['$$this.viewed', false],
+          },
+        },
+      },
+    },
+  };
+
+  const data = await this.aggregate([
+    {
+      $match,
+    },
+    {
+      $project,
+    },
+  ]);
+
+  return data;
+};
 
 // TODO
 messageSchema.statics.getAllOfType = async function (type) {
