@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
+import { Badge } from 'antd';
 
 const DashboardMenuWrapper = styled.div`
   width: 100%;
@@ -21,7 +22,7 @@ const StyledTabList = styled(TabList)`
   }
 `;
 
-const StyledTab = styled(Tab).attrs({
+const StyledTabItem = styled(Tab).attrs({
   selectedClassName: 'selected',
   disabledClassName: 'disabled',
 })`
@@ -53,6 +54,31 @@ const StyledTab = styled(Tab).attrs({
     min-width: unset;
   }
 `;
+
+const StyledBadge = styled(Badge).attrs({
+  offset: [15, -20],
+})`
+  display: block;
+  line-height: unset;
+  font-size: 20px;
+  font-family: lato;
+
+  & sup {
+    font-size: 16px;
+    font-family: lato;
+    padding: 6px 10px;
+    height: unset;
+    min-width: 32px;
+  }
+`;
+
+const StyledTab = ({ children, todoCount, ...rest }) => {
+  return (
+    <StyledTabItem {...rest}>
+      <StyledBadge count={todoCount}>{children}</StyledBadge>
+    </StyledTabItem>
+  );
+};
 
 const StyledTabHidden = styled(Tab)`
   display: none;

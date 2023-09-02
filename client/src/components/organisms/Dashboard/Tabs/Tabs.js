@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
 import { SocketContext } from '../../../../context/socket-context';
-import { Badge } from 'antd';
 import {
   StyledTab,
   StyledTabList,
@@ -55,7 +54,7 @@ export const Tabs = ({ itemId }) => {
     return () => socket.off(onMessage);
   }, [newMessages, socket, user.id]);
 
-  // console.log({ newMessages });
+  console.log({ newMessages });
 
   useEffect(() => {
     tabs.forEach((t, index) => {
@@ -77,9 +76,9 @@ export const Tabs = ({ itemId }) => {
             return d.name === 'Dashboard' ? (
               <StyledTabHidden key={d.name}>{d.name}</StyledTabHidden>
             ) : (
-              <Badge count={totalUnread[d.id]}>
-                <StyledTab key={d.name}>{d.name}</StyledTab>
-              </Badge>
+              <StyledTab todoCount={totalUnread[d.id]} key={d.name}>
+                {d.name}
+              </StyledTab>
             );
           })}
         </StyledTabList>
@@ -91,9 +90,6 @@ export const Tabs = ({ itemId }) => {
             </StyledTabPanelDashboardImage>
           ) : (
             <StyledTabPanel key={d.name}>{d.content}</StyledTabPanel>
-            // <StyledTabPanel key={d.name}>
-            //   {d.name === 'Messaging' ? d.content({ setBlah }) : d.content}
-            // </StyledTabPanel>
           );
         })}
       </StyledTabs>
