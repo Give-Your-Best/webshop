@@ -12,9 +12,10 @@ import {
 } from './Tabs.styles';
 import { AccountWelcome } from '../../../molecules/AccountWelcome';
 import { tabList } from '../../../../utils/helpers';
+import { getInboxSummary } from '../../../../services/user';
 
 export const Tabs = ({ itemId }) => {
-  const { user } = useContext(AppContext);
+  const { user, token } = useContext(AppContext);
   const socket = useContext(SocketContext);
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -27,7 +28,16 @@ export const Tabs = ({ itemId }) => {
     ),
   };
 
-  console.log({ user, totalUnread });
+  React.useEffect(() => {
+    getInboxSummary(user.id, token).then(({ messages }) => {
+      const data = messages.reduce((acc, cur) => {
+        acc[cur.threadId] = cur.unviewed;
+        return acc;
+      }, {});
+
+      setNewMessages(data);
+    });
+  }, [token, user.id]);
 
   var tabs = tabList(user);
 

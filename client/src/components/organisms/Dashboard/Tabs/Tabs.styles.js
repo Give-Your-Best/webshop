@@ -56,7 +56,7 @@ const StyledTabItem = styled(Tab).attrs({
 `;
 
 const StyledBadge = styled(Badge).attrs({
-  offset: [15, -20],
+  offset: [20, -20],
 })`
   display: block;
   line-height: unset;
