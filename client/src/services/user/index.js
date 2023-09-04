@@ -5,6 +5,7 @@ export { createUser } from './createUser';
 export { getUser } from './getUser';
 export { deleteUser } from './deleteUser';
 export { getUsers } from './getUsers';
+export { getInboxSummary } from './getInboxSummary';
 export { updateUser } from './updateUser';
 export { updateDonor } from './updateDonor';
 export { updateShopper } from './updateShopper';
