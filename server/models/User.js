@@ -70,6 +70,14 @@ userSchema.methods.updatePassword = async (id, candidatePassword) => {
   });
 };
 
+// Currently this covers only message threads but other notifications, actions,
+// approvals etc. are to follow - response will depend on user type...
+userSchema.methods.getInboxSummary = async function () {
+  const messages = await this.model('Message').countUnreadMessages(this);
+
+  return { messages };
+};
+
 userSchema.virtual('shoppedItems', {
   ref: 'Item',
   localField: '_id',

@@ -31,6 +31,14 @@ router.get('/:id', async (req, res) => {
   res.json(user);
 });
 
+// TODO
+router.get('/:id/inbox', async (req, res) => {
+  const id = req.params.id;
+  const user = await getUser(id);
+  const inbox = await user.getInboxSummary();
+  res.json(inbox);
+});
+
 // get user endoint api/users/:id
 router.get('/dummyadmin/:name', async (req, res) => {
   const name = req.params.name;
