@@ -92,7 +92,7 @@ const MessagesContainer = styled.div`
   display: block;
   width: 100%;
   margin-top: 10px;
-  max-height: 1000px;
+  max-height: 30vh;
   overflow: scroll;
   margin-bottom: 1em;
 `;

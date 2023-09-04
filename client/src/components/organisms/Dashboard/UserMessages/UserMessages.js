@@ -30,6 +30,7 @@ export const UserMessages = () => {
   const socket = useContext(SocketContext); // ('ws://localhost:8000');
   const type = user.type;
   const mountedRef = useRef(true);
+  const blahblahRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [newThread, setNewThread] = useState(false);
   const [emailId, setEmailId] = useState('');
@@ -39,6 +40,7 @@ export const UserMessages = () => {
   };
 
   const viewConversation = (conversation) => {
+    console.log({ conversation, messages });
     const markAsRead = async () => {
       let unread = checkUnread(type, user.id, conversation.messages);
       if (unread[0] > 0) {
@@ -88,11 +90,11 @@ export const UserMessages = () => {
 
     return (
       <div>
-        <MessagesContainer>
+        <MessagesContainer ref={blahblahRef}>
           {conversation.messages.map((m) => {
             if (m.recipient.kind === 'admin') {
               return (
-                <MessageReceived key={m.threadId}>
+                <MessageReceived key={m._id}>
                   <div>
                     <p>{m.message}</p>
                     <InfoNote>
@@ -105,7 +107,7 @@ export const UserMessages = () => {
               );
             } else {
               return (
-                <MessageSent key={m.threadId}>
+                <MessageSent key={m._id}>
                   <div>
                     <p>{m.message}</p>
                     <InfoNote>
@@ -154,6 +156,15 @@ export const UserMessages = () => {
           const messages = await getMessages('shopper', user.id, token);
           if (!mountedRef.current) return null;
           setMessages(messages);
+          // blahblahRef.current.scrollTop = blahblahRef.current.scrollHeight;
+          // blahblahRef.current.lastChild.scrollIntoView({
+          //   behavior: 'smooth',
+          //   block: 'end',
+          // });
+          blahblahRef.current.scroll({
+            top: blahblahRef.current.scrollHeight,
+            behavior: 'smooth',
+          });
         })();
       }
     },
