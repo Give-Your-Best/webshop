@@ -28,6 +28,7 @@ export const Images = (data) => {
   const handleCancel = () => setPreviewVisible(false);
 
   const handleChange = ({ file, fileList }) => {
+    console.log('CHANGE', { file }, file.originFileObj);
     fileList[0].front = true; //set first image to front image
     data.setUploadedImages(fileList);
 
@@ -66,8 +67,55 @@ export const Images = (data) => {
     </div>
   );
 
-  const custom = ({ onSuccess }) => {
-    onSuccess('Ok');
+  const custom = async (blah) => {
+    console.log(blah);
+    // const { onSuccess } = blah;
+    // onSuccess('Ok');
+    const { file } = blah;
+
+    const params = {
+      public_id: file.uid,
+    };
+
+    const { apikey, cloudname, signature, timestamp } = await fetch(
+      '/api/cloudinary/upload_url',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'x-access-token': data.token,
+        },
+        body: JSON.stringify(params),
+      }
+    ).then((res) => res.json());
+
+    console.log({ apikey, cloudname, signature, timestamp });
+
+    const formData = new FormData();
+
+    formData.append('file', file);
+    formData.append('api_key', apikey);
+    formData.append('signature', signature);
+    formData.append('timestamp', timestamp);
+
+    Object.entries(params).forEach(([k, v]) => {
+      formData.append(k, String(v));
+    });
+
+    const response = JSON.parse(
+      await fetch(
+        'https://api.cloudinary.com/v1_1/' + cloudname + '/auto/upload',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      ).then((res) => res.text())
+    );
+
+    console.log('FFFFSSSS', { response });
+
+    blah.onSuccess('OK');
   };
 
   return (
@@ -78,7 +126,15 @@ export const Images = (data) => {
         multiple={true}
         beforeUpload={checkFileType}
         fileList={data.uploadedImages || []}
-        onPreview={handlePreview}
+        previewFile={async (file) => {
+          console.log('HSHDFHSDHFS', file);
+          return (
+            'https://res.cloudinary.com/demadpdms/image/upload/q_auto,f_auto,c_thumb,w_200,ar_1/' +
+            file.uid +
+            '.jpg'
+          );
+        }}
+        // onPreview={handlePreview}
         disabled={data.editingKey !== data.recordId}
         onChange={handleChange}
       >

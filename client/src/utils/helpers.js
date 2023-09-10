@@ -333,6 +333,11 @@ export const checkUnread = (type, userId, messages) => {
   return [unread.length, unread];
 };
 
+// TODO...
+function getImageUrl({ cloudName, publicId, transformations }) {
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformations}/${publicId}.jpg`;
+}
+
 export const setImageSrc = (data) =>
   data && data.url
     ? data.url.replace('http://', 'https://')

@@ -102,6 +102,7 @@ export const ItemCreateForm = (data) => {
 
           <StyledLabel>Please upload a front and back image</StyledLabel>
           <Images
+            token={token}
             uploadedImages={uploadedImages}
             setUploadedImages={setUploadedImages}
           />
