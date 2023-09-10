@@ -12,6 +12,7 @@ const statisticsRoutes = require('./statistics');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const { getSetting } = require('../../services/settings');
+const cloudinary = require('../../services/cloudinary');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
@@ -25,6 +26,17 @@ router.get('/settings/:name', async (req, res) => {
   const name = req.params.name;
   const setting = await getSetting(name);
   res.json(setting);
+});
+
+// TODO
+router.post('/cloudinary/upload_url', async (req, res) => {
+  try {
+    const signature = cloudinary.getSignedUploadUrl(req.body);
+    res.json(signature);
+  } catch (e) {
+    console.log('ERROR', e);
+    res.status(400).json({ error: e });
+  }
 });
 
 router.use('/items', itemsRoutes);
