@@ -3,6 +3,7 @@ import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from 'formik';
 import { Notification } from '../../atoms';
+import { getImageUrl } from '../../../utils/helpers';
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -12,8 +13,9 @@ export const Images = (data) => {
 
   const checkFileType = (file) => {
     //do not upload if not in accepted file types
-    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
+    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic']; // TODO casing!!
     if (!acceptedFormats.includes(file.name.split('.')[1])) {
+      // TODO this might not work beacuse periods in filename
       Notification(
         'Error!',
         'Error uploading image. Please make sure your file is an image type',
@@ -27,37 +29,37 @@ export const Images = (data) => {
 
   const handleCancel = () => setPreviewVisible(false);
 
-  const handleChange = ({ file, fileList }) => {
-    console.log('CHANGE', { file }, file.originFileObj);
+  const handleChange = ({ fileList }) => {
     fileList[0].front = true; //set first image to front image
     data.setUploadedImages(fileList);
 
     if (data.handleChange) {
-      data.handleChange(data.uploadedImages);
+      data.handleChange(fileList);
     }
 
     //update dummy field for image validation
     formikProps.setFieldValue('photos', fileList);
   };
 
+  const getThumbUrl = async (file) => {
+    console.log('THUMB', { file });
+    return getImageUrl({
+      publicId: file.uid,
+      transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
+    });
+  };
+
   const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview || file.src);
+    setPreviewImage(
+      getImageUrl({
+        publicId: file.uid,
+        transformations: 'q_auto,f_auto,c_fill,w_400',
+      })
+    );
     setPreviewVisible(true);
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
     );
-  };
-
-  const getBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
   };
 
   const uploadButton = (
@@ -67,12 +69,7 @@ export const Images = (data) => {
     </div>
   );
 
-  const custom = async (blah) => {
-    console.log(blah);
-    // const { onSuccess } = blah;
-    // onSuccess('Ok');
-    const { file } = blah;
-
+  const customRequest = async ({ file, onSuccess }) => {
     const params = {
       public_id: file.uid,
     };
@@ -90,7 +87,7 @@ export const Images = (data) => {
       }
     ).then((res) => res.json());
 
-    console.log({ apikey, cloudname, signature, timestamp });
+    // console.log({ apikey, cloudname, signature, timestamp });
 
     const formData = new FormData();
 
@@ -113,28 +110,41 @@ export const Images = (data) => {
       ).then((res) => res.text())
     );
 
-    console.log('FFFFSSSS', { response });
+    // console.log('FFFFSSSS', { response });
 
-    blah.onSuccess('OK');
+    const {
+      created_at: createdAt,
+      public_id: publicId,
+      secure_url: url,
+    } = response;
+
+    const thumbUrl = getImageUrl({
+      publicId: file.uid,
+      transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
+    });
+
+    const imageData = {
+      createdAt,
+      name: file.name,
+      publicId,
+      thumbUrl,
+      url,
+      uid: publicId,
+    };
+
+    onSuccess(imageData);
   };
 
   return (
     <>
       <Upload
-        customRequest={custom}
+        customRequest={customRequest}
         listType="picture-card"
         multiple={true}
         beforeUpload={checkFileType}
         fileList={data.uploadedImages || []}
-        previewFile={async (file) => {
-          console.log('HSHDFHSDHFS', file);
-          return (
-            'https://res.cloudinary.com/demadpdms/image/upload/q_auto,f_auto,c_thumb,w_200,ar_1/' +
-            file.uid +
-            '.jpg'
-          );
-        }}
-        // onPreview={handlePreview}
+        previewFile={getThumbUrl}
+        onPreview={handlePreview}
         disabled={data.editingKey !== data.recordId}
         onChange={handleChange}
       >
