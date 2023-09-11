@@ -334,9 +334,9 @@ export const checkUnread = (type, userId, messages) => {
 };
 
 // TODO...
-function getImageUrl({ cloudName, publicId, transformations }) {
-  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformations}/${publicId}.jpg`;
-}
+export const getImageUrl = ({ publicId, transformations }) => {
+  return `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_NAME}/image/upload/${transformations}/${publicId}.jpg`;
+};
 
 export const setImageSrc = (data) =>
   data && data.url
