@@ -4,6 +4,11 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from 'formik';
 import { Notification } from '../../atoms';
 import { getImageUrl } from '../../../utils/helpers';
+import {
+  getSignedUrl,
+  handleDestroy,
+  handleUpload,
+} from '../../../services/cloudinary';
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -12,10 +17,15 @@ export const Images = (data) => {
   const formikProps = useFormikContext();
 
   const checkFileType = (file) => {
-    //do not upload if not in accepted file types
-    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic']; // TODO casing!!
-    if (!acceptedFormats.includes(file.name.split('.')[1])) {
-      // TODO this might not work beacuse periods in filename
+    // Do not upload if not in accepted file types
+    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
+
+    const fileName = file.name.toLowerCase();
+
+    // Just get the last item, there may be periods in the original file name
+    const ext = fileName.split('.').pop();
+
+    if (!acceptedFormats.includes(ext)) {
       Notification(
         'Error!',
         'Error uploading image. Please make sure your file is an image type',
@@ -27,22 +37,19 @@ export const Images = (data) => {
     }
   };
 
-  const handleCancel = () => setPreviewVisible(false);
-
   const handleChange = ({ fileList }) => {
-    fileList[0].front = true; //set first image to front image
+    fileList[0].front = true; // Set first image to front image
     data.setUploadedImages(fileList);
 
     if (data.handleChange) {
       data.handleChange(fileList);
     }
 
-    //update dummy field for image validation
+    // Update dummy field for image validation
     formikProps.setFieldValue('photos', fileList);
   };
 
   const getThumbUrl = async (file) => {
-    console.log('THUMB', { file });
     return getImageUrl({
       publicId: file.uid,
       transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
@@ -62,32 +69,41 @@ export const Images = (data) => {
     );
   };
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
-
-  const customRequest = async ({ file, onSuccess }) => {
+  // Destroy the asset in cloudinary
+  const handleRemove = async (file) => {
     const params = {
       public_id: file.uid,
     };
 
-    const { apikey, cloudname, signature, timestamp } = await fetch(
-      '/api/cloudinary/upload_url',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'x-access-token': data.token,
-        },
-        body: JSON.stringify(params),
-      }
-    ).then((res) => res.json());
+    const { apikey, cloudname, signature, timestamp } = await getSignedUrl(
+      params,
+      data.token
+    );
 
-    // console.log({ apikey, cloudname, signature, timestamp });
+    const formData = new FormData();
+
+    formData.append('api_key', apikey);
+    formData.append('signature', signature);
+    formData.append('timestamp', timestamp);
+
+    Object.entries(params).forEach(([k, v]) => {
+      formData.append(k, String(v));
+    });
+
+    await handleDestroy(formData, cloudname);
+  };
+
+  // Upload the asset to cloudinary via signed url
+  const customRequest = async ({ file, onSuccess }) => {
+    console.log('CALLED');
+    const params = {
+      public_id: file.uid,
+    };
+
+    const { apikey, cloudname, signature, timestamp } = await getSignedUrl(
+      params,
+      data.token
+    );
 
     const formData = new FormData();
 
@@ -100,23 +116,16 @@ export const Images = (data) => {
       formData.append(k, String(v));
     });
 
-    const response = JSON.parse(
-      await fetch(
-        'https://api.cloudinary.com/v1_1/' + cloudname + '/auto/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      ).then((res) => res.text())
-    );
-
-    // console.log('FFFFSSSS', { response });
-
     const {
       created_at: createdAt,
       public_id: publicId,
       secure_url: url,
-    } = response;
+    } = await handleUpload(formData, cloudname);
+
+    const mainUrl = getImageUrl({
+      publicId: file.uid,
+      transformations: 'q_auto,f_auto,c_fill,w_400',
+    });
 
     const thumbUrl = getImageUrl({
       publicId: file.uid,
@@ -127,6 +136,7 @@ export const Images = (data) => {
       createdAt,
       name: file.name,
       publicId,
+      mainUrl,
       thumbUrl,
       url,
       uid: publicId,
@@ -135,27 +145,36 @@ export const Images = (data) => {
     onSuccess(imageData);
   };
 
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
   return (
     <>
       <Upload
-        customRequest={customRequest}
+        disabled={data.editingKey !== data.recordId}
+        fileList={data.uploadedImages || []}
         listType="picture-card"
         multiple={true}
         beforeUpload={checkFileType}
-        fileList={data.uploadedImages || []}
+        customRequest={customRequest}
         previewFile={getThumbUrl}
-        onPreview={handlePreview}
-        disabled={data.editingKey !== data.recordId}
         onChange={handleChange}
+        onPreview={handlePreview}
+        onRemove={handleRemove}
       >
         {data.uploadedImages.length >= 4 ? null : uploadButton}
       </Upload>
+
       <Modal
         visible={previewVisible}
         className="modalStyle"
         title={previewTitle}
         footer={null}
-        onCancel={handleCancel}
+        onCancel={() => setPreviewVisible(false)}
       >
         <img alt="preview" style={{ width: '100%' }} src={previewImage} />
       </Modal>
