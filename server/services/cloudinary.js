@@ -11,7 +11,7 @@ cloudinary.config({
 /**
  * TODO...
  */
-const getSignedUploadUrl = (options) => {
+const getSignedUrl = (options) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
 
   const signature = cloudinary.utils.api_sign_request(
@@ -31,5 +31,5 @@ const getSignedUploadUrl = (options) => {
 };
 
 module.exports = {
-  getSignedUploadUrl,
+  getSignedUrl,
 };

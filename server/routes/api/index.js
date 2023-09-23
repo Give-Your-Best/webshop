@@ -29,9 +29,9 @@ router.get('/settings/:name', async (req, res) => {
 });
 
 // TODO
-router.post('/cloudinary/upload_url', async (req, res) => {
+router.post('/cloudinary/signed_url', async (req, res) => {
   try {
-    const signature = cloudinary.getSignedUploadUrl(req.body);
+    const signature = cloudinary.getSignedUrl(req.body);
     res.json(signature);
   } catch (e) {
     console.log('ERROR', e);
