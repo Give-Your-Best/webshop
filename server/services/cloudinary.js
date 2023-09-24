@@ -9,7 +9,9 @@ cloudinary.config({
 });
 
 /**
- * TODO...
+ * Generate a signed url for secure authenticated actions on the client (without
+ * exposing any secret). See the cloudinary documentation here:
+ * https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
  */
 const getSignedUrl = (options) => {
   const timestamp = Math.round(new Date().getTime() / 1000);
@@ -25,6 +27,8 @@ const getSignedUrl = (options) => {
   return {
     signature,
     timestamp,
+    // Return the cloudinary account name and api key for use in building urls
+    // etc. on the client
     cloudname: cloudName,
     apikey: apiKey,
   };

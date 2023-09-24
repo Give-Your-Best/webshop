@@ -28,7 +28,7 @@ router.get('/settings/:name', async (req, res) => {
   res.json(setting);
 });
 
-// TODO
+// Provide signed url for secure upload etc. on the client
 router.post('/cloudinary/signed_url', async (req, res) => {
   try {
     const signature = cloudinary.getSignedUrl(req.body);

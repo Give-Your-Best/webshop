@@ -1,17 +1,12 @@
 /**
- *
- * @param {*} param0
- * @returns
+ * https://cloudinary.com/blog/guest_post/photo-gallery-with-automatic-thumbnails-using-react-and-cloudinary
  */
 export const getImageUrl = ({ cloudName, publicId, transformations }) => {
   return `https://res.cloudinary.com/${cloudName}/image/upload/${transformations}/${publicId}.jpg`;
 };
 
 /**
- *
- * @param {*} params
- * @param {*} token
- * @returns
+ * Get the secure signed url from backend...
  */
 export const getSignedUrl = async (params, token) => {
   try {
@@ -38,10 +33,7 @@ export const getSignedUrl = async (params, token) => {
 };
 
 /**
- *
- * @param {*} formData
- * @param {*} cloudname
- * @returns
+ * https://cloudinary.com/documentation/image_upload_api_reference#signed_upload_syntax
  */
 export const assetUpload = async (formData, cloudname) => {
   try {
@@ -55,16 +47,13 @@ export const assetUpload = async (formData, cloudname) => {
     return result;
   } catch (error) {
     // TODO
-    console.error(`Error in cloudinary manage asset: ${error}`);
+    console.error(`Error in cloudinary asset upload: ${error}`);
     return error;
   }
 };
 
 /**
- *
- * @param {*} formData
- * @param {*} cloudname
- * @returns
+ * https://cloudinary.com/documentation/image_upload_api_reference#destroy_syntax
  */
 export const assetDestroy = async (formData, cloudname) => {
   try {
@@ -80,8 +69,7 @@ export const assetDestroy = async (formData, cloudname) => {
 
     return result;
   } catch (error) {
-    // TODO
-    console.error(`Error in cloudinary manage asset: ${error}`);
+    console.error(`Error in cloudinary asset destroy: ${error}`);
     return error;
   }
 };
