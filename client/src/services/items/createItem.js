@@ -1,13 +1,10 @@
-import { convertHeic } from '../../utils/helpers';
-
 export const createItem = async (values, token) => {
   //call api to create item
-  if (values.photos) {
-    console.log(values.photos.length);
-    console.log(values.photos);
-    values.photos = await convertHeic(values.photos);
-  }
   try {
+    const body = {
+      ...values,
+      photos: values.photos.map((p) => p.response || p),
+    };
     const response = await fetch('/api/items/', {
       method: 'post',
       headers: {
@@ -15,7 +12,7 @@ export const createItem = async (values, token) => {
         'Content-Type': 'application/json',
         'x-access-token': token,
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(body),
     });
     const jsonres = await response.json();
     return jsonres;
