@@ -333,11 +333,6 @@ export const checkUnread = (type, userId, messages) => {
   return [unread.length, unread];
 };
 
-// TODO...
-export const getImageUrl = ({ publicId, transformations }) => {
-  return `https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_NAME}/image/upload/${transformations}/${publicId}.jpg`;
-};
-
 export const setImageSrc = (data) =>
   data && data.url
     ? data.url.replace('http://', 'https://')
