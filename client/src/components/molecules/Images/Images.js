@@ -3,26 +3,26 @@ import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from 'formik';
 import { Notification } from '../../atoms';
-import { getImageUrl } from '../../../utils/helpers';
 import {
+  getImageUrl,
   getSignedUrl,
-  handleDestroy,
-  handleUpload,
+  assetDestroy,
+  assetUpload,
 } from '../../../services/cloudinary';
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+  const [cloudName, setCloudName] = useState('');
   const formikProps = useFormikContext();
 
   const checkFileType = (file) => {
     // Do not upload if not in accepted file types
     const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
 
-    const fileName = file.name.toLowerCase();
-
     // Just get the last item, there may be periods in the original file name
+    const fileName = file.name.toLowerCase();
     const ext = fileName.split('.').pop();
 
     if (!acceptedFormats.includes(ext)) {
@@ -50,18 +50,24 @@ export const Images = (data) => {
   };
 
   const getThumbUrl = async (file) => {
-    return getImageUrl({
-      publicId: file.uid,
-      transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
-    });
+    return (
+      file.thumbUrl ||
+      getImageUrl({
+        cloudName,
+        publicId: file.uid,
+        transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
+      })
+    );
   };
 
   const handlePreview = async (file) => {
     setPreviewImage(
-      getImageUrl({
-        publicId: file.uid,
-        transformations: 'q_auto,f_auto,c_fill,w_400',
-      })
+      file.mainUrl ||
+        getImageUrl({
+          cloudName,
+          publicId: file.uid,
+          transformations: 'q_auto,f_auto,c_fill,w_400',
+        })
     );
     setPreviewVisible(true);
     setPreviewTitle(
@@ -80,6 +86,9 @@ export const Images = (data) => {
       data.token
     );
 
+    // Hold the cloudinary account name in local state for use in url builders
+    setCloudName(cloudname);
+
     const formData = new FormData();
 
     formData.append('api_key', apikey);
@@ -90,7 +99,7 @@ export const Images = (data) => {
       formData.append(k, String(v));
     });
 
-    await handleDestroy(formData, cloudname);
+    await assetDestroy(formData, cloudname);
   };
 
   // Upload the asset to cloudinary via signed url
@@ -104,6 +113,9 @@ export const Images = (data) => {
       params,
       data.token
     );
+
+    // Hold the cloudinary account name in local state for use in url builders
+    setCloudName(cloudname);
 
     const formData = new FormData();
 
@@ -120,22 +132,24 @@ export const Images = (data) => {
       created_at: createdAt,
       public_id: publicId,
       secure_url: url,
-    } = await handleUpload(formData, cloudname);
+    } = await assetUpload(formData, cloudname);
 
     const mainUrl = getImageUrl({
+      cloudName: cloudname,
       publicId: file.uid,
-      transformations: 'q_auto,f_auto,c_fill,w_400',
+      transformations: 'q_auto,f_auto,c_fill,w_400', // TODO decide this
     });
 
     const thumbUrl = getImageUrl({
+      cloudName: cloudname,
       publicId: file.uid,
-      transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1',
+      transformations: 'q_auto,f_auto,c_thumb,w_200,ar_1', // TODO this ok?
     });
 
     const imageData = {
       createdAt,
       name: file.name,
-      publicId,
+      publicId, // Can get rid of this later perhaps?
       mainUrl,
       thumbUrl,
       url,
