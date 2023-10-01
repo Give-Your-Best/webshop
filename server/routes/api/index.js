@@ -28,17 +28,6 @@ router.get('/settings/:name', async (req, res) => {
   res.json(setting);
 });
 
-// Provide signed url for secure upload etc. on the client
-router.post('/cloudinary/signed_url', async (req, res) => {
-  try {
-    const signature = cloudinary.getSignedUrl(req.body);
-    res.json(signature);
-  } catch (e) {
-    console.log('ERROR', e);
-    res.status(400).json({ error: e });
-  }
-});
-
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
 router.use('/mail', mailerRoutes);
@@ -52,5 +41,28 @@ router.use('/locations', locationRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/statistics', statisticsRoutes);
 router.use('/messages', messageRoutes);
+
+// Provide signed url for secure upload etc. on the client
+router.post('/cloudinary/signed_url', async (req, res) => {
+  try {
+    const signature = cloudinary.getSignedUrl(req.body);
+    res.json(signature);
+  } catch (e) {
+    console.log('ERROR', e);
+    res.status(400).json({ error: e });
+  }
+});
+
+// TODO
+router.post('/cloudinary/delete_resources', async (req, res) => {
+  try {
+    const { publicIds } = req.body;
+    const result = await cloudinary.deleteResources(publicIds || []);
+    res.json(result);
+  } catch (e) {
+    console.log('ERROR', e);
+    res.status(400).json({ error: e });
+  }
+});
 
 module.exports = router;
