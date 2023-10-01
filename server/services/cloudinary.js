@@ -9,8 +9,7 @@ cloudinary.config({
 });
 
 /**
- * Generate a signed url for secure authenticated actions on the client (without
- * exposing any secret). See the cloudinary documentation here:
+ * Generate a signed url for secure authenticated actions on the client.
  * https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
  */
 const getSignedUrl = (options) => {
@@ -27,13 +26,22 @@ const getSignedUrl = (options) => {
   return {
     signature,
     timestamp,
-    // Return the cloudinary account name and api key for use in building urls
-    // etc. on the client
     cloudname: cloudName,
     apikey: apiKey,
   };
 };
 
+/**
+ * Batch delete resources via the admin api.
+ * https://cloudinary.com/documentation/admin_api#delete_resources
+ */
+const deleteResources = async (publicIds) => {
+  const result = await cloudinary.api.delete_resources(publicIds);
+
+  return result;
+};
+
 module.exports = {
+  deleteResources,
   getSignedUrl,
 };
