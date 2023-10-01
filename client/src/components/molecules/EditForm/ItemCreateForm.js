@@ -9,6 +9,7 @@ import {
   shoeSizeOptions,
   colours,
 } from '../../../utils/constants';
+import { bulkDelete } from '../../../services/cloudinary';
 import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
@@ -24,6 +25,16 @@ import { CategoryFields } from './CategoryFields';
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
+
+  const handleCancel = async () => {
+    if (uploadedImages.length) {
+      const ids = uploadedImages.map((i) => i.uid || i.response.publicId);
+      const blah = await bulkDelete(ids, token);
+      console.log(blah);
+    }
+    setUploadedImages([]);
+    reopenTab('items');
+  };
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     const res = await createItem(values, token);
@@ -113,9 +124,11 @@ export const ItemCreateForm = (data) => {
           <Button
             primary
             type="reset"
-            onClick={() => {
-              reopenTab('items');
-            }}
+            onClick={handleCancel}
+            // onClick={() => {
+            //   console.log({ uploadedImages });
+            //   reopenTab('items');
+            // }}
           >
             Cancel
           </Button>
