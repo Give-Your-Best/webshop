@@ -27,7 +27,7 @@ export const ItemCreateForm = (data) => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   const handleCancel = async () => {
-    // IF there are uploaded images on cancel, request their removal
+    // If there are uploaded images on cancel, request their removal
     if (uploadedImages.length) {
       const ids = uploadedImages
         .map((i) => i.uid || i.response.publicId || '')

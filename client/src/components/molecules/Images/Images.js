@@ -104,7 +104,7 @@ export const Images = (data) => {
       public_id: file.uid,
       overwrite: false,
       format: 'jpg',
-      eager: 'q_auto,f_auto,c_fill,w_100,ar_1|q_auto,f_auto,c_fit,w_400',
+      eager: 'q_auto,f_auto,c_fill,w_100,ar_1|q_auto,f_auto,c_fit,w_800',
     };
 
     const { error, apikey, cloudname, signature, timestamp } =
