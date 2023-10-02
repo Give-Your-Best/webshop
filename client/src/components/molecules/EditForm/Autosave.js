@@ -17,7 +17,7 @@ const debounce = (func, wait) => {
   };
 };
 
-const notice = ['Success!', 'changes saved', 'success'];
+const notificationConfig = ['Success!', 'changes saved', 'success', 5];
 
 export const AutoSave = ({ delay = 2000 }) => {
   const initRef = React.useRef(true);
@@ -25,7 +25,7 @@ export const AutoSave = ({ delay = 2000 }) => {
   const { errors, submitForm, values } = useFormikContext();
 
   const handleSave = React.useCallback(() => {
-    Notification(...notice);
+    Notification(...notificationConfig);
     submitForm();
   }, [submitForm]);
 
