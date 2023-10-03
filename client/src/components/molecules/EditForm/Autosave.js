@@ -19,7 +19,7 @@ const debounce = (func, wait) => {
 
 const notificationConfig = ['Success!', 'changes saved', 'success', 5];
 
-export const AutoSave = ({ delay = 2000 }) => {
+export const AutoSave = ({ delay = 1500 }) => {
   const initRef = React.useRef(true);
 
   const { errors, submitForm, values } = useFormikContext();
@@ -35,10 +35,12 @@ export const AutoSave = ({ delay = 2000 }) => {
   );
 
   React.useEffect(() => {
+    // This is the initial render, or there are errors, or we can call submit
     initRef.current || Object.keys(errors)[0] || debouncedSubmit();
   }, [debouncedSubmit, errors, values]);
 
   React.useEffect(() => {
+    // Update the ref on the first load
     initRef.current = false;
   }, []);
 
