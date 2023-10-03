@@ -124,15 +124,7 @@ export const ItemCreateForm = (data) => {
           <StyledError name="photos" component="div" />
 
           <StyledSubmitButton>Upload Item</StyledSubmitButton>
-          <Button
-            primary
-            type="reset"
-            onClick={handleCancel}
-            // onClick={() => {
-            //   console.log({ uploadedImages });
-            //   reopenTab('items');
-            // }}
-          >
+          <Button primary type="reset" onClick={handleCancel}>
             Cancel
           </Button>
         </Form>
