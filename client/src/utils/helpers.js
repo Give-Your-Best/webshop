@@ -292,9 +292,9 @@ export const checkUnread = (type, userId, messages) => {
   return [unread.length, unread];
 };
 
-export const setImageSrc = (data) =>
-  data && data.mainUrl
-    ? data.mainUrl
+export const setImageSrc = (data, type = 'mainUrl') =>
+  data && data[type]
+    ? data[type]
     : data.url
     ? data.url.replace('http://', 'https://')
     : '/product-placeholder.jpeg';
