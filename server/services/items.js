@@ -216,9 +216,14 @@ const getShopperItems = async (userId, itemStatus) => {
   }
 };
 
-const getAdminItems = async (isCurrent) => {
+const getAdminItems = async (isCurrent, limit = 10, page = 1) => {
   //here type is current or past
   var conditions = {};
+
+  const lim = parseInt(limit);
+  const pge = parseInt(page);
+
+  console.log({ lim, pge });
 
   try {
     if (isCurrent) {
@@ -237,13 +242,22 @@ const getAdminItems = async (isCurrent) => {
         status: 'received',
       };
     }
+
+    const total = await Item.countDocuments(conditions);
+
     var items = await Item.find(conditions)
       .sort({ createdAt: -1 })
+      .limit(lim)
+      .skip((pge - 1) * lim)
       .populate('shopperId')
       .populate('donorId')
       .populate('tags')
       .exec();
-    return items;
+
+    return {
+      total,
+      items,
+    };
   } catch (error) {
     console.error(`Error in getting admin items: ${error}`);
     return {
