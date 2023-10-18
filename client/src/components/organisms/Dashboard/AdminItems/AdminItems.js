@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
@@ -14,6 +14,7 @@ import { tabList } from '../../../../utils/helpers';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
+  const mountedRef = useRef(true);
   const [tags, setTags] = useState([]);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
@@ -65,10 +66,24 @@ export const AdminItems = () => {
       }
     });
 
+    const fetchAllTags = async () => {
+      if (!mountedRef.current) return null;
+      const tags = await getTags(token);
+      setTags(tags);
+    };
+
+    fetchAllTags();
+
+    return () => {
+      // cleanup
+      mountedRef.current = false;
+    };
+  }, [token, user]);
+
+  useEffect(() => {
     const fetchItems = async () => {
-      //current items
       const { total, items } = await getAdminItems(
-        true,
+        true, // Current items
         limit,
         currentItemsPage
       );
@@ -77,9 +92,13 @@ export const AdminItems = () => {
       setTotalItems(total);
     };
 
+    fetchItems();
+  }, [token, user, currentItemsPage]);
+
+  useEffect(() => {
     const fetchPastItems = async () => {
       const { total, items } = await getAdminItems(
-        false,
+        false, // Past items
         limit,
         currentPastItemsPage
       );
@@ -88,16 +107,8 @@ export const AdminItems = () => {
       setTotalPastItems(total);
     };
 
-    const fetchAllTags = async () => {
-      const tags = await getTags(token);
-
-      setTags(tags);
-    };
-
-    fetchItems();
     fetchPastItems();
-    fetchAllTags();
-  }, [token, user, currentItemsPage, currentPastItemsPage]);
+  }, [token, user, currentPastItemsPage]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
