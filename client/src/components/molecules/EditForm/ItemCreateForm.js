@@ -9,7 +9,6 @@ import {
   shoeSizeOptions,
   colours,
 } from '../../../utils/constants';
-import { bulkDelete } from '../../../services/cloudinary';
 import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
@@ -25,19 +24,6 @@ import { CategoryFields } from './CategoryFields';
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
-
-  const handleCancel = async () => {
-    // If there are uploaded images on cancel, request their removal
-    if (uploadedImages.length) {
-      const ids = uploadedImages
-        .map((i) => i.uid || i.response.publicId || '')
-        .filter(Boolean);
-
-      await bulkDelete(ids, token);
-    }
-    setUploadedImages([]);
-    reopenTab('items');
-  };
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     const res = await createItem(values, token);
@@ -116,7 +102,6 @@ export const ItemCreateForm = (data) => {
 
           <StyledLabel>Please upload a front and back image</StyledLabel>
           <Images
-            token={token}
             uploadedImages={uploadedImages}
             setUploadedImages={setUploadedImages}
           />
@@ -124,7 +109,13 @@ export const ItemCreateForm = (data) => {
           <StyledError name="photos" component="div" />
 
           <StyledSubmitButton>Upload Item</StyledSubmitButton>
-          <Button primary type="reset" onClick={handleCancel}>
+          <Button
+            primary
+            type="reset"
+            onClick={() => {
+              reopenTab('items');
+            }}
+          >
             Cancel
           </Button>
         </Form>

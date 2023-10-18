@@ -1,10 +1,11 @@
+import { convertHeic } from '../../utils/helpers';
+
 export const updateItem = async (id, updateData, token) => {
+  if (updateData.photos) {
+    updateData.photos = await convertHeic(updateData.photos);
+  }
   //call api to update item details
   try {
-    const body = {
-      ...updateData,
-      photos: updateData.photos.map((p) => p.response || p),
-    };
     const response = await fetch(`/api/items/${id}`, {
       method: 'put',
       headers: {
@@ -12,7 +13,7 @@ export const updateItem = async (id, updateData, token) => {
         'Content-Type': 'application/json',
         'x-access-token': token,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(updateData),
     });
     const jsonres = await response.json();
     return jsonres;

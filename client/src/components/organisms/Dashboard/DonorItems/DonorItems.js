@@ -29,6 +29,7 @@ export const DonorItems = () => {
   const [pastItems, setPastItems] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
   const [editingKey, setEditingKey] = useState([]);
+  const [images, setImages] = useState([]);
   const { confirm } = Modal;
 
   const handleDelete = (id) => {
@@ -116,9 +117,28 @@ export const DonorItems = () => {
   }, [token, user]);
 
   const editForm = (record) => {
-    const handleSubmit = async (values) => {
+    const handleEditSave = (newRecord) => {
+      // force refresh - bug fix to do
+      setItems(
+        items.map((item) => {
+          if (item._id === newRecord._id) {
+            return Object.assign(item, newRecord);
+          } else {
+            return item;
+          }
+        })
+      );
+    };
+
+    const handleSubmit = async (values, { setFieldValue }) => {
+      setFieldValue('photos', values.photos);
+      if (images.length > 0) {
+        values.photos = images;
+      }
       const res = await updateItem(record._id, values, token);
       if (res.success) {
+        handleEditSave(res.item);
+        setEditingKey('');
         return true;
       } else {
         setErrorMessage(res.message);
@@ -140,12 +160,13 @@ export const DonorItems = () => {
             photos={record.photos}
             recordId={record._id}
             editingKey={editingKey}
+            handleImageUpdate={setImages}
           />
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         {record.status !== 'received' ? (
           <Button primary small onClick={handleEdit}>
-            {editingKey === record._id ? 'Done' : 'Edit'}
+            {editingKey === record._id ? 'Cancel' : 'Edit'}
           </Button>
         ) : (
           ''
@@ -153,7 +174,6 @@ export const DonorItems = () => {
       </div>
     );
   };
-
   const submitFunction = (item) => {
     setItems(items.concat(item));
   };
