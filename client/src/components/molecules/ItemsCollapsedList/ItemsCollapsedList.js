@@ -14,6 +14,9 @@ import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
 export const ItemsCollapsedList = ({
   data,
+  total,
+  current,
+  onChange,
   handleDelete,
   expandRow,
   reOpen,
@@ -222,7 +225,19 @@ export const ItemsCollapsedList = ({
     <ListWrapper>
       <StyledTable
         rowSelection={!admin ? rowSelection : false}
-        pagination={{ hideOnSinglePage: true }}
+        // We are expecting extra props to handle pagination on the admin view
+        pagination={
+          !admin
+            ? { hideOnSinglePage: true }
+            : {
+                total,
+                current,
+                onChange,
+                position: ['topRight', 'bottomRight'],
+                showSizeChanger: false,
+                hideOnSinglePage: false,
+              }
+        }
         columns={columns}
         rowKey={(record) => record._id || 0}
         showHeader={!admin ? false : true}
