@@ -22,6 +22,7 @@ export const AdminItems = () => {
   const [totalPastItems, setTotalPastItems] = useState(0);
   const [currentItemsPage, setCurrentItemsPage] = useState(1);
   const [currentPastItemsPage, setCurrentPastItemsPage] = useState(1);
+  // TODO - we need to look at the naming here it is getting confusing...
 
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
