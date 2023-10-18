@@ -16,7 +16,7 @@ export const ItemsCollapsedList = ({
   data,
   total,
   current,
-  onChange: handleChange,
+  onChange,
   handleDelete,
   expandRow,
   reOpen,
@@ -225,16 +225,19 @@ export const ItemsCollapsedList = ({
     <ListWrapper>
       <StyledTable
         rowSelection={!admin ? rowSelection : false}
-        // TODO might want to put a conditional in here to set pagination props
-        // different if we are not in the admin view??
-        pagination={{
-          total,
-          current,
-          onChange: handleChange,
-          position: ['topRight'],
-          showSizeChanger: false,
-          hideOnSinglePage: false,
-        }}
+        // We are expecting extra props to handle pagination on the admin view
+        pagination={
+          !admin
+            ? { hideOnSinglePage: true }
+            : {
+                total,
+                current,
+                onChange,
+                position: ['topRight', 'bottomRight'],
+                showSizeChanger: false,
+                hideOnSinglePage: false,
+              }
+        }
         columns={columns}
         rowKey={(record) => record._id || 0}
         showHeader={!admin ? false : true}
