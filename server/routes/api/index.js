@@ -53,7 +53,7 @@ router.post('/cloudinary/signed_url', async (req, res) => {
   }
 });
 
-// TODO
+// Bulk resource deletion handler
 router.post('/cloudinary/delete_resources', async (req, res) => {
   try {
     const { publicIds } = req.body;
