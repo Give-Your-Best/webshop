@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
@@ -14,10 +14,16 @@ import { tabList } from '../../../../utils/helpers';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
-  const mountedRef = useRef(true);
-  const [items, setItems] = useState([]);
   const [tags, setTags] = useState([]);
+  const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPastItems, setTotalPastItems] = useState(0);
+  const [currentItemsPage, setCurrentItemsPage] = useState(1);
+  const [currentPastItemsPage, setCurrentPastItemsPage] = useState(1);
+
+  // Set this constant for now - we might want to allow adjustment later
+  const limit = 10;
 
   const { confirm } = Modal;
 
@@ -61,33 +67,37 @@ export const AdminItems = () => {
 
     const fetchItems = async () => {
       //current items
-      const items = await getAdminItems(true);
-      if (!mountedRef.current) return null;
+      const { total, items } = await getAdminItems(
+        true,
+        limit,
+        currentItemsPage
+      );
+
       setItems(items);
+      setTotalItems(total);
     };
 
     const fetchPastItems = async () => {
-      const items = await getAdminItems(false);
-      if (!mountedRef.current) return null;
+      const { total, items } = await getAdminItems(
+        false,
+        limit,
+        currentPastItemsPage
+      );
+
       setPastItems(items);
+      setTotalPastItems(total);
     };
 
     const fetchAllTags = async () => {
       const tags = await getTags(token);
-      if (!mountedRef.current) return null;
+
       setTags(tags);
     };
 
     fetchItems();
     fetchPastItems();
     fetchAllTags();
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
-    // eslint-disable-next-line
-  }, [token, user]);
+  }, [token, user, currentItemsPage, currentPastItemsPage]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
@@ -99,6 +109,9 @@ export const AdminItems = () => {
       <StyledTabPanel>
         <ItemsCollapsedList
           data={items}
+          total={totalItems}
+          current={currentItemsPage}
+          onChange={(page) => setCurrentItemsPage(page)}
           expandRow={editForm}
           handleDelete={handleDelete}
           admin={true}
@@ -108,6 +121,9 @@ export const AdminItems = () => {
       <StyledTabPanel>
         <ItemsCollapsedList
           data={pastItems}
+          total={totalPastItems}
+          current={currentPastItemsPage}
+          onChange={(page) => setCurrentPastItemsPage(page)}
           expandRow={editForm}
           handleDelete={handleDelete}
           admin={true}
