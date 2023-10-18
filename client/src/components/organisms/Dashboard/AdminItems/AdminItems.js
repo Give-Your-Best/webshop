@@ -15,9 +15,17 @@ import { tabList } from '../../../../utils/helpers';
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
   const mountedRef = useRef(true);
-  const [items, setItems] = useState([]);
   const [tags, setTags] = useState([]);
+  const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPastItems, setTotalPastItems] = useState(0);
+  const [currentItemsPage, setCurrentItemsPage] = useState(1);
+  const [currentPastItemsPage, setCurrentPastItemsPage] = useState(1);
+  // TODO - we need to look at the naming here it is getting confusing...
+
+  // Set this constant for now - we might want to allow adjustment later
+  const limit = 10;
 
   const { confirm } = Modal;
 
@@ -59,35 +67,49 @@ export const AdminItems = () => {
       }
     });
 
-    const fetchItems = async () => {
-      //current items
-      const items = await getAdminItems(true);
-      if (!mountedRef.current) return null;
-      setItems(items);
-    };
-
-    const fetchPastItems = async () => {
-      const items = await getAdminItems(false);
-      if (!mountedRef.current) return null;
-      setPastItems(items);
-    };
-
     const fetchAllTags = async () => {
-      const tags = await getTags(token);
       if (!mountedRef.current) return null;
+      const tags = await getTags(token);
       setTags(tags);
     };
 
-    fetchItems();
-    fetchPastItems();
     fetchAllTags();
 
     return () => {
       // cleanup
       mountedRef.current = false;
     };
-    // eslint-disable-next-line
   }, [token, user]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const { total, items } = await getAdminItems(
+        true, // Current items
+        limit,
+        currentItemsPage
+      );
+
+      setItems(items);
+      setTotalItems(total);
+    };
+
+    fetchItems();
+  }, [token, user, currentItemsPage]);
+
+  useEffect(() => {
+    const fetchPastItems = async () => {
+      const { total, items } = await getAdminItems(
+        false, // Past items
+        limit,
+        currentPastItemsPage
+      );
+
+      setPastItems(items);
+      setTotalPastItems(total);
+    };
+
+    fetchPastItems();
+  }, [token, user, currentPastItemsPage]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
@@ -99,6 +121,9 @@ export const AdminItems = () => {
       <StyledTabPanel>
         <ItemsCollapsedList
           data={items}
+          total={totalItems}
+          current={currentItemsPage}
+          onChange={(page) => setCurrentItemsPage(page)}
           expandRow={editForm}
           handleDelete={handleDelete}
           admin={true}
@@ -108,6 +133,9 @@ export const AdminItems = () => {
       <StyledTabPanel>
         <ItemsCollapsedList
           data={pastItems}
+          total={totalPastItems}
+          current={currentPastItemsPage}
+          onChange={(page) => setCurrentPastItemsPage(page)}
           expandRow={editForm}
           handleDelete={handleDelete}
           admin={true}
