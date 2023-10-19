@@ -13,11 +13,11 @@ export const ImageGallery = ({ changeMainImage, mainImage, otherImages }) => {
             onClick={changeMainImage}
             data-id={image._id}
             alt={`other images`}
-            src={setImageSrc(image, 'thumbUrl')}
+            src={setImageSrc(image)}
           />
         ))}
       </MiniImagesWrapper>
-      <img alt={`main`} src={setImageSrc(mainImage, 'mainUrl')} />
+      <img alt={`main`} src={setImageSrc(mainImage)} />
     </ImagesWrapper>
   );
 };

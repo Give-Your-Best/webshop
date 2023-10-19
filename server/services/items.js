@@ -1,31 +1,134 @@
 const Item = require('../models/Item');
+const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
+  var new_photos = [];
+  var success = true;
+  const promises = data.photos.map((photo) => {
+    if (photo.status !== 'removed') {
+      return cloudinary.uploader
+        .upload(photo.imageUrl, {
+          resource_type: 'auto',
+          public_id: photo.uid,
+          overwrite: false,
+          secure: true,
+        })
+        .then((result) => {
+          console.log('*** Success: Cloudinary Upload: ', result.secure_url);
+          new_photos.push({
+            url: result.secure_url,
+            name: photo.name,
+            createdAt: result.created_at,
+            publicId: photo.uid,
+            success: true,
+            front: photo.front ? true : false,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          console.log('*** Error: Cloudinary Upload');
+          success = false;
+          return;
+        });
+    }
+  });
+  await Promise.all(promises);
+  if (!success) {
+    return {
+      success: false,
+      message: 'Failed to upload one or more of your images',
+    };
+  }
+  data.photos = new_photos;
   try {
     const item = new Item(data);
-    await item.save();
+    let saveItem = await item.save();
     return { success: true, message: 'Item created', item: item };
   } catch (err) {
     console.error(err);
     return { success: false, message: err };
   }
 };
-
+//messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
-  try {
-    const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+  var results = {};
+  var new_photos = [];
+  if (updateData.photos) {
+    //if there are images to add to the item then upload to cloudianary and add cloudinary links to the update data
+    const promises = updateData.photos.map(async (photo) => {
+      if (photo.status == 'removed') {
+        try {
+          return cloudinary.uploader.destroy(photo.publicId);
+        } catch (err) {
+          return {};
+        }
+      } else if (!photo.url && photo.imageUrl) {
+        return cloudinary.uploader
+          .upload(photo.imageUrl, {
+            resource_type: 'auto',
+            public_id: photo.uid,
+            overwrite: false,
+            secure: true,
+          })
+          .then((result) => {
+            console.log('*** Success: Cloudinary Upload: ', result.secure_url);
+            new_photos.push({
+              url: result.secure_url,
+              name: photo.name,
+              createdAt: result.created_at,
+              publicId: photo.uid,
+              front: photo.front ? true : false,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            console.log('*** Error: Cloudinary Upload');
+          });
+      } else if (Object.keys(photo).length) {
+        new_photos.push(photo);
+        return true;
+      }
     });
-    if (item) {
-      return { success: true, message: 'Item updated', item: item };
+    await Promise.all(promises);
+    if (new_photos.length) {
+      updateData.photos = new_photos;
     } else {
-      throw Error('Cannot update item');
+      delete updateData.photos;
     }
-  } catch (err) {
-    console.log(err);
-    return { success: false, message: err };
+    try {
+      const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
+        useFindAndModify: false,
+        returnDocument: 'after',
+      });
+      if (item) {
+        return { success: true, message: 'Item updated', item: item };
+      } else {
+        throw Error('Cannot update item');
+      }
+    } catch (err) {
+      console.log(err);
+      return { success: false, message: err };
+    }
+  } else {
+    //if no new images to add then remove the empty photos list and continue updating
+    delete updateData.photos;
+    try {
+      const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
+        useFindAndModify: false,
+        returnDocument: 'after',
+      });
+
+      if (item) {
+        results = { success: true, message: 'Item updated', item: item };
+      } else {
+        throw Error('Cannot update item');
+      }
+    } catch (err) {
+      console.log(err);
+      results = { success: false, message: err };
+    }
   }
+  return results;
 };
 
 const deleteItem = async (id) => {

@@ -6,7 +6,7 @@ import {
 } from './ItemCardBasket.styles';
 import { Card as AntCard } from 'antd';
 import { Button } from '../../atoms';
-import { trunc, getFrontImageUrl } from '../../../utils/helpers';
+import { trunc } from '../../../utils/helpers';
 
 const { Meta } = AntCard;
 
@@ -20,7 +20,7 @@ export const ItemCardBasket = ({ item, actionText, action }) => {
       cover={
         <CardLongImageWithBackground
           alt={`front of ${item.name}`}
-          src={getFrontImageUrl(item.photos)}
+          src={item.photos.length ? item.photos[0].url : ''}
           width="200"
         />
       }
