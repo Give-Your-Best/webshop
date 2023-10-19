@@ -12,6 +12,7 @@ const statisticsRoutes = require('./statistics');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const { getSetting } = require('../../services/settings');
+const cloudinary = require('../../services/cloudinary');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
@@ -40,5 +41,28 @@ router.use('/locations', locationRoutes);
 router.use('/settings', settingsRoutes);
 router.use('/statistics', statisticsRoutes);
 router.use('/messages', messageRoutes);
+
+// Provide signed url for secure upload etc. on the client
+router.post('/cloudinary/signed_url', async (req, res) => {
+  try {
+    const signature = cloudinary.getSignedUrl(req.body);
+    res.json(signature);
+  } catch (e) {
+    console.log('ERROR', e);
+    res.status(400).json({ error: e });
+  }
+});
+
+// Bulk resource deletion handler
+router.post('/cloudinary/delete_resources', async (req, res) => {
+  try {
+    const { publicIds } = req.body;
+    const result = await cloudinary.deleteResources(publicIds || []);
+    res.json(result);
+  } catch (e) {
+    console.log('ERROR', e);
+    res.status(400).json({ error: e });
+  }
+});
 
 module.exports = router;

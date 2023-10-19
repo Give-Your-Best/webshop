@@ -5,7 +5,6 @@ import {
   donorTabs,
   shopperTabs,
 } from '../components/organisms/Dashboard/Tabs/constants';
-import heic2any from 'heic2any';
 
 export const downloadWorkbook = async (workbook) => {
   const uint8Array = await workbook.xlsx.writeBuffer();
@@ -267,46 +266,6 @@ export const trunc = (str = '') => {
   return str.length > 61 ? str.substring(0, 61) + '...' : str;
 };
 
-const blobToData = (blob) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(blob);
-  });
-};
-
-export const convertHeic = async (fileList) => {
-  console.log('con');
-  console.log(fileList.length);
-  //if a file in the filelist is of type heic then use heic2any to convert to a png
-  const newList = await Promise.all(
-    fileList.map(async (f) => {
-      console.log('test');
-      if (f.name && f.name.includes('.heic') && f.originFileObj) {
-        //will skip if no file object
-        //this is a heic file type
-        //convert to jpg
-        const c = await heic2any({
-          blob: f.originFileObj,
-          toType: 'image/png',
-          quality: 0.5,
-        });
-
-        const resData = await blobToData(c);
-        f.imageUrl = resData; //update with dataurl to pass to cloudinary in the backend
-        f.name = f.name.split('.heic')[0] + '.png'; //update ext
-        return f;
-      } else if (f.name && f.originFileObj) {
-        console.log('else');
-        const resData = await blobToData(f.originFileObj);
-        f.imageUrl = resData; //update with dataurl to pass to cloudinary in the backend
-        return f;
-      } else return f; //return object as is (this will be an existing image)
-    })
-  );
-  return newList;
-};
-
 export const checkUnread = (type, userId, messages) => {
   let unread = [];
   if (!messages.length) {
@@ -333,8 +292,10 @@ export const checkUnread = (type, userId, messages) => {
   return [unread.length, unread];
 };
 
-export const setImageSrc = (data) =>
-  data && data.url
+export const setImageSrc = (data, type = 'mainUrl') =>
+  data && data[type]
+    ? data[type]
+    : data.url
     ? data.url.replace('http://', 'https://')
     : '/product-placeholder.jpeg';
 

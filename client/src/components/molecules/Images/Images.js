@@ -3,17 +3,34 @@ import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useFormikContext } from 'formik';
 import { Notification } from '../../atoms';
+import {
+  getSignedUrl,
+  assetDestroy,
+  assetUpload,
+} from '../../../services/cloudinary';
+
+const cloudinaryErrorConfig = [
+  'Error!',
+  'Error updating image. Please try again later',
+  'error',
+];
 
 export const Images = (data) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
-  const formikProps = useFormikContext();
+  const [thumbUrl, setThumbUrl] = useState('');
+  const { setFieldValue } = useFormikContext();
 
   const checkFileType = (file) => {
-    //do not upload if not in accepted file types
-    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
-    if (!acceptedFormats.includes(file.name.split('.')[1])) {
+    // Do not upload if not in accepted file types
+    const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic', 'webp'];
+
+    // Just get the last item, there may be periods in the original file name
+    const fileName = file.name.toLowerCase();
+    const ext = fileName.split('.').pop();
+
+    if (!acceptedFormats.includes(ext)) {
       Notification(
         'Error!',
         'Error uploading image. Please make sure your file is an image type',
@@ -25,38 +42,124 @@ export const Images = (data) => {
     }
   };
 
-  const handleCancel = () => setPreviewVisible(false);
-
   const handleChange = ({ file, fileList }) => {
-    fileList[0].front = true; //set first image to front image
+    // Set first image to front image
+    fileList[0].front = true;
+    // Update the component
     data.setUploadedImages(fileList);
 
-    if (data.handleChange) {
-      data.handleChange(data.uploadedImages);
+    if (['uploading', 'error'].includes(file.status)) {
+      return;
     }
 
-    //update dummy field for image validation
-    formikProps.setFieldValue('photos', fileList);
+    // Set the form field
+    setFieldValue('photos', fileList);
+  };
+
+  const getThumbUrl = async (file) => {
+    return file.thumbUrl || thumbUrl || '';
   };
 
   const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview || file.src);
+    setPreviewImage(file.mainUrl || file.response.mainUrl || '');
     setPreviewVisible(true);
     setPreviewTitle(
       file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
     );
   };
 
-  const getBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
+  // Destroy the asset in cloudinary
+  const handleRemove = async (file) => {
+    const params = {
+      public_id: file.uid,
+    };
+
+    const { error, apikey, cloudname, signature, timestamp } =
+      await getSignedUrl(params, data.token);
+
+    if (error) {
+      return Notification(...cloudinaryErrorConfig);
+    }
+
+    const formData = new FormData();
+
+    formData.append('api_key', apikey);
+    formData.append('signature', signature);
+    formData.append('timestamp', timestamp);
+
+    Object.entries(params).forEach(([k, v]) => {
+      formData.append(k, String(v));
     });
+
+    const { error: destroyError } = await assetDestroy(formData, cloudname);
+
+    if (destroyError) {
+      return Notification(...cloudinaryErrorConfig);
+    }
+  };
+
+  // Upload the asset to cloudinary via signed url
+  const customRequest = async ({ file, onSuccess, onError }) => {
+    const params = {
+      public_id: file.uid,
+      overwrite: false,
+      format: 'jpg',
+      eager: 'q_auto,f_auto,c_fill,w_200,ar_1|q_auto,f_auto,c_fit,w_800',
+    };
+
+    const { error, apikey, cloudname, signature, timestamp } =
+      await getSignedUrl(params, data.token);
+
+    if (error) {
+      Notification(...cloudinaryErrorConfig);
+
+      return onError();
+    }
+
+    const formData = new FormData();
+
+    formData.append('file', file);
+    formData.append('api_key', apikey);
+    formData.append('signature', signature);
+    formData.append('timestamp', timestamp);
+
+    Object.entries(params).forEach(([k, v]) => {
+      formData.append(k, String(v));
+    });
+
+    const result = await assetUpload(formData, cloudname);
+
+    const {
+      error: uploadError,
+      created_at: createdAt,
+      public_id: publicId,
+      secure_url: url,
+      eager,
+    } = result;
+
+    console.log({ result });
+
+    if (uploadError) {
+      Notification(...cloudinaryErrorConfig);
+
+      return onError();
+    }
+
+    const [thumb, main] = eager;
+
+    setThumbUrl(thumb.secure_url);
+
+    const imageData = {
+      createdAt,
+      name: file.name,
+      publicId, // Can get rid of this later perhaps?
+      thumbUrl: thumb.secure_url,
+      mainUrl: main.secure_url,
+      url,
+      uid: publicId,
+    };
+
+    onSuccess(imageData);
   };
 
   const uploadButton = (
@@ -66,30 +169,29 @@ export const Images = (data) => {
     </div>
   );
 
-  const custom = ({ onSuccess }) => {
-    onSuccess('Ok');
-  };
-
   return (
     <>
       <Upload
-        customRequest={custom}
+        disabled={data.editingKey !== data.recordId}
+        fileList={data.uploadedImages || []}
         listType="picture-card"
         multiple={true}
         beforeUpload={checkFileType}
-        fileList={data.uploadedImages || []}
-        onPreview={handlePreview}
-        disabled={data.editingKey !== data.recordId}
+        customRequest={customRequest}
+        previewFile={getThumbUrl}
         onChange={handleChange}
+        onPreview={handlePreview}
+        onRemove={handleRemove}
       >
         {data.uploadedImages.length >= 4 ? null : uploadButton}
       </Upload>
+
       <Modal
         visible={previewVisible}
         className="modalStyle"
         title={previewTitle}
         footer={null}
-        onCancel={handleCancel}
+        onCancel={() => setPreviewVisible(false)}
       >
         <img alt="preview" style={{ width: '100%' }} src={previewImage} />
       </Modal>
