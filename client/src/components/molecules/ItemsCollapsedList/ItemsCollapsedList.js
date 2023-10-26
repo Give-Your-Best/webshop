@@ -167,18 +167,12 @@ export const ItemsCollapsedList = ({
     columns.push({
       title: 'Donor',
       dataIndex: 'donor',
-      render: (record) => {
-        return name(record);
-      },
-      ...getColumnSearchProps('donor'),
+      render: (text) => text,
     });
     columns.push({
       title: 'Shopper',
       dataIndex: 'shopper',
-      render: (record) => {
-        return name(record);
-      },
-      ...getColumnSearchProps('shopper'),
+      render: (text) => text,
     });
     columns.push({
       title: 'Tags',

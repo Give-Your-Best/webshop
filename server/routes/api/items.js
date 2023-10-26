@@ -54,7 +54,9 @@ router.get('/admin', async (req, res) => {
   const isCurrent = req.query.isCurrent === 'true';
   const limit = req.query.limit;
   const page = req.query.page;
-  const items = await getAdminItems(isCurrent, limit, page);
+  const donor = req.query.donorId;
+  const shopper = req.query.shopperId;
+  const items = await getAdminItems(isCurrent, limit, page, donor, shopper);
   res.json(items);
 });
 

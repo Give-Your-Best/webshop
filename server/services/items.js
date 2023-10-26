@@ -1,4 +1,6 @@
+const { ObjectId } = require('bson');
 const Item = require('../models/Item');
+const User_ = require('../models/User');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
@@ -218,12 +220,17 @@ const getShopperItems = async (userId, itemStatus) => {
 
 // There is now proper pagination on this endpoint as the quantity of results
 // combined with aggregations is resulting in timeouts...
-const getAdminItems = async (isCurrent, limit = 10, page = 1) => {
-  //here type is current or past
-  var conditions = {};
-
+const getAdminItems = async (
+  isCurrent,
+  limit = 10,
+  page = 1,
+  donor = undefined,
+  shopper = undefined
+) => {
   const lim = parseInt(limit);
   const pge = parseInt(page);
+
+  var conditions = {};
 
   try {
     if (isCurrent) {
@@ -241,6 +248,12 @@ const getAdminItems = async (isCurrent, limit = 10, page = 1) => {
       conditions = {
         status: 'received',
       };
+    }
+
+    if (donor) {
+      conditions.donorId = new ObjectId(donor);
+    } else if (shopper) {
+      conditions.shopperId = new ObjectId(shopper);
     }
 
     // For now we are always running the count although it would be sensible to
