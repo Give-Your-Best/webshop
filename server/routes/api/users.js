@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
   res.json(users);
 });
 
-// TODO
+// get all shoppers and donors (no admins)
 router.get('/public', async (req, res) => {
   const users = await listPublicUsers();
   res.json(users);

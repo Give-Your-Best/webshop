@@ -6,7 +6,6 @@ export const getPublicUsers = async (token) => {
     },
   });
   const body = await response.json();
-  console.log({ body });
   if (response.status !== 200) {
     throw Error(body.message);
   }

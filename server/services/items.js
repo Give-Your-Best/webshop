@@ -230,7 +230,6 @@ const getAdminItems = async (
   const lim = parseInt(limit);
   const pge = parseInt(page);
 
-  //here type is current or past
   var conditions = {};
 
   try {
