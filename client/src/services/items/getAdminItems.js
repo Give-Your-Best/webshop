@@ -5,18 +5,19 @@ export const getAdminItems = async ({
   donorId = undefined,
   shopperId = undefined,
 }) => {
-  const response = await fetch(
-    `/api/items/admin?isCurrent=${Boolean(
-      isCurrent
-    )}&limit=${limit}&page=${page}${donorId ? `&donorId=${donorId}` : ''}${
-      shopperId ? `&shopperId=${shopperId}` : ''
-    }`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+  const params = new URLSearchParams({ isCurrent, limit, page });
+
+  if (donorId) {
+    params.set('donorId', donorId);
+  } else if (shopperId) {
+    params.set('shopperId', shopperId);
+  }
+
+  const response = await fetch(`/api/items/admin?${params.toString()}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   const body = await response.json();
   if (response.status !== 200) {
     throw Error(body.message);
