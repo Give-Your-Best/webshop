@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
 import { AutoComplete, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
@@ -15,36 +21,13 @@ export const AdminItems = () => {
   const [items, setItems] = useState([]);
   const [view, setView] = useState('current');
   const [totalItems, setTotalItems] = useState(0);
-  const [currentItemsPage, setCurrentItemsPage] = useState(1);
-  // TODO - we need to look at the naming here it is getting confusing...
+  const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState({});
 
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
 
   const { confirm } = Modal;
-
-  const handleDelete = (id, type) => {
-    confirm({
-      title: `Are you sure you want to delete this item?`,
-      className: 'modalStyle',
-      onOk() {
-        deleteItem(id, token).then(() => {
-          // TODO need to update the component?
-          // setItems(
-          //   items.filter((item) => {
-          //     return item._id !== id;
-          //   })
-          // );
-          // setPastItems(
-          //   pastItems.filter((item) => {
-          //     return item._id !== id;
-          //   })
-          // );
-        });
-      },
-    });
-  };
 
   const editForm = (record) => {
     return (
@@ -53,6 +36,23 @@ export const AdminItems = () => {
       </div>
     );
   };
+
+  const fetchItems = useCallback(async () => {
+    const { type, value } = currentUser;
+    const donorId = type === 'donor' ? value : undefined;
+    const shopperId = type === 'shopper' ? value : undefined;
+
+    const { total, items } = await getAdminItems({
+      isCurrent: view === 'current',
+      page: currentPage,
+      limit,
+      donorId,
+      shopperId,
+    });
+
+    setItems(items);
+    setTotalItems(total);
+  }, [currentPage, currentUser, view]);
 
   useEffect(() => {
     var tabs = tabList(user);
@@ -70,7 +70,6 @@ export const AdminItems = () => {
 
     const fetchUsers = async () => {
       const data = await getPublicUsers(token);
-
       setUsers(
         data.map((d) => ({
           label: `${d.firstName} ${d.lastName}`.trim(),
@@ -91,31 +90,22 @@ export const AdminItems = () => {
     };
   }, [token, user]);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const { total, items } = await getAdminItems({
-        isCurrent: view === 'current', // Current items
-        limit,
-        page: currentItemsPage,
-        donorId: currentUser.type === 'donor' ? currentUser.value : undefined,
-        shopperId:
-          currentUser.type === 'shopper' ? currentUser.value : undefined,
-      });
-
-      setItems(items);
-      setTotalItems(total);
-    };
-
-    fetchItems();
-  }, [token, user, view, currentItemsPage, currentUser]);
+  useEffect(fetchItems, [
+    token,
+    user,
+    view,
+    currentPage,
+    currentUser,
+    fetchItems,
+  ]);
 
   const handleSelectUser = (_value, option) => {
-    setCurrentItemsPage(1);
+    setCurrentPage(1);
     setCurrentUser(option);
   };
 
   const handleClearUser = () => {
-    setCurrentItemsPage(1);
+    setCurrentPage(1);
     setCurrentUser({});
   };
 
@@ -125,11 +115,21 @@ export const AdminItems = () => {
   };
 
   const handleSelectView = (view) => {
-    setCurrentItemsPage(1);
+    setCurrentPage(1);
     setView(view);
   };
 
-  const handleSetPage = (page) => setCurrentItemsPage(page);
+  const handleSetPage = (page) => setCurrentPage(page);
+
+  const handleDeleteItem = (id) => {
+    confirm({
+      title: `Are you sure you want to delete this item?`,
+      className: 'modalStyle',
+      onOk() {
+        deleteItem(id, token).then(fetchItems);
+      },
+    });
+  };
 
   return (
     <>
@@ -168,46 +168,13 @@ export const AdminItems = () => {
       <ItemsCollapsedList
         data={items}
         total={totalItems}
-        current={currentItemsPage}
+        current={currentPage}
         onChange={handleSetPage}
         expandRow={editForm}
-        handleDelete={handleDelete}
+        handleDelete={handleDeleteItem}
         admin={true}
         allTags={tags}
       />
     </>
-    // <StyledTabs forceRenderTabPanel={true}>
-    //   <StyledTabList>
-    //     <StyledTab className="itemslist">Items</StyledTab>
-    //     <StyledTab>My Past Items</StyledTab>
-    //   </StyledTabList>
-
-    //   <StyledTabPanel>
-    //     <ItemsCollapsedList
-    //       data={items}
-    //       total={totalItems}
-    //       current={currentItemsPage}
-    //       onFilter={(...data) => console.log(...data)}
-    //       onChange={(page) => setCurrentItemsPage(page)}
-    //       expandRow={editForm}
-    //       handleDelete={handleDelete}
-    //       admin={true}
-    //       allTags={tags}
-    //     />
-    //   </StyledTabPanel>
-    //   <StyledTabPanel>
-    //     <ItemsCollapsedList
-    //       data={pastItems}
-    //       total={totalPastItems}
-    //       current={currentPastItemsPage}
-    //       onFilter={console.log}
-    //       onChange={(page) => setCurrentPastItemsPage(page)}
-    //       expandRow={editForm}
-    //       handleDelete={handleDelete}
-    //       admin={true}
-    //       allTags={tags}
-    //     />
-    //   </StyledTabPanel>
-    // </StyledTabs>
   );
 };
