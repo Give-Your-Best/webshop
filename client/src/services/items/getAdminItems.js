@@ -4,6 +4,8 @@ export const getAdminItems = async ({
   page = 1,
   donorId = undefined,
   shopperId = undefined,
+  category = undefined,
+  status = undefined,
 }) => {
   const params = new URLSearchParams({ isCurrent, limit, page });
 
@@ -11,6 +13,14 @@ export const getAdminItems = async ({
     params.set('donorId', donorId);
   } else if (shopperId) {
     params.set('shopperId', shopperId);
+  }
+
+  if (category) {
+    params.set('category', category.join(','));
+  }
+
+  if (status) {
+    params.set('status', status.join(','));
   }
 
   const response = await fetch(`/api/items/admin?${params.toString()}`, {
