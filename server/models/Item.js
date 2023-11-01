@@ -13,6 +13,11 @@ const itemSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    batchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BatchItem',
+      default: null,
+    },
     approvedStatus: {
       type: String,
       enum: ['in-progress', 'approved', 'rejected'],

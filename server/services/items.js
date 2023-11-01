@@ -1,7 +1,19 @@
 const Item = require('../models/Item');
+const BatchItem = require('../models/BatchItem');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
+  _uploadPhotos(data);
+  try {
+    const item = new Item(data);
+    let saveItem = await item.save();
+    return { success: true, message: 'Item created', item: item };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: err };
+  }
+};
+const _uploadPhotos = async (data) => {
   var new_photos = [];
   var success = true;
   const promises = data.photos.map((photo) => {
@@ -40,10 +52,31 @@ const createItem = async (data) => {
     };
   }
   data.photos = new_photos;
+  return;
+};
+const createBatchItem = async (data) => {
   try {
-    const item = new Item(data);
-    let saveItem = await item.save();
-    return { success: true, message: 'Item created', item: item };
+    const batchItem = new BatchItem({ itemIds: [] });
+    // Saved initially to generate the batchItemId
+    const savedBatchItem = await batchItem.save();
+    // Create multiple Items associated with the BatchItem
+    const createdItems = [];
+    const [items] = Object.values(data);
+    for (const item of items) {
+      _uploadPhotos(item);
+      const newItem = new Item({ ...item, batchId: savedBatchItem._id });
+      const savedItem = await newItem.save();
+      createdItems.push(savedItem);
+      savedBatchItem.itemIds.push(savedItem._id);
+    }
+    // Save the batchItem again to update the itemIds array
+    await savedBatchItem.save();
+    return {
+      success: true,
+      message: 'BatchItem and associated items created',
+      batchItem: savedBatchItem,
+      items: createdItems,
+    };
   } catch (err) {
     console.error(err);
     return { success: false, message: err };
@@ -496,6 +529,7 @@ const deleteDonorItems = async (id) => {
 
 module.exports = {
   createItem,
+  createBatchItem,
   getItem,
   getAllItems,
   getShopperItems,

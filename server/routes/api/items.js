@@ -92,6 +92,9 @@ router.put('/:id', Items.updateItem);
 // create item endpoint post to api/items
 router.post('/', Items.createItem);
 
+// create batch item endpoint post to api/items/batchitems
+router.post('/batchItems', Items.createBatchItem);
+
 // get items endpoint api/items
 router.post('/dummy', async (req, res) => {
   res.json({ success: true });
