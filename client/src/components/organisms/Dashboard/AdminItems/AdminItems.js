@@ -88,7 +88,7 @@ export const AdminItems = () => {
 
     const fetchUsers = async () => {
       const data = await getPublicUsers(token);
-      console.log('HOHOHO', data);
+
       setUsers(
         data.map((d) => ({
           label: `${d.firstName} ${d.lastName}`.trim(),
