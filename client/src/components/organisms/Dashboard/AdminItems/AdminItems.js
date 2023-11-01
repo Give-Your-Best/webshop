@@ -9,7 +9,7 @@ import { AutoComplete, Menu, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
 import { getAdminItems, deleteItem } from '../../../../services/items';
-import { getTags } from '../../../../services/tags';
+// import { getTags } from '../../../../services/tags';
 import { getPublicUsers } from '../../../../services/user';
 import { tabList } from '../../../../utils/helpers';
 import { categories } from '../../../../utils/constants';
