@@ -8,7 +8,7 @@ import {
   ExpandButton,
   DeleteButton,
 } from './ItemsCollapsedList.styles';
-import { categories } from '../../../utils/constants';
+// import { categories } from '../../../utils/constants';
 import { name } from '../../../utils/helpers';
 import { adminAllItemStatus } from '../../atoms/ProgressBar/constants';
 
@@ -21,7 +21,7 @@ export const ItemsCollapsedList = ({
   expandRow,
   reOpen,
   admin,
-  allTags,
+  // allTags,
   editItemLiveStatus,
 }) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -99,7 +99,7 @@ export const ItemsCollapsedList = ({
       title: 'Name',
       dataIndex: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
-      ...getColumnSearchProps('name'),
+      ...(admin ? {} : getColumnSearchProps('name')),
     },
   ];
 
@@ -141,24 +141,24 @@ export const ItemsCollapsedList = ({
       dataIndex: 'category',
       className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.category.localeCompare(b.category),
-      filters: categories.map((c) => {
-        return { text: c.name, value: c.id };
-      }),
-      filterMode: 'tree',
-      filterSearch: true,
-      onFilter: (value, record) => record.category.startsWith(value),
+      // filters: categories.map((c) => {
+      //   return { text: c.name, value: c.id };
+      // }),
+      // filterMode: 'tree',
+      // filterSearch: true,
+      // onFilter: (value, record) => record.category.startsWith(value),
     });
     columns.push({
       title: 'Status',
       dataIndex: 'status',
       className: 'fixedOnMobileSmall',
       sorter: (a, b) => a.status.localeCompare(b.status),
-      filters: adminAllItemStatus.map((c) => {
-        return { text: c.statusText, value: c.status };
-      }),
-      filterMode: 'tree',
-      filterSearch: true,
-      onFilter: (value, record) => record.status.startsWith(value),
+      // filters: adminAllItemStatus.map((c) => {
+      //   return { text: c.statusText, value: c.status };
+      // }),
+      // filterMode: 'tree',
+      // filterSearch: true,
+      // onFilter: (value, record) => record.status.startsWith(value),
       render: (record) => {
         let value = adminAllItemStatus.find((x) => x.status === record);
         return value.statusText;
@@ -174,23 +174,23 @@ export const ItemsCollapsedList = ({
       dataIndex: 'shopper',
       render: (text) => text,
     });
-    columns.push({
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (record) => {
-        return record
-          .map((r) => {
-            return <span>r.name</span>;
-          })
-          .join();
-      },
-      className: 'onlyHeading',
-      filters: allTags.map((c) => {
-        return { text: c.name, value: c._id };
-      }),
-      filterMode: 'tree',
-      onFilter: (value, record) => record.tags.some((t) => t._id === value),
-    });
+    // columns.push({
+    //   title: 'Tags',
+    //   dataIndex: 'tags',
+    //   render: (record) => {
+    //     return record
+    //       .map((r) => {
+    //         return <span>r.name</span>;
+    //       })
+    //       .join();
+    //   },
+    //   className: 'onlyHeading',
+    //   filters: allTags.map((c) => {
+    //     return { text: c.name, value: c._id };
+    //   }),
+    //   filterMode: 'tree',
+    //   onFilter: (value, record) => record.tags.some((t) => t._id === value),
+    // });
   }
 
   if (handleDelete) {
