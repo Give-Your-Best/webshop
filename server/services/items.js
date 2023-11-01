@@ -268,6 +268,10 @@ const getAdminItems = async ({
       conditions = {
         status: 'received',
       };
+      // Apply categories if provided by the client
+      if (category) {
+        conditions.$or = category.split(',').map((c) => ({ category: c }));
+      }
     }
 
     // Apply the donor or shopper id if any
