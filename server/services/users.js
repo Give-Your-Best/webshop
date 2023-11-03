@@ -138,6 +138,20 @@ const getAllUsers = async (type, approvedStatus) => {
   }
 };
 
+const listPublicUsers = async () => {
+  try {
+    const users = await User_.User.find(
+      { kind: { $in: ['shopper', 'donor'] } },
+      'firstName lastName kind'
+    ).lean();
+
+    return users;
+  } catch (error) {
+    console.error(`Error in listPublicUsers: ${error}`);
+    return { success: false, message: `Error in listPublicUsers: ${error}` };
+  }
+};
+
 const getDonations = async (approvedStatus) => {
   try {
     const donations = await User_.Donor.aggregate([
@@ -213,6 +227,7 @@ module.exports = {
   createUser,
   getUser,
   getAllUsers,
+  listPublicUsers,
   deleteUser,
   updateUser,
   updateDonor,

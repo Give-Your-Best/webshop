@@ -7,6 +7,7 @@ const {
   deleteUser,
   getDonations,
   getGYBDummyUser,
+  listPublicUsers,
 } = require('../../services/users');
 
 // get users endpoint api/users
@@ -14,6 +15,12 @@ router.get('/', async (req, res) => {
   let type = req.query.type || 'all';
   let approvedStatus = req.query.approvedStatus || '';
   const users = await getAllUsers(type, approvedStatus);
+  res.json(users);
+});
+
+// get all shoppers and donors (no admins)
+router.get('/public', async (req, res) => {
+  const users = await listPublicUsers();
   res.json(users);
 });
 

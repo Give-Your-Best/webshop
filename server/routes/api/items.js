@@ -49,12 +49,25 @@ router.get('/donor', async (req, res) => {
   res.json(items);
 });
 
+// TODO this should probably be a POST endoint
 // get admin items endpoint api/items
 router.get('/admin', async (req, res) => {
   const isCurrent = req.query.isCurrent === 'true';
   const limit = req.query.limit;
   const page = req.query.page;
-  const items = await getAdminItems(isCurrent, limit, page);
+  const donor = req.query.donorId;
+  const shopper = req.query.shopperId;
+  const category = req.query.category;
+  const status = req.query.status;
+  const items = await getAdminItems({
+    isCurrent,
+    limit,
+    page,
+    donor,
+    shopper,
+    category,
+    status,
+  });
   res.json(items);
 });
 

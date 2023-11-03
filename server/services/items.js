@@ -1,4 +1,6 @@
+const { ObjectId } = require('bson');
 const Item = require('../models/Item');
+const User_ = require('../models/User');
 const BatchItem = require('../models/BatchItem');
 const { cloudinary } = require('../utils/cloudinary');
 
@@ -278,29 +280,61 @@ const getShopperItems = async (userId, itemStatus) => {
 
 // There is now proper pagination on this endpoint as the quantity of results
 // combined with aggregations is resulting in timeouts...
-const getAdminItems = async (isCurrent, limit = 10, page = 1) => {
-  //here type is current or past
-  var conditions = {};
-
+const getAdminItems = async ({
+  isCurrent,
+  limit = 10,
+  page = 1,
+  donor = undefined,
+  shopper = undefined,
+  category = undefined,
+  status = undefined,
+}) => {
   const lim = parseInt(limit);
   const pge = parseInt(page);
 
+  var conditions = {};
+
   try {
     if (isCurrent) {
-      conditions = {
-        approvedStatus: 'approved',
-        $or: [
-          { status: 'in-shop' },
-          { status: 'shopped' },
-          { status: 'shipped-to-gyb' },
-          { status: 'received-by-gyb' },
-          { status: 'shipped-to-shopper' },
-        ],
-      };
+      // Statuses comprising 'current' items
+      const defaultStatus = [
+        'in-shop',
+        'shopped',
+        'shipped-by-gyb',
+        'received-by-gyb',
+        'shipped-to-shopper',
+      ];
+      // all current items must be approved
+      const $and = [{ approvedStatus: 'approved' }];
+      // Apply either the statuses prvided by the client or the defaults
+      if (status) {
+        $and.push({
+          $or: status.split(',').map((s) => ({ status: s })),
+        });
+      } else {
+        $and.push({
+          $or: defaultStatus.map((s) => ({ status: s })),
+        });
+      }
+      // Apply categories if provided by the client
+      if (category) {
+        $and.push({
+          $or: category.split(',').map((c) => ({ category: c })),
+        });
+      }
+      conditions = { $and };
     } else {
+      // Past items are items that are confirmed received
       conditions = {
         status: 'received',
       };
+    }
+
+    // Apply the donor or shopper id if any
+    if (donor) {
+      conditions.donorId = new ObjectId(donor);
+    } else if (shopper) {
+      conditions.shopperId = new ObjectId(shopper);
     }
 
     // For now we are always running the count although it would be sensible to
