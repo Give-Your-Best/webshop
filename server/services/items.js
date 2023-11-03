@@ -3,7 +3,7 @@ const BatchItem = require('../models/BatchItem');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
-  _uploadPhotos(data);
+  uploadPhotos(data);
   try {
     const item = new Item(data);
     let saveItem = await item.save();
@@ -13,7 +13,7 @@ const createItem = async (data) => {
     return { success: false, message: err };
   }
 };
-const _uploadPhotos = async (data) => {
+const uploadPhotos = async (data) => {
   var new_photos = [];
   var success = true;
   const promises = data.photos.map((photo) => {
@@ -63,7 +63,7 @@ const createBatchItem = async (data) => {
     const createdItems = [];
     const [items] = Object.values(data);
     for (const item of items) {
-      _uploadPhotos(item);
+      uploadPhotos(item);
       const newItem = new Item({ ...item, batchId: savedBatchItem._id });
       const savedItem = await newItem.save();
       createdItems.push(savedItem);
@@ -175,6 +175,33 @@ const deleteItem = async (id) => {
   } catch (error) {
     console.error(`Error in deleteItem: ${error}`);
     return { success: false, message: `Error in deleteItem: ${error}` };
+  }
+};
+
+const deleteBatchItem = async (id) => {
+  try {
+    const batchItem = await BatchItem.findById(id);
+    if (!batchItem) {
+      throw Error('BatchItem not found');
+    }
+    const itemIds = batchItem.itemIds;
+    const itemDeletionPromises = itemIds.map(async (itemId) => {
+      const deletedItem = await Item.findByIdAndRemove(itemId, {
+        useFindAndModify: false,
+      });
+      if (!deletedItem) {
+        throw Error(`Cannot delete item with ID ${itemId}`);
+      }
+    });
+    await Promise.all(itemDeletionPromises);
+    await BatchItem.findByIdAndRemove(id, { useFindAndModify: false });
+    return { success: true, message: 'BatchItem and associated items deleted' };
+  } catch (error) {
+    console.error(`Error in deleteBatchItem: ${error}`);
+    return {
+      success: false,
+      message: `Error in deleteBatchItem: ${error.message}`,
+    };
   }
 };
 
@@ -539,5 +566,6 @@ module.exports = {
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,
+  deleteBatchItem,
   updateItem,
 };

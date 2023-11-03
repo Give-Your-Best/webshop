@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const itemsRoutes = require('./items');
+const batchItemRoutes = require('./batchItems');
 const usersRoutes = require('./users');
 const locationRoutes = require('./locations');
 const settingsRoutes = require('./settings');
@@ -27,6 +28,7 @@ router.get('/settings/:name', async (req, res) => {
   res.json(setting);
 });
 
+router.use('/batchItems', batchItemRoutes);
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
 router.use('/mail', mailerRoutes);

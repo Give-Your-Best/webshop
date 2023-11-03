@@ -42,6 +42,26 @@ const createBatchItem = async (req, res) => {
   }
 };
 
+const deleteBatchItem = async (req, res) => {
+  try {
+    const response = await ItemService.deleteBatchItem(req.params.id);
+    if (response.success) {
+      return res.status(200).send({
+        success: true,
+        message: 'BatchItem and associated items deleted',
+      });
+    } else {
+      return res.status(404).send({
+        success: false,
+        message: 'BatchItem not found',
+      });
+    }
+  } catch (err) {
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({ message: `Service error: ${err}` });
+  }
+};
+
 const updateItem = async (req, res) => {
   if (Object.keys(req.body).length === 0) {
     return res
@@ -67,4 +87,5 @@ module.exports = {
   createItem,
   createBatchItem,
   updateItem,
+  deleteBatchItem,
 };
