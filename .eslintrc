@@ -1,28 +1,19 @@
 {
+  "root": true,
   "env": {
-    "browser": true,
+    "commonjs": true,
     "es2021": true,
     "node": true
   },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:prettier/recommended",
     "prettier"
   ],
   "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
     "ecmaVersion": 12,
-    "sourceType": "module"
   },
-  "plugins": ["react", "prettier"],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
+  "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": 2 // Means error
   }
