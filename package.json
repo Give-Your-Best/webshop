@@ -33,10 +33,9 @@
     "express-https-redirect": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
-    "mongodb": "^4.1.0",
     "mongoose": "^5.13.7",
-    "node-mailjet": "^4.0.1",
-    "uuid": "^8.3.2"
+    "node-mailjet": "^6.0.4",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "eslint": "^8.53.0",
