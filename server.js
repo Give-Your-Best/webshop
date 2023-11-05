@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 
 // Establish the database connection
-(async function connect () {
+(async () => {
   try {
     await mongoose.connect(process.env.DB_CONNECTION_URI);
     console.log('Connected to the database');

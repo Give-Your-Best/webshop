@@ -34,7 +34,7 @@ const getAllLocations = async (status) => {
 const createLocation = async (data) => {
   try {
     const location = new Location(data);
-    let saveLocation = await location.save();
+    await location.save();
     return { success: true, message: `Location created`, location: location };
   } catch (err) {
     console.error(err);

@@ -1,6 +1,4 @@
 require('dotenv').config();
-const uuidv4 = require('uuid').v4;
-const Location = require('../models/Location');
 const LocationsService = require('../services/locations');
 
 const updateLocation = async (req, res) => {

@@ -198,7 +198,7 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-const refreshToken = (req, res, next) => {
+const refreshToken = () => {
   // set refresh token as cookie
   // get refresh_token cookie
   // verify against db
@@ -285,10 +285,7 @@ const updatePassword = async (req, res) => {
     }
 
     try {
-      const update = await user.updatePassword(
-        req.body.id,
-        req.body.newPassword
-      );
+      await user.updatePassword(req.body.id, req.body.newPassword);
       return res.json({
         success: true,
         message: 'password updated!',

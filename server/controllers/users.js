@@ -1,5 +1,4 @@
 require('dotenv').config();
-const uuidv4 = require('uuid').v4;
 const UserService = require('../services/users');
 
 const createUser = async (req, res) => {

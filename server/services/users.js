@@ -1,4 +1,3 @@
-const Role = require('../models/Role');
 const Item = require('../models/Item');
 const User_ = require('../models/User');
 
@@ -17,7 +16,7 @@ const createUser = async (data) => {
       } else if (data.type == 'admin') {
         user = new User_.Admin(data);
       }
-      let saveUser = await user.save();
+      await user.save();
       return { success: true, message: `User created`, user: user };
     }
   } catch (err) {
@@ -45,7 +44,7 @@ const updateUser = async (id, updateData) => {
 
 const updateDonor = async (id, updateData) => {
   if (updateData.trustedDonor === true) {
-    const update = await Item.updateMany(
+    await Item.updateMany(
       { donorId: id.toString(), approvedStatus: 'in-progress' },
       { $set: { approvedStatus: 'approved' } }
     );
@@ -118,16 +117,18 @@ const deleteUser = async (id) => {
 
 const getAllUsers = async (type, approvedStatus) => {
   try {
+    let users;
+
     if (type == 'donor') {
-      var users = await User_.Donor.find({
+      users = await User_.Donor.find({
         approvedStatus: approvedStatus,
       }).populate('tags');
     } else if (type == 'shopper') {
-      var users = await User_.Shopper.find({
+      users = await User_.Shopper.find({
         approvedStatus: approvedStatus,
       }).populate('tags');
     } else if (type == 'admin') {
-      var users = await User_.Admin.find({
+      users = await User_.Admin.find({
         approvedStatus: approvedStatus,
       }).lean();
     }
