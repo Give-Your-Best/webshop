@@ -178,7 +178,7 @@ export const Users = () => {
     };
   }, [token, user]);
 
-  const submitFunction = (user, type) => {
+  const submitFunction = (user) => {
     if (user.kind === 'donor') {
       setDonors(donors.concat(user));
     } else if (user.kind === 'shopper') {
