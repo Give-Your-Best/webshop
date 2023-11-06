@@ -11,10 +11,10 @@
     "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": 12
   },
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": 2 // Means error
+    "prettier/prettier": 2 // Error
   }
 }
