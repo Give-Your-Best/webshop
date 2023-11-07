@@ -4,9 +4,10 @@
   "description": "The webshop app of Give Your Best that enables users to 'shop' for free",
   "main": "server.js",
   "scripts": {
+    "build": "cd client && npm i && npm run build",
+    "lint": "eslint ./client/src --ext .js ./server --ext .js ./server.js",
     "lint:server": "eslint ./server --ext .js ./server.js",
     "lint:client": "eslint ./client/src --ext .js",
-    "build": "cd client && npm i && npm run build",
     "start:prod": "NODE_ENV=production node server.js",
     "start:server": "nodemon server.js",
     "start:client": "cd client && npm start",
@@ -43,5 +44,8 @@
     "eslint-plugin-react": "^7.33.2",
     "nodemon": "^3.0.1",
     "prettier": "3.0.3"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
