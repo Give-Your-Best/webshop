@@ -1,6 +1,4 @@
 require('dotenv').config();
-const uuidv4 = require('uuid').v4;
-const Item = require('../models/Item');
 const ItemService = require('../services/items');
 
 const createItem = async (req, res) => {

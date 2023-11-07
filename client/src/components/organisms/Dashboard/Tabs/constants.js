@@ -1,3 +1,4 @@
+import React from 'react';
 import { Users } from '../Users';
 import { Notifications } from '../Notifications';
 import { ApproveRequests } from '../ApproveRequests/ApproveRequests';

@@ -48,7 +48,7 @@ const updateTag = async (id, updateData) => {
 const createTag = async (data) => {
   try {
     const tag = new Tag(data);
-    let saveTag = await tag.save();
+    await tag.save();
     return { success: true, message: `tag created`, tag: tag };
   } catch (err) {
     console.error(err);
