@@ -23,7 +23,7 @@ const createItem = async (req, res) => {
 };
 
 const createBatchItem = async (req, res) => {
-  if (!req.body.itemsData) {
+  if (!req.body) {
     return res
       .status(400)
       .send({ message: 'Service error: batch item details are required' });

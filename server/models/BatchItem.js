@@ -2,12 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const batchItemSchema = new Schema({
-  itemIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Item',
-    },
-  ],
+  templateItem: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item',
+  },
+  availableSizes: {
+    type: Map,
+    of: Number,
+    default: new Map(),
+  },
 });
 
 const BatchItem = mongoose.model('BatchItem', batchItemSchema);

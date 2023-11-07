@@ -8,8 +8,9 @@ import {
   clothingSizeOptions,
   shoeSizeOptions,
   colours,
+  batchItemOptions,
 } from '../../../utils/constants';
-import { createItem } from '../../../services/items';
+import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
   StyledSubmitButton,
@@ -26,7 +27,14 @@ export const ItemCreateForm = (data) => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
-    const res = await createItem(values, token);
+    console.log('values.batchItem: ', values.batchItem);
+    console.log('token: ', token);
+    let res;
+    if (values.batchItem == 'yes') {
+      res = await createBatchItem(values, token);
+    } else {
+      res = await createItem(values, token);
+    }
     if (res.success) {
       Notification('Success!', 'New item created', 'success');
       if (!user.trustedDonor) {
@@ -99,6 +107,12 @@ export const ItemCreateForm = (data) => {
             <StyledCheckboxGroup name="colors" options={colours} />
           </StyledLabel>
           <StyledError name="colors" component="div" />
+
+          <StyledLabel>
+            Batch Item?
+            <StyledCheckboxGroup name="batchItem" options={batchItemOptions} />
+          </StyledLabel>
+          <StyledError name="batchItem" component="div" />
 
           <StyledLabel>Please upload a front and back image</StyledLabel>
           <Images
