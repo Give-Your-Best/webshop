@@ -24,6 +24,7 @@
   },
   "homepage": "https://shop.giveyourbest.uk/",
   "dependencies": {
+    "@bugsnag/js": "^7.21.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "bson": "^6.2.0",
