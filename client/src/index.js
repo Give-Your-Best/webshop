@@ -1,13 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginReact from '@bugsnag/plugin-react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.variable.min.css';
 
+Bugsnag.start({
+  apiKey: 'fb3f2d4e229463de31f3ed1a61918875',
+  plugins: [new BugsnagPluginReact()],
+});
+
+// Create the error boundary...
+const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+
+const ErrorView = () => (
+  <div>
+    <p>Inform users of an error in the component tree.</p>
+  </div>
+);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary FallbackComponent={ErrorView}>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );
