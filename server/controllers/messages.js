@@ -14,6 +14,7 @@ const createMessage = async (req, res) => {
       thread: response.thread || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -35,6 +36,7 @@ const markMessageAsViewed = async (req, res) => {
       thread: response.thread,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }

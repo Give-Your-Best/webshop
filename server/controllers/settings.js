@@ -16,6 +16,7 @@ const updateSetting = async (req, res) => {
       message: `Setting updated`,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
