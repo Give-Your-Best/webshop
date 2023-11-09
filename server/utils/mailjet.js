@@ -1,9 +1,6 @@
-require('dotenv').config();
 const Mailjet = require('node-mailjet');
+const config = require('../config/mailjet');
 
-const mailjet = new Mailjet({
-  apiKey: process.env.MAILJET_KEY,
-  apiSecret: process.env.MAILJET_SECRET,
-});
+const mailjet = new Mailjet(config);
 
 module.exports = { mailjet };
