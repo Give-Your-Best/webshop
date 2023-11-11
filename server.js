@@ -31,7 +31,7 @@ app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 // anything beginning with "/api" will go into this
 app.use('/api', require('./server/routes/api'));
 
-if (process.env.NODE_ENV === 'production') {
+if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   // serve static files
   app.use(express.static('client/build'));
 
