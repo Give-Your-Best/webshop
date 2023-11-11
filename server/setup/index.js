@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
@@ -18,6 +19,7 @@ const settings = require('./settings.json');
 
     // Populate the default app settings
     await Settings.insertMany(settings);
+    console.log('Settings ✔');
 
     // Add a user of each type
     await Promise.all(
@@ -26,13 +28,19 @@ const settings = require('./settings.json');
         await instance.save();
       })
     );
+    console.log('Users ✔');
 
     // Populate dummy locations
     await Location.insertMany(locations);
+    console.log('Locations ✔');
 
     // Add some dummy items to the shop
     await Item.insertMany(items);
+    console.log('Items ✔');
+
+    await mongoose.connection.close();
   } catch (e) {
     console.warn('Something went wrong: ', e);
+    await mongoose.connection.close();
   }
 })();
