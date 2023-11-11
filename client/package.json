@@ -35,8 +35,10 @@
     "react-error-overlay": "^6.0.9"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
+    "build:production": "REACT_APP_ENV=production react-scripts build",
+    "build:staging": "REACT_APP_ENV=staging react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
     "eject": "react-scripts eject"
   },
   "browserslist": {

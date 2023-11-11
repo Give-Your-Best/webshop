@@ -7,6 +7,8 @@ import { Routes } from './Routes';
 import { AppProvider } from './context/app-context';
 import { ConfigProvider } from 'antd';
 
+console.log('EVN', process.env);
+
 ConfigProvider.config({
   theme: {
     primaryColor: theme.colorMappings.primary,

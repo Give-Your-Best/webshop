@@ -7,14 +7,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.variable.min.css';
 
+import bugsnagConfig from './config/bugsnag';
+
 Bugsnag.start({
-  apiKey: 'fb3f2d4e229463de31f3ed1a61918875',
+  ...bugsnagConfig,
   plugins: [new BugsnagPluginReact()],
 });
 
 // Create the error boundary...
 const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
 
+// TODO
 const ErrorView = () => (
   <div>
     <p>Inform users of an error in the component tree.</p>
