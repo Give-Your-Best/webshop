@@ -114,6 +114,7 @@ const login = async (req, res) => {
       token,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Error in Authentication.login() : ${err}`);
     return res.json({
       success: false,
@@ -156,12 +157,14 @@ const passwordReset = async (req, res) => {
         message: 'password updated!',
       });
     } catch (err) {
+      req.bugsnag.notify(err);
       return res.json({
         success: false,
         message: 'password failed to update',
       });
     }
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Error in Authentication.updatePassword() : ${err}`);
     return res.json({
       success: false,
@@ -183,6 +186,7 @@ const verifyToken = (req, res, next) => {
       req.decoded = decoded;
       next();
     } catch (err) {
+      req.bugsnag.notify(err);
       console.error(`Error in Authentication.verifyToken() : ${err}`);
       return res
         .status(401)
@@ -251,6 +255,7 @@ const authenticate = async (req, res) => {
       token,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Error in Authentication.authenticate() : ${err}`);
     return res.status(401).send({
       success: false,
@@ -291,12 +296,14 @@ const updatePassword = async (req, res) => {
         message: 'password updated!',
       });
     } catch (err) {
+      req.bugsnag.notify(err);
       return res.json({
         success: false,
         message: 'password failed to update',
       });
     }
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Error in Authentication.updatePassword() : ${err}`);
     return res.json({
       success: false,

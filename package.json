@@ -5,13 +5,13 @@
   "main": "server.js",
   "scripts": {
     "build": "cd client && npm i && npm run build",
+    "heroku-postbuild": "cd client && npm install --no-shrinkwrap && npm run build:${NODE_ENV}",
     "lint": "eslint ./client/src --ext .js ./server --ext .js ./server.js",
-    "lint:server": "eslint ./server --ext .js ./server.js",
     "lint:client": "eslint ./client/src --ext .js",
+    "lint:server": "eslint ./server --ext .js ./server.js",
     "start:prod": "NODE_ENV=production node server.js",
-    "start:server": "nodemon server.js",
     "start:client": "cd client && npm start",
-    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "start:server": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
   },
   "homepage": "https://shop.giveyourbest.uk/",
   "dependencies": {
+    "@bugsnag/js": "^7.21.0",
+    "@bugsnag/plugin-express": "^7.19.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "bson": "^6.2.0",

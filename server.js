@@ -5,10 +5,14 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
+const Bugsnag = require('./server/utils/bugsnag');
+
 const app = express();
+const { requestHandler, errorHandler } = Bugsnag.getPlugin('express');
 
 const port = process.env.PORT || 5000;
 
+app.use(requestHandler);
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
@@ -19,7 +23,7 @@ app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
     await mongoose.connect(process.env.DB_CONNECTION_URI);
     console.log('Connected to the database');
   } catch (err) {
-    // TODO Bugsnag etc.
+    Bugsnag.notify(err);
   }
 })();
 
@@ -27,7 +31,7 @@ app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 // anything beginning with "/api" will go into this
 app.use('/api', require('./server/routes/api'));
 
-if (process.env.NODE_ENV === 'production') {
+if (['production', 'staging'].includes(process.env.NODE_ENV)) {
   // serve static files
   app.use(express.static('client/build'));
 
@@ -36,5 +40,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
+
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

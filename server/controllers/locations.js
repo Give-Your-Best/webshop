@@ -17,6 +17,7 @@ const updateLocation = async (req, res) => {
       location: response.location,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -37,6 +38,7 @@ const createLocation = async (req, res) => {
       location: response.location || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }

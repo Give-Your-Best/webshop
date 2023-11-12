@@ -1,0 +1,5 @@
+[
+  { "name": "shop_email", "value": "" },
+  { "name": "shopItemLimit", "value": "1" },
+  { "name": "trustedDonorLimit", "value": "3" }
+]

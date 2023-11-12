@@ -1,0 +1,39 @@
+[
+  {
+    "firstName": "Shopper",
+    "lastname": "Shopper",
+    "email": "shopper@example.com",
+    "password": "shopper@example.com",
+    "approvedStatus": "approved",
+    "type": "Shopper",
+    "referredBy": "N/A",
+    "currentStatus": "refugee",
+    "deliveryPreference": "direct",
+    "shoeSize": ["4", "5"],
+    "clothingSize": ["12", "L"],
+    "shoppingFor": 1,
+    "deliveryAddress": {
+      "firstLine": "49A High Street",
+      "postcode": "SE84GR",
+      "city": "London"
+    }
+  },
+  {
+    "firstName": "Donor",
+    "lastname": "Donor",
+    "email": "donor@example.com",
+    "password": "donor@example.com",
+    "approvedStatus": "approved",
+    "type": "Donor",
+    "trustedDonor": true
+  },
+  {
+    "firstName": "Admin",
+    "lastName": "Admin",
+    "email": "admin@example.com",
+    "password": "admin@example.com",
+    "approvedStatus": "approved",
+    "type": "Admin",
+    "role": "Developer"
+  }
+]

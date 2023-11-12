@@ -1,0 +1,81 @@
+[
+  {
+    "approvedStatus": "approved",
+    "clothingSize": ["14"],
+    "shoeSize": [],
+    "colors": ["Blue"],
+    "status": "in-shop",
+    "live": true,
+    "tags": [],
+    "packageId": "",
+    "name": "Blue cropped trousers ",
+    "description": "Blue Boden cropped trousers with side zip",
+    "category": "women",
+    "subCategory": "trousers",
+    "brand": "Boden",
+    "photos": [
+      {
+        "url": "https://www.bodenimages.com/productimages/r1aproductmedium/23gsum_g4137_mbl.jpg",
+        "name": "image.jpg",
+        "createdAt": "2023-10-05T20:48:29Z",
+        "publicId": "rc-upload-1696538700317-6",
+        "front": true
+      },
+      {
+        "url": "https://www.bodenimages.com/productimages/r1aproductmedium/23gsum_g4137_mbl_d01.jpg",
+        "name": "image.jpg",
+        "createdAt": "2023-10-05T20:48:29Z",
+        "publicId": "rc-upload-1696538700317-2",
+        "front": false
+      },
+      {
+        "url": "https://www.bodenimages.com/productimages/r1aproductmedium/23gsum_g4137_mbl_d02.jpg",
+        "name": "image.jpg",
+        "createdAt": "2023-10-05T20:48:29Z",
+        "publicId": "rc-upload-1696538700317-4",
+        "front": false
+      }
+    ],
+    "donorId": "651f30f55d37a6384eacdeba"
+  },
+  {
+    "approvedStatus": "approved",
+    "clothingSize": ["10"],
+    "shoeSize": [],
+    "colors": ["Grey"],
+    "status": "shopped",
+    "live": true,
+    "tags": [],
+    "packageId": "",
+    "name": "Grey stretchy jumper",
+    "description": "Grey stretchy long sleeve jumper",
+    "category": "women",
+    "subCategory": "sweaters",
+    "brand": "H&M",
+    "photos": [
+      {
+        "url": "https://lp2.hm.com/hmgoepprod?set=format%5Bwebp%5D%2Cquality%5B79%5D%2Csource%5B%2Fd8%2F51%2Fd8518308648274ebd4c491239d78fac0f9284381.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bladies_cardigansjumpers_jumpers%5D%2Ctype%5BDESCRIPTIVEDETAIL%5D%2Cres%5Bm%5D%2Chmver%5B2%5D&call=url%5Bfile%3A%2Fproduct%2Fmain%5D",
+        "name": "A8B8AC04-C5EA-4519-8E3B-6048B0710FC0.jpeg",
+        "createdAt": "2023-02-14T10:03:42Z",
+        "publicId": "rc-upload-1676368791813-3",
+        "front": false,
+        "uid": "rc-upload-1676368791813-3"
+      },
+      {
+        "url": "https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2F7f%2F65%2F7f651bd858e41eb4383c096767dc2775d436af97.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bladies_cardigansjumpers_jumpers%5D%2Ctype%5BDESCRIPTIVESTILLLIFE%5D%2Cres%5Bm%5D%2Chmver%5B2%5D&call=url[file:/product/main]",
+        "name": "22BFF854-E040-4670-B037-59FBFB754763.jpeg",
+        "createdAt": "2023-02-14T10:03:41Z",
+        "publicId": "rc-upload-1676368791813-2",
+        "front": true,
+        "uid": "rc-upload-1676368791813-2"
+      }
+    ],
+    "donorId": "651f30f55d37a6384eacdeba",
+    "inBasket": true,
+    "statusUpdateDates": {
+      "inBasketDate": "2023-02-14T10:09:10.091Z",
+      "shoppedDate": "2023-02-14T10:09:13.447Z"
+    },
+    "shopperId": "651f30f55d37a6384eacdeb9"
+  }
+]

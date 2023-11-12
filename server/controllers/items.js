@@ -15,6 +15,7 @@ const createItem = async (req, res) => {
       item: response.item || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -36,6 +37,7 @@ const updateItem = async (req, res) => {
       item: response.item,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
