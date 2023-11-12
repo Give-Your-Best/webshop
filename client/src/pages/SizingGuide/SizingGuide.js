@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container } from '../../components/atoms';
 import { Heading, SubHeader, SizesTable } from './SizingGuide.styles';
 import {

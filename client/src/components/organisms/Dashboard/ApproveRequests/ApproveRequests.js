@@ -149,7 +149,7 @@ export const ApproveRequests = () => {
       }
     };
 
-    const updateRecord = async (values, action) => {
+    const updateRecord = async (values) => {
       const res = await updateUserWrapper(record._id, values, token);
       if (res.success) {
         return true;

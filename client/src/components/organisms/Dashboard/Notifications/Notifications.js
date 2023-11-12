@@ -57,7 +57,7 @@ export const Notifications = () => {
       'statusUpdateDates.gybAssignedDate': getDate(),
     };
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       updateItem(assignAddressId, updateData, token).then(() => {
         const item = shopNotificationsPendingAssign.items.filter((i) => {
           return assignAddressId === i._id;
@@ -134,7 +134,7 @@ export const Notifications = () => {
         title: `Are you sure you want to do this?`,
         className: 'modalStyle',
         onOk() {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             updateItem(itemId, updateData, token).then(() => {
               setAccountNotificationsPendingReceive((prevState) => {
                 return {
@@ -164,7 +164,7 @@ export const Notifications = () => {
         title: `Are you sure you want to do this?`,
         className: 'modalStyle',
         onOk() {
-          return new Promise((resolve, reject) => {
+          return new Promise((resolve) => {
             updateItem(itemId, updateData, token).then(() => {
               getItem(itemId).then((item) => {
                 getUser(item.shopperId, token).then((shopper) => {

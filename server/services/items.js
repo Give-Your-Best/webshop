@@ -1,6 +1,5 @@
 const { ObjectId } = require('bson');
 const Item = require('../models/Item');
-const User_ = require('../models/User');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
@@ -44,7 +43,7 @@ const createItem = async (data) => {
   data.photos = new_photos;
   try {
     const item = new Item(data);
-    let saveItem = await item.save();
+    await item.save();
     return { success: true, message: 'Item created', item: item };
   } catch (err) {
     console.error(err);
@@ -438,7 +437,7 @@ const getAccountNotificationItems = async (adminUserId) => {
 };
 
 const getShopNotificationItems = async () => {
-  var results = [];
+  const results = [];
 
   const pendingAssignQuery = {
     $and: [
@@ -462,7 +461,6 @@ const getShopNotificationItems = async () => {
   };
 
   try {
-    var results = [];
     const pendingAssign = await Item.find(pendingAssignQuery)
       .populate({
         path: 'shopperId',

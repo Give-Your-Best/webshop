@@ -6,7 +6,7 @@ import {
 import { CategoryBlock } from '../../atoms/CategoryBlock';
 
 export const CategoriesCarousel = ({ categories }) => {
-  const SlickArrowLeft = ({ currentSlide, slideCount, ...props }) => (
+  const SlickArrowLeft = ({ currentSlide, ...props }) => (
     <button
       {...props}
       className={
