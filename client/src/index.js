@@ -17,10 +17,14 @@ Bugsnag.start({
 // Create the error boundary...
 const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
 
-// TODO
 const ErrorView = () => (
-  <div>
-    <p>Inform users of an error in the component tree.</p>
+  <div style={{ marginTop: '40vh', textAlign: 'center' }}>
+    <h1>⚠️</h1>
+    <h2>
+      <strong>Sorry, something went wrong</strong>
+      <br />
+      If the issue persists please contact us at enquire@giveyourbest.uk
+    </h2>
   </div>
 );
 
