@@ -1,5 +1,6 @@
 export const getAdminItems = async ({
-  isCurrent,
+  isCurrent = true,
+  withCount = true,
   limit = 10,
   page = 1,
   donorId = undefined,
@@ -7,7 +8,7 @@ export const getAdminItems = async ({
   category = undefined,
   status = undefined,
 }) => {
-  const params = new URLSearchParams({ isCurrent, limit, page });
+  const params = new URLSearchParams({ isCurrent, withCount, limit, page });
 
   if (donorId) {
     params.set('donorId', donorId);

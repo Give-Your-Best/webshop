@@ -220,7 +220,8 @@ const getShopperItems = async (userId, itemStatus) => {
 // There is now proper pagination on this endpoint as the quantity of results
 // combined with aggregations is resulting in timeouts...
 const getAdminItems = async ({
-  isCurrent,
+  isCurrent = true,
+  withCount = true,
   limit = 10,
   page = 1,
   donor = undefined,
@@ -280,9 +281,9 @@ const getAdminItems = async ({
       conditions.shopperId = new ObjectId(shopper);
     }
 
-    // For now we are always running the count although it would be sensible to
-    // fetch this only when required...
-    const total = await Item.countDocuments(conditions);
+    // We only want to calculate the count when the view/filters etc. change,
+    // not for pagination update queries...
+    const count = withCount ? await Item.countDocuments(conditions) : undefined;
 
     var items = await Item.find(conditions)
       .sort({ createdAt: -1 })
@@ -294,7 +295,7 @@ const getAdminItems = async ({
       .exec();
 
     return {
-      total,
+      count,
       items,
     };
   } catch (error) {

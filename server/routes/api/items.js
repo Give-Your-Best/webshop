@@ -53,6 +53,7 @@ router.get('/donor', async (req, res) => {
 // get admin items endpoint api/items
 router.get('/admin', async (req, res) => {
   const isCurrent = req.query.isCurrent === 'true';
+  const withCount = req.query.withCount === 'true';
   const limit = req.query.limit;
   const page = req.query.page;
   const donor = req.query.donorId;
@@ -61,6 +62,7 @@ router.get('/admin', async (req, res) => {
   const status = req.query.status;
   const items = await getAdminItems({
     isCurrent,
+    withCount,
     limit,
     page,
     donor,
