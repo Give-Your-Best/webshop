@@ -19,14 +19,16 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "react-hooks", "prettier"],
   "settings": {
     "react": {
       "version": "detect"
     }
   },
   "rules": {
-    "prettier/prettier": 2, // Error
-    "react/prop-types": 0 // Off
+    "prettier/prettier": "error",
+    "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
