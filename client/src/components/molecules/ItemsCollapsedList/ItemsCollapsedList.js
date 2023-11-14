@@ -128,6 +128,7 @@ export const ItemsCollapsedList = ({
 
   if (admin) {
     //map shopper and donor name onto the result as antd table search does not work otherwise
+    // TODO can maybe get rid of this?
     rows = data.map((d) => {
       return {
         ...d,
@@ -226,12 +227,23 @@ export const ItemsCollapsedList = ({
             : {
                 total,
                 current,
-                onChange,
                 position: ['topRight', 'bottomRight'],
                 showSizeChanger: false,
                 hideOnSinglePage: false,
               }
         }
+        onChange={(pagination, filters, sorter) => {
+          const { current, pageSize } = pagination;
+
+          const { field, order } = sorter;
+
+          onChange({
+            current,
+            pageSize,
+            field,
+            order,
+          });
+        }}
         columns={columns}
         rowKey={(record) => record._id || 0}
         showHeader={!admin ? false : true}

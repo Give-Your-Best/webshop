@@ -228,6 +228,7 @@ const getAdminItems = async ({
   shopper = undefined,
   category = undefined,
   status = undefined,
+  sort = undefined,
 }) => {
   const lim = parseInt(limit);
   const pge = parseInt(page);
@@ -281,12 +282,30 @@ const getAdminItems = async ({
       conditions.shopperId = new ObjectId(shopper);
     }
 
+    // Default sort most recent items
+    let sortBy = { createdAt: -1 };
+
+    // Prepend sort config from the client if any
+    if (sort) {
+      const [field, dir] = sort.split(':');
+
+      const map = {
+        ascend: -1,
+        descend: 1,
+      };
+
+      sortBy = {
+        [field]: map[dir],
+        createdAt: -1,
+      };
+    }
+
     // We only want to calculate the count when the view/filters etc. change,
     // not for pagination update queries...
     const count = withCount ? await Item.countDocuments(conditions) : undefined;
 
     var items = await Item.find(conditions)
-      .sort({ createdAt: -1 })
+      .sort(sortBy)
       .limit(lim)
       .skip((pge - 1) * lim)
       .populate('shopperId')

@@ -25,6 +25,10 @@ export const AdminItems = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState({});
   const [conditions, setConditions] = useState([]);
+  const [sortBy, setSortBy] = useState(undefined);
+
+  // z->a oldest->newest descending -1
+  // a->z newest->oldest ascending 1
 
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
@@ -58,11 +62,12 @@ export const AdminItems = () => {
       shopperId,
       category,
       status,
+      sortBy,
     });
 
     setItems(items);
     count && setItemsCount(count);
-  }, [conditions, currentPage, currentUser, view]);
+  }, [conditions, currentPage, currentUser, sortBy, view]);
 
   useEffect(fetchItems, [
     token,
@@ -127,6 +132,7 @@ export const AdminItems = () => {
   };
 
   const handleSelectView = (view) => {
+    setSortBy(undefined);
     setConditions([]);
     setCurrentPage(1);
     setView(view);
@@ -141,7 +147,19 @@ export const AdminItems = () => {
     setCurrentPage(1);
   };
 
-  const handleSetPage = (page) => setCurrentPage(page);
+  const handleTableChange = (data) => {
+    const { current, field, order } = data;
+
+    console.log({ field, order });
+
+    setCurrentPage(current);
+
+    if (order === undefined) {
+      setSortBy(undefined);
+    } else {
+      setSortBy(`${field}:${order}`);
+    }
+  };
 
   const handleDeleteItem = (id) => {
     confirm({
@@ -237,8 +255,8 @@ export const AdminItems = () => {
         data={items}
         total={itemsCount}
         current={currentPage}
-        onChange={handleSetPage}
         expandRow={editForm}
+        onChange={handleTableChange}
         handleDelete={handleDeleteItem}
         admin={true}
         allTags={[]}
