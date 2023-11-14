@@ -127,15 +127,7 @@ export const ItemsCollapsedList = ({
   //additional columns if admin
 
   if (admin) {
-    //map shopper and donor name onto the result as antd table search does not work otherwise
-    // TODO can maybe get rid of this?
-    rows = data.map((d) => {
-      return {
-        ...d,
-        shopper: name(d.shopperId),
-        donor: name(d.donorId),
-      };
-    });
+    rows = data;
 
     columns.push({
       title: 'Category',
@@ -167,13 +159,13 @@ export const ItemsCollapsedList = ({
     });
     columns.push({
       title: 'Donor',
-      dataIndex: 'donor',
-      render: (text) => text,
+      dataIndex: 'donorId',
+      render: (text) => name(text),
     });
     columns.push({
       title: 'Shopper',
-      dataIndex: 'shopper',
-      render: (text) => text,
+      dataIndex: 'shopperId',
+      render: (text) => name(text),
     });
     // columns.push({
     //   title: 'Tags',
@@ -232,17 +224,10 @@ export const ItemsCollapsedList = ({
                 hideOnSinglePage: false,
               }
         }
-        onChange={(pagination, filters, sorter) => {
-          const { current, pageSize } = pagination;
-
+        onChange={(pagination, _filters, sorter) => {
+          const { current } = pagination;
           const { field, order } = sorter;
-
-          onChange({
-            current,
-            pageSize,
-            field,
-            order,
-          });
+          onChange({ current, field, order });
         }}
         columns={columns}
         rowKey={(record) => record._id || 0}
