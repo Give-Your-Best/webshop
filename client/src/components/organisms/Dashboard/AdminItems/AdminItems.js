@@ -21,23 +21,16 @@ export const AdminItems = () => {
   const [users, setUsers] = useState([]);
   const [items, setItems] = useState([]);
   const [view, setView] = useState('current');
-  const [totalItems, setTotalItems] = useState(0);
+  const [itemsCount, setItemsCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState({});
   const [conditions, setConditions] = useState([]);
+  const [sortBy, setSortBy] = useState(undefined);
 
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
 
   const { confirm } = Modal;
-
-  const editForm = (record) => {
-    return (
-      <div key={record._id}>
-        <ItemCardLong item={record} type="all" />
-      </div>
-    );
-  };
 
   const fetchItems = useCallback(async () => {
     const { type, value } = currentUser;
@@ -57,19 +50,30 @@ export const AdminItems = () => {
       }
     );
 
-    const { total, items } = await getAdminItems({
+    const { count, items } = await getAdminItems({
       isCurrent: view === 'current',
+      withCount: currentPage === 1,
       page: currentPage,
       limit,
       donorId,
       shopperId,
       category,
       status,
+      sortBy,
     });
 
     setItems(items);
-    setTotalItems(total);
-  }, [conditions, currentPage, currentUser, view]);
+    count && setItemsCount(count);
+  }, [conditions, currentPage, currentUser, sortBy, view]);
+
+  useEffect(fetchItems, [
+    token,
+    user,
+    view,
+    currentPage,
+    currentUser,
+    fetchItems,
+  ]);
 
   useEffect(() => {
     var tabs = tabList(user);
@@ -109,15 +113,6 @@ export const AdminItems = () => {
     };
   }, [token, user]);
 
-  useEffect(fetchItems, [
-    token,
-    user,
-    view,
-    currentPage,
-    currentUser,
-    fetchItems,
-  ]);
-
   const handleSelectUser = (_value, option) => {
     setCurrentPage(1);
     setCurrentUser(option);
@@ -134,6 +129,7 @@ export const AdminItems = () => {
   };
 
   const handleSelectView = (view) => {
+    setSortBy(undefined);
     setConditions([]);
     setCurrentPage(1);
     setView(view);
@@ -145,9 +141,20 @@ export const AdminItems = () => {
         ? conditions.filter((i) => i !== e.key)
         : [...conditions, e.key]
     );
+    setCurrentPage(1);
   };
 
-  const handleSetPage = (page) => setCurrentPage(page);
+  const handleTableChange = (data) => {
+    const { current, field, order } = data;
+
+    setCurrentPage(current);
+
+    if (order === undefined) {
+      setSortBy(undefined);
+    } else {
+      setSortBy(`${field}:${order}`);
+    }
+  };
 
   const handleDeleteItem = (id) => {
     confirm({
@@ -157,6 +164,14 @@ export const AdminItems = () => {
         deleteItem(id, token).then(fetchItems);
       },
     });
+  };
+
+  const editForm = (record) => {
+    return (
+      <div key={record._id}>
+        <ItemCardLong item={record} type="all" />
+      </div>
+    );
   };
 
   return (
@@ -233,10 +248,10 @@ export const AdminItems = () => {
 
       <ItemsCollapsedList
         data={items}
-        total={totalItems}
+        total={itemsCount}
         current={currentPage}
-        onChange={handleSetPage}
         expandRow={editForm}
+        onChange={handleTableChange}
         handleDelete={handleDeleteItem}
         admin={true}
         allTags={[]}

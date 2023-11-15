@@ -220,13 +220,15 @@ const getShopperItems = async (userId, itemStatus) => {
 // There is now proper pagination on this endpoint as the quantity of results
 // combined with aggregations is resulting in timeouts...
 const getAdminItems = async ({
-  isCurrent,
+  isCurrent = true,
+  withCount = true,
   limit = 10,
   page = 1,
   donor = undefined,
   shopper = undefined,
   category = undefined,
   status = undefined,
+  sort = undefined,
 }) => {
   const lim = parseInt(limit);
   const pge = parseInt(page);
@@ -267,6 +269,10 @@ const getAdminItems = async ({
       conditions = {
         status: 'received',
       };
+      // Apply categories if provided by the client
+      if (category) {
+        conditions.$or = category.split(',').map((c) => ({ category: c }));
+      }
     }
 
     // Apply the donor or shopper id if any
@@ -276,12 +282,30 @@ const getAdminItems = async ({
       conditions.shopperId = new ObjectId(shopper);
     }
 
-    // For now we are always running the count although it would be sensible to
-    // fetch this only when required...
-    const total = await Item.countDocuments(conditions);
+    // Default sort most recent items
+    let sortBy = { createdAt: -1 };
+
+    // Prepend sort config from the client if any
+    if (sort) {
+      const [field, dir] = sort.split(':');
+
+      const map = {
+        ascend: -1,
+        descend: 1,
+      };
+
+      sortBy = {
+        [field]: map[dir],
+        createdAt: -1,
+      };
+    }
+
+    // We only want to calculate the count when the view/filters etc. change,
+    // not for pagination update queries...
+    const count = withCount ? await Item.countDocuments(conditions) : undefined;
 
     var items = await Item.find(conditions)
-      .sort({ createdAt: -1 })
+      .sort(sortBy)
       .limit(lim)
       .skip((pge - 1) * lim)
       .populate('shopperId')
@@ -290,7 +314,7 @@ const getAdminItems = async ({
       .exec();
 
     return {
-      total,
+      count,
       items,
     };
   } catch (error) {

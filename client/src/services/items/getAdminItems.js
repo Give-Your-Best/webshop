@@ -1,13 +1,15 @@
 export const getAdminItems = async ({
-  isCurrent,
+  isCurrent = true,
+  withCount = true,
   limit = 10,
   page = 1,
   donorId = undefined,
   shopperId = undefined,
   category = undefined,
   status = undefined,
+  sortBy = undefined,
 }) => {
-  const params = new URLSearchParams({ isCurrent, limit, page });
+  const params = new URLSearchParams({ isCurrent, withCount, limit, page });
 
   if (donorId) {
     params.set('donorId', donorId);
@@ -21,6 +23,10 @@ export const getAdminItems = async ({
 
   if (status) {
     params.set('status', status.join(','));
+  }
+
+  if (sortBy) {
+    params.set('sort', sortBy);
   }
 
   const response = await fetch(`/api/items/admin?${params.toString()}`, {
