@@ -147,8 +147,6 @@ export const AdminItems = () => {
   const handleTableChange = (data) => {
     const { current, field, order } = data;
 
-    console.log({ field, order });
-
     setCurrentPage(current);
 
     if (order === undefined) {
