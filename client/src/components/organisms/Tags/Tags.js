@@ -63,6 +63,8 @@ export const Tags = ({ updateId, updateType, tagList, availableTags }) => {
           tag.name = tag.label;
         }
 
+        console.log({ tag });
+
         const isLongTag = tag.name.length > 20;
         const tagElem = (
           <StyledTag

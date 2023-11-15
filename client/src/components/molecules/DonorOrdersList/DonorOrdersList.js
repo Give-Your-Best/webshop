@@ -13,6 +13,7 @@ import {
 } from './DonorOrdersList.styles';
 import { getDonorItems, updateItem } from '../../../services/items';
 import { H2, Button } from '../../atoms';
+import { getTags } from '../../../services/tags';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import {
@@ -25,6 +26,7 @@ import { ItemCardLong } from '../ItemCardLong';
 
 export const DonorOrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
+  const [allTags, setAllTags] = useState([]);
   const [itemsToSend, setItemsToSend] = useState([]);
   const [itemsAwaitingReceived, setItemsAwaitingReceived] = useState([]);
   const mountedRef = useRef(true);
@@ -95,16 +97,25 @@ export const DonorOrdersList = () => {
       }
     });
 
+    // const fetchAllTags = async () => {
+    //   const tags = await getTags(token);
+    //   setAllTags(tags);
+    // };
+
+    const fetchAllTags = () =>
+      getTags(token).then(setAllTags).catch(console.warn);
+
     const fetchDonorItems = async () => {
       const items = await getDonorItems(user.id);
-      console.log('ITEMS NOW', items);
-      if (!mountedRef.current) return null;
       const itemsOrdered = donorItemsOrdering(items);
       setItemsToSend(itemsOrdered[0]);
       setItemsAwaitingReceived(itemsOrdered[1]);
     };
 
-    fetchDonorItems();
+    if (mountedRef.current) {
+      fetchAllTags();
+      fetchDonorItems();
+    }
 
     return () => {
       // cleanup
@@ -137,6 +148,7 @@ export const DonorOrdersList = () => {
                                 type={user.type}
                                 actionText={''}
                                 action={null}
+                                allTags={allTags}
                               />
                             </div>
                           );
@@ -173,6 +185,7 @@ export const DonorOrdersList = () => {
                             type={user.type}
                             actionText={''}
                             action={null}
+                            allTags={allTags}
                           />
                         </ShopperWrapperSmall>
                       );
@@ -192,6 +205,7 @@ export const DonorOrdersList = () => {
                                 type={user.type}
                                 actionText={''}
                                 action={null}
+                                allTags={allTags}
                               />
                             </div>
                           );

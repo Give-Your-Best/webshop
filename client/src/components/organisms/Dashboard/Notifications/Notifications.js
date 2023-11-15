@@ -20,6 +20,7 @@ import {
   getItem,
 } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
+import { getTags } from '../../../../services/tags';
 import { getUser } from '../../../../services/user';
 import {
   sendAutoEmail,
@@ -49,6 +50,7 @@ export const Notifications = () => {
   ] = useState([]);
   const [adminLocations, setAdminLocations] = useState([]);
   const [assignAddressId, setAssignAddressId] = useState('');
+  const [allTags, setAllTags] = useState([]);
 
   const handleOk = (values) => {
     setLoading(true);
@@ -189,11 +191,17 @@ export const Notifications = () => {
       });
     };
 
+    // const fetchAllTags = async () => {
+    //   const tags = await getTags(token);
+    //   setAllTags(tags);
+    // };
+
+    const fetchAllTags = () =>
+      getTags(token).then(setAllTags).catch(console.warn);
+
     const fetchShopItems = async () => {
       const items = await getShopNotificationsItems(token);
       const locations = await getAdminLocations('available', token);
-
-      if (!mountedRef.current) return null;
 
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
@@ -216,8 +224,6 @@ export const Notifications = () => {
 
     const fetchAccountItems = async () => {
       const items = await getAccountNotificationsItems(user.id, token);
-
-      if (!mountedRef.current) return null;
 
       setAccountNotificationsPendingReceive({
         key: 1,
@@ -246,8 +252,11 @@ export const Notifications = () => {
       });
     };
 
-    fetchShopItems();
-    fetchAccountItems();
+    if (mountedRef.current) {
+      fetchAllTags();
+      fetchShopItems();
+      fetchAccountItems();
+    }
 
     return () => {
       mountedRef.current = false;
@@ -265,6 +274,7 @@ export const Notifications = () => {
                 type={user.type}
                 actionText={record.actionDesc}
                 action={record.action}
+                allTags={allTags}
               />
             </div>
           );

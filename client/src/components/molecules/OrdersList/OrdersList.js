@@ -15,6 +15,7 @@ import {
   updateItem,
 } from '../../../services/items';
 import { H2, Button } from '../../atoms';
+import { getTags } from '../../../services/tags';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import { getSetting } from '../../../services/settings';
@@ -31,6 +32,7 @@ export const OrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const mountedRef = useRef(true);
   const [shopRemaining, setShopRemaining] = useState(0);
   const [shopRemainingChildren, setShopRemainingChildren] = useState(0);
@@ -170,22 +172,27 @@ export const OrdersList = () => {
       }
     });
 
+    // const fetchAllTags = async () => {
+    //   const tags = await getTags(token);
+    //   setAllTags(tags);
+    // };
+
+    const fetchAllTags = () =>
+      getTags(token).then(setAllTags).catch(console.warn);
+
     const fetchShopperItems = async () => {
       const items = await getShopperItems(user.id);
-      if (!mountedRef.current) return null;
       setItems(items);
     };
 
     const fetchShopperPastItems = async () => {
       const pastItems = await getShopperItems(user.id, 'received');
-      if (!mountedRef.current) return null;
       setPastItems(pastItems);
     };
 
     const fetchSetting = async () => {
       if (!token) return null;
       const settingValue = await getSetting('shopItemLimit', token);
-      if (!mountedRef.current) return null;
 
       if (user) {
         let countAdults =
@@ -207,16 +214,18 @@ export const OrdersList = () => {
 
     const fetchDonorItems = async () => {
       const items = await getDonorItems(user.id);
-      if (!mountedRef.current) return null;
       setItems(items);
     };
 
-    if (user.type === 'shopper') {
-      fetchShopperItems();
-      fetchShopperPastItems();
-      fetchSetting();
-    } else if (user.type === 'donor') {
-      fetchDonorItems();
+    if (mountedRef.current) {
+      fetchAllTags();
+      if (user.type === 'shopper') {
+        fetchShopperItems();
+        fetchShopperPastItems();
+        fetchSetting();
+      } else if (user.type === 'donor') {
+        fetchDonorItems();
+      }
     }
 
     return () => {
@@ -255,6 +264,7 @@ export const OrdersList = () => {
               let allowCancel =
                 item.status === 'shopped' &&
                 user.type === 'shopper' &&
+                item.statusUpdateDates &&
                 lessThanSixHoursAgo(
                   new Date(item.statusUpdateDates.shoppedDate)
                 );
@@ -264,6 +274,7 @@ export const OrdersList = () => {
                   <ItemCardLong
                     item={item}
                     type={user.type}
+                    allTags={allTags}
                     actionText={
                       allowCancel ? 'Cancel Order' : noAction ? '' : actionText
                     }
@@ -291,7 +302,7 @@ export const OrdersList = () => {
           {pastItems.map((item) => {
             return (
               <div key={item._id}>
-                <ItemCardLong item={item} type={user.type} />
+                <ItemCardLong item={item} type={user.type} allTags={allTags} />
               </div>
             );
           })}

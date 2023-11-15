@@ -9,7 +9,7 @@ import { AutoComplete, Menu, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
 import { getAdminItems, deleteItem } from '../../../../services/items';
-// import { getTags } from '../../../../services/tags';
+import { getTags } from '../../../../services/tags';
 import { getPublicUsers } from '../../../../services/user';
 import { tabList } from '../../../../utils/helpers';
 import { categories } from '../../../../utils/constants';
@@ -20,6 +20,7 @@ export const AdminItems = () => {
   const mountedRef = useRef(true);
   const [users, setUsers] = useState([]);
   const [items, setItems] = useState([]);
+  const [allTags, setAllTags] = useState([]);
   const [view, setView] = useState('current');
   const [itemsCount, setItemsCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -84,11 +85,10 @@ export const AdminItems = () => {
       }
     });
 
-    // const fetchTags = async () => {
-    //   const tags = await getTags(token);
-    //   console.log('HAHAH', tags);
-    //   setAllTags(tags);
-    // };
+    const fetchTags = async () => {
+      const tags = await getTags(token);
+      setAllTags(tags);
+    };
 
     const fetchUsers = async () => {
       const data = await getPublicUsers(token);
@@ -103,7 +103,7 @@ export const AdminItems = () => {
     };
 
     if (mountedRef.current) {
-      // fetchTags();
+      fetchTags();
       fetchUsers();
     }
 
@@ -169,7 +169,7 @@ export const AdminItems = () => {
   const editForm = (record) => {
     return (
       <div key={record._id}>
-        <ItemCardLong item={record} type="all" />
+        <ItemCardLong item={record} type="all" allTags={allTags} />
       </div>
     );
   };
