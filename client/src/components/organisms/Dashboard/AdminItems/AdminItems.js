@@ -27,9 +27,6 @@ export const AdminItems = () => {
   const [conditions, setConditions] = useState([]);
   const [sortBy, setSortBy] = useState(undefined);
 
-  // z->a oldest->newest descending -1
-  // a->z newest->oldest ascending 1
-
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
 
