@@ -43,8 +43,6 @@ export const shoeSizeOptions = [
   '10',
 ];
 
-export const batchItemOptions = ['yes', 'no'];
-
 export const colours = [
   'Black',
   'Blue',

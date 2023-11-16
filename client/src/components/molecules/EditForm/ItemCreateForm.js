@@ -18,19 +18,26 @@ import {
   StyledError,
   StyledLabel,
   StyledCheckboxGroup,
+  StyledSwitch,
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
+import { ClothingSizeFields } from './ClothingSizeFields';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [showBatchOptions, setShowBatchOptions] = useState(false);
+
+  const handleSwitchChange = (checked) => {
+    setShowBatchOptions(checked);
+  };
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
-    console.log('values.batchItem: ', values.batchItem);
-    console.log('token: ', token);
     let res;
-    if (values.batchItem == 'yes') {
+    console.log('values: ', values);
+    if (values.batchItem === 'yes') {
+      console.log('values: ', values);
       res = await createBatchItem(values, token);
     } else {
       res = await createItem(values, token);
@@ -67,6 +74,9 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
+          <StyledLabel>Batch Item?</StyledLabel>
+          <StyledSwitch onChange={handleSwitchChange} />
+
           <StyledLabel>
             Item Name
             <StyledInput name="name" />
@@ -87,32 +97,35 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="brand" component="div" />
 
-          <StyledLabel>
-            Clothing size
-            <StyledCheckboxGroup
-              name="clothingSize"
-              options={clothingSizeOptions}
-            />
-          </StyledLabel>
-          <StyledError name="clothingSize" component="div" />
+          {showBatchOptions ? (
+            <ClothingSizeFields />
+          ) : (
+            <>
+              <StyledLabel>
+                Clothing size
+                <StyledCheckboxGroup
+                  name="clothingSize"
+                  options={clothingSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="clothingSize" component="div" />
 
-          <StyledLabel>
-            Shoe size
-            <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions} />
-          </StyledLabel>
-          <StyledError name="shoeSize" component="div" />
+              <StyledLabel>
+                Shoe size
+                <StyledCheckboxGroup
+                  name="shoeSize"
+                  options={shoeSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="shoeSize" component="div" />
+            </>
+          )}
 
           <StyledLabel>
             Colours
             <StyledCheckboxGroup name="colors" options={colours} />
           </StyledLabel>
           <StyledError name="colors" component="div" />
-
-          <StyledLabel>
-            Batch Item?
-            <StyledCheckboxGroup name="batchItem" options={batchItemOptions} />
-          </StyledLabel>
-          <StyledError name="batchItem" component="div" />
 
           <StyledLabel>Please upload a front and back image</StyledLabel>
           <Images

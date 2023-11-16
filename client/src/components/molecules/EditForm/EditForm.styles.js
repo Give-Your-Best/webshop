@@ -9,6 +9,7 @@ import {
   Select,
   AutoComplete,
 } from 'formik-antd';
+import { Switch } from 'antd';
 import { ErrorMessage } from 'formik';
 
 const StyledError = styled(ErrorMessage)`
@@ -307,6 +308,33 @@ const FieldContainerUneven = styled.div`
   }
 `;
 
+const SizeQuantityContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const SizeQuantityPair = styled.div`
+  display: flex;
+  align-items: stretch;
+  margin-right: 20px;
+
+  &:last-child {
+    margin-right: 0; /* Remove right margin for the last pair in a row */
+  }
+`;
+
+// const StyledLabel2 = styled.label`
+//   width: 65px;
+//   display: inline-block;
+//   margin: 0;
+//   color: ${({ theme }) => theme.colorMappings.primary};
+//   font-size: 22px !important;
+// `;
+
+const StyledSwitch = styled(Switch)`
+  color: ${({ theme }) => theme.colorMappings.primary};
+`;
+
 export {
   StyledInput,
   StyledSubmitButton,
@@ -327,4 +355,7 @@ export {
   FieldContainerUneven,
   StyledInputAreaInLine,
   NewPasswordLink,
+  SizeQuantityContainer,
+  SizeQuantityPair,
+  StyledSwitch,
 };
