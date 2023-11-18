@@ -139,17 +139,22 @@ const getAllUsers = async (type, approvedStatus) => {
   }
 };
 
-const listPublicUsers = async () => {
+// Count all users - we should add conditions handling here...
+const countAllUsers = () => User_.User.countDocuments();
+
+// Minimal list handler with pagination
+const listAllUsers = async (limit, offset) => {
   try {
-    const users = await User_.User.find(
-      { kind: { $in: ['shopper', 'donor'] } },
-      'firstName lastName kind'
-    ).lean();
+    const users = await User_.User.find({})
+      .limit(limit)
+      .skip(offset)
+      .select('firstName lastName email kind')
+      .lean();
 
     return users;
   } catch (error) {
-    console.error(`Error in listPublicUsers: ${error}`);
-    return { success: false, message: `Error in listPublicUsers: ${error}` };
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
   }
 };
 
@@ -228,7 +233,8 @@ module.exports = {
   createUser,
   getUser,
   getAllUsers,
-  listPublicUsers,
+  listAllUsers,
+  countAllUsers,
   deleteUser,
   updateUser,
   updateDonor,
