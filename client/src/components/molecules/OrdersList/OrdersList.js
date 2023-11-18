@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import { Modal } from 'antd';
 import {
   ListWrapper,
@@ -15,7 +16,6 @@ import {
   updateItem,
 } from '../../../services/items';
 import { H2, Button } from '../../atoms';
-import { getTags } from '../../../services/tags';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import { getSetting } from '../../../services/settings';
@@ -30,9 +30,9 @@ import { ItemCardLong } from '../ItemCardLong';
 
 export const OrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
-  const [allTags, setAllTags] = useState([]);
   const mountedRef = useRef(true);
   const [shopRemaining, setShopRemaining] = useState(0);
   const [shopRemainingChildren, setShopRemainingChildren] = useState(0);
@@ -172,14 +172,6 @@ export const OrdersList = () => {
       }
     });
 
-    // const fetchAllTags = async () => {
-    //   const tags = await getTags(token);
-    //   setAllTags(tags);
-    // };
-
-    const fetchAllTags = () =>
-      getTags(token).then(setAllTags).catch(console.warn);
-
     const fetchShopperItems = async () => {
       const items = await getShopperItems(user.id);
       setItems(items);
@@ -218,7 +210,6 @@ export const OrdersList = () => {
     };
 
     if (mountedRef.current) {
-      fetchAllTags();
       if (user.type === 'shopper') {
         fetchShopperItems();
         fetchShopperPastItems();

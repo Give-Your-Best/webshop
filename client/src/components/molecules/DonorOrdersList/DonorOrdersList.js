@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import { Modal } from 'antd';
 import {
   ListWrapper,
@@ -13,7 +14,6 @@ import {
 } from './DonorOrdersList.styles';
 import { getDonorItems, updateItem } from '../../../services/items';
 import { H2, Button } from '../../atoms';
-import { getTags } from '../../../services/tags';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import {
@@ -26,7 +26,7 @@ import { ItemCardLong } from '../ItemCardLong';
 
 export const DonorOrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
-  const [allTags, setAllTags] = useState([]);
+  const { allTags } = useContext(AccountContext);
   const [itemsToSend, setItemsToSend] = useState([]);
   const [itemsAwaitingReceived, setItemsAwaitingReceived] = useState([]);
   const mountedRef = useRef(true);
@@ -97,14 +97,6 @@ export const DonorOrdersList = () => {
       }
     });
 
-    // const fetchAllTags = async () => {
-    //   const tags = await getTags(token);
-    //   setAllTags(tags);
-    // };
-
-    const fetchAllTags = () =>
-      getTags(token).then(setAllTags).catch(console.warn);
-
     const fetchDonorItems = async () => {
       const items = await getDonorItems(user.id);
       const itemsOrdered = donorItemsOrdering(items);
@@ -113,7 +105,6 @@ export const DonorOrdersList = () => {
     };
 
     if (mountedRef.current) {
-      fetchAllTags();
       fetchDonorItems();
     }
 

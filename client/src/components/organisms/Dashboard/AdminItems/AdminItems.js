@@ -1,32 +1,36 @@
-import React, {
-  useCallback,
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-} from 'react';
+import React, { useCallback, useContext, useState, useEffect } from 'react';
 import { AutoComplete, Menu, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
 import { getAdminItems, deleteItem } from '../../../../services/items';
-import { getTags } from '../../../../services/tags';
-import { getPublicUsers } from '../../../../services/user';
 import { tabList } from '../../../../utils/helpers';
 import { categories } from '../../../../utils/constants';
 import { adminAllItemStatus } from '../../../atoms/ProgressBar/constants';
 
 export const AdminItems = () => {
   const { token, user } = useContext(AppContext);
-  const mountedRef = useRef(true);
-  const [users, setUsers] = useState([]);
+  const { allTags, allUsers } = useContext(AccountContext);
   const [items, setItems] = useState([]);
-  const [allTags, setAllTags] = useState([]);
   const [view, setView] = useState('current');
   const [itemsCount, setItemsCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState({});
   const [conditions, setConditions] = useState([]);
   const [sortBy, setSortBy] = useState(undefined);
+
+  // Transform the users data from context to a formatted autocomplete options
+  // list with all admins excluded...
+  const publicUserOptions = (allUsers || []).reduce((acc, cur) => {
+    cur.type !== 'admin' &&
+      acc.push({
+        label: cur.name,
+        value: cur.id,
+        type: cur.type,
+      });
+
+    return acc;
+  }, []);
 
   // Set this constant for now - we might want to allow adjustment later
   const limit = 10;
@@ -78,39 +82,13 @@ export const AdminItems = () => {
 
   useEffect(() => {
     var tabs = tabList(user);
+
     tabs.forEach((t) => {
       let url = '/dashboard/' + t.id;
       if (t.id === 'adminItems' && window.location !== 'url') {
         window.history.pushState({}, '', url);
       }
     });
-
-    const fetchTags = async () => {
-      const tags = await getTags(token);
-      setAllTags(tags);
-    };
-
-    const fetchUsers = async () => {
-      const data = await getPublicUsers(token);
-
-      setUsers(
-        data.map((d) => ({
-          label: `${d.firstName} ${d.lastName}`.trim(),
-          value: d._id,
-          type: d.kind,
-        }))
-      );
-    };
-
-    if (mountedRef.current) {
-      fetchTags();
-      fetchUsers();
-    }
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
   }, [token, user]);
 
   const handleSelectUser = (_value, option) => {
@@ -198,7 +176,7 @@ export const AdminItems = () => {
 
         <AutoComplete
           value={(currentUser || {}).label}
-          options={users}
+          options={publicUserOptions}
           style={{ width: 300 }}
           size="large"
           onClear={handleClearUser}

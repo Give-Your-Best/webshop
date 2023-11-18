@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -14,7 +15,6 @@ import {
   updateShopper,
 } from '../../../../services/user';
 import { deleteDonorItems } from '../../../../services/items';
-import { getTags } from '../../../../services/tags';
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import {
@@ -31,10 +31,10 @@ import { openHiddenTab, tabList } from '../../../../utils/helpers';
 export const Users = () => {
   const { confirm } = Modal;
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const mountedRef = useRef(true);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
-  const [tags, setTags] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -118,7 +118,7 @@ export const Users = () => {
         <Tags
           updateId={record._id}
           tagList={record.tags || []}
-          availableTags={tags}
+          availableTags={allTags}
           updateType="user"
         />
         <Space />
@@ -152,25 +152,18 @@ export const Users = () => {
 
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'approved', token);
-      if (!mountedRef.current) return null;
       setShoppers(users);
     };
 
     const fetchDonors = async () => {
       const users = await getUsers('donor', 'approved', token);
-      if (!mountedRef.current) return null;
       setDonors(users);
     };
 
-    const fetchAllTags = async () => {
-      const tags = await getTags(token);
-      if (!mountedRef.current) return null;
-      setTags(tags);
-    };
-
-    fetchShoppers();
-    fetchDonors();
-    fetchAllTags();
+    if (mountedRef) {
+      fetchShoppers();
+      fetchDonors();
+    }
 
     return () => {
       // cleanup
@@ -200,7 +193,7 @@ export const Users = () => {
           data={shoppers}
           handleDelete={handleDelete}
           expandRow={editForm}
-          allTags={tags}
+          allTags={allTags}
         />
         <Button
           primary
@@ -217,7 +210,7 @@ export const Users = () => {
           data={donors}
           handleDelete={handleDelete}
           expandRow={editForm}
-          allTags={tags}
+          allTags={allTags}
         />
         <Button
           primary

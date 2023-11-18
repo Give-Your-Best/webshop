@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -20,7 +21,6 @@ import {
   getItem,
 } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
-import { getTags } from '../../../../services/tags';
 import { getUser } from '../../../../services/user';
 import {
   sendAutoEmail,
@@ -32,6 +32,7 @@ import { Modal } from 'antd';
 
 export const Notifications = () => {
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const mountedRef = useRef(true);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -50,7 +51,6 @@ export const Notifications = () => {
   ] = useState([]);
   const [adminLocations, setAdminLocations] = useState([]);
   const [assignAddressId, setAssignAddressId] = useState('');
-  const [allTags, setAllTags] = useState([]);
 
   const handleOk = (values) => {
     setLoading(true);
@@ -191,14 +191,6 @@ export const Notifications = () => {
       });
     };
 
-    // const fetchAllTags = async () => {
-    //   const tags = await getTags(token);
-    //   setAllTags(tags);
-    // };
-
-    const fetchAllTags = () =>
-      getTags(token).then(setAllTags).catch(console.warn);
-
     const fetchShopItems = async () => {
       const items = await getShopNotificationsItems(token);
       const locations = await getAdminLocations('available', token);
@@ -253,7 +245,6 @@ export const Notifications = () => {
     };
 
     if (mountedRef.current) {
-      fetchAllTags();
       fetchShopItems();
       fetchAccountItems();
     }

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -13,7 +14,6 @@ import {
   updateUser,
   getDonations,
 } from '../../../../services/user';
-import { getTags } from '../../../../services/tags';
 import { updateItem } from '../../../../services/items';
 import { getSetting } from '../../../../services/settings';
 import { sendAutoEmail, tabList } from '../../../../utils/helpers';
@@ -30,8 +30,8 @@ import { Modal } from 'antd';
 
 export const ApproveRequests = () => {
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const mountedRef = useRef(true);
-  const [allTags, setAllTags] = useState([]);
   const [shoppers, setShoppers] = useState([]);
   const [donations, setDonations] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -206,14 +206,6 @@ export const ApproveRequests = () => {
       }
     });
 
-    // const fetchAllTags = async () => {
-    //   const tags = await getTags(token);
-    //   setAllTags(tags);
-    // };
-
-    const fetchAllTags = () =>
-      getTags(token).then(setAllTags).catch(console.warn);
-
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'in-progress', token);
       setShoppers(users);
@@ -235,7 +227,6 @@ export const ApproveRequests = () => {
     };
 
     if (mountedRef.current) {
-      fetchAllTags();
       fetchShoppers();
       fetchDonations();
       fetchSetting();
