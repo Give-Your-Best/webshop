@@ -195,6 +195,9 @@ const StyledInputNumber = styled(InputNumber)`
   color: ${({ theme }) => theme.colorMappings.primary};
   background: transparent;
   font-size: 20px;
+  &.bulk-item {
+    width: 100%;
+  }
   &:disabled {
     background-color: transparent;
     color: black;
@@ -309,13 +312,17 @@ const FieldContainerUneven = styled.div`
 `;
 
 const SizeQuantityContainer = styled.div`
+  margin: 7.5px 0;
   display: flex;
   flex-wrap: wrap;
+  flex-direction: row;
 `;
 
 const SizeQuantityPair = styled.div`
+  width: 25%;
+  max-width: 150px;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   margin-right: 20px;
 
   &:last-child {
@@ -323,16 +330,9 @@ const SizeQuantityPair = styled.div`
   }
 `;
 
-// const StyledLabel2 = styled.label`
-//   width: 65px;
-//   display: inline-block;
-//   margin: 0;
-//   color: ${({ theme }) => theme.colorMappings.primary};
-//   font-size: 22px !important;
-// `;
-
 const StyledSwitch = styled(Switch)`
   color: ${({ theme }) => theme.colorMappings.primary};
+  margin-bottom: 15px;
 `;
 
 export {

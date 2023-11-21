@@ -3,11 +3,10 @@ import { convertHeic } from '../../utils/helpers';
 export const createBatchItem = async (values, token) => {
   //call api to create batch item
   if (values.photos) {
-    console.log(values.photos.length);
-    console.log(values.photos);
     values.photos = await convertHeic(values.photos);
   }
   try {
+    console.log('values: ', values);
     const response = await fetch('/api/batchItems/', {
       method: 'post',
       headers: {
@@ -17,6 +16,7 @@ export const createBatchItem = async (values, token) => {
       },
       body: JSON.stringify(values),
     });
+    console.log('response:', response);
     const jsonres = await response.json();
     return jsonres;
   } catch (error) {

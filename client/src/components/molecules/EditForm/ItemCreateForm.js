@@ -8,7 +8,6 @@ import {
   clothingSizeOptions,
   shoeSizeOptions,
   colours,
-  batchItemOptions,
 } from '../../../utils/constants';
 import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
@@ -23,6 +22,7 @@ import {
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 import { ClothingSizeFields } from './ClothingSizeFields';
+import { ShoeSizeFields } from './ShoeSizeFields';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -35,9 +35,7 @@ export const ItemCreateForm = (data) => {
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     let res;
-    console.log('values: ', values);
-    if (values.batchItem === 'yes') {
-      console.log('values: ', values);
+    if (showBatchOptions === true) {
       res = await createBatchItem(values, token);
     } else {
       res = await createItem(values, token);
@@ -74,8 +72,8 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <StyledLabel>Batch Item?</StyledLabel>
-          <StyledSwitch onChange={handleSwitchChange} />
+          <StyledLabel>Bulk Item?</StyledLabel>
+          <StyledSwitch name="showBatchOptions" onChange={handleSwitchChange} />
 
           <StyledLabel>
             Item Name
@@ -98,26 +96,29 @@ export const ItemCreateForm = (data) => {
           <StyledError name="brand" component="div" />
 
           {showBatchOptions ? (
-            <ClothingSizeFields />
+            <>
+              <ClothingSizeFields />
+              <ShoeSizeFields />
+            </>
           ) : (
             <>
               <StyledLabel>
                 Clothing size
                 <StyledCheckboxGroup
-                  name="clothingSize"
+                  name="clothingSizeCheckBox"
                   options={clothingSizeOptions}
                 />
               </StyledLabel>
-              <StyledError name="clothingSize" component="div" />
+              <StyledError name="clothingSizeCheckBox" component="div" />
 
               <StyledLabel>
                 Shoe size
                 <StyledCheckboxGroup
-                  name="shoeSize"
+                  name="shoeSizeCheckBox"
                   options={shoeSizeOptions}
                 />
               </StyledLabel>
-              <StyledError name="shoeSize" component="div" />
+              <StyledError name="shoeSizeCheckBox" component="div" />
             </>
           )}
 
