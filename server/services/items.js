@@ -1,6 +1,5 @@
 const { ObjectId } = require('bson');
 const Item = require('../models/Item');
-const User_ = require('../models/User');
 const BatchItem = require('../models/BatchItem');
 const { cloudinary } = require('../utils/cloudinary');
 
@@ -52,124 +51,85 @@ const createItem = async (data) => {
     return { success: false, message: err };
   }
 };
-// const uploadPhotos = async (data) => {
-//   var new_photos = [];
-//   var success = true;
-//   const promises = data.photos.map((photo) => {
-//     if (photo.status !== 'removed') {
-//       return cloudinary.uploader
-//         .upload(photo.imageUrl, {
-//           resource_type: 'auto',
-//           public_id: photo.uid,
-//           overwrite: false,
-//           secure: true,
-//         })
-//         .then((result) => {
-//           console.log('*** Success: Cloudinary Upload: ', result.secure_url);
-//           new_photos.push({
-//             url: result.secure_url,
-//             name: photo.name,
-//             createdAt: result.created_at,
-//             publicId: photo.uid,
-//             success: true,
-//             front: photo.front ? true : false,
-//           });
-//         })
-//         .catch((err) => {
-//           console.error(err);
-//           console.log('*** Error: Cloudinary Upload');
-//           success = false;
-//           return;
+
+// const createBatchItem = async (data) => {
+//   try {
+//     const batchItem = new BatchItem({ itemIds: [] });
+//     // Saved initially to generate the batchItemId
+//     const savedBatchItem = await batchItem.save();
+//     // Create multiple Items associated with the BatchItem
+//     const createdItems = [];
+//     console.log('data: ', data);
+//     const [items] = Object.values(data);
+//     for (const item of items) {
+//       var new_photos = [];
+//       var success = true;
+//       const promises = item.photos.map((photo) => {
+//         if (photo.status !== 'removed') {
+//           return cloudinary.uploader
+//             .upload(photo.imageUrl, {
+//               resource_type: 'auto',
+//               public_id: photo.uid,
+//               overwrite: false,
+//               secure: true,
+//             })
+//             .then((result) => {
+//               console.log(
+//                 '*** Success: Cloudinary Upload: ',
+//                 result.secure_url
+//               );
+//               new_photos.push({
+//                 url: result.secure_url,
+//                 name: photo.name,
+//                 createdAt: result.created_at,
+//                 publicId: photo.uid,
+//                 success: true,
+//                 front: photo.front ? true : false,
+//               });
+//             })
+//             .catch((err) => {
+//               console.error(err);
+//               console.log('*** Error: Cloudinary Upload');
+//               success = false;
+//               return;
+//             });
+//         }
+//       });
+//       await Promise.all(promises);
+//       if (!success) {
+//         return {
+//           success: false,
+//           message: 'Failed to upload one or more of your images',
+//         };
+//       }
+//       data.photos = new_photos;
+//       try {
+//         const newItem = new Item({
+//           ...itemWithPhotos,
+//           batchId: savedBatchItem._id,
 //         });
+//         const savedItem = await newItem.save();
+//         createdItems.push(savedItem);
+//         savedBatchItem.itemIds.push(savedItem._id);
+//       } catch (err) {
+//         console.error(err);
+//         return { success: false, message: err };
+//       }
 //     }
-//   });
-//   await Promise.all(promises);
-//   if (!success) {
+//     // Save the batchItem again to update the itemIds array
+//     await savedBatchItem.save();
 //     return {
-//       success: false,
-//       message: 'Failed to upload one or more of your images',
+//       success: true,
+//       message: 'BatchItem and associated items created',
+//       batchItem: savedBatchItem,
+//       items: createdItems,
 //     };
+//   } catch (err) {
+//     console.error(err);
+//     return { success: false, message: err };
 //   }
-//   return new_photos;
 // };
 
-const createBatchItem = async (data) => {
-  try {
-    const batchItem = new BatchItem({ itemIds: [] });
-    // Saved initially to generate the batchItemId
-    const savedBatchItem = await batchItem.save();
-    // Create multiple Items associated with the BatchItem
-    const createdItems = [];
-    console.log('data: ', data);
-    const [items] = Object.values(data);
-    for (const item of items) {
-      var new_photos = [];
-      var success = true;
-      const promises = item.photos.map((photo) => {
-        if (photo.status !== 'removed') {
-          return cloudinary.uploader
-            .upload(photo.imageUrl, {
-              resource_type: 'auto',
-              public_id: photo.uid,
-              overwrite: false,
-              secure: true,
-            })
-            .then((result) => {
-              console.log(
-                '*** Success: Cloudinary Upload: ',
-                result.secure_url
-              );
-              new_photos.push({
-                url: result.secure_url,
-                name: photo.name,
-                createdAt: result.created_at,
-                publicId: photo.uid,
-                success: true,
-                front: photo.front ? true : false,
-              });
-            })
-            .catch((err) => {
-              console.error(err);
-              console.log('*** Error: Cloudinary Upload');
-              success = false;
-              return;
-            });
-        }
-      });
-      await Promise.all(promises);
-      if (!success) {
-        return {
-          success: false,
-          message: 'Failed to upload one or more of your images',
-        };
-      }
-      data.photos = new_photos;
-      try {
-        const newItem = new Item({
-          ...itemWithPhotos,
-          batchId: savedBatchItem._id,
-        });
-        const savedItem = await newItem.save();
-        createdItems.push(savedItem);
-        savedBatchItem.itemIds.push(savedItem._id);
-      } catch (err) {
-        console.error(err);
-        return { success: false, message: err };
-      }
-    }
-    // Save the batchItem again to update the itemIds array
-    await savedBatchItem.save();
-    return {
-      success: true,
-      message: 'BatchItem and associated items created',
-      batchItem: savedBatchItem,
-      items: createdItems,
-    };
-  } catch (err) {
-    console.error(err);
-    return { success: false, message: err };
-  }
-};
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
   var results = {};
@@ -216,31 +176,41 @@ const updateItem = async (id, updateData) => {
     } else {
       delete updateData.photos;
     }
-    findOneAndUpdateItem(id, updateData);
+    try {
+      const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
+        useFindAndModify: false,
+        returnDocument: 'after',
+      });
+
+      if (item) {
+        results = { success: true, message: 'Item updated', item: item };
+      } else {
+        throw Error('Cannot update item');
+      }
+    } catch (err) {
+      console.log(err);
+      results = { success: false, message: err };
+    }
   } else {
     //if no new images to add then remove the empty photos list and continue updating
     delete updateData.photos;
-    findOneAndUpdateItem(id, updateData);
+    try {
+      const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
+        useFindAndModify: false,
+        returnDocument: 'after',
+      });
+
+      if (item) {
+        results = { success: true, message: 'Item updated', item: item };
+      } else {
+        throw Error('Cannot update item');
+      }
+    } catch (err) {
+      console.log(err);
+      results = { success: false, message: err };
+    }
   }
   return results;
-};
-
-const findOneAndUpdateItem = async (id, updateData) => {
-  try {
-    const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
-    });
-
-    if (item) {
-      results = { success: true, message: 'Item updated', item: item };
-    } else {
-      throw Error('Cannot update item');
-    }
-  } catch (err) {
-    console.log(err);
-    results = { success: false, message: err };
-  }
 };
 
 const deleteItem = async (id) => {
@@ -690,7 +660,6 @@ const deleteDonorItems = async (id) => {
 
 module.exports = {
   createItem,
-  createBatchItem,
   getItem,
   getAllItems,
   getShopperItems,
