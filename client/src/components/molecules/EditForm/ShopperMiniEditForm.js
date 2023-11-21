@@ -43,7 +43,7 @@ export const ShopperMiniEditForm = ({
         </StyledLabel>
         <StyledLabel>
           Share address with donors
-          <InfoNote>If you are staying in a hotel please select 'no'</InfoNote>
+          <InfoNote>{`If you are staying in a hotel please select 'no'`}</InfoNote>
           <div>
             <StyledRadio.Group
               name="deliveryPreference"

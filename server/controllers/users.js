@@ -1,5 +1,4 @@
 require('dotenv').config();
-const uuidv4 = require('uuid').v4;
 const UserService = require('../services/users');
 
 const createUser = async (req, res) => {
@@ -17,6 +16,7 @@ const createUser = async (req, res) => {
       user: response.user || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -40,6 +40,7 @@ const registerUser = async (req, res) => {
       user: response.user || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -61,6 +62,7 @@ const updateUser = async (req, res) => {
       user: response.user,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -82,6 +84,7 @@ const updateDonor = async (req, res) => {
       user: response.user,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -103,6 +106,7 @@ const updateShopper = async (req, res) => {
       user: response.user,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -124,6 +128,7 @@ const updateAdmin = async (req, res) => {
       user: response.user,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }

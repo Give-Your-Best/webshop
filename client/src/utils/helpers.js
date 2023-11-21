@@ -441,7 +441,7 @@ const emailItems = (items) => {
   );
 };
 
-const deliveryAddressContent = (deliveryAddress, name) => {
+const deliveryAddressContent = (deliveryAddress) => {
   return (
     `<section>
             <p style="margin:30px;">Delivery Address</p>` +

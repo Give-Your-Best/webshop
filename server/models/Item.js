@@ -26,10 +26,6 @@ const itemSchema = new Schema(
     category: String,
     brand: String,
     description: String,
-    clothingSize: {
-      UK: String,
-      EU: String,
-    },
     clothingSize: [String],
     shoeSize: [String],
     photos: [
@@ -84,7 +80,7 @@ const itemSchema = new Schema(
 );
 
 itemSchema.post('update', function () {
-  const modifiedFields = this.getUpdate().$set;
+  this.getUpdate().$set;
 });
 
 // Before saving set approved status to approved if donor is a trusted donor (default is in-progress)

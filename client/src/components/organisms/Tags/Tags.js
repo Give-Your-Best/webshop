@@ -28,7 +28,7 @@ export const Tags = ({ updateId, updateType, tagList, availableTags }) => {
     setTags(newTags);
   };
 
-  const showInput = (e) => {
+  const showInput = () => {
     setInputVisible(true);
   };
 

@@ -110,7 +110,7 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
       render: (record) => {
         return record
           .map((r) => {
-            return <span>r.name</span>;
+            return <span key={r.name}>r.name</span>;
           })
           .join();
       },

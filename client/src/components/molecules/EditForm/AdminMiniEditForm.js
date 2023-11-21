@@ -8,7 +8,7 @@ import {
 
 //admin user needs to be a dropdown listing all admin users
 
-export const AdminMiniEditForm = ({ editingKey, recordId, roles }) => {
+export const AdminMiniEditForm = ({ editingKey, recordId }) => {
   return (
     <Form>
       <StyledInput

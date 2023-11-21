@@ -78,7 +78,7 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
     );
   };
 
-  const handleViewAddress = async (e) => {
+  const handleViewAddress = async () => {
     var shopper = {};
 
     if (typeof item.shopperId === 'string') {

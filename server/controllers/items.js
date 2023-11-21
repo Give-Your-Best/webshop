@@ -1,6 +1,4 @@
 require('dotenv').config();
-const uuidv4 = require('uuid').v4;
-const Item = require('../models/Item');
 const ItemService = require('../services/items');
 
 const createItem = async (req, res) => {
@@ -17,6 +15,7 @@ const createItem = async (req, res) => {
       item: response.item || {},
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -80,6 +79,7 @@ const updateItem = async (req, res) => {
       item: response.item,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }

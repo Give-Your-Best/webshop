@@ -1,13 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Bugsnag from '@bugsnag/js';
+import BugsnagPluginReact from '@bugsnag/plugin-react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'antd/dist/antd.variable.min.css';
 
+import bugsnagConfig from './config/bugsnag';
+
+Bugsnag.start({
+  ...bugsnagConfig,
+  plugins: [new BugsnagPluginReact()],
+});
+
+// Create the error boundary...
+const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React);
+
+const ErrorView = () => (
+  <div style={{ marginTop: '40vh', textAlign: 'center' }}>
+    <h1>⚠️</h1>
+    <h2>
+      <strong>Sorry, something went wrong</strong>
+      <br />
+      If the issue persists please contact us at enquire@giveyourbest.uk
+    </h2>
+  </div>
+);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary FallbackComponent={ErrorView}>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>,
   document.getElementById('root')
 );
