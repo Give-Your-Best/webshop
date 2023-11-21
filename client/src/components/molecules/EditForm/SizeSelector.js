@@ -7,7 +7,7 @@ import {
 } from './EditForm.styles';
 import { useFormikContext } from 'formik';
 
-const SizeSelector = ({ sizeOptions, fieldName, label, clearFields }) => {
+const SizeSelector = ({ sizeOptions, fieldName, label }) => {
   const formikProps = useFormikContext();
 
   const handleQuantityChange = (size, quantity) => {
