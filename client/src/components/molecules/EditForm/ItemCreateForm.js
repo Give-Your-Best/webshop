@@ -28,6 +28,13 @@ export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showBatchOptions, setShowBatchOptions] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+
+  const handleCategoryChange = (category, subCategory) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(subCategory);
+  };
 
   const handleSwitchChange = (checked) => {
     setShowBatchOptions(checked);
@@ -87,7 +94,7 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="description" component="div" />
 
-          <CategoryFields />
+          <CategoryFields onCategoryChange={handleCategoryChange} />
 
           <StyledLabel>
             Brand
@@ -97,8 +104,19 @@ export const ItemCreateForm = (data) => {
 
           {showBatchOptions ? (
             <>
-              <ClothingSizeFields />
-              <ShoeSizeFields />
+              {selectedCategory === 'shoes' && <ShoeSizeFields />}
+              {selectedCategory === 'children' &&
+                selectedSubCategory === 'baby' && (
+                  <>
+                    <ClothingSizeFields />
+                    <ShoeSizeFields />
+                  </>
+                )}
+              {selectedCategory !== 'shoes' &&
+                !(
+                  selectedCategory === 'children' &&
+                  selectedSubCategory === 'baby'
+                ) && <ClothingSizeFields />}
             </>
           ) : (
             <>
