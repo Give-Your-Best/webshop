@@ -215,7 +215,7 @@ const updateItem = async (id, updateData) => {
 
 const deleteItem = async (id) => {
   try {
-    const item = await Item.findByIdAndRemove(id, { useFindAndModify: false });
+    const item = await Item.findOneAndDelete(id, { useFindAndModify: false });
     if (item) {
       return { success: true, message: 'Item deleted' };
     } else {
@@ -235,7 +235,7 @@ const deleteBatchItem = async (id) => {
     }
     const itemIds = batchItem.itemIds;
     const itemDeletionPromises = itemIds.map(async (itemId) => {
-      const deletedItem = await Item.findByIdAndRemove(itemId, {
+      const deletedItem = await Item.findOneAndDelete(itemId, {
         useFindAndModify: false,
       });
       if (!deletedItem) {
@@ -243,7 +243,7 @@ const deleteBatchItem = async (id) => {
       }
     });
     await Promise.all(itemDeletionPromises);
-    await BatchItem.findByIdAndRemove(id, { useFindAndModify: false });
+    await BatchItem.findOneAndDelete(id, { useFindAndModify: false });
     return { success: true, message: 'BatchItem and associated items deleted' };
   } catch (error) {
     console.error(`Error in deleteBatchItem: ${error}`);

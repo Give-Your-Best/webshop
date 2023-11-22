@@ -6,7 +6,12 @@ const batchItemSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item',
   },
-  availableSizes: {
+  clothingSizes: {
+    type: Map,
+    of: Number,
+    default: new Map(),
+  },
+  shoeSizes: {
     type: Map,
     of: Number,
     default: new Map(),
