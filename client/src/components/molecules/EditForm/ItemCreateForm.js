@@ -1,14 +1,11 @@
+/* eslint-disable */
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
-import {
-  clothingSizeOptions,
-  shoeSizeOptions,
-  colours,
-} from '../../../utils/constants';
+import { colours } from '../../../utils/constants';
 import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
@@ -21,8 +18,9 @@ import {
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
-import { ClothingSizeFields } from './ClothingSizeFields';
-import { ShoeSizeFields } from './ShoeSizeFields';
+import CheckboxGroupField from './CheckboxGroupField';
+import SizeSelector from './SizeSelector';
+import { shoeSizeOptions, clothingSizeOptions } from '../../../utils/constants';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -55,7 +53,7 @@ export const ItemCreateForm = (data) => {
       resetForm();
       setFieldValue('photos', []);
       setUploadedImages([]);
-      data.submitFunction(res.item);
+      // data.submitFunction(res.item);
       reopenTab('items');
     } else {
       Notification('Error creating item', res.message, 'error');
@@ -104,39 +102,52 @@ export const ItemCreateForm = (data) => {
 
           {showBatchOptions ? (
             <>
-              {selectedCategory === 'shoes' && <ShoeSizeFields />}
+              {selectedCategory === 'shoes' && (
+                <SizeSelector
+                  sizeOptions={shoeSizeOptions}
+                  fieldName="shoeSize"
+                  label="Shoe Size"
+                />
+              )}
               {selectedCategory === 'children' &&
                 selectedSubCategory === 'baby' && (
                   <>
-                    <ClothingSizeFields />
-                    <ShoeSizeFields />
+                    <SizeSelector
+                      sizeOptions={clothingSizeOptions}
+                      fieldName="clothingSize"
+                      label="Clothing Size"
+                    />
+                    <SizeSelector
+                      sizeOptions={shoeSizeOptions}
+                      fieldName="shoeSize"
+                      label="Shoe Size"
+                    />
                   </>
                 )}
               {selectedCategory !== 'shoes' &&
                 !(
                   selectedCategory === 'children' &&
                   selectedSubCategory === 'baby'
-                ) && <ClothingSizeFields />}
+                ) && (
+                  <SizeSelector
+                    sizeOptions={clothingSizeOptions}
+                    fieldName="clothingSize"
+                    label="Clothing Size"
+                  />
+                )}
             </>
           ) : (
             <>
-              <StyledLabel>
-                Clothing size
-                <StyledCheckboxGroup
-                  name="clothingSizeCheckBox"
-                  options={clothingSizeOptions}
-                />
-              </StyledLabel>
-              <StyledError name="clothingSizeCheckBox" component="div" />
-
-              <StyledLabel>
-                Shoe size
-                <StyledCheckboxGroup
-                  name="shoeSizeCheckBox"
-                  options={shoeSizeOptions}
-                />
-              </StyledLabel>
-              <StyledError name="shoeSizeCheckBox" component="div" />
+              <CheckboxGroupField
+                label="Clothing Size"
+                name="clothingSizeCheckBox"
+                options={clothingSizeOptions}
+              />
+              <CheckboxGroupField
+                label="Shoe Size"
+                name="shoeSizeCheckBox"
+                options={shoeSizeOptions}
+              />
             </>
           )}
 

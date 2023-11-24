@@ -23,15 +23,16 @@ const SizeSelector = ({ sizeOptions, fieldName, label }) => {
 
   return (
     <div>
+      <StyledLabel>{`${label} Quantities`}</StyledLabel>
       <SizeQuantityContainer name="sizeQuantityContainer">
-        <StyledLabel>{`${label} Quantities`}</StyledLabel>
         {sizeOptions.map((size) => (
           <SizeQuantityPair
+            className={fieldName}
             key={`${fieldName}-${size.toString().replace('.', '_')}`}
           >
-            <StyledLabel>{size}:</StyledLabel>
+            <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
-              className="bulk-item"
+              className={fieldName}
               /*
                 Some of the size options are fractional e.g. [2.5, 3.5, etc].
                 resulting in some of the input boxes having coupled behaviour if their names

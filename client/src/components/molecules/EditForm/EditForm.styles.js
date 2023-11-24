@@ -195,9 +195,6 @@ const StyledInputNumber = styled(InputNumber)`
   color: ${({ theme }) => theme.colorMappings.primary};
   background: transparent;
   font-size: 20px;
-  &.bulk-item {
-    width: 100%;
-  }
   &:disabled {
     background-color: transparent;
     color: black;
@@ -256,6 +253,17 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
+
+  &.childrenClothingSize {
+    width: 75%;
+    font-size: 19px !important;
+  }
+
+  &.shoeSize,
+  &.childrenClothingSize {
+    width: 40%;
+    font-size: 19px !important;
+  }
 `;
 
 const NewPasswordLink = styled.label`
@@ -315,18 +323,25 @@ const SizeQuantityContainer = styled.div`
   margin: 7.5px 0;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+  height: 400px;
+  width: 100%;
 `;
 
 const SizeQuantityPair = styled.div`
-  width: 25%;
-  max-width: 150px;
   display: flex;
-  align-items: center;
-  margin-right: 20px;
-
+  align-items: flex-start;
+  margin-bottom: 10px;
+  width: 27.5%;
+  &.clothingSize {
+    margin-right: 20px;
+  }
   &:last-child {
-    margin-right: 0; /* Remove right margin for the last pair in a row */
+    margin-right: 0;
+    margin-bottom: 0; /* Remove right margin for the last pair in a row */
   }
 `;
 
