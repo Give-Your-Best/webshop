@@ -9,15 +9,14 @@ import {
 } from './UsersList.styles';
 import { name } from '../../../utils/helpers';
 
-export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
+export const UsersList = ({
+  data: rows,
+  handleDelete,
+  expandRow,
+  onExpand: handleOnExpand,
+}) => {
   const searchInput = useRef(null);
 
-  const rows = data.map((d) => {
-    return {
-      ...d,
-      name: name(d),
-    };
-  });
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
@@ -102,27 +101,27 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
     },
   ];
 
-  //additional tag column if shopper and donor list
-  if (allTags) {
-    columns.push({
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (record) => {
-        return record
-          .map((r) => {
-            return <span key={r.name}>r.name</span>;
-          })
-          .join();
-      },
-      className: 'onlyHeading',
-      filters: allTags.map((c) => {
-        return { text: c.name, value: c._id };
-      }),
-      filterMode: 'tree',
-      filterSearch: true,
-      onFilter: (value, record) => record.tags.some((t) => t._id === value),
-    });
-  }
+  // //additional tag column if shopper and donor list
+  // if (allTags) {
+  //   columns.push({
+  //     title: 'Tags',
+  //     dataIndex: 'tags',
+  //     render: (record) => {
+  //       return record
+  //         .map((r) => {
+  //           return <span key={r.name}>r.name</span>;
+  //         })
+  //         .join();
+  //     },
+  //     className: 'onlyHeading',
+  //     filters: allTags.map((c) => {
+  //       return { text: c.name, value: c._id };
+  //     }),
+  //     filterMode: 'tree',
+  //     filterSearch: true,
+  //     onFilter: (value, record) => record.tags.some((t) => t._id === value),
+  //   });
+  // }
 
   if (handleDelete) {
     columns.push({
@@ -147,6 +146,7 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
         columns={columns}
         rowKey={(record) => record._id}
         expandable={{
+          onExpand: handleOnExpand,
           expandedRowRender: expandRow,
           expandIconColumnIndex: 2,
           expandIcon: ({ expanded, onExpand, record }) =>

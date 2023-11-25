@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
 import { AccountContext } from '../../../../context/account-context';
 import {
@@ -9,7 +9,7 @@ import {
   HiddenStyledTab,
 } from './Users.styles';
 import {
-  getUsers,
+  getUser,
   deleteUser,
   updateDonor,
   updateShopper,
@@ -31,13 +31,15 @@ import { openHiddenTab, tabList } from '../../../../utils/helpers';
 export const Users = () => {
   const { confirm } = Modal;
   const { token, user } = useContext(AppContext);
-  const { allTags } = useContext(AccountContext);
-  const mountedRef = useRef(true);
+  const { allTags, allUsers } = useContext(AccountContext);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  // TODO
+  const [currentRecord, setCurrentRecord] = useState(null);
 
+  // TODO - user setAllUsers to update the context...
   const handleDelete = (id, kind) => {
     confirm({
       title: `Are you sure you want to delete this ${kind}?`,
@@ -64,7 +66,16 @@ export const Users = () => {
     });
   };
 
-  const editForm = (record) => {
+  const editForm = (user) => {
+    if (!currentRecord) {
+      return;
+    }
+
+    if (user.id !== currentRecord._id) {
+      return;
+    }
+
+    // TODO - user setAllUsers to update the context...
     const handleEditSave = (newRecord) => {
       if (newRecord.kind === 'donor') {
         setDonors(
@@ -88,9 +99,10 @@ export const Users = () => {
         );
       }
     };
+
     const handleSubmit = async (values) => {
-      if (record.kind === 'donor') {
-        const res = await updateDonor(record._id, values, token);
+      if (currentRecord.kind === 'donor') {
+        const res = await updateDonor(currentRecord._id, values, token);
         if (res.success) {
           handleEditSave(res.user);
           setEditingKey('');
@@ -98,8 +110,8 @@ export const Users = () => {
         } else {
           setErrorMessage(res.message);
         }
-      } else if (record.kind === 'shopper') {
-        const res = await updateShopper(record._id, values, token);
+      } else if (currentRecord.kind === 'shopper') {
+        const res = await updateShopper(currentRecord._id, values, token);
         if (res.success) {
           handleEditSave(res.user);
           setEditingKey('');
@@ -109,26 +121,30 @@ export const Users = () => {
         }
       }
     };
+
     const handleEdit = () => {
-      setEditingKey(editingKey ? '' : record._id);
+      setEditingKey(editingKey ? '' : currentRecord._id);
     };
 
     return (
       <div>
         <Tags
-          updateId={record._id}
-          tagList={record.tags || []}
+          updateId={currentRecord._id}
+          tagList={currentRecord.tags || []}
           availableTags={allTags}
           updateType="user"
         />
         <Space />
-        <Formik initialValues={record} onSubmit={handleSubmit}>
-          {record.kind === 'donor' ? (
-            <DonorMiniEditForm editingKey={editingKey} recordId={record._id} />
-          ) : record.kind === 'shopper' ? (
+        <Formik initialValues={currentRecord} onSubmit={handleSubmit}>
+          {currentRecord.kind === 'donor' ? (
+            <DonorMiniEditForm
+              editingKey={editingKey}
+              recordId={currentRecord._id}
+            />
+          ) : currentRecord.kind === 'shopper' ? (
             <ShopperMiniEditForm
               editingKey={editingKey}
-              recordId={record._id}
+              recordId={currentRecord._id}
             />
           ) : (
             ''
@@ -136,11 +152,30 @@ export const Users = () => {
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         <Button primary onClick={handleEdit}>
-          {editingKey === record._id ? 'Cancel' : 'Edit'}
+          {editingKey === currentRecord._id ? 'Cancel' : 'Edit'}
         </Button>
       </div>
     );
   };
+
+  // TODO this can be a lot nicer
+  useEffect(() => {
+    const { shopper, donor } = (allUsers || []).reduce(
+      (acc, cur) => {
+        if (cur.type !== 'admin') {
+          acc[cur.type].push(cur);
+        }
+        return acc;
+      },
+      {
+        shopper: [],
+        donor: [],
+      }
+    );
+
+    setShoppers(shopper);
+    setDonors(donor);
+  }, [allUsers]);
 
   useEffect(() => {
     var tabs = tabList(user);
@@ -149,26 +184,6 @@ export const Users = () => {
         window.history.pushState({}, '', '/dashboard/' + t.id);
       }
     });
-
-    const fetchShoppers = async () => {
-      const users = await getUsers('shopper', 'approved', token);
-      setShoppers(users);
-    };
-
-    const fetchDonors = async () => {
-      const users = await getUsers('donor', 'approved', token);
-      setDonors(users);
-    };
-
-    if (mountedRef) {
-      fetchShoppers();
-      fetchDonors();
-    }
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
   }, [token, user]);
 
   const submitFunction = (user) => {
@@ -194,6 +209,13 @@ export const Users = () => {
           handleDelete={handleDelete}
           expandRow={editForm}
           allTags={allTags}
+          onExpand={(record, event) => {
+            console.log({ record, event });
+
+            record
+              ? getUser(event.id, token).then(setCurrentRecord)
+              : setCurrentRecord(null);
+          }}
         />
         <Button
           primary
@@ -211,6 +233,13 @@ export const Users = () => {
           handleDelete={handleDelete}
           expandRow={editForm}
           allTags={allTags}
+          onExpand={(record, event) => {
+            console.log({ record, event });
+
+            record
+              ? getUser(event.id, token).then(setCurrentRecord)
+              : setCurrentRecord(null);
+          }}
         />
         <Button
           primary
