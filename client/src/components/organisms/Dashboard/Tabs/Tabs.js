@@ -13,7 +13,6 @@ import {
 import { AccountWelcome } from '../../../molecules/AccountWelcome';
 import { tabList } from '../../../../utils/helpers';
 import { getTags } from '../../../../services/tags';
-import { countUsers } from '../../../../services/user';
 import { listUsers } from '../../../../services/user';
 
 export const Tabs = ({ itemId }) => {
@@ -31,34 +30,32 @@ export const Tabs = ({ itemId }) => {
     });
   }, [itemId, tabs]);
 
-  // Runs five queries in parallel for speed - pull minimal lean result for all
-  // existing users from the db (maybe we want to exclude non-approved?)
-  const fetchAllUsers = useCallback(async () => {
-    const { total } = await countUsers(token);
+  // TODO
+  const setAllUsersTransformed = useCallback(
+    (data) =>
+      setAllUsers(
+        data.map(({ firstName, lastName, email, kind, _id }) => ({
+          name: `${firstName} ${lastName}`.trim(),
+          email,
+          id: _id,
+          _id,
+          type: kind,
+        }))
+      ),
+    [setAllUsers]
+  );
 
-    const rem = total % 4;
-    const lim = (total - rem) / 4;
-
-    const data = await Promise.all(
-      [lim, lim, lim, lim, rem].map(async (limit, index) =>
-        listUsers(token, limit, index * limit)
-      )
-    );
-
-    setAllUsers(
-      [].concat(...data).map(({ firstName, lastName, email, kind, _id }) => ({
-        name: `${firstName} ${lastName}`.trim(),
-        email,
-        id: _id,
-        type: kind,
-      }))
-    );
-  }, [setAllUsers, token]);
-
-  useEffect(fetchAllUsers, [fetchAllUsers, token, user]);
+  // TODO
+  useEffect(
+    () => listUsers(token).then(setAllUsersTransformed).catch(console.warn),
+    [setAllUsersTransformed, token, user]
+  );
 
   // Set the current tags - not sure how usefult this is tbh...
-  useEffect(() => getTags(token).then(setAllTags), [setAllTags, token, user]);
+  useEffect(
+    () => getTags(token).then(setAllTags).catch(console.warn),
+    [setAllTags, token, user]
+  );
 
   return (
     <DashboardMenuWrapper>
