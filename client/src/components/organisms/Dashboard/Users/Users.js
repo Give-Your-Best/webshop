@@ -14,7 +14,7 @@ import {
   updateDonor,
   updateShopper,
 } from '../../../../services/user';
-import { deleteDonorItems } from '../../../../services/items';
+import { deleteDonorItems } from '../../../../services/items'; // TODO
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import {
@@ -31,13 +31,28 @@ import { openHiddenTab, tabList } from '../../../../utils/helpers';
 export const Users = () => {
   const { confirm } = Modal;
   const { token, user } = useContext(AppContext);
-  const { allTags, allUsers } = useContext(AccountContext);
+  const { allTags, allUsers, setAllUsers } = useContext(AccountContext);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  // TODO
   const [currentRecord, setCurrentRecord] = useState(null);
+
+  console.log('hello');
+
+  const updateContext = (data) => {
+    const { firstName, lastName, email, kind, _id } = data;
+
+    setAllUsers({
+      ...allUsers,
+      [_id]: {
+        name: `${firstName} ${lastName}`.trim(),
+        email: email,
+        _id: _id,
+        type: kind,
+      },
+    });
+  };
 
   // TODO - user setAllUsers to update the context...
   const handleDelete = (id, kind) => {
@@ -47,78 +62,56 @@ export const Users = () => {
       content: 'This will remove the user',
       onOk() {
         deleteUser(id, token).then(() => {
-          if (kind === 'shopper') {
-            setShoppers(
-              shoppers.filter((shopper) => {
-                return shopper._id !== id;
-              })
-            );
-          } else if (kind === 'donor') {
-            deleteDonorItems(id, token);
-            setDonors(
-              donors.filter((donor) => {
-                return donor._id !== id;
-              })
-            );
-          }
+          // eslint-disable-next-line no-unused-vars
+          const { [id]: _discard, ...rest } = allUsers;
+          setAllUsers(rest);
+
+          // TODO deleteDonorItems deleteDonorItems deleteDonorItems
+          // if (kind === 'shopper') {
+          //   setShoppers(
+          //     shoppers.filter((shopper) => {
+          //       return shopper._id !== id;
+          //     })
+          //   );
+          // } else if (kind === 'donor') {
+          //   deleteDonorItems(id, token);
+          //   setDonors(
+          //     donors.filter((donor) => {
+          //       return donor._id !== id;
+          //     })
+          //   );
+          // }
         });
       },
     });
   };
+
+  const handleExpand = (expanded, record) =>
+    expanded
+      ? getUser(record._id, token).then(setCurrentRecord)
+      : setCurrentRecord(null);
 
   const editForm = (user) => {
     if (!currentRecord) {
       return;
     }
 
-    if (user.id !== currentRecord._id) {
+    if (user._id !== currentRecord._id) {
       return;
     }
 
-    // TODO - user setAllUsers to update the context...
-    const handleEditSave = (newRecord) => {
-      if (newRecord.kind === 'donor') {
-        setDonors(
-          donors.map((donor) => {
-            if (donor._id === newRecord._id) {
-              return Object.assign(donor, newRecord);
-            } else {
-              return donor;
-            }
-          })
-        );
-      } else if (newRecord.kind === 'shopper') {
-        setShoppers(
-          shoppers.map((shopper) => {
-            if (shopper._id === newRecord._id) {
-              return Object.assign(shopper, newRecord);
-            } else {
-              return shopper;
-            }
-          })
-        );
-      }
-    };
-
     const handleSubmit = async (values) => {
-      if (currentRecord.kind === 'donor') {
-        const res = await updateDonor(currentRecord._id, values, token);
-        if (res.success) {
-          handleEditSave(res.user);
-          setEditingKey('');
-          return true;
-        } else {
-          setErrorMessage(res.message);
-        }
-      } else if (currentRecord.kind === 'shopper') {
-        const res = await updateShopper(currentRecord._id, values, token);
-        if (res.success) {
-          handleEditSave(res.user);
-          setEditingKey('');
-          return true;
-        } else {
-          setErrorMessage(res.message);
-        }
+      const res = await {
+        donor: updateDonor,
+        shopper: updateShopper,
+      }[currentRecord.kind](currentRecord._id, values, token);
+
+      if (res.success) {
+        updateContext(res.user);
+        setEditingKey('');
+        return true;
+      } else {
+        setErrorMessage(res.message);
       }
     };
 
@@ -160,17 +153,14 @@ export const Users = () => {
 
   // TODO this can be a lot nicer
   useEffect(() => {
-    const { shopper, donor } = (allUsers || []).reduce(
+    const { shopper, donor } = Object.values(allUsers || {}).reduce(
       (acc, cur) => {
         if (cur.type !== 'admin') {
           acc[cur.type].push(cur);
         }
         return acc;
       },
-      {
-        shopper: [],
-        donor: [],
-      }
+      { donor: [], shopper: [] }
     );
 
     setShoppers(shopper);
@@ -186,20 +176,15 @@ export const Users = () => {
     });
   }, [token, user]);
 
-  const submitFunction = (user) => {
-    if (user.kind === 'donor') {
-      setDonors(donors.concat(user));
-    } else if (user.kind === 'shopper') {
-      setShoppers(shoppers.concat(user));
-    }
-  };
-
   return (
     <StyledTabs forceRenderTabPanel={true}>
       <StyledTabList>
         <StyledTab className="shopperlist">Shoppers</StyledTab>
+
         <StyledTab className="donorlist">Donors</StyledTab>
+
         <HiddenStyledTab className="addshopper">Add Shopper</HiddenStyledTab>
+
         <HiddenStyledTab className="adddonor">Add Donor</HiddenStyledTab>
       </StyledTabList>
 
@@ -208,15 +193,10 @@ export const Users = () => {
           data={shoppers}
           handleDelete={handleDelete}
           expandRow={editForm}
+          onExpand={handleExpand}
           allTags={allTags}
-          onExpand={(record, event) => {
-            console.log({ record, event });
-
-            record
-              ? getUser(event.id, token).then(setCurrentRecord)
-              : setCurrentRecord(null);
-          }}
         />
+
         <Button
           primary
           small
@@ -227,20 +207,16 @@ export const Users = () => {
           Create
         </Button>
       </StyledTabPanel>
+
       <StyledTabPanel>
         <UsersList
           data={donors}
           handleDelete={handleDelete}
           expandRow={editForm}
+          onExpand={handleExpand}
           allTags={allTags}
-          onExpand={(record, event) => {
-            console.log({ record, event });
-
-            record
-              ? getUser(event.id, token).then(setCurrentRecord)
-              : setCurrentRecord(null);
-          }}
         />
+
         <Button
           primary
           small
@@ -251,11 +227,13 @@ export const Users = () => {
           Create
         </Button>
       </StyledTabPanel>
+
       <StyledTabPanel>
-        <ShopperCreateForm submitFunction={submitFunction} />
+        <ShopperCreateForm submitFunction={updateContext} />
       </StyledTabPanel>
+
       <StyledTabPanel>
-        <DonorCreateForm submitFunction={submitFunction} />
+        <DonorCreateForm submitFunction={updateContext} />
       </StyledTabPanel>
     </StyledTabs>
   );

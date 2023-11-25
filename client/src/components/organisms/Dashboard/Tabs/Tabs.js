@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
 import { AccountContext } from '../../../../context/account-context';
 import {
@@ -30,28 +30,31 @@ export const Tabs = ({ itemId }) => {
     });
   }, [itemId, tabs]);
 
-  // TODO
-  const setAllUsersTransformed = useCallback(
-    (data) =>
-      setAllUsers(
-        data.map(({ firstName, lastName, email, kind, _id }) => ({
-          name: `${firstName} ${lastName}`.trim(),
-          email,
-          id: _id,
-          _id,
-          type: kind,
-        }))
-      ),
-    [setAllUsers]
-  );
+  const buildTransformUsersHash = (data) =>
+    data.reduce((acc, cur) => {
+      const { firstName, lastName, email, kind, _id } = cur;
 
-  // TODO
+      acc[_id] = {
+        name: `${firstName} ${lastName}`.trim(),
+        email,
+        _id,
+        type: kind,
+      };
+
+      return acc;
+    }, {});
+
+  // Set all current users to the context as a hash map on the id
   useEffect(
-    () => listUsers(token).then(setAllUsersTransformed).catch(console.warn),
-    [setAllUsersTransformed, token, user]
+    () =>
+      listUsers(token)
+        .then(buildTransformUsersHash)
+        .then(setAllUsers)
+        .catch(console.warn),
+    [setAllUsers, token, user]
   );
 
-  // Set the current tags - not sure how usefult this is tbh...
+  // Set the current tags - not sure how useful this is tbh...
   useEffect(
     () => getTags(token).then(setAllTags).catch(console.warn),
     [setAllTags, token, user]

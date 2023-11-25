@@ -13,7 +13,7 @@ export const UsersList = ({
   data: rows,
   handleDelete,
   expandRow,
-  onExpand: handleOnExpand,
+  onExpand: handleExpand,
 }) => {
   const searchInput = useRef(null);
 
@@ -129,13 +129,25 @@ export const UsersList = ({
       key: 'action',
       render: (record) => (
         <Space size="middle">
-          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>
+          <DeleteButton onClick={() => handleDelete(record._id, record.type)}>
             Delete
           </DeleteButton>
         </Space>
       ),
     });
   }
+
+  const expandableProps = {
+    ...(handleExpand ? { onExpand: handleExpand } : {}),
+    expandedRowRender: expandRow,
+    expandIconColumnIndex: 2,
+    expandIcon: ({ expanded, onExpand, record }) =>
+      expanded ? (
+        <ExpandButton onClick={(e) => onExpand(record, e)}>Close</ExpandButton>
+      ) : (
+        <ExpandButton onClick={(e) => onExpand(record, e)}>View</ExpandButton>
+      ),
+  };
 
   return (
     <ListWrapper>
@@ -145,21 +157,7 @@ export const UsersList = ({
         scroll={{ x: '100%' }}
         columns={columns}
         rowKey={(record) => record._id}
-        expandable={{
-          onExpand: handleOnExpand,
-          expandedRowRender: expandRow,
-          expandIconColumnIndex: 2,
-          expandIcon: ({ expanded, onExpand, record }) =>
-            expanded ? (
-              <ExpandButton onClick={(e) => onExpand(record, e)}>
-                Close
-              </ExpandButton>
-            ) : (
-              <ExpandButton onClick={(e) => onExpand(record, e)}>
-                View
-              </ExpandButton>
-            ),
-        }}
+        expandable={expandableProps}
         dataSource={rows}
       />
     </ListWrapper>

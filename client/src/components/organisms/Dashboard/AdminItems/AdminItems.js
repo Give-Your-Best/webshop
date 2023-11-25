@@ -21,11 +21,11 @@ export const AdminItems = () => {
 
   // Transform the users data from context to a formatted autocomplete options
   // list with all admins excluded...
-  const publicUserOptions = (allUsers || []).reduce((acc, cur) => {
+  const publicUserOptions = Object.values(allUsers || {}).reduce((acc, cur) => {
     cur.type !== 'admin' &&
       acc.push({
         label: cur.name,
-        value: cur.id,
+        value: cur._id,
         type: cur.type,
       });
 
