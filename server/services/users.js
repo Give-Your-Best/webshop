@@ -142,15 +142,45 @@ const getAllUsers = async (type, approvedStatus) => {
 // Count all users - we should add conditions handling here...
 const countAllUsers = () => User_.User.countDocuments();
 
-// Minimal list handler with pagination
-const listAllUsers = async (limit, offset) => {
-  try {
-    const users = await User_.User.find({})
-      .limit(limit)
-      .skip(offset)
-      .select('firstName lastName email kind')
-      .lean();
+// // Minimal list handler with pagination
+// const listAllUsers = async (limit, offset) => {
+//   try {
+//     const users = await User_.User.find({})
+//       .limit(limit)
+//       .skip(offset)
+//       .select('firstName lastName email kind')
+//       .lean();
 
+//     return users;
+//   } catch (error) {
+//     console.error(`Error in listAllUsers: ${error}`);
+//     return { success: false, message: `Error in listAllUsers: ${error}` };
+//   }
+// };
+
+// TODO - Minimal list handler with pagination
+const listAllUsers = async () => {
+  const condition = { approvedStatus: 'approved' };
+
+  try {
+    const total = await User_.User.countDocuments(condition);
+
+    const rem = total % 4;
+    const lim = (total - rem) / 4;
+
+    const data = await Promise.all(
+      [lim, lim, lim, lim, rem].filter(Boolean).map(async (limit, index) =>
+        User_.User.find(condition)
+          .limit(limit)
+          .skip(index * limit)
+          .select('firstName lastName email kind')
+          .lean()
+      )
+    );
+
+    const users = [].concat(...data);
+
+    console.log(data.length, total, users.length, lim, rem);
     return users;
   } catch (error) {
     console.error(`Error in listAllUsers: ${error}`);
@@ -204,7 +234,7 @@ const getDonations = async (approvedStatus) => {
 
 const getUser = async (id) => {
   try {
-    const user = await User_.User.findById(id);
+    const user = await User_.User.findById(id).populate('tags');
     if (user && user.approvedStatus == 'approved') {
       return user;
     } else {
