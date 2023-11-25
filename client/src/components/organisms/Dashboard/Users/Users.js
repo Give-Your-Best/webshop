@@ -14,7 +14,7 @@ import {
   updateDonor,
   updateShopper,
 } from '../../../../services/user';
-import { deleteDonorItems } from '../../../../services/items'; // TODO
+// import { deleteDonorItems } from '../../../../services/items'; // TODO
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import {
