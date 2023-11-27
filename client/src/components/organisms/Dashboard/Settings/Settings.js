@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import { Modal } from 'antd';
 import { Form } from 'formik-antd';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   AdminEditForm,
   AdminMiniEditForm,
@@ -24,37 +25,49 @@ import {
   StyledTabPanel,
   HiddenStyledTab,
 } from './Settings.styles';
-import { getUsers, updateAdmin, deleteUser } from '../../../../services/user';
+import { getUser, updateAdmin, deleteUser } from '../../../../services/user';
 import { getRoles } from '../../../../services/roles';
 import { getSettings } from '../../../../services/settings';
-import {
-  getTags,
-  deleteTag,
-  createTag,
-  updateTag,
-} from '../../../../services/tags';
+import { deleteTag, createTag, updateTag } from '../../../../services/tags';
 import { Button } from '../../../atoms';
 import { openHiddenTab, tabList } from '../../../../utils/helpers';
 import { adminSchema, tagCreateSchema } from '../../../../utils/validation';
 
 export const Settings = () => {
   const { token, user } = useContext(AppContext);
+  const { allTags, setAllTags, allUsers, setAllUsers, currentUser } =
+    useContext(AccountContext);
+
   const mountedRef = useRef(true);
-  const [currentUser, setCurrentUser] = useState({});
+
   const [roles, setRoles] = useState([]);
   const [settings, setSettings] = useState([]);
-  const [tags, setTags] = useState([]);
   const [adminUsers, setAdminUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
   const [editingKey, setEditingKey] = useState([]);
+  const [activeRecords, setActiveRecords] = useState({});
 
   const { confirm } = Modal;
 
-  //tag functions
+  // TODO this belongs with the global helpers
+  const updateContext = (data) => {
+    const { firstName, lastName, email, kind, _id } = data;
+
+    setAllUsers({
+      ...allUsers,
+      [_id]: {
+        name: `${firstName} ${lastName}`.trim(),
+        email: email,
+        _id: _id,
+        type: kind,
+      },
+    });
+  };
+
   const addTag = async (values, { resetForm }) => {
     const res = await createTag(values, token);
     if (res.success && res.tag) {
-      setTags(tags.concat(res.tag));
+      setAllTags(allTags.concat(res.tag));
       resetForm();
       return true;
     } else {
@@ -69,8 +82,8 @@ export const Settings = () => {
       content: 'This will remove the tag and associated items from the tag',
       onOk() {
         deleteTag(id, token).then(() => {
-          setTags(
-            tags.filter((t) => {
+          setAllTags(
+            allTags.filter((t) => {
               return t._id !== id;
             })
           );
@@ -81,8 +94,8 @@ export const Settings = () => {
 
   const editTag = (record) => {
     const handleEditSave = (newRecord) => {
-      setTags(
-        tags.map((tag) => {
+      setAllTags(
+        allTags.map((tag) => {
           if (tag._id === newRecord._id) {
             return Object.assign(tag, newRecord);
           } else {
@@ -135,7 +148,6 @@ export const Settings = () => {
     );
   };
 
-  //admin user functions
   const handleDelete = (id) => {
     confirm({
       title: `Are you sure you want to delete this team member?`,
@@ -143,11 +155,9 @@ export const Settings = () => {
       content: 'This will remove the user',
       onOk() {
         deleteUser(id, token).then(() => {
-          setAdminUsers(
-            adminUsers.filter((user) => {
-              return user._id !== id;
-            })
-          );
+          // eslint-disable-next-line no-unused-vars
+          const { [id]: _discard, ...rest } = allUsers;
+          setAllUsers(rest);
         });
       },
     });
@@ -162,23 +172,28 @@ export const Settings = () => {
     }
   };
 
-  const editForm = (record) => {
-    const handleEditSave = (newRecord) => {
-      setAdminUsers(
-        adminUsers.map((adminUser) => {
-          if (adminUser._id === newRecord._id) {
-            return Object.assign(adminUser, newRecord);
-          } else {
-            return adminUser;
-          }
-        })
-      );
-    };
+  const editForm = (user) => {
+    const currentRecord = activeRecords[user._id];
+
+    const templateForm = (
+      <Formik initialValues={{}}>
+        <AdminMiniEditForm />
+      </Formik>
+    );
+
+    if (!currentRecord) {
+      return templateForm;
+    }
+
+    if (user._id !== currentRecord._id) {
+      return templateForm;
+    }
 
     const handleSubmit = async (values) => {
-      const res = await updateAdmin(record._id, values, token);
+      const res = await updateAdmin(currentRecord._id, values, token);
+
       if (res.success) {
-        handleEditSave(res.user);
+        updateContext(res.user);
         setEditingKey('');
         return true;
       } else {
@@ -187,29 +202,42 @@ export const Settings = () => {
     };
 
     const handleEdit = () => {
-      setEditingKey(editingKey ? '' : record._id);
+      setEditingKey(editingKey ? '' : currentRecord._id);
     };
 
     return (
       <div>
-        <Formik initialValues={record} onSubmit={handleSubmit}>
+        <Formik initialValues={currentRecord} onSubmit={handleSubmit}>
           <AdminMiniEditForm
-            recordId={record._id}
+            recordId={currentRecord._id}
             editingKey={editingKey}
             roles={roles}
           />
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         <Button primary small type="reset" onClick={handleEdit}>
-          {editingKey === record._id ? 'Cancel' : 'Edit'}
+          {editingKey === currentRecord._id ? 'Cancel' : 'Edit'}
         </Button>
       </div>
     );
   };
 
-  const submitFunction = (adminUser) => {
-    setAdminUsers(adminUsers.concat(adminUser));
-  };
+  const handleExpand = (expanded, record) =>
+    expanded &&
+    getUser(record._id, token).then((u) =>
+      setActiveRecords({
+        ...activeRecords,
+        [u._id]: u,
+      })
+    );
+
+  useEffect(() => {
+    const allAdmins = Object.values(allUsers || {}).filter(
+      (u) => u.type === 'admin'
+    );
+
+    setAdminUsers(allAdmins);
+  }, [allUsers]);
 
   useEffect(() => {
     //add to url history (added for back button to work)
@@ -220,46 +248,14 @@ export const Settings = () => {
       }
     });
 
-    //currently unused
-    const fetchRoles = async () => {
-      const roles = await getRoles(token);
-      if (!mountedRef.current) return null;
-      setRoles(roles);
-    };
-
-    //get overall site settings
-    const fetchSettings = async () => {
-      const settings = await getSettings(token);
-      if (!mountedRef.current) return null;
-      setSettings(settings);
-    };
-
-    //get list of all tags in the system
-    const fetchAllTags = async () => {
-      const tags = await getTags(token);
-      if (!mountedRef.current) return null;
-      setTags(tags);
-    };
-
-    //list of admin users
-    const fetchAdminUsers = async () => {
-      const users = await getUsers('admin', 'approved', token);
-      if (!mountedRef.current) return null;
-      setAdminUsers(users);
-      setCurrentUser(
-        users.find((adminUser) => {
-          return adminUser._id === user.id;
-        })
-      );
-    };
-
-    fetchRoles();
-    fetchAdminUsers();
-    fetchSettings();
-    fetchAllTags();
+    if (mountedRef.current) {
+      //currently unused
+      getRoles(token).then(setRoles);
+      //get overall site settings
+      getSettings(token).then(setSettings);
+    }
 
     return () => {
-      // cleanup
       mountedRef.current = false;
     };
   }, [token, user]);
@@ -278,7 +274,6 @@ export const Settings = () => {
       </StyledTabList>
 
       <StyledTabPanel>
-        {' '}
         {/*User edit form */}
         <Formik
           enableReinitialize={true}
@@ -291,18 +286,18 @@ export const Settings = () => {
       </StyledTabPanel>
 
       <StyledTabPanel>
-        {' '}
         {/* update password edit form hidden tab */}
         <PasswordUpdate email={user.email} id={user.id} />
       </StyledTabPanel>
 
       <StyledTabPanel>
-        {' '}
         {/* Team list tab */}
         <UsersList
           data={adminUsers}
           handleDelete={handleDelete}
           expandRow={editForm}
+          onExpand={handleExpand}
+          allTags={allTags}
         />
         <Button
           primary
@@ -316,22 +311,19 @@ export const Settings = () => {
       </StyledTabPanel>
 
       <StyledTabPanel>
-        {' '}
         {/* team create hidden tab */}
-        <AdminCreateForm submitFunction={submitFunction} roles={roles} />
+        <AdminCreateForm submitFunction={updateContext} roles={roles} />
       </StyledTabPanel>
 
       <StyledTabPanel>
-        {' '}
         {/*shop settings edit form */}
         <ShopSettingsEditForm settings={settings} />
       </StyledTabPanel>
 
       <StyledTabPanel>
-        {' '}
         {/* tags list and create */}
         <TagsList
-          data={tags}
+          data={allTags}
           handleDelete={handleDeleteTag}
           expandRow={editTag}
         />
