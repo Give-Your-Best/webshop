@@ -10,12 +10,19 @@ import {
 import { name } from '../../../utils/helpers';
 
 export const UsersList = ({
-  data: rows,
+  data,
   handleDelete,
   expandRow,
   onExpand: handleExpand,
 }) => {
   const searchInput = useRef(null);
+
+  const rows = data.map((d) => {
+    return {
+      ...d,
+      name: d.name || name(d),
+    };
+  });
 
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
