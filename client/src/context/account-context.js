@@ -9,17 +9,20 @@ export const AccountProvider = ({ children }) => {
 
   const [allTags, setAllTags] = React.useState(null);
   const [allUsers, setAllUsers] = React.useState(null);
+  const [currentUser, setCurrentUser] = React.useState(null);
 
   console.log(user); // Depending on user type we will expose data or not
 
   const value = React.useMemo(
     () => ({
       allTags,
-      allUsers,
       setAllTags,
+      allUsers,
       setAllUsers,
+      currentUser,
+      setCurrentUser,
     }),
-    [allTags, allUsers]
+    [allTags, allUsers, currentUser]
   );
 
   return (
