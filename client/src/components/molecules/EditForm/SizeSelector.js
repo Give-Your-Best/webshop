@@ -28,17 +28,12 @@ const SizeSelector = ({ sizeOptions, fieldName, label }) => {
         {sizeOptions.map((size) => (
           <SizeQuantityPair
             className={fieldName}
-            key={`${fieldName}-${size.toString().replace('.', '_')}`}
+            key={`['${fieldName}-${size}']`}
           >
             <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
               className={fieldName}
-              /*
-                Some of the size options are fractional e.g. [2.5, 3.5, etc].
-                resulting in some of the input boxes having coupled behaviour if their names
-                untreated, e.g. 2 & 2.5 were coupled; adding underscore prevents from this behaviour.
-              */
-              name={`${fieldName}-${size.toString().replace('.', '_')}`}
+              name={`['${fieldName}-${size}']`}
               min="0"
               onChange={(quantity) => handleQuantityChange(size, quantity)}
             />
