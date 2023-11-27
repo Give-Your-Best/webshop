@@ -13,12 +13,13 @@ import {
 import { AccountWelcome } from '../../../molecules/AccountWelcome';
 import { tabList } from '../../../../utils/helpers';
 import { getTags } from '../../../../services/tags';
-import { listUsers } from '../../../../services/user';
+import { getUser, listUsers } from '../../../../services/user';
 
 export const Tabs = ({ itemId }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const { token, user } = useContext(AppContext);
-  const { setAllTags, setAllUsers } = useContext(AccountContext);
+  const { setAllTags, setAllUsers, setCurrentUser } =
+    useContext(AccountContext);
 
   var tabs = tabList(user);
 
@@ -52,6 +53,12 @@ export const Tabs = ({ itemId }) => {
         .then(setAllUsers)
         .catch(console.warn),
     [setAllUsers, token, user]
+  );
+
+  // Set the full current user detail
+  useEffect(
+    () => getUser(user.id, token).then(setCurrentUser).catch(console.warn),
+    [setCurrentUser, token, user]
   );
 
   // Set the current tags - not sure how useful this is tbh...
