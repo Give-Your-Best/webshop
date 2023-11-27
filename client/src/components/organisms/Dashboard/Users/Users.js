@@ -14,7 +14,7 @@ import {
   updateDonor,
   updateShopper,
 } from '../../../../services/user';
-// import { deleteDonorItems } from '../../../../services/items'; // TODO
+import { deleteDonorItems } from '../../../../services/items';
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import {
@@ -36,10 +36,9 @@ export const Users = () => {
   const [donors, setDonors] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [currentRecord, setCurrentRecord] = useState(null);
+  const [activeRecords, setActiveRecords] = useState({});
 
-  console.log('hello');
-
+  // TODO this belongs with the global helpers
   const updateContext = (data) => {
     const { firstName, lastName, email, kind, _id } = data;
 
@@ -54,7 +53,6 @@ export const Users = () => {
     });
   };
 
-  // TODO - user setAllUsers to update the context...
   const handleDelete = (id, kind) => {
     confirm({
       title: `Are you sure you want to delete this ${kind}?`,
@@ -66,38 +64,48 @@ export const Users = () => {
           const { [id]: _discard, ...rest } = allUsers;
           setAllUsers(rest);
 
-          // TODO deleteDonorItems deleteDonorItems deleteDonorItems
-          // if (kind === 'shopper') {
-          //   setShoppers(
-          //     shoppers.filter((shopper) => {
-          //       return shopper._id !== id;
-          //     })
-          //   );
-          // } else if (kind === 'donor') {
-          //   deleteDonorItems(id, token);
-          //   setDonors(
-          //     donors.filter((donor) => {
-          //       return donor._id !== id;
-          //     })
-          //   );
-          // }
+          if (kind === 'donor') {
+            deleteDonorItems(id, token);
+          }
         });
       },
     });
   };
 
   const handleExpand = (expanded, record) =>
-    expanded
-      ? getUser(record._id, token).then(setCurrentRecord)
-      : setCurrentRecord(null);
+    expanded &&
+    getUser(record._id, token).then((u) =>
+      setActiveRecords({
+        ...activeRecords,
+        [u._id]: u,
+      })
+    );
 
   const editForm = (user) => {
+    const currentRecord = activeRecords[user._id];
+
+    const templateForm = (
+      <>
+        <Tags tagList={[]} />
+        <Space />
+        <Formik initialValues={{}}>
+          {user.type === 'donor' ? (
+            <DonorMiniEditForm />
+          ) : user.type === 'shopper' ? (
+            <ShopperMiniEditForm />
+          ) : (
+            ''
+          )}
+        </Formik>
+      </>
+    );
+
     if (!currentRecord) {
-      return;
+      return templateForm;
     }
 
     if (user._id !== currentRecord._id) {
-      return;
+      return templateForm;
     }
 
     const handleSubmit = async (values) => {
@@ -129,12 +137,12 @@ export const Users = () => {
         />
         <Space />
         <Formik initialValues={currentRecord} onSubmit={handleSubmit}>
-          {currentRecord.kind === 'donor' ? (
+          {user.type === 'donor' ? (
             <DonorMiniEditForm
               editingKey={editingKey}
               recordId={currentRecord._id}
             />
-          ) : currentRecord.kind === 'shopper' ? (
+          ) : user.type === 'shopper' ? (
             <ShopperMiniEditForm
               editingKey={editingKey}
               recordId={currentRecord._id}
