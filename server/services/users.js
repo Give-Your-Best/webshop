@@ -142,23 +142,24 @@ const getAllUsers = async (type, approvedStatus) => {
 // Count all users - we should add conditions handling here...
 const countAllUsers = () => User_.User.countDocuments();
 
-// // Minimal list handler with pagination
-// const listAllUsers = async (limit, offset) => {
-//   try {
-//     const users = await User_.User.find({})
-//       .limit(limit)
-//       .skip(offset)
-//       .select('firstName lastName email kind')
-//       .lean();
+// Minimal list handler with pagination
+const listAllUsersPaginated = async (limit, offset) => {
+  try {
+    const users = await User_.User.find({})
+      .limit(limit)
+      .skip(offset)
+      .select('firstName lastName email kind')
+      .lean();
 
-//     return users;
-//   } catch (error) {
-//     console.error(`Error in listAllUsers: ${error}`);
-//     return { success: false, message: `Error in listAllUsers: ${error}` };
-//   }
-// };
+    return users;
+  } catch (error) {
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
+  }
+};
 
-// TODO - Minimal list handler with pagination
+// Minimal list handler parallelised - pattern is useful and can be extracted to
+// a util or something for reuse...
 const listAllUsers = async () => {
   const condition = { approvedStatus: 'approved' };
 
@@ -175,7 +176,7 @@ const listAllUsers = async () => {
       init.map(async (limit, index) =>
         User_.User.find(condition)
           .limit(limit)
-          .skip(index * limit) //
+          .skip(index * limit)
           .select('firstName lastName email kind')
           .lean()
       )
@@ -265,8 +266,9 @@ module.exports = {
   createUser,
   getUser,
   getAllUsers,
-  listAllUsers,
   countAllUsers,
+  listAllUsers,
+  listAllUsersPaginated,
   deleteUser,
   updateUser,
   updateDonor,

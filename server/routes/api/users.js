@@ -7,8 +7,9 @@ const {
   deleteUser,
   getDonations,
   getGYBDummyUser,
-  listAllUsers,
   countAllUsers,
+  listAllUsers,
+  listAllUsersPaginated,
 } = require('../../services/users');
 
 // get users endpoint api/users
@@ -30,10 +31,13 @@ router.get('/list', async (req, res) => {
   const limit = req.query.limit;
   const offset = req.query.offset;
 
-  const users = await listAllUsers(
-    limit ? Number(limit) : Infinity,
-    offset ? Number(offset) : 0
-  );
+  let users;
+
+  if (limit && offset) {
+    users = await listAllUsersPaginated(Number(limit), Number(offset));
+  } else {
+    users = listAllUsers();
+  }
 
   res.json(users);
 });

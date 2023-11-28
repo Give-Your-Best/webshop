@@ -1,6 +1,6 @@
 const { ObjectId } = require('bson');
 const Item = require('../models/Item');
-const User_ = require('../models/User');
+// const User_ = require('../models/User'); TODO will use asap
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
@@ -458,6 +458,7 @@ const getAccountNotificationItems = async (adminUserId) => {
 };
 
 const getShopNotificationItems = async () => {
+  // TODO - testing this query - it reduces the load from 25s -> 2.5s
   // const shopperIds = await User_.Shopper.find({
   //   deliveryPreference: 'via-gyb',
   // })
