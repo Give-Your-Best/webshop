@@ -4,8 +4,8 @@ const User_ = require('../models/User');
 
 const getTags = async () => {
   try {
-    // TODO this is an incredibly slow query and from what I can see we can
-    // probablt abandon the populate lookups entirely...
+    // TODO this is a very slow query due to lookups scanning the entire items
+    // and users collections - disabling the lookups as appear to be uneeded
     const tags = await Tag.find({}).lean(); //.populate('items').populate('users');
     return tags;
   } catch (error) {
