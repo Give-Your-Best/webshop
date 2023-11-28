@@ -15,11 +15,18 @@ import { tabList } from '../../../../utils/helpers';
 import { getTags } from '../../../../services/tags';
 import { getUser, listUsers } from '../../../../services/user';
 
+// Note! This tabs "wrapper" is currently in use as the data loader for the new
+// "account" context - there are certain data we should only be loading if the
+// current user is an admin - we dont want to expose all users data to shoppers
+// or donors... this should all be restructured with dedicated contexts etc.
+
 export const Tabs = ({ itemId }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const { token, user } = useContext(AppContext);
   const { setAllTags, setAllUsers, setCurrentUser } =
     useContext(AccountContext);
+
+  console.log({ user });
 
   var tabs = tabList(user);
 
@@ -46,14 +53,14 @@ export const Tabs = ({ itemId }) => {
     }, {});
 
   // Set all current users to the context as a hash map on the id
-  useEffect(
-    () =>
+  useEffect(() => {
+    // Only load all users data in an admin context
+    user.type === 'admin' &&
       listUsers(token)
         .then(buildTransformUsersHash)
         .then(setAllUsers)
-        .catch(console.warn),
-    [setAllUsers, token, user]
-  );
+        .catch(console.warn);
+  }, [setAllUsers, token, user]);
 
   // Set the full current user detail
   useEffect(
