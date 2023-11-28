@@ -177,7 +177,7 @@ export const Settings = () => {
 
     const templateForm = (
       <Formik initialValues={{}}>
-        <AdminMiniEditForm />
+        <AdminMiniEditForm editingKey={editingKey} />
       </Formik>
     );
 
