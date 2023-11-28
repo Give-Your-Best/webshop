@@ -26,8 +26,6 @@ export const Tabs = ({ itemId }) => {
   const { setAllTags, setAllUsers, setCurrentUser } =
     useContext(AccountContext);
 
-  console.log({ user });
-
   var tabs = tabList(user);
 
   useEffect(() => {
