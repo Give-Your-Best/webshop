@@ -16,7 +16,7 @@ export const ItemsCollapsedList = ({
   data,
   total,
   current,
-  onChange,
+  onChange: handleChange,
   handleDelete,
   expandRow,
   reOpen,
@@ -227,7 +227,7 @@ export const ItemsCollapsedList = ({
         onChange={(pagination, _filters, sorter) => {
           const { current } = pagination;
           const { field, order } = sorter;
-          onChange({ current, field, order });
+          handleChange({ current, field, order });
         }}
         columns={columns}
         rowKey={(record) => record._id || 0}

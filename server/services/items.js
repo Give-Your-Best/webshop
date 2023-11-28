@@ -1,5 +1,6 @@
 const { ObjectId } = require('bson');
 const Item = require('../models/Item');
+// const User_ = require('../models/User'); TODO will use asap
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
@@ -457,6 +458,61 @@ const getAccountNotificationItems = async (adminUserId) => {
 };
 
 const getShopNotificationItems = async () => {
+  // TODO - testing this query - it reduces the load from 25s -> 2.5s
+  // const shopperIds = await User_.Shopper.find({
+  //   deliveryPreference: 'via-gyb',
+  // })
+  //   .select('id')
+  //   .then((data) => {
+  //     return data.reduce((acc, cur) => {
+  //       acc[cur.id] = cur;
+  //       return acc;
+  //     }, {});
+  //   });
+
+  // const condition = {
+  //   $and: [
+  //     { approvedStatus: 'approved' },
+  //     { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
+  //   ],
+  // };
+
+  // const count = await Item.countDocuments(condition);
+
+  // const div = 14;
+  // const rem = count % div;
+  // const max = (count - rem) / div;
+
+  // const init = new Array(div).fill(max).concat([rem]).filter(Boolean);
+
+  // const data = await Promise.all(
+  //   init.map(async (limit, index) =>
+  //     Item.find(condition)
+  //       .limit(limit)
+  //       .skip(index * max)
+  //       .lean()
+  //   )
+  // );
+
+  // const result = [].concat(...data).reduce(
+  //   (acc, cur) => {
+  //     if (!shopperIds[cur.shopperId]) {
+  //       return acc;
+  //     }
+
+  //     if (cur.status === 'shopped' && cur.sendVia === null) {
+  //       acc[0].push(cur);
+  //     } else {
+  //       acc[1].push(cur);
+  //     }
+
+  //     return acc;
+  //   },
+  //   [[], []]
+  // );
+
+  // return result;
+
   const results = [];
 
   const pendingAssignQuery = {

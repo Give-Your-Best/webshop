@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { useHistory } from 'react-router-dom';
 import {
@@ -12,7 +12,6 @@ import { Card as AntCard, Modal } from 'antd';
 import { Button } from '../../atoms';
 import { getLocation } from '../../../services/locations';
 import { getUser } from '../../../services/user';
-import { getTags } from '../../../services/tags';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
 import { Tags } from '../../organisms';
 import {
@@ -25,14 +24,12 @@ import {
 
 const { Meta } = AntCard;
 
-export const ItemCardLong = ({ item, actionText, action, type }) => {
+export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
   const { token } = useContext(AppContext);
-  const mountedRef = useRef(true);
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
   const [FAOshopperName, setFAOShopperName] = useState('');
-  const [allTags, setAllTags] = useState([]);
 
   const additionalItemDetails =
     type === 'all' || type === 'admin' ? getItemDetails(item) : false;
@@ -101,22 +98,6 @@ export const ItemCardLong = ({ item, actionText, action, type }) => {
       setAddressFound(true);
     }
   };
-
-  useEffect(() => {
-    const fetchAllTags = async () => {
-      const tags = await getTags(token);
-      if (!mountedRef.current) return null;
-      setAllTags(tags);
-    };
-
-    fetchAllTags();
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
-    // eslint-disable-next-line
-  }, [token]);
 
   return (
     //some of the olf cloudinary images are not secure urls so forcing the change here
