@@ -163,16 +163,19 @@ const listAllUsers = async () => {
   const condition = { approvedStatus: 'approved' };
 
   try {
-    const total = await User_.User.countDocuments(condition);
+    const count = await User_.User.countDocuments(condition);
 
-    const rem = total % 4;
-    const lim = (total - rem) / 4;
+    const div = 4;
+    const rem = count % div;
+    const max = (count - rem) / div;
+
+    const init = new Array(div).fill(max).concat([rem]).filter(Boolean);
 
     const data = await Promise.all(
-      [lim, lim, lim, lim, rem].filter(Boolean).map(async (limit, index) =>
+      init.map(async (limit, index) =>
         User_.User.find(condition)
           .limit(limit)
-          .skip(index * limit)
+          .skip(index * limit) //
           .select('firstName lastName email kind')
           .lean()
       )
@@ -180,7 +183,6 @@ const listAllUsers = async () => {
 
     const users = [].concat(...data);
 
-    console.log(data.length, total, users.length, lim, rem);
     return users;
   } catch (error) {
     console.error(`Error in listAllUsers: ${error}`);
