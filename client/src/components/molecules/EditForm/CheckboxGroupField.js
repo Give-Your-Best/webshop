@@ -6,7 +6,7 @@ import {
   StyledError,
 } from './EditForm.styles';
 
-const CheckboxGroupField = ({ label, name, options }) => {
+const CheckboxGroupField = ({ options, name, label }) => {
   const field = useField(name);
 
   return (

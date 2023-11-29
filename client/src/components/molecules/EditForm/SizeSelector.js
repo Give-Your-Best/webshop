@@ -11,8 +11,6 @@ const SizeSelector = ({ sizeOptions, fieldName, label }) => {
   const formikProps = useFormikContext();
 
   const handleQuantityChange = (size, quantity) => {
-    console.log('formikProps.values: ', formikProps.values);
-    console.log('formikProps: ', formikProps);
     const validQuantity = Math.max(quantity, 0);
     const updatedQuantities = {
       ...formikProps.values[fieldName],

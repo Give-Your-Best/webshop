@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { Form } from 'formik-antd';
@@ -6,7 +5,7 @@ import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
 import { colours } from '../../../utils/constants';
-import { createItem, createBatchItem } from '../../../services/items';
+import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
   StyledSubmitButton,
@@ -18,9 +17,8 @@ import {
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
-import CheckboxGroupField from './CheckboxGroupField';
-import SizeSelector from './SizeSelector';
-import { shoeSizeOptions, clothingSizeOptions } from '../../../utils/constants';
+import RenderBatchOptions from './RenderBatchOptions';
+import RenderItemOptions from './RenderItemOptions';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -41,7 +39,7 @@ export const ItemCreateForm = (data) => {
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     let res;
     if (showBatchOptions === true) {
-      res = await createBatchItem(values, token);
+      // res = await createBatchItem(values, token);
     } else {
       res = await createItem(values, token);
     }
@@ -53,7 +51,7 @@ export const ItemCreateForm = (data) => {
       resetForm();
       setFieldValue('photos', []);
       setUploadedImages([]);
-      // data.submitFunction(res.item);
+      data.submitFunction(res.item);
       reopenTab('items');
     } else {
       Notification('Error creating item', res.message, 'error');
@@ -101,52 +99,15 @@ export const ItemCreateForm = (data) => {
           <StyledError name="brand" component="div" />
 
           {showBatchOptions ? (
-            <>
-              {selectedCategory === 'shoes' && (
-                <SizeSelector
-                  sizeOptions={shoeSizeOptions}
-                  fieldName="shoeSize"
-                  label="Shoe Size"
-                />
-              )}
-              {selectedCategory === 'children' &&
-                selectedSubCategory === 'baby' && (
-                  <>
-                    <SizeSelector
-                      sizeOptions={clothingSizeOptions}
-                      fieldName="clothingSize"
-                      label="Clothing Size"
-                    />
-                    <SizeSelector
-                      sizeOptions={shoeSizeOptions}
-                      fieldName="shoeSize"
-                      label="Shoe Size"
-                    />
-                  </>
-                )}
-              {selectedCategory !== 'shoes' &&
-                !(
-                  selectedCategory === 'children' &&
-                  selectedSubCategory === 'baby'
-                ) && (
-                  <SizeSelector
-                    sizeOptions={clothingSizeOptions}
-                    fieldName="clothingSize"
-                    label="Clothing Size"
-                  />
-                )}
-            </>
+            <RenderBatchOptions
+              category={selectedCategory}
+              subcategory={selectedSubCategory}
+            />
           ) : (
             <>
-              <CheckboxGroupField
-                label="Clothing Size"
-                name="clothingSizeCheckBox"
-                options={clothingSizeOptions}
-              />
-              <CheckboxGroupField
-                label="Shoe Size"
-                name="shoeSizeCheckBox"
-                options={shoeSizeOptions}
+              <RenderItemOptions
+                category={selectedCategory}
+                subcategory={selectedSubCategory}
               />
             </>
           )}

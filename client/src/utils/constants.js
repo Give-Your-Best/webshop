@@ -74,7 +74,6 @@ export const shoeSizeOptions = [
 ];
 
 export const childrensShoeSizeOptions = [
-  'Kids 00',
   'Kids 0',
   'Kids 1',
   'Kids 1.5',

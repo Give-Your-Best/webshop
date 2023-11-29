@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -31,6 +32,7 @@ import { Modal } from 'antd';
 
 export const Notifications = () => {
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const mountedRef = useRef(true);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -193,8 +195,6 @@ export const Notifications = () => {
       const items = await getShopNotificationsItems(token);
       const locations = await getAdminLocations('available', token);
 
-      if (!mountedRef.current) return null;
-
       setAdminLocations(locations);
       setShopNotificationsPendingAssign({
         key: 1,
@@ -216,8 +216,6 @@ export const Notifications = () => {
 
     const fetchAccountItems = async () => {
       const items = await getAccountNotificationsItems(user.id, token);
-
-      if (!mountedRef.current) return null;
 
       setAccountNotificationsPendingReceive({
         key: 1,
@@ -246,8 +244,10 @@ export const Notifications = () => {
       });
     };
 
-    fetchShopItems();
-    fetchAccountItems();
+    if (mountedRef.current) {
+      fetchShopItems();
+      fetchAccountItems();
+    }
 
     return () => {
       mountedRef.current = false;
@@ -265,6 +265,7 @@ export const Notifications = () => {
                 type={user.type}
                 actionText={record.actionDesc}
                 action={record.action}
+                allTags={allTags}
               />
             </div>
           );

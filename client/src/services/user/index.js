@@ -13,4 +13,5 @@ export { authenticateUser } from './authenticateUser';
 export { getDonations } from './getDonations';
 export { updatePassword } from './updatePassword';
 export { getGYBDummyUser } from './getGYBDummyUser';
-export { getPublicUsers } from './getPublicUsers';
+export { listUsers } from './listUsers';
+export { countUsers } from './countUsers';

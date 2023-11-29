@@ -139,17 +139,55 @@ const getAllUsers = async (type, approvedStatus) => {
   }
 };
 
-const listPublicUsers = async () => {
+// Count all users - we should add conditions handling here...
+const countAllUsers = () => User_.User.countDocuments();
+
+// Minimal list handler with pagination
+const listAllUsersPaginated = async (limit, offset) => {
   try {
-    const users = await User_.User.find(
-      { kind: { $in: ['shopper', 'donor'] } },
-      'firstName lastName kind'
-    ).lean();
+    const users = await User_.User.find({})
+      .limit(limit)
+      .skip(offset)
+      .select('firstName lastName email kind')
+      .lean();
 
     return users;
   } catch (error) {
-    console.error(`Error in listPublicUsers: ${error}`);
-    return { success: false, message: `Error in listPublicUsers: ${error}` };
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
+  }
+};
+
+// Minimal list handler parallelised - pattern is useful and can be extracted to
+// a util or something for reuse...
+const listAllUsers = async () => {
+  const condition = { approvedStatus: 'approved' };
+
+  try {
+    const count = await User_.User.countDocuments(condition);
+
+    const div = 4;
+    const rem = count % div;
+    const max = (count - rem) / div;
+
+    const init = new Array(div).fill(max).concat([rem]).filter(Boolean);
+
+    const data = await Promise.all(
+      init.map(async (limit, index) =>
+        User_.User.find(condition)
+          .limit(limit)
+          .skip(index * limit)
+          .select('firstName lastName email kind')
+          .lean()
+      )
+    );
+
+    const users = [].concat(...data);
+
+    return users;
+  } catch (error) {
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
   }
 };
 
@@ -199,7 +237,7 @@ const getDonations = async (approvedStatus) => {
 
 const getUser = async (id) => {
   try {
-    const user = await User_.User.findById(id);
+    const user = await User_.User.findById(id).populate('tags');
     if (user && user.approvedStatus == 'approved') {
       return user;
     } else {
@@ -228,7 +266,9 @@ module.exports = {
   createUser,
   getUser,
   getAllUsers,
-  listPublicUsers,
+  countAllUsers,
+  listAllUsers,
+  listAllUsersPaginated,
   deleteUser,
   updateUser,
   updateDonor,
