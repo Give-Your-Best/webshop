@@ -2,6 +2,7 @@ const { ObjectId } = require('bson');
 const Item = require('../models/Item');
 // const User_ = require('../models/User'); TODO will use asap
 const { cloudinary } = require('../utils/cloudinary');
+const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data) => {
   var new_photos = [];
