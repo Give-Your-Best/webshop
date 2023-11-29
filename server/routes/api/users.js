@@ -36,7 +36,7 @@ router.get('/list', async (req, res) => {
   if (limit && offset) {
     users = await listAllUsersPaginated(Number(limit), Number(offset));
   } else {
-    users = listAllUsers();
+    users = await listAllUsers();
   }
 
   res.json(users);
