@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -29,6 +30,7 @@ import { Modal } from 'antd';
 
 export const ApproveRequests = () => {
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const mountedRef = useRef(true);
   const [shoppers, setShoppers] = useState([]);
   const [donations, setDonations] = useState([]);
@@ -112,7 +114,7 @@ export const ApproveRequests = () => {
       <div>
         {record.donationItems.map((item) => (
           <ItemBox key={item._id}>
-            <ItemCardLong item={item} />
+            <ItemCardLong item={item} allTags={allTags} />
             <Button primary small data-item-id={item._id} onClick={approve}>
               Approve
             </Button>
@@ -149,7 +151,7 @@ export const ApproveRequests = () => {
       }
     };
 
-    const updateRecord = async (values, action) => {
+    const updateRecord = async (values) => {
       const res = await updateUserWrapper(record._id, values, token);
       if (res.success) {
         return true;
@@ -206,14 +208,11 @@ export const ApproveRequests = () => {
 
     const fetchShoppers = async () => {
       const users = await getUsers('shopper', 'in-progress', token);
-      if (!mountedRef.current) return null;
       setShoppers(users);
     };
 
     const fetchDonations = async () => {
       const donations = await getDonations('in-progress', token);
-      if (!mountedRef.current) return null;
-
       setDonations(
         donations.filter((item) => {
           return item.numOfDonationItems !== 0;
@@ -224,13 +223,14 @@ export const ApproveRequests = () => {
     const fetchSetting = async () => {
       if (!token) return null;
       const settingValue = await getSetting('trustedDonorLimit', token);
-      if (!mountedRef.current) return null;
       setTrustedDonorLimit(settingValue);
     };
 
-    fetchShoppers();
-    fetchDonations();
-    fetchSetting();
+    if (mountedRef.current) {
+      fetchShoppers();
+      fetchDonations();
+      fetchSetting();
+    }
 
     return () => {
       mountedRef.current = false;

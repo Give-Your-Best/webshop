@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Location 1",
+    "firstLine": "971 Manchester Road",
+    "postcode": "EC42 6ZU",
+    "city": "London",
+    "adminUser": "651f30f55d37a6384eacdebb",
+    "available": true
+  },
+  {
+    "name": "Location 2",
+    "firstLine": "62 Queens Road",
+    "postcode": "E79 1SE",
+    "city": "London",
+    "adminUser": "651f30f55d37a6384eacdebb",
+    "available": false
+  },
+  {
+    "name": "Location 3",
+    "firstLine": "25 Alexander Road",
+    "secondLine": "Flat 6",
+    "postcode": "SW61 3KY",
+    "city": "London",
+    "adminUser": "651f30f55d37a6384eacdebb",
+    "available": true
+  },
+  {
+    "name": "Location 4",
+    "firstLine": "14C Hapden Place",
+    "postcode": "W90 8RT",
+    "city": "London",
+    "adminUser": "651f30f55d37a6384eacdebb",
+    "available": false
+  }
+]

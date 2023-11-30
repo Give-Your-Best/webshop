@@ -14,3 +14,5 @@ export { authenticateUser } from './authenticateUser';
 export { getDonations } from './getDonations';
 export { updatePassword } from './updatePassword';
 export { getGYBDummyUser } from './getGYBDummyUser';
+export { listUsers } from './listUsers';
+export { countUsers } from './countUsers';

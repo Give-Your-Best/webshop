@@ -1,4 +1,3 @@
-const Role = require('../models/Role');
 const Item = require('../models/Item');
 const User_ = require('../models/User');
 
@@ -17,7 +16,7 @@ const createUser = async (data) => {
       } else if (data.type == 'admin') {
         user = new User_.Admin(data);
       }
-      let saveUser = await user.save();
+      await user.save();
       return { success: true, message: `User created`, user: user };
     }
   } catch (err) {
@@ -45,7 +44,7 @@ const updateUser = async (id, updateData) => {
 
 const updateDonor = async (id, updateData) => {
   if (updateData.trustedDonor === true) {
-    const update = await Item.updateMany(
+    await Item.updateMany(
       { donorId: id.toString(), approvedStatus: 'in-progress' },
       { $set: { approvedStatus: 'approved' } }
     );
@@ -118,16 +117,18 @@ const deleteUser = async (id) => {
 
 const getAllUsers = async (type, approvedStatus) => {
   try {
+    let users;
+
     if (type == 'donor') {
-      var users = await User_.Donor.find({
+      users = await User_.Donor.find({
         approvedStatus: approvedStatus,
       }).populate('tags');
     } else if (type == 'shopper') {
-      var users = await User_.Shopper.find({
+      users = await User_.Shopper.find({
         approvedStatus: approvedStatus,
       }).populate('tags');
     } else if (type == 'admin') {
-      var users = await User_.Admin.find({
+      users = await User_.Admin.find({
         approvedStatus: approvedStatus,
       }).lean();
     }
@@ -138,44 +139,95 @@ const getAllUsers = async (type, approvedStatus) => {
   }
 };
 
+// Count all users - we should add conditions handling here...
+const countAllUsers = () => User_.User.countDocuments();
+
+// Minimal list handler with pagination
+const listAllUsersPaginated = async (limit, offset) => {
+  try {
+    const users = await User_.User.find({})
+      .limit(limit)
+      .skip(offset)
+      .select('firstName lastName email kind')
+      .lean();
+
+    return users;
+  } catch (error) {
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
+  }
+};
+
+// Minimal list handler parallelised - pattern is useful and can be extracted to
+// a util or something for reuse...
+const listAllUsers = async () => {
+  const condition = { approvedStatus: 'approved' };
+
+  try {
+    const count = await User_.User.countDocuments(condition);
+
+    const div = 4;
+    const rem = count % div;
+    const max = (count - rem) / div;
+
+    const init = new Array(div).fill(max).concat([rem]).filter(Boolean);
+
+    const data = await Promise.all(
+      init.map(async (limit, index) =>
+        User_.User.find(condition)
+          .limit(limit)
+          .skip(index * limit)
+          .select('firstName lastName email kind')
+          .lean()
+      )
+    );
+
+    const users = [].concat(...data);
+
+    return users;
+  } catch (error) {
+    console.error(`Error in listAllUsers: ${error}`);
+    return { success: false, message: `Error in listAllUsers: ${error}` };
+  }
+};
+
 const getDonations = async (approvedStatus) => {
   try {
-    const donations = await User_.Donor.aggregate([
-      {
-        $match: {
-          $and: [
-            { $or: [{ trustedDonor: false }, { trustedDonor: null }] },
-            { approvedStatus: 'approved' },
-          ],
-        },
-      },
-      {
-        $lookup: {
-          from: 'items',
-          localField: '_id',
-          foreignField: 'donorId',
-          pipeline: [
-            {
-              $match: {
-                $expr: { $and: [{ $eq: ['$approvedStatus', approvedStatus] }] },
-              },
-            },
-          ],
-          as: 'donationItemsDetails',
-        },
-      },
-      {
-        $project: {
-          _id: '$_id',
-          name: { $concat: ['$firstName', ' ', '$lastName'] },
-          hod: '$hod',
-          numOfDonationItems: { $size: '$donationItemsDetails' },
-          donationItems: '$donationItemsDetails',
-        },
-      },
-    ]).exec();
+    // We care about approved but not yet trusted users
+    const donors = await User_.Donor.find({
+      $and: [{ trustedDonor: { $ne: true } }, { approvedStatus: 'approved' }],
+    }).select('id firstName lastName');
 
-    return donations;
+    const condition = {
+      donorId: { $in: donors },
+      approvedStatus: approvedStatus,
+    };
+
+    // Pull the relevant items
+    const data = await Item.find(condition).lean();
+
+    // Group items under donor id
+    const donorItems = data.reduce((acc, cur) => {
+      acc[cur.donorId] = acc[cur.donorId] || [];
+      acc[cur.donorId].push(cur);
+      return acc;
+    }, {});
+
+    // Format the result
+    const result = donors.map((d) => {
+      const name = `${d.firstName} ${d.lastName}`.trim();
+      const donationItems = donorItems[d.id] || [];
+      const numOfDonationItems = donationItems.length;
+
+      return {
+        _id: d.id,
+        name,
+        donationItems,
+        numOfDonationItems,
+      };
+    });
+
+    return result;
   } catch (error) {
     console.error(`Error in get donations: ${error}`);
     return { success: false, message: `Error in getdonations: ${error}` };
@@ -184,7 +236,7 @@ const getDonations = async (approvedStatus) => {
 
 const getUser = async (id) => {
   try {
-    const user = await User_.User.findById(id);
+    const user = await User_.User.findById(id).populate('tags');
     if (user && user.approvedStatus == 'approved') {
       return user;
     } else {
@@ -213,6 +265,9 @@ module.exports = {
   createUser,
   getUser,
   getAllUsers,
+  countAllUsers,
+  listAllUsers,
+  listAllUsersPaginated,
   deleteUser,
   updateUser,
   updateDonor,

@@ -10,7 +10,7 @@ import {
 import { Button, Space } from '../../atoms';
 import { openHiddenTab } from '../../../utils/helpers';
 
-export const AdminEditForm = (data) => {
+export const AdminEditForm = () => {
   return (
     <Form>
       <FieldContainerHalf>

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import { Modal } from 'antd';
 import {
   ListWrapper,
@@ -29,6 +30,7 @@ import { ItemCardLong } from '../ItemCardLong';
 
 export const OrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const [items, setItems] = useState([]);
   const [pastItems, setPastItems] = useState([]);
   const mountedRef = useRef(true);
@@ -172,20 +174,17 @@ export const OrdersList = () => {
 
     const fetchShopperItems = async () => {
       const items = await getShopperItems(user.id);
-      if (!mountedRef.current) return null;
       setItems(items);
     };
 
     const fetchShopperPastItems = async () => {
       const pastItems = await getShopperItems(user.id, 'received');
-      if (!mountedRef.current) return null;
       setPastItems(pastItems);
     };
 
     const fetchSetting = async () => {
       if (!token) return null;
       const settingValue = await getSetting('shopItemLimit', token);
-      if (!mountedRef.current) return null;
 
       if (user) {
         let countAdults =
@@ -207,16 +206,17 @@ export const OrdersList = () => {
 
     const fetchDonorItems = async () => {
       const items = await getDonorItems(user.id);
-      if (!mountedRef.current) return null;
       setItems(items);
     };
 
-    if (user.type === 'shopper') {
-      fetchShopperItems();
-      fetchShopperPastItems();
-      fetchSetting();
-    } else if (user.type === 'donor') {
-      fetchDonorItems();
+    if (mountedRef.current) {
+      if (user.type === 'shopper') {
+        fetchShopperItems();
+        fetchShopperPastItems();
+        fetchSetting();
+      } else if (user.type === 'donor') {
+        fetchDonorItems();
+      }
     }
 
     return () => {
@@ -255,6 +255,7 @@ export const OrdersList = () => {
               let allowCancel =
                 item.status === 'shopped' &&
                 user.type === 'shopper' &&
+                item.statusUpdateDates &&
                 lessThanSixHoursAgo(
                   new Date(item.statusUpdateDates.shoppedDate)
                 );
@@ -264,6 +265,7 @@ export const OrdersList = () => {
                   <ItemCardLong
                     item={item}
                     type={user.type}
+                    allTags={allTags}
                     actionText={
                       allowCancel ? 'Cancel Order' : noAction ? '' : actionText
                     }
@@ -291,7 +293,7 @@ export const OrdersList = () => {
           {pastItems.map((item) => {
             return (
               <div key={item._id}>
-                <ItemCardLong item={item} type={user.type} />
+                <ItemCardLong item={item} type={user.type} allTags={allTags} />
               </div>
             );
           })}

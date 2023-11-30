@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import { Modal } from 'antd';
 import {
   ListWrapper,
@@ -25,6 +26,7 @@ import { ItemCardLong } from '../ItemCardLong';
 
 export const DonorOrdersList = () => {
   const { token, user, basket } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const [itemsToSend, setItemsToSend] = useState([]);
   const [itemsAwaitingReceived, setItemsAwaitingReceived] = useState([]);
   const mountedRef = useRef(true);
@@ -97,14 +99,14 @@ export const DonorOrdersList = () => {
 
     const fetchDonorItems = async () => {
       const items = await getDonorItems(user.id);
-      console.log('ITEMS NOW', items);
-      if (!mountedRef.current) return null;
       const itemsOrdered = donorItemsOrdering(items);
       setItemsToSend(itemsOrdered[0]);
       setItemsAwaitingReceived(itemsOrdered[1]);
     };
 
-    fetchDonorItems();
+    if (mountedRef.current) {
+      fetchDonorItems();
+    }
 
     return () => {
       // cleanup
@@ -137,6 +139,7 @@ export const DonorOrdersList = () => {
                                 type={user.type}
                                 actionText={''}
                                 action={null}
+                                allTags={allTags}
                               />
                             </div>
                           );
@@ -173,6 +176,7 @@ export const DonorOrdersList = () => {
                             type={user.type}
                             actionText={''}
                             action={null}
+                            allTags={allTags}
                           />
                         </ShopperWrapperSmall>
                       );
@@ -192,6 +196,7 @@ export const DonorOrdersList = () => {
                                 type={user.type}
                                 actionText={''}
                                 action={null}
+                                allTags={allTags}
                               />
                             </div>
                           );

@@ -7,6 +7,9 @@ const {
   deleteUser,
   getDonations,
   getGYBDummyUser,
+  countAllUsers,
+  listAllUsers,
+  listAllUsersPaginated,
 } = require('../../services/users');
 
 // get users endpoint api/users
@@ -14,6 +17,28 @@ router.get('/', async (req, res) => {
   let type = req.query.type || 'all';
   let approvedStatus = req.query.approvedStatus || '';
   const users = await getAllUsers(type, approvedStatus);
+  res.json(users);
+});
+
+// count all the users - we should add conditions...
+router.get('/count', async (req, res) => {
+  const total = await countAllUsers();
+  res.json({ total });
+});
+
+// list all users with no condition on type etc - allows pagination
+router.get('/list', async (req, res) => {
+  const limit = req.query.limit;
+  const offset = req.query.offset;
+
+  let users;
+
+  if (limit && offset) {
+    users = await listAllUsersPaginated(Number(limit), Number(offset));
+  } else {
+    users = await listAllUsers();
+  }
+
   res.json(users);
 });
 

@@ -9,15 +9,21 @@ import {
 } from './UsersList.styles';
 import { name } from '../../../utils/helpers';
 
-export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
+export const UsersList = ({
+  data,
+  handleDelete,
+  expandRow,
+  onExpand: handleExpand,
+}) => {
   const searchInput = useRef(null);
 
   const rows = data.map((d) => {
     return {
       ...d,
-      name: name(d),
+      name: d.name || name(d),
     };
   });
+
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
   };
@@ -102,27 +108,27 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
     },
   ];
 
-  //additional tag column if shopper and donor list
-  if (allTags) {
-    columns.push({
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (record) => {
-        return record
-          .map((r) => {
-            return <span>r.name</span>;
-          })
-          .join();
-      },
-      className: 'onlyHeading',
-      filters: allTags.map((c) => {
-        return { text: c.name, value: c._id };
-      }),
-      filterMode: 'tree',
-      filterSearch: true,
-      onFilter: (value, record) => record.tags.some((t) => t._id === value),
-    });
-  }
+  // //additional tag column if shopper and donor list
+  // if (allTags) {
+  //   columns.push({
+  //     title: 'Tags',
+  //     dataIndex: 'tags',
+  //     render: (record) => {
+  //       return record
+  //         .map((r) => {
+  //           return <span key={r.name}>r.name</span>;
+  //         })
+  //         .join();
+  //     },
+  //     className: 'onlyHeading',
+  //     filters: allTags.map((c) => {
+  //       return { text: c.name, value: c._id };
+  //     }),
+  //     filterMode: 'tree',
+  //     filterSearch: true,
+  //     onFilter: (value, record) => record.tags.some((t) => t._id === value),
+  //   });
+  // }
 
   if (handleDelete) {
     columns.push({
@@ -130,13 +136,25 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
       key: 'action',
       render: (record) => (
         <Space size="middle">
-          <DeleteButton onClick={() => handleDelete(record._id, record.kind)}>
+          <DeleteButton onClick={() => handleDelete(record._id, record.type)}>
             Delete
           </DeleteButton>
         </Space>
       ),
     });
   }
+
+  const expandableProps = {
+    ...(handleExpand ? { onExpand: handleExpand } : {}),
+    expandedRowRender: expandRow,
+    expandIconColumnIndex: 2,
+    expandIcon: ({ expanded, onExpand, record }) =>
+      expanded ? (
+        <ExpandButton onClick={(e) => onExpand(record, e)}>Close</ExpandButton>
+      ) : (
+        <ExpandButton onClick={(e) => onExpand(record, e)}>View</ExpandButton>
+      ),
+  };
 
   return (
     <ListWrapper>
@@ -146,20 +164,7 @@ export const UsersList = ({ data, handleDelete, expandRow, allTags }) => {
         scroll={{ x: '100%' }}
         columns={columns}
         rowKey={(record) => record._id}
-        expandable={{
-          expandedRowRender: expandRow,
-          expandIconColumnIndex: 2,
-          expandIcon: ({ expanded, onExpand, record }) =>
-            expanded ? (
-              <ExpandButton onClick={(e) => onExpand(record, e)}>
-                Close
-              </ExpandButton>
-            ) : (
-              <ExpandButton onClick={(e) => onExpand(record, e)}>
-                View
-              </ExpandButton>
-            ),
-        }}
+        expandable={expandableProps}
         dataSource={rows}
       />
     </ListWrapper>

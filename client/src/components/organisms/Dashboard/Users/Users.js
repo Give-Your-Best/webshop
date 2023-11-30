@@ -1,5 +1,6 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -8,13 +9,12 @@ import {
   HiddenStyledTab,
 } from './Users.styles';
 import {
-  getUsers,
+  getUser,
   deleteUser,
   updateDonor,
   updateShopper,
 } from '../../../../services/user';
 import { deleteDonorItems } from '../../../../services/items';
-import { getTags } from '../../../../services/tags';
 import { Modal } from 'antd';
 import { Formik } from 'formik';
 import {
@@ -31,12 +31,27 @@ import { openHiddenTab, tabList } from '../../../../utils/helpers';
 export const Users = () => {
   const { confirm } = Modal;
   const { token, user } = useContext(AppContext);
-  const mountedRef = useRef(true);
+  const { allTags, allUsers, setAllUsers } = useContext(AccountContext);
   const [shoppers, setShoppers] = useState([]);
   const [donors, setDonors] = useState([]);
-  const [tags, setTags] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [activeRecords, setActiveRecords] = useState({});
+
+  // TODO this belongs with the global helpers
+  const updateContext = (data) => {
+    const { firstName, lastName, email, kind, _id } = data;
+
+    setAllUsers({
+      ...allUsers,
+      [_id]: {
+        name: `${firstName} ${lastName}`.trim(),
+        email: email,
+        _id: _id,
+        type: kind,
+      },
+    });
+  };
 
   const handleDelete = (id, kind) => {
     confirm({
@@ -45,90 +60,92 @@ export const Users = () => {
       content: 'This will remove the user',
       onOk() {
         deleteUser(id, token).then(() => {
-          if (kind === 'shopper') {
-            setShoppers(
-              shoppers.filter((shopper) => {
-                return shopper._id !== id;
-              })
-            );
-          } else if (kind === 'donor') {
+          // eslint-disable-next-line no-unused-vars
+          const { [id]: _discard, ...rest } = allUsers;
+          setAllUsers(rest);
+
+          if (kind === 'donor') {
             deleteDonorItems(id, token);
-            setDonors(
-              donors.filter((donor) => {
-                return donor._id !== id;
-              })
-            );
           }
         });
       },
     });
   };
 
-  const editForm = (record) => {
-    const handleEditSave = (newRecord) => {
-      if (newRecord.kind === 'donor') {
-        setDonors(
-          donors.map((donor) => {
-            if (donor._id === newRecord._id) {
-              return Object.assign(donor, newRecord);
-            } else {
-              return donor;
-            }
-          })
-        );
-      } else if (newRecord.kind === 'shopper') {
-        setShoppers(
-          shoppers.map((shopper) => {
-            if (shopper._id === newRecord._id) {
-              return Object.assign(shopper, newRecord);
-            } else {
-              return shopper;
-            }
-          })
-        );
-      }
-    };
+  const handleExpand = (expanded, record) =>
+    expanded &&
+    getUser(record._id, token).then((u) =>
+      setActiveRecords({
+        ...activeRecords,
+        [u._id]: u,
+      })
+    );
+
+  const editForm = (user) => {
+    const currentRecord = activeRecords[user._id];
+
+    const templateForm = (
+      <>
+        <Tags tagList={[]} />
+        <Space />
+        <Formik initialValues={{}}>
+          {user.type === 'donor' ? (
+            <DonorMiniEditForm />
+          ) : user.type === 'shopper' ? (
+            <ShopperMiniEditForm />
+          ) : (
+            ''
+          )}
+        </Formik>
+      </>
+    );
+
+    if (!currentRecord) {
+      return templateForm;
+    }
+
+    if (user._id !== currentRecord._id) {
+      return templateForm;
+    }
+
     const handleSubmit = async (values) => {
-      if (record.kind === 'donor') {
-        const res = await updateDonor(record._id, values, token);
-        if (res.success) {
-          handleEditSave(res.user);
-          setEditingKey('');
-          return true;
-        } else {
-          setErrorMessage(res.message);
-        }
-      } else if (record.kind === 'shopper') {
-        const res = await updateShopper(record._id, values, token);
-        if (res.success) {
-          handleEditSave(res.user);
-          setEditingKey('');
-          return true;
-        } else {
-          setErrorMessage(res.message);
-        }
+      const res = await {
+        donor: updateDonor,
+        shopper: updateShopper,
+      }[currentRecord.kind](currentRecord._id, values, token);
+
+      if (res.success) {
+        updateContext(res.user);
+        setEditingKey('');
+        return true;
+      } else {
+        setErrorMessage(res.message);
       }
     };
+
     const handleEdit = () => {
-      setEditingKey(editingKey ? '' : record._id);
+      setEditingKey(editingKey ? '' : currentRecord._id);
     };
 
     return (
       <div>
         <Tags
-          updateId={record._id}
-          tagList={record.tags || []}
-          availableTags={tags}
+          updateId={currentRecord._id}
+          tagList={currentRecord.tags || []}
+          availableTags={allTags}
           updateType="user"
         />
         <Space />
-        <Formik initialValues={record} onSubmit={handleSubmit}>
-          {record.kind === 'donor' ? (
-            <DonorMiniEditForm editingKey={editingKey} recordId={record._id} />
-          ) : record.kind === 'shopper' ? (
+        <Formik initialValues={currentRecord} onSubmit={handleSubmit}>
+          {user.type === 'donor' ? (
+            <DonorMiniEditForm
+              editingKey={editingKey}
+              recordId={currentRecord._id}
+            />
+          ) : user.type === 'shopper' ? (
             <ShopperMiniEditForm
               editingKey={editingKey}
-              recordId={record._id}
+              recordId={currentRecord._id}
             />
           ) : (
             ''
@@ -136,11 +153,27 @@ export const Users = () => {
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         <Button primary onClick={handleEdit}>
-          {editingKey === record._id ? 'Cancel' : 'Edit'}
+          {editingKey === currentRecord._id ? 'Cancel' : 'Edit'}
         </Button>
       </div>
     );
   };
+
+  // TODO this can be a lot nicer
+  useEffect(() => {
+    const { shopper, donor } = Object.values(allUsers || {}).reduce(
+      (acc, cur) => {
+        if (cur.type !== 'admin') {
+          acc[cur.type].push(cur);
+        }
+        return acc;
+      },
+      { donor: [], shopper: [] }
+    );
+
+    setShoppers(shopper);
+    setDonors(donor);
+  }, [allUsers]);
 
   useEffect(() => {
     var tabs = tabList(user);
@@ -149,49 +182,17 @@ export const Users = () => {
         window.history.pushState({}, '', '/dashboard/' + t.id);
       }
     });
-
-    const fetchShoppers = async () => {
-      const users = await getUsers('shopper', 'approved', token);
-      if (!mountedRef.current) return null;
-      setShoppers(users);
-    };
-
-    const fetchDonors = async () => {
-      const users = await getUsers('donor', 'approved', token);
-      if (!mountedRef.current) return null;
-      setDonors(users);
-    };
-
-    const fetchAllTags = async () => {
-      const tags = await getTags(token);
-      if (!mountedRef.current) return null;
-      setTags(tags);
-    };
-
-    fetchShoppers();
-    fetchDonors();
-    fetchAllTags();
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
   }, [token, user]);
-
-  const submitFunction = (user, type) => {
-    if (user.kind === 'donor') {
-      setDonors(donors.concat(user));
-    } else if (user.kind === 'shopper') {
-      setShoppers(shoppers.concat(user));
-    }
-  };
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
       <StyledTabList>
         <StyledTab className="shopperlist">Shoppers</StyledTab>
+
         <StyledTab className="donorlist">Donors</StyledTab>
+
         <HiddenStyledTab className="addshopper">Add Shopper</HiddenStyledTab>
+
         <HiddenStyledTab className="adddonor">Add Donor</HiddenStyledTab>
       </StyledTabList>
 
@@ -200,8 +201,10 @@ export const Users = () => {
           data={shoppers}
           handleDelete={handleDelete}
           expandRow={editForm}
-          allTags={tags}
+          onExpand={handleExpand}
+          allTags={allTags}
         />
+
         <Button
           primary
           small
@@ -212,13 +215,16 @@ export const Users = () => {
           Create
         </Button>
       </StyledTabPanel>
+
       <StyledTabPanel>
         <UsersList
           data={donors}
           handleDelete={handleDelete}
           expandRow={editForm}
-          allTags={tags}
+          onExpand={handleExpand}
+          allTags={allTags}
         />
+
         <Button
           primary
           small
@@ -229,11 +235,13 @@ export const Users = () => {
           Create
         </Button>
       </StyledTabPanel>
+
       <StyledTabPanel>
-        <ShopperCreateForm submitFunction={submitFunction} />
+        <ShopperCreateForm submitFunction={updateContext} />
       </StyledTabPanel>
+
       <StyledTabPanel>
-        <DonorCreateForm submitFunction={submitFunction} />
+        <DonorCreateForm submitFunction={updateContext} />
       </StyledTabPanel>
     </StyledTabs>
   );

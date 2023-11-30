@@ -27,7 +27,7 @@ export const Images = (data) => {
 
   const handleCancel = () => setPreviewVisible(false);
 
-  const handleChange = ({ file, fileList }) => {
+  const handleChange = ({ fileList }) => {
     fileList[0].front = true; //set first image to front image
     data.setUploadedImages(fileList);
 

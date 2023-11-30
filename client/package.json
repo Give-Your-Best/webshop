@@ -5,6 +5,8 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
+    "@bugsnag/js": "^7.21.0",
+    "@bugsnag/plugin-react": "^7.19.0",
     "@testing-library/jest-dom": "^5.13.0",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^13.1.9",
@@ -29,26 +31,15 @@
     "web-vitals": "^1.0.1",
     "yup": "^0.32.11"
   },
-  "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "react-error-overlay": "^6.0.9"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "**/*.stories.*"
-        ],
-        "rules": {
-          "import/no-anonymous-default-export": "off"
-        }
-      }
-    ]
+  "scripts": {
+    "build": "react-scripts build",
+    "build:production": "REACT_APP_ENV=production react-scripts build",
+    "build:staging": "REACT_APP_ENV=staging react-scripts build",
+    "start": "ESLINT_NO_DEV_ERRORS=true react-scripts --openssl-legacy-provider start",
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [
@@ -62,8 +53,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000/",
-  "devDependencies": {
-    "react-error-overlay": "^6.0.9"
-  }
+  "proxy": "http://localhost:5000/"
 }

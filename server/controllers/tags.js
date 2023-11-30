@@ -16,6 +16,7 @@ const createTag = async (req, res) => {
       tag: response.tag,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }
@@ -37,6 +38,7 @@ const updateTag = async (req, res) => {
       tag: response.tag,
     });
   } catch (err) {
+    req.bugsnag.notify(err);
     console.error(`Service error: ${err}`);
     return res.status(500).send({ message: `Service error: ${err}` });
   }

@@ -1,4 +1,7 @@
+const { ObjectId } = require('bson');
 const Item = require('../models/Item');
+const User_ = require('../models/User');
+const Location = require('../models/Location');
 const { cloudinary } = require('../utils/cloudinary');
 
 const createItem = async (data) => {
@@ -42,7 +45,7 @@ const createItem = async (data) => {
   data.photos = new_photos;
   try {
     const item = new Item(data);
-    let saveItem = await item.save();
+    await item.save();
     return { success: true, message: 'Item created', item: item };
   } catch (err) {
     console.error(err);
@@ -216,34 +219,106 @@ const getShopperItems = async (userId, itemStatus) => {
   }
 };
 
-const getAdminItems = async (isCurrent) => {
-  //here type is current or past
+// There is now proper pagination on this endpoint as the quantity of results
+// combined with aggregations is resulting in timeouts...
+const getAdminItems = async ({
+  isCurrent = true,
+  withCount = true,
+  limit = 10,
+  page = 1,
+  donor = undefined,
+  shopper = undefined,
+  category = undefined,
+  status = undefined,
+  sort = undefined,
+}) => {
+  const lim = parseInt(limit);
+  const pge = parseInt(page);
+
   var conditions = {};
 
   try {
     if (isCurrent) {
-      conditions = {
-        approvedStatus: 'approved',
-        $or: [
-          { status: 'in-shop' },
-          { status: 'shopped' },
-          { status: 'shipped-to-gyb' },
-          { status: 'received-by-gyb' },
-          { status: 'shipped-to-shopper' },
-        ],
-      };
+      // Statuses comprising 'current' items
+      const defaultStatus = [
+        'in-shop',
+        'shopped',
+        'shipped-by-gyb',
+        'received-by-gyb',
+        'shipped-to-shopper',
+      ];
+      // all current items must be approved
+      const $and = [{ approvedStatus: 'approved' }];
+      // Apply either the statuses prvided by the client or the defaults
+      if (status) {
+        $and.push({
+          $or: status.split(',').map((s) => ({ status: s })),
+        });
+      } else {
+        $and.push({
+          $or: defaultStatus.map((s) => ({ status: s })),
+        });
+      }
+      // Apply categories if provided by the client
+      if (category) {
+        $and.push({
+          $or: category.split(',').map((c) => ({ category: c })),
+        });
+      }
+      conditions = { $and };
     } else {
+      // Past items are items that are confirmed received
       conditions = {
         status: 'received',
       };
+      // Apply categories if provided by the client
+      if (category) {
+        conditions.$or = category.split(',').map((c) => ({ category: c }));
+      }
     }
+
+    // Apply the donor or shopper id if any
+    if (donor) {
+      conditions.donorId = new ObjectId(donor);
+    } else if (shopper) {
+      conditions.shopperId = new ObjectId(shopper);
+    }
+
+    // Default sort most recent items
+    let sortBy = { createdAt: -1 };
+
+    // Prepend sort config from the client if any
+    if (sort) {
+      const [field, dir] = sort.split(':');
+
+      const map = {
+        ascend: -1,
+        descend: 1,
+      };
+
+      sortBy = {
+        [field]: map[dir],
+        createdAt: -1,
+      };
+    }
+
+    // We only want to calculate the count when the view/filters etc. change,
+    // not for pagination update queries...
+    const count = withCount ? await Item.countDocuments(conditions) : undefined;
+
     var items = await Item.find(conditions)
-      .sort({ createdAt: -1 })
+      .sort(sortBy)
+      .limit(lim)
+      .skip((pge - 1) * lim)
       .populate('shopperId')
       .populate('donorId')
       .populate('tags')
       .exec();
-    return items;
+
+    return {
+      count,
+      items,
+    };
   } catch (error) {
     console.error(`Error in getting admin items: ${error}`);
     return {
@@ -312,129 +387,106 @@ const getAllItems = async (
 };
 
 const getAccountNotificationItems = async (adminUserId) => {
-  var results = [];
-
-  const pendingReceiveQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { $or: [{ status: 'shopped' }, { status: 'shipped-to-gyb' }] },
-    ],
-  };
-  const pendingSentQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { status: 'received-by-gyb' },
-    ],
-  };
-
-  const pendingShopperReceivedQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { status: 'shipped-to-shopper' },
-    ],
-  };
-
   try {
-    const pendingReceive = await Item.find(pendingReceiveQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
-    const pendingSent = await Item.find(pendingSentQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
-    const pendingShopperReceived = await Item.find(pendingShopperReceivedQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
+    // We only care about items assigned to the current admin user
+    const locationId = await Location.find(
+      {
+        adminUser: adminUserId,
+      },
+      '_id'
+    ).lean();
 
-    results.push(
-      pendingReceive.filter((i) => {
-        return i.sendVia !== null;
-      })
-    );
-    results.push(
-      pendingSent.filter((i) => {
-        return i.sendVia !== null;
-      })
-    );
-    results.push(
-      pendingShopperReceived.filter((i) => {
-        return i.sendVia !== null;
-      })
+    const condition = {
+      $and: [
+        { approvedStatus: 'approved' },
+        { sendVia: locationId },
+        {
+          status: {
+            $in: [
+              'shopped',
+              'shipped-to-gyb',
+              'received-by-gyb',
+              'shipped-to-shopper',
+            ],
+          },
+        },
+      ],
+    };
+
+    const data = await Item.find(condition)
+      .populate('shopperId')
+      .populate('donorId')
+      .populate('sendVia')
+      .lean();
+
+    const result = [].concat(...data).reduce(
+      (acc, cur) => {
+        if (cur.status === 'shipped-to-shopper') {
+          // Items dispatched to shopper and awaiting confirmation of receipt
+          acc[2].push(cur);
+        } else if (cur.status === 'received-by-gyb') {
+          // Items received from donor and awaiting dispatch
+          acc[1].push(cur);
+        } else {
+          // Items not yet received from donor
+          acc[0].push(cur);
+        }
+
+        return acc;
+      },
+      [[], [], []]
     );
 
-    return results;
+    return result;
   } catch (error) {
-    console.error(`Error in find items: ${error}`);
-    return { success: false, message: `Error in find items: ${error}` };
+    console.error(`Error in get account notifications: ${error}`);
+    return {
+      success: false,
+      message: `Error in get account notifications: ${error}`,
+    };
   }
 };
 
 const getShopNotificationItems = async () => {
-  var results = [];
-
-  const pendingAssignQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { status: 'shopped' },
-      { sendVia: null },
-    ],
-  };
-  const shoppedQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      {
-        $or: [
-          { status: 'shopped' },
-          { status: 'shipped-to-gyb' },
-          { status: 'received-by-gyb' },
-        ],
-      },
-      { sendVia: { $ne: null } },
-    ],
-  };
-
   try {
-    var results = [];
-    const pendingAssign = await Item.find(pendingAssignQuery)
-      .populate({
-        path: 'shopperId',
-        match: { deliveryPreference: 'via-gyb' },
-      })
-      .populate('donorId');
-    const shopped = await Item.find(shoppedQuery)
-      .populate({
-        path: 'shopperId',
-        match: { deliveryPreference: 'via-gyb' },
-      })
+    // We only care about items where shopper requires dispatch via GYB
+    const shopperIds = await User_.Shopper.find(
+      {
+        deliveryPreference: 'via-gyb',
+      },
+      '_id'
+    ).lean();
+
+    const condition = {
+      $and: [
+        { approvedStatus: 'approved' },
+        { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
+        { shopperId: { $in: shopperIds } },
+      ],
+    };
+
+    const data = await Item.find(condition)
+      .populate('shopperId')
       .populate('donorId')
-      .populate('sendVia');
+      .populate('sendVia')
+      .lean();
 
-    results.push(
-      pendingAssign.filter((i) => {
-        return i.shopperId !== null;
-      })
-    );
-    results.push(
-      shopped.filter((i) => {
-        return i.shopperId !== null;
-      })
+    const result = [].concat(...data).reduce(
+      (acc, cur) => {
+        if (cur.status === 'shopped' && cur.sendVia === undefined) {
+          // Items not yet assigned an administrator to handle shipping
+          acc[0].push(cur);
+        } else {
+          // Items assigned and awaiting progress update from donor/shopper
+          acc[1].push(cur);
+        }
+
+        return acc;
+      },
+      [[], []]
     );
 
-    return results;
+    return result;
   } catch (error) {
     console.error(`Error in get shop notifications: ${error}`);
     return {

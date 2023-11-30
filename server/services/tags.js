@@ -4,7 +4,9 @@ const User_ = require('../models/User');
 
 const getTags = async () => {
   try {
-    const tags = await Tag.find({}).populate('items').populate('users');
+    // TODO this is a very slow query due to lookups scanning the entire items
+    // and users collections - disabling the lookups as appear to be uneeded
+    const tags = await Tag.find({}).lean(); //.populate('items').populate('users');
     return tags;
   } catch (error) {
     console.error(`Error in get tags: ${error}`);
@@ -46,7 +48,7 @@ const updateTag = async (id, updateData) => {
 const createTag = async (data) => {
   try {
     const tag = new Tag(data);
-    let saveTag = await tag.save();
+    await tag.save();
     return { success: true, message: `tag created`, tag: tag };
   } catch (err) {
     console.error(err);
