@@ -7,7 +7,6 @@ const { cloudinary } = require('../utils/cloudinary');
 const createItem = async (data) => {
   var new_photos = [];
   var success = true;
-  console.log(cloudinary.config(), data);
   const promises = data.photos.map((photo) => {
     if (photo.status !== 'removed') {
       return cloudinary.uploader
