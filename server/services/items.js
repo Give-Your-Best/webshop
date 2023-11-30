@@ -1,6 +1,7 @@
 const { ObjectId } = require('bson');
 const Item = require('../models/Item');
-// const User_ = require('../models/User'); TODO will use asap
+const User_ = require('../models/User');
+const Location = require('../models/Location');
 const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
@@ -494,183 +495,106 @@ const getAllItems = async (
 };
 
 const getAccountNotificationItems = async (adminUserId) => {
-  var results = [];
-
-  const pendingReceiveQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { $or: [{ status: 'shopped' }, { status: 'shipped-to-gyb' }] },
-    ],
-  };
-  const pendingSentQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { status: 'received-by-gyb' },
-    ],
-  };
-
-  const pendingShopperReceivedQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { sendVia: { $exists: true } },
-      { status: 'shipped-to-shopper' },
-    ],
-  };
-
   try {
-    const pendingReceive = await Item.find(pendingReceiveQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
-    const pendingSent = await Item.find(pendingSentQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
-    const pendingShopperReceived = await Item.find(pendingShopperReceivedQuery)
-      .populate({
-        path: 'sendVia',
-        match: { adminUser: adminUserId },
-      })
-      .populate('shopperId')
-      .populate('donorId');
+    // We only care about items assigned to the current admin user
+    const locationId = await Location.find(
+      {
+        adminUser: adminUserId,
+      },
+      '_id'
+    ).lean();
 
-    results.push(
-      pendingReceive.filter((i) => {
-        return i.sendVia !== null;
-      })
-    );
-    results.push(
-      pendingSent.filter((i) => {
-        return i.sendVia !== null;
-      })
-    );
-    results.push(
-      pendingShopperReceived.filter((i) => {
-        return i.sendVia !== null;
-      })
+    const condition = {
+      $and: [
+        { approvedStatus: 'approved' },
+        { sendVia: locationId },
+        {
+          status: {
+            $in: [
+              'shopped',
+              'shipped-to-gyb',
+              'received-by-gyb',
+              'shipped-to-shopper',
+            ],
+          },
+        },
+      ],
+    };
+
+    const data = await Item.find(condition)
+      .populate('shopperId')
+      .populate('donorId')
+      .populate('sendVia')
+      .lean();
+
+    const result = [].concat(...data).reduce(
+      (acc, cur) => {
+        if (cur.status === 'shipped-to-shopper') {
+          // Items dispatched to shopper and awaiting confirmation of receipt
+          acc[2].push(cur);
+        } else if (cur.status === 'received-by-gyb') {
+          // Items received from donor and awaiting dispatch
+          acc[1].push(cur);
+        } else {
+          // Items not yet received from donor
+          acc[0].push(cur);
+        }
+
+        return acc;
+      },
+      [[], [], []]
     );
 
-    return results;
+    return result;
   } catch (error) {
-    console.error(`Error in find items: ${error}`);
-    return { success: false, message: `Error in find items: ${error}` };
+    console.error(`Error in get account notifications: ${error}`);
+    return {
+      success: false,
+      message: `Error in get account notifications: ${error}`,
+    };
   }
 };
 
 const getShopNotificationItems = async () => {
-  // TODO - testing this query - it reduces the load from 25s -> 2.5s
-  // const shopperIds = await User_.Shopper.find({
-  //   deliveryPreference: 'via-gyb',
-  // })
-  //   .select('id')
-  //   .then((data) => {
-  //     return data.reduce((acc, cur) => {
-  //       acc[cur.id] = cur;
-  //       return acc;
-  //     }, {});
-  //   });
-
-  // const condition = {
-  //   $and: [
-  //     { approvedStatus: 'approved' },
-  //     { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
-  //   ],
-  // };
-
-  // const count = await Item.countDocuments(condition);
-
-  // const div = 14;
-  // const rem = count % div;
-  // const max = (count - rem) / div;
-
-  // const init = new Array(div).fill(max).concat([rem]).filter(Boolean);
-
-  // const data = await Promise.all(
-  //   init.map(async (limit, index) =>
-  //     Item.find(condition)
-  //       .limit(limit)
-  //       .skip(index * max)
-  //       .lean()
-  //   )
-  // );
-
-  // const result = [].concat(...data).reduce(
-  //   (acc, cur) => {
-  //     if (!shopperIds[cur.shopperId]) {
-  //       return acc;
-  //     }
-
-  //     if (cur.status === 'shopped' && cur.sendVia === null) {
-  //       acc[0].push(cur);
-  //     } else {
-  //       acc[1].push(cur);
-  //     }
-
-  //     return acc;
-  //   },
-  //   [[], []]
-  // );
-
-  // return result;
-
-  const results = [];
-
-  const pendingAssignQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      { status: 'shopped' },
-      { sendVia: null },
-    ],
-  };
-  const shoppedQuery = {
-    $and: [
-      { approvedStatus: 'approved' },
-      {
-        $or: [
-          { status: 'shopped' },
-          { status: 'shipped-to-gyb' },
-          { status: 'received-by-gyb' },
-        ],
-      },
-      { sendVia: { $ne: null } },
-    ],
-  };
-
   try {
-    const pendingAssign = await Item.find(pendingAssignQuery)
-      .populate({
-        path: 'shopperId',
-        match: { deliveryPreference: 'via-gyb' },
-      })
-      .populate('donorId');
-    const shopped = await Item.find(shoppedQuery)
-      .populate({
-        path: 'shopperId',
-        match: { deliveryPreference: 'via-gyb' },
-      })
+    // We only care about items where shopper requires dispatch via GYB
+    const shopperIds = await User_.Shopper.find(
+      {
+        deliveryPreference: 'via-gyb',
+      },
+      '_id'
+    ).lean();
+
+    const condition = {
+      $and: [
+        { approvedStatus: 'approved' },
+        { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
+        { shopperId: { $in: shopperIds } },
+      ],
+    };
+
+    const data = await Item.find(condition)
+      .populate('shopperId')
       .populate('donorId')
-      .populate('sendVia');
+      .populate('sendVia')
+      .lean();
 
-    results.push(
-      pendingAssign.filter((i) => {
-        return i.shopperId !== null;
-      })
-    );
-    results.push(
-      shopped.filter((i) => {
-        return i.shopperId !== null;
-      })
+    const result = [].concat(...data).reduce(
+      (acc, cur) => {
+        if (cur.status === 'shopped' && cur.sendVia === undefined) {
+          // Items not yet assigned an administrator to handle shipping
+          acc[0].push(cur);
+        } else {
+          // Items assigned and awaiting progress update from donor/shopper
+          acc[1].push(cur);
+        }
+
+        return acc;
+      },
+      [[], []]
     );
 
-    return results;
+    return result;
   } catch (error) {
     console.error(`Error in get shop notifications: ${error}`);
     return {

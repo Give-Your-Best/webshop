@@ -193,42 +193,41 @@ const listAllUsers = async () => {
 
 const getDonations = async (approvedStatus) => {
   try {
-    const donations = await User_.Donor.aggregate([
-      {
-        $match: {
-          $and: [
-            { $or: [{ trustedDonor: false }, { trustedDonor: null }] },
-            { approvedStatus: 'approved' },
-          ],
-        },
-      },
-      {
-        $lookup: {
-          from: 'items',
-          localField: '_id',
-          foreignField: 'donorId',
-          pipeline: [
-            {
-              $match: {
-                $expr: { $and: [{ $eq: ['$approvedStatus', approvedStatus] }] },
-              },
-            },
-          ],
-          as: 'donationItemsDetails',
-        },
-      },
-      {
-        $project: {
-          _id: '$_id',
-          name: { $concat: ['$firstName', ' ', '$lastName'] },
-          hod: '$hod',
-          numOfDonationItems: { $size: '$donationItemsDetails' },
-          donationItems: '$donationItemsDetails',
-        },
-      },
-    ]).exec();
+    // We care about approved but not yet trusted users
+    const donors = await User_.Donor.find({
+      $and: [{ trustedDonor: { $ne: true } }, { approvedStatus: 'approved' }],
+    }).select('id firstName lastName');
 
-    return donations;
+    const condition = {
+      donorId: { $in: donors },
+      approvedStatus: approvedStatus,
+    };
+
+    // Pull the relevant items
+    const data = await Item.find(condition).lean();
+
+    // Group items under donor id
+    const donorItems = data.reduce((acc, cur) => {
+      acc[cur.donorId] = acc[cur.donorId] || [];
+      acc[cur.donorId].push(cur);
+      return acc;
+    }, {});
+
+    // Format the result
+    const result = donors.map((d) => {
+      const name = `${d.firstName} ${d.lastName}`.trim();
+      const donationItems = donorItems[d.id] || [];
+      const numOfDonationItems = donationItems.length;
+
+      return {
+        _id: d.id,
+        name,
+        donationItems,
+        numOfDonationItems,
+      };
+    });
+
+    return result;
   } catch (error) {
     console.error(`Error in get donations: ${error}`);
     return { success: false, message: `Error in getdonations: ${error}` };
