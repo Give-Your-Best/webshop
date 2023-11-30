@@ -390,9 +390,12 @@ const getAllItems = async (
 const getAccountNotificationItems = async (adminUserId) => {
   try {
     // We only care about items assigned to the current admin user
-    const locationId = await Location.find({
-      adminUser: adminUserId,
-    }).select('id');
+    const locationId = await Location.find(
+      {
+        adminUser: adminUserId,
+      },
+      '_id'
+    ).lean();
 
     const condition = {
       $and: [
@@ -448,9 +451,12 @@ const getAccountNotificationItems = async (adminUserId) => {
 const getShopNotificationItems = async () => {
   try {
     // We only care about items where shopper requires dispatch via GYB
-    const shopperIds = await User_.Shopper.find({
-      deliveryPreference: 'via-gyb',
-    }).select('id');
+    const shopperIds = await User_.Shopper.find(
+      {
+        deliveryPreference: 'via-gyb',
+      },
+      '_id'
+    ).lean();
 
     const condition = {
       $and: [
