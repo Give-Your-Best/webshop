@@ -4,7 +4,7 @@ import { StyledSelect } from '../../atoms';
 import { StyledError, StyledLabel } from './EditForm.styles';
 import { useFormikContext } from 'formik';
 
-export const CategoryFields = ({ editingKey, recordId }) => {
+export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const [subs, setSubs] = useState([]);
   const formikProps = useFormikContext();
 
@@ -25,6 +25,11 @@ export const CategoryFields = ({ editingKey, recordId }) => {
         return sub.parentCategory === cat;
       })
     );
+    onCategoryChange(cat, formikProps.values.subCategory);
+  };
+
+  const handleSubCategoryChange = (subCategory) => {
+    onCategoryChange(formikProps.values.category, subCategory);
   };
 
   return (
@@ -46,7 +51,11 @@ export const CategoryFields = ({ editingKey, recordId }) => {
       <StyledError name="category" component="div" />
 
       <StyledLabel>Sub Category</StyledLabel>
-      <StyledSelect name="subCategory" disabled={editingKey !== recordId}>
+      <StyledSelect
+        name="subCategory"
+        disabled={editingKey !== recordId}
+        onChange={handleSubCategoryChange}
+      >
         {subs.map((d) => {
           return (
             <StyledSelect.Option key={d.id} value={d.id}>

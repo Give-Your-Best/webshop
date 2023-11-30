@@ -9,3 +9,4 @@ export { deleteItem } from './deleteItem';
 export { deleteDonorItems } from './deleteDonorItems';
 export { createItem } from './createItem';
 export { getItem } from './getItem';
+export { createBatchItem } from './createBatchItem';
