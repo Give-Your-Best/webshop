@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
 import { Badge } from 'antd';
