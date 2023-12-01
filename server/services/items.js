@@ -518,7 +518,7 @@ const getStatusReminderItems = async (delta, userType) => {
       },
     }).lean();
 
-    // Group items under donor id
+    // Group items under target user reference id
     const result = items.reduce((acc, cur) => {
       const key = cur[`${userType}Id`];
       acc[key] = acc[key] || [];

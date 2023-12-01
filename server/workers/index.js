@@ -81,7 +81,7 @@ const order_reminders = async () => {
       const content = reminderContent(kind)(items[id]);
 
       // return [subject, content, email, name];
-      return [subject, emailTemplate(content), 'haydnba@pm.me', name];
+      return [subject, emailTemplate(content), 'email@example.com', name];
     });
 
     const results = await Promise.all(reminders.map((r) => sendMail(...r)));
