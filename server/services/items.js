@@ -54,83 +54,53 @@ const createItem = async (data) => {
   }
 };
 
-// const createBatchItem = async (data) => {
-//   try {
-//     const batchItem = new BatchItem({ itemIds: [] });
-//     // Saved initially to generate the batchItemId
-//     const savedBatchItem = await batchItem.save();
-//     // Create multiple Items associated with the BatchItem
-//     const createdItems = [];
-//     console.log('data: ', data);
-//     const [items] = Object.values(data);
-//     for (const item of items) {
-//       var new_photos = [];
-//       var success = true;
-//       const promises = item.photos.map((photo) => {
-//         if (photo.status !== 'removed') {
-//           return cloudinary.uploader
-//             .upload(photo.imageUrl, {
-//               resource_type: 'auto',
-//               public_id: photo.uid,
-//               overwrite: false,
-//               secure: true,
-//             })
-//             .then((result) => {
-//               console.log(
-//                 '*** Success: Cloudinary Upload: ',
-//                 result.secure_url
-//               );
-//               new_photos.push({
-//                 url: result.secure_url,
-//                 name: photo.name,
-//                 createdAt: result.created_at,
-//                 publicId: photo.uid,
-//                 success: true,
-//                 front: photo.front ? true : false,
-//               });
-//             })
-//             .catch((err) => {
-//               console.error(err);
-//               console.log('*** Error: Cloudinary Upload');
-//               success = false;
-//               return;
-//             });
-//         }
-//       });
-//       await Promise.all(promises);
-//       if (!success) {
-//         return {
-//           success: false,
-//           message: 'Failed to upload one or more of your images',
-//         };
-//       }
-//       data.photos = new_photos;
-//       try {
-//         const newItem = new Item({
-//           ...itemWithPhotos,
-//           batchId: savedBatchItem._id,
-//         });
-//         const savedItem = await newItem.save();
-//         createdItems.push(savedItem);
-//         savedBatchItem.itemIds.push(savedItem._id);
-//       } catch (err) {
-//         console.error(err);
-//         return { success: false, message: err };
-//       }
-//     }
-//     // Save the batchItem again to update the itemIds array
-//     await savedBatchItem.save();
-//     return {
-//       success: true,
-//       message: 'BatchItem and associated items created',
-//       batchItem: savedBatchItem,
-//       items: createdItems,
-//     };
-//   } catch (err) {
-//     console.error(err);
-//     return { success: false, message: err };
-//   }
-// };
+const createBatchItem = async (data) => {
+  try {
+    const batchItem = new BatchItem();
+    const savedBatchItem = await batchItem.save();
+
+    savedBatchItem.clothingSizes = data.clothingSize;
+    savedBatchItem.shoeSizes = data.shoeSize;
+    savedBatchItem.childrenClothingSizes = data.childrenClothingSize;
+    savedBatchItem.childrenShoeSizes = data.childrenShoeSize;
+
+    // Extract sizes without quantities to create an item with
+    const clothingSize = data.clothingSize
+      ? Object.keys(data.clothingSize)
+      : [];
+    const shoeSize = data.shoeSize ? Object.keys(data.shoeSize) : [];
+    const childrenClothingSize = data.childrenClothingSize
+      ? Object.keys(data.childrenClothingSize)
+      : [];
+    const childrenShoeSize = data.childrenShoeSize
+      ? Object.keys(data.childrenShoeSize)
+      : [];
+
+    // Create a new data object for createItem()
+    const itemData = {
+      ...data,
+      clothingSize,
+      shoeSize,
+      childrenClothingSize,
+      childrenShoeSize,
+    };
+    const newItemData = await createItem(itemData);
+    const newItem = newItemData.item;
+    savedBatchItem.templateItem = newItem._id;
+    await savedBatchItem.save();
+
+    console.log('savedBatchItem: ', savedBatchItem);
+    return {
+      success: true,
+      message: 'BatchItem and associated item created',
+      batchItem: savedBatchItem,
+      item: newItem,
+    };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: err };
+  }
+};
 
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
@@ -651,4 +621,5 @@ module.exports = {
   deleteDonorItems,
   deleteBatchItem,
   updateItem,
+  createBatchItem,
 };

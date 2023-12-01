@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
 import { colours } from '../../../utils/constants';
-import { createItem } from '../../../services/items';
+import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
   StyledSubmitButton,
@@ -39,7 +39,7 @@ export const ItemCreateForm = (data) => {
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     let res;
     if (showBatchOptions === true) {
-      // res = await createBatchItem(values, token);
+      res = await createBatchItem(values, token);
     } else {
       res = await createItem(values, token);
     }
