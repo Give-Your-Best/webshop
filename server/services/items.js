@@ -448,28 +448,6 @@ const getAccountNotificationItems = async (adminUserId) => {
   }
 };
 
-const getDonorNotificationItems = async () => {
-  try {
-    //
-    const oneWeekAgo = moment().subtract(7, 'days').format('YYYY-MM-DD');
-
-    const blah = await Item.find({
-      status: 'shopped',
-      approvedStatus: 'approved',
-      $expr: {
-        $eq: [
-          oneWeekAgo,
-          { $dateToString: { date: '$updatedAt', format: '%Y-%m-%d' } },
-        ],
-      },
-    });
-
-    console.log(blah);
-  } catch (e) {
-    //
-  }
-};
-
 const getShopNotificationItems = async () => {
   try {
     // We only care about items where shopper requires dispatch via GYB
@@ -519,6 +497,41 @@ const getShopNotificationItems = async () => {
   }
 };
 
+const getStatusReminderItems = async (delta, userType) => {
+  const typeStatusMap = {
+    donor: 'shopped',
+    shopper: 'shipped-to-shopper',
+  };
+
+  try {
+    //
+    const date = moment().subtract(delta, 'days').format('YYYY-MM-DD');
+
+    const items = await Item.find({
+      status: typeStatusMap[userType],
+      approvedStatus: 'approved',
+      $expr: {
+        $eq: [
+          date,
+          { $dateToString: { date: '$updatedAt', format: '%Y-%m-%d' } },
+        ],
+      },
+    }).lean();
+
+    // Group items under donor id
+    const result = items.reduce((acc, cur) => {
+      const key = cur[`${userType}Id`];
+      acc[key] = acc[key] || [];
+      acc[key].push(cur);
+      return acc;
+    }, {});
+
+    return result;
+  } catch (e) {
+    // TODO
+  }
+};
+
 const getItem = async (id) => {
   try {
     const item = await Item.findById(id);
@@ -561,7 +574,7 @@ module.exports = {
   getDonorItems,
   getAdminItems,
   getAccountNotificationItems,
-  getDonorNotificationItems,
+  getStatusReminderItems,
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,
