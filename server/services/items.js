@@ -1,4 +1,5 @@
 const { ObjectId } = require('bson');
+const moment = require('moment');
 const Item = require('../models/Item');
 const User_ = require('../models/User');
 const Location = require('../models/Location');
@@ -447,6 +448,28 @@ const getAccountNotificationItems = async (adminUserId) => {
   }
 };
 
+const getDonorNotificationItems = async () => {
+  try {
+    //
+    const oneWeekAgo = moment().subtract(7, 'days').format('YYYY-MM-DD');
+
+    const blah = await Item.find({
+      status: 'shopped',
+      approvedStatus: 'approved',
+      $expr: {
+        $eq: [
+          oneWeekAgo,
+          { $dateToString: { date: '$updatedAt', format: '%Y-%m-%d' } },
+        ],
+      },
+    });
+
+    console.log(blah);
+  } catch (e) {
+    //
+  }
+};
+
 const getShopNotificationItems = async () => {
   try {
     // We only care about items where shopper requires dispatch via GYB
@@ -538,6 +561,7 @@ module.exports = {
   getDonorItems,
   getAdminItems,
   getAccountNotificationItems,
+  getDonorNotificationItems,
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,
