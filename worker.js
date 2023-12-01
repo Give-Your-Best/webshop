@@ -3,14 +3,18 @@ const mongoose = require('mongoose');
 
 const Bugsnag = require('./server/utils/bugsnag');
 
-const { getDonorNotificationItems } = require('./server/services/items');
+const workers = require('./server/workers');
+
+const [, , job] = process.argv;
 
 (async () => {
   try {
     await mongoose.connect(process.env.DB_CONNECTION_URI);
     console.log('Connected to the database');
 
-    await getDonorNotificationItems();
+    // Access the worker
+    await workers[job]();
+    // validate some stuff?
   } catch (err) {
     Bugsnag.notify(err);
   } finally {
