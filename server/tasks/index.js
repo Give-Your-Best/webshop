@@ -111,6 +111,7 @@ const renderEmailProperties = (user, items, delta) => {
  *
  */
 const send_order_status_reminders = async () => {
+  // TODO can the config go in the DB settings ??
   const config = [
     // 1 week since item shopped, please confirm sent
     {
@@ -140,6 +141,9 @@ const send_order_status_reminders = async () => {
 
   for (const unit of config) {
     const items = await getStatusReminderItems(unit);
+
+    if (items.success === false) continue; // TODO how to handle errors?
+
     const users = await getUsers(Object.keys(items));
 
     console.log(items, users);
@@ -151,7 +155,7 @@ const send_order_status_reminders = async () => {
         unit.delta
       );
 
-      // return [subject, content, email, name];
+      // TODO return [subject, content, email, name];
       return [subject, emailTemplate(content), 'email@example.com', name];
     });
 

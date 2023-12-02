@@ -533,10 +533,10 @@ const getStatusReminderItems = async ({ delta, status, kind }) => {
 
     return result;
   } catch (error) {
-    console.error(`Error in get status remonder items: ${error}`);
+    console.error(`Error in get status reminder items: ${error}`);
     return {
       success: false,
-      message: `Error in get status remonder items: ${error}`,
+      message: `Error in get status reminder items: ${error}`,
     };
   }
 };
