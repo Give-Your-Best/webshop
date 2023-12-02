@@ -3,21 +3,27 @@ const mongoose = require('mongoose');
 
 const Bugsnag = require('./server/utils/bugsnag');
 
-const workers = require('./server/workers');
+const tasks = require('./server/tasks');
 
-const [, , job] = process.argv;
-
-(async () => {
+(async function run() {
   try {
     await mongoose.connect(process.env.DB_CONNECTION_URI);
     console.log('Connected to the database');
 
-    // Access the worker
-    await workers[job]();
+    const [, , taskName, ...args] = process.argv;
+
+    if (typeof tasks[taskName] !== 'function') {
+      throw new Error('Invalid task name: ' + taskName);
+    }
+
+    // Invoke the task
+    await tasks[taskName](...args);
     // validate some stuff?
   } catch (err) {
+    console.warn(err);
     Bugsnag.notify(err);
   } finally {
     await mongoose.connection.close();
+    console.log('Database connection closed');
   }
 })();
