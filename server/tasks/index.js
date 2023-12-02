@@ -117,24 +117,28 @@ const send_order_status_reminders = async () => {
     {
       delta: 7,
       status: 'shopped',
+      update: 'shoppedDate',
       kind: 'donor',
     },
     // 2 weeks since item shopped, please confirm sent
     {
       delta: 14,
       status: 'shopped',
+      update: 'shoppedDate',
       kind: 'donor',
     },
     // 1 week since item shipped, please confirm received
     {
       delta: 7,
       status: 'shipped-to-shopper',
+      update: 'shopperShippedDate',
       kind: 'shopper',
     },
     // 2 weeks since item shipped, please confirm received
     {
       delta: 14,
       status: 'shipped-to-shopper',
+      update: 'shopperShippedDate',
       kind: 'shopper',
     },
   ];

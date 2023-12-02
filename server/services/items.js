@@ -497,12 +497,24 @@ const getShopNotificationItems = async () => {
   }
 };
 
-const getStatusReminderItems = async ({ delta, status, kind }) => {
+/**
+ * Gets items grouped by donor or shopper id for sending reminders for status
+ * updates: where user kind is donor, items are shopped but not yet marked as
+ * shipped; where user kind is shopper, items are shipped but not yet marked as
+ * received. Items are selected based on the length of time between last status
+ * update and now (either one or two weeks).
+ */
+const getStatusReminderItems = async ({
+  delta,
+  status,
+  update,
+  kind: userKind,
+}) => {
   try {
     // Formatted date relative to now
     const date = moment().subtract(delta, 'days').format('YYYY-MM-DD');
 
-    // Status is 'shopped' and shopped date is exactly `delta` days ago...
+    // Status is `status` and status date is exactly `delta` days ago...
     const condition = {
       status,
       approvedStatus: 'approved',
@@ -511,7 +523,7 @@ const getStatusReminderItems = async ({ delta, status, kind }) => {
           date,
           {
             $dateToString: {
-              date: '$statusUpdateDates.shoppedDate',
+              date: `$statusUpdateDates.${update}`,
               format: '%Y-%m-%d',
             },
           },
@@ -523,7 +535,7 @@ const getStatusReminderItems = async ({ delta, status, kind }) => {
 
     // Group items under target user reference id
     const result = items.reduce((acc, cur) => {
-      const key = cur[`${kind}Id`];
+      const key = cur[`${userKind}Id`];
 
       acc[key] = acc[key] || [];
       acc[key].push(cur);
