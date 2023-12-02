@@ -497,38 +497,47 @@ const getShopNotificationItems = async () => {
   }
 };
 
-const getStatusReminderItems = async (delta, userType) => {
-  const typeStatusMap = {
-    donor: 'shopped',
-    shopper: 'shipped-to-shopper',
-  };
-
+const getStatusReminderItems = async ({ delta, status, kind }) => {
   try {
-    //
+    // Formatted date relative to now
     const date = moment().subtract(delta, 'days').format('YYYY-MM-DD');
 
-    const items = await Item.find({
-      status: typeStatusMap[userType],
+    // Status is 'shopped' and shopped date is exactly `delta` days ago...
+    const condition = {
+      status,
       approvedStatus: 'approved',
       $expr: {
         $eq: [
           date,
-          { $dateToString: { date: '$updatedAt', format: '%Y-%m-%d' } },
+          {
+            $dateToString: {
+              date: '$statusUpdateDates.shoppedDate',
+              format: '%Y-%m-%d',
+            },
+          },
         ],
       },
-    }).lean();
+    };
+
+    const items = await Item.find(condition).lean();
 
     // Group items under target user reference id
     const result = items.reduce((acc, cur) => {
-      const key = cur[`${userType}Id`];
+      const key = cur[`${kind}Id`];
+
       acc[key] = acc[key] || [];
       acc[key].push(cur);
+
       return acc;
     }, {});
 
     return result;
-  } catch (e) {
-    // TODO
+  } catch (error) {
+    console.error(`Error in get status remonder items: ${error}`);
+    return {
+      success: false,
+      message: `Error in get status remonder items: ${error}`,
+    };
   }
 };
 
