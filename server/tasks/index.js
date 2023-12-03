@@ -50,11 +50,11 @@ const emailTemplate = (content) => `
 `;
 
 // TODO
-const renderEmailProperties = (user, items, delta) => {
+const renderEmailProperties = (user, items, interval) => {
   const period = {
     7: '1 week',
     14: '2 weeks',
-  }[delta];
+  }[interval];
 
   const pluralise = items.length > 1;
 
@@ -108,55 +108,57 @@ const renderEmailProperties = (user, items, delta) => {
 };
 
 /**
- *
+ * Dispatch reminder emails for status updates on items either shoppe (donor
+ * user reminders) or shipped (shopper user reminders).
  */
 const send_order_status_reminders = async () => {
-  // TODO can the config go in the DB settings ??
-  const config = [
+  const settings = [
     // 1 week since item shopped, please confirm sent
     {
-      delta: 7,
-      status: 'shopped',
-      update: 'shoppedDate',
-      kind: 'donor',
+      interval: 7,
+      currentStatus: 'shopped',
+      updateType: 'shoppedDate',
+      targetUser: 'donor',
     },
     // 2 weeks since item shopped, please confirm sent
     {
-      delta: 14,
-      status: 'shopped',
-      update: 'shoppedDate',
-      kind: 'donor',
+      interval: 14,
+      currentStatus: 'shopped',
+      updateType: 'shoppedDate',
+      targetUser: 'donor',
     },
     // 1 week since item shipped, please confirm received
     {
-      delta: 7,
-      status: 'shipped-to-shopper',
-      update: 'shopperShippedDate',
-      kind: 'shopper',
+      interval: 7,
+      currentStatus: 'shipped-to-shopper',
+      updateType: 'shopperShippedDate',
+      targetUser: 'shopper',
     },
     // 2 weeks since item shipped, please confirm received
     {
-      delta: 14,
-      status: 'shipped-to-shopper',
-      update: 'shopperShippedDate',
-      kind: 'shopper',
+      interval: 14,
+      currentStatus: 'shipped-to-shopper',
+      updateType: 'shopperShippedDate',
+      targetUser: 'shopper',
     },
   ];
 
-  for (const unit of config) {
-    const items = await getStatusReminderItems(unit);
+  for (const s of settings) {
+    const items = await getStatusReminderItems(s);
 
-    if (items.success === false) continue; // TODO how to handle errors?
+    // If there was an issue with the query, continue to the next
+    if (items.success === false) continue;
 
     const users = await getUsers(Object.keys(items));
 
-    console.log(items, users);
+    // If there was an issue with the query, continue to the next
+    if (users.success === false) continue;
 
     const reminders = users.map((u) => {
       const { name, subject, content } = renderEmailProperties(
         u,
         items[u.id],
-        unit.delta
+        s.interval
       );
 
       // TODO return [subject, content, email, name];

@@ -498,32 +498,32 @@ const getShopNotificationItems = async () => {
 };
 
 /**
- * Gets items grouped by donor or shopper id for sending reminders for status
- * updates: where user kind is donor, items are shopped but not yet marked as
- * shipped; where user kind is shopper, items are shipped but not yet marked as
- * received. Items are selected based on the length of time between last status
- * update and now (either one or two weeks).
+ * Get items grouped by donor or shopper id for sending status update reminders:
+ * where user is a donor, items are shopped but not yet marked as shipped, where
+ * user is a shopper, items are shipped but not yet marked as received. Items
+ * are selected on the basis of the interval between present moment and the last
+ * status update.
  */
 const getStatusReminderItems = async ({
-  delta,
-  status,
-  update,
-  kind: userKind,
+  interval,
+  currentStatus,
+  updateType,
+  targetUser,
 }) => {
   try {
     // Formatted date relative to now
-    const date = moment().subtract(delta, 'days').format('YYYY-MM-DD');
+    const date = moment().subtract(interval, 'days').format('YYYY-MM-DD');
 
     // Status is `status` and status date is exactly `delta` days ago...
     const condition = {
-      status,
+      status: currentStatus,
       approvedStatus: 'approved',
       $expr: {
         $eq: [
           date,
           {
             $dateToString: {
-              date: `$statusUpdateDates.${update}`,
+              date: `$statusUpdateDates.${updateType}`,
               format: '%Y-%m-%d',
             },
           },
@@ -535,7 +535,7 @@ const getStatusReminderItems = async ({
 
     // Group items under target user reference id
     const result = items.reduce((acc, cur) => {
-      const key = cur[`${userKind}Id`];
+      const key = cur[`${targetUser}Id`];
 
       acc[key] = acc[key] || [];
       acc[key].push(cur);
