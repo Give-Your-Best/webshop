@@ -27,8 +27,6 @@ export const ItemCreateForm = (data) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
 
-  console.log({ user });
-
   const handleCategoryChange = (category, subCategory) => {
     setSelectedCategory(category);
     setSelectedSubCategory(subCategory);
