@@ -75,8 +75,15 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <StyledLabel>Bulk Item?</StyledLabel>
-          <StyledSwitch name="showBatchOptions" onChange={handleSwitchChange} />
+          {user.canAddItemInBulk && (
+            <>
+              <StyledLabel>Bulk Item?</StyledLabel>
+              <StyledSwitch
+                name="showBatchOptions"
+                onChange={handleSwitchChange}
+              />
+            </>
+          )}
 
           <StyledLabel>
             Item Name
