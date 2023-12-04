@@ -3,7 +3,6 @@ const Location = require('../models/Location');
 const updateLocation = async (id, updateData) => {
   try {
     const location = await Location.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
       returnDocument: 'after',
     });
     if (location) {
@@ -58,9 +57,7 @@ const getLocation = async (id) => {
 
 const deleteLocation = async (id) => {
   try {
-    const location = await Location.findByIdAndRemove(id, {
-      useFindAndModify: false,
-    });
+    const location = await Location.findByIdAndDelete(id);
     if (location) {
       return { success: true, message: 'location deleted' };
     } else {

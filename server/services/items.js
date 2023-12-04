@@ -180,7 +180,6 @@ const updateItem = async (id, updateData) => {
     }
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
 
@@ -198,7 +197,6 @@ const updateItem = async (id, updateData) => {
     delete updateData.photos;
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
 
@@ -217,7 +215,7 @@ const updateItem = async (id, updateData) => {
 
 const deleteItem = async (id) => {
   try {
-    const item = await Item.findOneAndDelete(id, { useFindAndModify: false });
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Item deleted' };
     } else {
@@ -237,15 +235,13 @@ const deleteBatchItem = async (id) => {
     }
     const itemIds = batchItem.itemIds;
     const itemDeletionPromises = itemIds.map(async (itemId) => {
-      const deletedItem = await Item.findOneAndDelete(itemId, {
-        useFindAndModify: false,
-      });
+      const deletedItem = await Item.findByIdAndDelete(itemId);
       if (!deletedItem) {
         throw Error(`Cannot delete item with ID ${itemId}`);
       }
     });
     await Promise.all(itemDeletionPromises);
-    await BatchItem.findOneAndDelete(id, { useFindAndModify: false });
+    await BatchItem.findByIdAndDelete(id);
     return { success: true, message: 'BatchItem and associated items deleted' };
   } catch (error) {
     console.error(`Error in deleteBatchItem: ${error}`);
@@ -623,10 +619,7 @@ const deleteDonorItems = async (id) => {
     throw Error('No donor id provided');
   }
   try {
-    const item = await Item.findOneAndDelete(
-      { donorId: id },
-      { useFindAndModify: false }
-    );
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Donor items deleted' };
     } else {

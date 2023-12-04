@@ -2,9 +2,7 @@ const Setting = require('../models/Settings');
 
 const updateSetting = async (name, data) => {
   try {
-    const setting = await Setting.findOneAndUpdate({ name: name }, data, {
-      useFindAndModify: false,
-    });
+    const setting = await Setting.findOneAndUpdate({ name: name }, data);
     if (setting) {
       return { success: true, message: 'setting updated' };
     } else {
