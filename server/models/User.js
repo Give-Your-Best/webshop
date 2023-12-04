@@ -89,6 +89,10 @@ const Donor = User.discriminator(
   new Schema(
     {
       trustedDonor: Boolean,
+      canAddItemInBulk: {
+        type: Boolean,
+        default: false,
+      },
     },
     options
   )
