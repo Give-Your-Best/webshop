@@ -17,6 +17,8 @@ import {
   getDonorItems,
   updateItem,
   deleteItem,
+  deleteBatchItem,
+  getItem,
 } from '../../../../services/items';
 import { Button, H2 } from '../../../atoms';
 import { openHiddenTab, reopenTab, tabList } from '../../../../utils/helpers';
@@ -37,12 +39,24 @@ export const DonorItems = () => {
       title: `Are you sure you want to delete this item?`,
       className: 'modalStyle',
       onOk() {
-        deleteItem(id, token).then(() => {
-          setItems(
-            items.filter((item) => {
-              return item._id !== id;
-            })
-          );
+        getItem(id).then((itemToDelete) => {
+          if (itemToDelete.batchId !== null) {
+            deleteBatchItem(id).then(() => {
+              setItems(
+                items.filter((item) => {
+                  return item._id !== id;
+                })
+              );
+            });
+          } else {
+            deleteItem(id, token).then(() => {
+              setItems(
+                items.filter((item) => {
+                  return item._id !== id;
+                })
+              );
+            });
+          }
         });
       },
     });

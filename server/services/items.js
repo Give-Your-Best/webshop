@@ -58,6 +58,7 @@ const createBatchItem = async (data) => {
   try {
     const batchItem = new BatchItem();
     const savedBatchItem = await batchItem.save();
+    const batchId = savedBatchItem.id;
 
     savedBatchItem.clothingSizes = data.clothingSize;
     savedBatchItem.shoeSizes = data.shoeSize;
@@ -79,6 +80,7 @@ const createBatchItem = async (data) => {
     // Create a new data object for createItem()
     const itemData = {
       ...data,
+      batchId,
       clothingSize,
       shoeSize,
       childrenClothingSize,
@@ -86,16 +88,16 @@ const createBatchItem = async (data) => {
     };
     const newItemData = await createItem(itemData);
     const newItem = newItemData.item;
-    savedBatchItem.templateItem = newItem._id;
-    await savedBatchItem.save();
-
-    console.log('savedBatchItem: ', savedBatchItem);
-    return {
-      success: true,
-      message: 'BatchItem and associated item created',
-      batchItem: savedBatchItem,
-      item: newItem,
-    };
+    if (newItem) {
+      savedBatchItem.templateItem = newItem.id;
+      await savedBatchItem.save();
+      return {
+        success: true,
+        message: 'BatchItem and associated item created',
+        batchItem: savedBatchItem,
+        item: newItem,
+      };
+    }
   } catch (err) {
     console.error(err);
     return { success: false, message: err };
@@ -201,22 +203,22 @@ const deleteItem = async (id) => {
 
 const deleteBatchItem = async (id) => {
   try {
-    const batchItem = await BatchItem.findById(id);
+    const templateItem = await Item.findById(id);
+    const batchItem = await BatchItem.findById(templateItem?.batchId);
     if (!batchItem) {
       throw Error('BatchItem not found');
     }
-    const itemIds = batchItem.itemIds;
-    const itemDeletionPromises = itemIds.map(async (itemId) => {
-      const deletedItem = await Item.findOneAndDelete(itemId, {
-        useFindAndModify: false,
-      });
-      if (!deletedItem) {
-        throw Error(`Cannot delete item with ID ${itemId}`);
-      }
+    const deletedItem = await Item.findOneAndDelete(id, {
+      useFindAndModify: false,
     });
-    await Promise.all(itemDeletionPromises);
-    await BatchItem.findOneAndDelete(id, { useFindAndModify: false });
-    return { success: true, message: 'BatchItem and associated items deleted' };
+    if (!deletedItem) {
+      throw Error(`Cannot delete item with ID ${id}`);
+    }
+    await BatchItem.findOneAndDelete(batchItem.id, { useFindAndModify: false });
+    return {
+      success: true,
+      message: 'BatchItem and associated template item deleted',
+    };
   } catch (error) {
     console.error(`Error in deleteBatchItem: ${error}`);
     return {

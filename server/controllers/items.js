@@ -22,10 +22,6 @@ const createItem = async (req, res) => {
 };
 
 const createBatchItem = async (req, res) => {
-  console.log('req.body.clothingSize: ', req.body.clothingSize);
-  console.log('req.body.childrenClothingSize: ', req.body.childrenClothingSize);
-  console.log('req.body.childrenShoeSize: ', req.body.childrenShoeSize);
-  console.log('req.body.shoeSize: ', req.body.shoeSize);
   if (!req.body) {
     return res
       .status(400)
@@ -33,12 +29,11 @@ const createBatchItem = async (req, res) => {
   }
   try {
     const response = await ItemService.createBatchItem(req.body);
-    console.log('response: ', response);
     return res.status(200).send({
       success: 'success',
-      // message: response.message,
-      // batchItem: response.batchItem || {},
-      // items: response.items || [],
+      message: response.message,
+      batchItem: response.batchItem || {},
+      item: response.item || {},
     });
   } catch (err) {
     console.error(`Service error: ${err}`);
@@ -52,7 +47,7 @@ const deleteBatchItem = async (req, res) => {
     if (response.success) {
       return res.status(200).send({
         success: true,
-        message: 'BatchItem and associated items deleted',
+        message: 'BatchItem and associated item deleted',
       });
     } else {
       return res.status(404).send({
