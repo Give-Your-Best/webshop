@@ -27,6 +27,8 @@ export const ItemCreateForm = (data) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
 
+  console.log({ user });
+
   const handleCategoryChange = (category, subCategory) => {
     setSelectedCategory(category);
     setSelectedSubCategory(subCategory);
@@ -75,8 +77,15 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <StyledLabel>Bulk Item?</StyledLabel>
-          <StyledSwitch name="showBatchOptions" onChange={handleSwitchChange} />
+          {user.canAddItemInBulk && (
+            <>
+              <StyledLabel>Bulk Item?</StyledLabel>
+              <StyledSwitch
+                name="showBatchOptions"
+                onChange={handleSwitchChange}
+              />
+            </>
+          )}
 
           <StyledLabel>
             Item Name
