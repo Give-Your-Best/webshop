@@ -36,7 +36,7 @@ const markMessageAsViewed = async (id, messageIds) => {
     const thread = await Message.findOneAndUpdate(
       { _id: id, 'messages._id': { $in: messageIds } },
       { $set: { 'messages.$.viewed': true } },
-      { useFindAndModify: false, returnDocument: 'after' }
+      { returnDocument: 'after' }
     );
     if (thread) {
       return { success: true, message: 'marked as viewed', thread: thread };
@@ -64,7 +64,7 @@ const createMessage = async (data) => {
     const thread = await Message.findOneAndUpdate(
       { threadId: data.threadId },
       { $push: { messages: updateData } },
-      { useFindAndModify: false, returnDocument: 'after' }
+      { returnDocument: 'after' }
     ).then((t) =>
       t
         .populate('user')
