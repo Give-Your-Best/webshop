@@ -28,7 +28,6 @@ const createUser = async (data) => {
 const updateUser = async (id, updateData) => {
   try {
     const user = await User_.User.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
       returnDocument: 'after',
     });
     if (user) {
@@ -51,7 +50,6 @@ const updateDonor = async (id, updateData) => {
   }
   try {
     const user = await User_.Donor.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
       returnDocument: 'after',
     });
     if (user) {
@@ -68,7 +66,6 @@ const updateDonor = async (id, updateData) => {
 const updateShopper = async (id, updateData) => {
   try {
     const user = await User_.Shopper.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
       returnDocument: 'after',
     });
     if (user) {
@@ -85,7 +82,6 @@ const updateShopper = async (id, updateData) => {
 const updateAdmin = async (id, updateData) => {
   try {
     const user = await User_.Admin.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
       returnDocument: 'after',
     });
     if (user) {
@@ -101,9 +97,7 @@ const updateAdmin = async (id, updateData) => {
 
 const deleteUser = async (id) => {
   try {
-    const user = await User_.User.findByIdAndRemove(id, {
-      useFindAndModify: false,
-    });
+    const user = await User_.User.findByIdAndDelete(id);
     if (user) {
       return { success: true, message: 'User deleted' };
     } else {

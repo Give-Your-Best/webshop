@@ -9,6 +9,7 @@ import {
   Select,
   AutoComplete,
 } from 'formik-antd';
+import { Switch } from 'antd';
 import { ErrorMessage } from 'formik';
 
 const StyledError = styled(ErrorMessage)`
@@ -198,6 +199,10 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
+  &.childrenShoeSize,
+  &.childrenClothingSize {
+    width: 100px;
+  }
 `;
 
 const StyledCheckbox = styled(Checkbox)`
@@ -252,6 +257,19 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
+  &.shoeSize,
+  &.clothingSize {
+    width: 40%;
+  }
+  &.shoeSize,
+  &.clothingSize,
+  &.childrenClothingSize,
+  &.childrenShoeSize {
+    font-size: 16px !important;
+    @media (min-width: 525px) {
+      font-size: 18px !important;
+    }
+  }
 `;
 
 const NewPasswordLink = styled.label`
@@ -307,6 +325,72 @@ const FieldContainerUneven = styled.div`
   }
 `;
 
+const SizeQuantityContainer = styled.div`
+  margin: 7.5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+  height: 600px;
+  width: 100%;
+  &.clothingSize,
+  &.shoeSize,
+  &.childrenClothingSize {
+    height: 550px;
+    @media (min-width: 525px) {
+      height: 400px;
+    }
+  }
+  &.childrenShoeSize {
+    height: 750px;
+    @media (min-width: 525px) {
+      height: 600px;
+    }
+  }
+`;
+
+const SizeQuantityPair = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  &.clothingSize {
+    width: 50%;
+    @media (min-width: 525px) {
+      width: 30%;
+    }
+  }
+  &.shoeSize {
+    margin-right: 0;
+    width: 50%;
+    @media (min-width: 525px) {
+      width: 36%;
+    }
+  }
+  &.childrenClothingSize {
+    width: 40%;
+    @media (min-width: 525px) {
+      width: 36%;
+    }
+  }
+  &.childrenShoeSize {
+    width: 50%;
+    @media (min-width: 525px) {
+      width: 30%;
+    }
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const StyledSwitch = styled(Switch)`
+  color: ${({ theme }) => theme.colorMappings.primary};
+  margin-bottom: 15px;
+`;
+
 export {
   StyledInput,
   StyledSubmitButton,
@@ -327,4 +411,7 @@ export {
   FieldContainerUneven,
   StyledInputAreaInLine,
   NewPasswordLink,
+  SizeQuantityContainer,
+  SizeQuantityPair,
+  StyledSwitch,
 };

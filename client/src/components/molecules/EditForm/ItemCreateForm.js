@@ -4,11 +4,7 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
-import {
-  clothingSizeOptions,
-  shoeSizeOptions,
-  colours,
-} from '../../../utils/constants';
+import { colours } from '../../../utils/constants';
 import { createItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
@@ -17,16 +13,36 @@ import {
   StyledError,
   StyledLabel,
   StyledCheckboxGroup,
+  StyledSwitch,
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
+import RenderBatchOptions from './RenderBatchOptions';
+import RenderItemOptions from './RenderItemOptions';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [showBatchOptions, setShowBatchOptions] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+
+  const handleCategoryChange = (category, subCategory) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(subCategory);
+  };
+
+  const handleSwitchChange = (checked) => {
+    setShowBatchOptions(checked);
+  };
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
-    const res = await createItem(values, token);
+    let res;
+    if (showBatchOptions === true) {
+      // res = await createBatchItem(values, token);
+    } else {
+      res = await createItem(values, token);
+    }
     if (res.success) {
       Notification('Success!', 'New item created', 'success');
       if (!user.trustedDonor) {
@@ -59,6 +75,16 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
+          {user.canAddItemInBulk && (
+            <>
+              <StyledLabel>Bulk Item?</StyledLabel>
+              <StyledSwitch
+                name="showBatchOptions"
+                onChange={handleSwitchChange}
+              />
+            </>
+          )}
+
           <StyledLabel>
             Item Name
             <StyledInput name="name" />
@@ -71,7 +97,7 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="description" component="div" />
 
-          <CategoryFields />
+          <CategoryFields onCategoryChange={handleCategoryChange} />
 
           <StyledLabel>
             Brand
@@ -79,20 +105,19 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="brand" component="div" />
 
-          <StyledLabel>
-            Clothing size
-            <StyledCheckboxGroup
-              name="clothingSize"
-              options={clothingSizeOptions}
+          {showBatchOptions ? (
+            <RenderBatchOptions
+              category={selectedCategory}
+              subcategory={selectedSubCategory}
             />
-          </StyledLabel>
-          <StyledError name="clothingSize" component="div" />
-
-          <StyledLabel>
-            Shoe size
-            <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions} />
-          </StyledLabel>
-          <StyledError name="shoeSize" component="div" />
+          ) : (
+            <>
+              <RenderItemOptions
+                category={selectedCategory}
+                subcategory={selectedSubCategory}
+              />
+            </>
+          )}
 
           <StyledLabel>
             Colours

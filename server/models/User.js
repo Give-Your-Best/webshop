@@ -56,11 +56,7 @@ userSchema.methods.updatePassword = async (id, candidatePassword) => {
 
     bcrypt.hash(candidatePassword, salt, async (err, hash) => {
       if (err) throw err;
-      const user = await User.findOneAndUpdate(
-        { _id: id },
-        { password: hash },
-        { useFindAndModify: false }
-      );
+      const user = await User.findOneAndUpdate({ _id: id }, { password: hash });
       if (user) {
         return { success: true, message: `Password updated` };
       } else {
@@ -93,6 +89,10 @@ const Donor = User.discriminator(
   new Schema(
     {
       trustedDonor: Boolean,
+      canAddItemInBulk: {
+        type: Boolean,
+        default: false,
+      },
     },
     options
   )

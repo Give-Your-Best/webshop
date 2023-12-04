@@ -1,12 +1,13 @@
 import { convertHeic } from '../../utils/helpers';
 
-export const createItem = async (values, token) => {
-  //call api to create item
+export const createBatchItem = async (values, token) => {
+  //call api to create batch item
   if (values.photos) {
     values.photos = await convertHeic(values.photos);
   }
   try {
-    const response = await fetch('/api/items/', {
+    console.log('values: ', values);
+    const response = await fetch('/api/batchItems/', {
       method: 'post',
       headers: {
         Accept: 'application/json',
@@ -15,10 +16,11 @@ export const createItem = async (values, token) => {
       },
       body: JSON.stringify(values),
     });
+    console.log('response:', response);
     const jsonres = await response.json();
     return jsonres;
   } catch (error) {
-    console.error(`Error in createItem: ${error}`);
+    console.error(`Error in createBatchItem: ${error}`);
     return error;
   }
 };

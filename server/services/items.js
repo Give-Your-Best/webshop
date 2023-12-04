@@ -4,6 +4,7 @@ const Item = require('../models/Item');
 const User_ = require('../models/User');
 const Location = require('../models/Location');
 const { cloudinary } = require('../utils/cloudinary');
+const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data) => {
   var new_photos = [];
@@ -53,6 +54,85 @@ const createItem = async (data) => {
     return { success: false, message: err };
   }
 };
+
+// const createBatchItem = async (data) => {
+//   try {
+//     const batchItem = new BatchItem({ itemIds: [] });
+//     // Saved initially to generate the batchItemId
+//     const savedBatchItem = await batchItem.save();
+//     // Create multiple Items associated with the BatchItem
+//     const createdItems = [];
+//     console.log('data: ', data);
+//     const [items] = Object.values(data);
+//     for (const item of items) {
+//       var new_photos = [];
+//       var success = true;
+//       const promises = item.photos.map((photo) => {
+//         if (photo.status !== 'removed') {
+//           return cloudinary.uploader
+//             .upload(photo.imageUrl, {
+//               resource_type: 'auto',
+//               public_id: photo.uid,
+//               overwrite: false,
+//               secure: true,
+//             })
+//             .then((result) => {
+//               console.log(
+//                 '*** Success: Cloudinary Upload: ',
+//                 result.secure_url
+//               );
+//               new_photos.push({
+//                 url: result.secure_url,
+//                 name: photo.name,
+//                 createdAt: result.created_at,
+//                 publicId: photo.uid,
+//                 success: true,
+//                 front: photo.front ? true : false,
+//               });
+//             })
+//             .catch((err) => {
+//               console.error(err);
+//               console.log('*** Error: Cloudinary Upload');
+//               success = false;
+//               return;
+//             });
+//         }
+//       });
+//       await Promise.all(promises);
+//       if (!success) {
+//         return {
+//           success: false,
+//           message: 'Failed to upload one or more of your images',
+//         };
+//       }
+//       data.photos = new_photos;
+//       try {
+//         const newItem = new Item({
+//           ...itemWithPhotos,
+//           batchId: savedBatchItem._id,
+//         });
+//         const savedItem = await newItem.save();
+//         createdItems.push(savedItem);
+//         savedBatchItem.itemIds.push(savedItem._id);
+//       } catch (err) {
+//         console.error(err);
+//         return { success: false, message: err };
+//       }
+//     }
+//     // Save the batchItem again to update the itemIds array
+//     await savedBatchItem.save();
+//     return {
+//       success: true,
+//       message: 'BatchItem and associated items created',
+//       batchItem: savedBatchItem,
+//       items: createdItems,
+//     };
+//   } catch (err) {
+//     console.error(err);
+//     return { success: false, message: err };
+//   }
+// };
+
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
   var results = {};
@@ -101,24 +181,23 @@ const updateItem = async (id, updateData) => {
     }
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
+
       if (item) {
-        return { success: true, message: 'Item updated', item: item };
+        results = { success: true, message: 'Item updated', item: item };
       } else {
         throw Error('Cannot update item');
       }
     } catch (err) {
       console.log(err);
-      return { success: false, message: err };
+      results = { success: false, message: err };
     }
   } else {
     //if no new images to add then remove the empty photos list and continue updating
     delete updateData.photos;
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
 
@@ -137,7 +216,7 @@ const updateItem = async (id, updateData) => {
 
 const deleteItem = async (id) => {
   try {
-    const item = await Item.findByIdAndRemove(id, { useFindAndModify: false });
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Item deleted' };
     } else {
@@ -146,6 +225,31 @@ const deleteItem = async (id) => {
   } catch (error) {
     console.error(`Error in deleteItem: ${error}`);
     return { success: false, message: `Error in deleteItem: ${error}` };
+  }
+};
+
+const deleteBatchItem = async (id) => {
+  try {
+    const batchItem = await BatchItem.findById(id);
+    if (!batchItem) {
+      throw Error('BatchItem not found');
+    }
+    const itemIds = batchItem.itemIds;
+    const itemDeletionPromises = itemIds.map(async (itemId) => {
+      const deletedItem = await Item.findByIdAndDelete(itemId);
+      if (!deletedItem) {
+        throw Error(`Cannot delete item with ID ${itemId}`);
+      }
+    });
+    await Promise.all(itemDeletionPromises);
+    await BatchItem.findByIdAndDelete(id);
+    return { success: true, message: 'BatchItem and associated items deleted' };
+  } catch (error) {
+    console.error(`Error in deleteBatchItem: ${error}`);
+    return {
+      success: false,
+      message: `Error in deleteBatchItem: ${error.message}`,
+    };
   }
 };
 
@@ -572,10 +676,7 @@ const deleteDonorItems = async (id) => {
     throw Error('No donor id provided');
   }
   try {
-    const item = await Item.findOneAndDelete(
-      { donorId: id },
-      { useFindAndModify: false }
-    );
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Donor items deleted' };
     } else {
@@ -599,5 +700,6 @@ module.exports = {
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,
+  deleteBatchItem,
   updateItem,
 };
