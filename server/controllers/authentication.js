@@ -40,6 +40,7 @@ const setUserDetails = (user) => {
 
   if (user.kind === 'donor') {
     UserDetails.trustedDonor = user.trustedDonor || false;
+    UserDetails.canAddItemInBulk = user.canAddItemInBulk || false;
   }
 
   if (user.kind === 'shopper') {

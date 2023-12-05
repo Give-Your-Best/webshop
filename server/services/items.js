@@ -152,7 +152,6 @@ const updateItem = async (id, updateData) => {
     }
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
 
@@ -170,7 +169,6 @@ const updateItem = async (id, updateData) => {
     delete updateData.photos;
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        useFindAndModify: false,
         returnDocument: 'after',
       });
 
@@ -189,7 +187,7 @@ const updateItem = async (id, updateData) => {
 
 const deleteItem = async (id) => {
   try {
-    const item = await Item.findOneAndDelete(id, { useFindAndModify: false });
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Item deleted' };
     } else {
@@ -208,13 +206,11 @@ const deleteBatchItem = async (id) => {
     if (!batchItem) {
       throw Error('BatchItem not found');
     }
-    const deletedItem = await Item.findOneAndDelete(id, {
-      useFindAndModify: false,
-    });
+    const deletedItem = await Item.findOneAndDelete(id);
     if (!deletedItem) {
       throw Error(`Cannot delete item with ID ${id}`);
     }
-    await BatchItem.findOneAndDelete(batchItem.id, { useFindAndModify: false });
+    await BatchItem.findOneAndDelete(batchItem.id);
     return {
       success: true,
       message: 'BatchItem and associated template item deleted',
@@ -595,10 +591,7 @@ const deleteDonorItems = async (id) => {
     throw Error('No donor id provided');
   }
   try {
-    const item = await Item.findOneAndDelete(
-      { donorId: id },
-      { useFindAndModify: false }
-    );
+    const item = await Item.findByIdAndDelete(id);
     if (item) {
       return { success: true, message: 'Donor items deleted' };
     } else {
