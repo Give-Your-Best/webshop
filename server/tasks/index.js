@@ -36,7 +36,7 @@ const emailTemplate = (content) => `
         </div>
         <div style="display:flex">
             <div style="width:15%;margin:0;display:block"></div>
-            <div style="width:70%;display:block;margin:-40px 0 0 0;background-color:white;border:2px solid #A21010;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:center;">
+            <div style="width:70%;display:block;margin:-40px 0 0 0;background-color:white;border:2px solid #A21010;border-radius: 30px;padding: 30px;color:#BA191A;font-size:20px;font-family:Lato;text-align:left;">
                 ${content}
                 <div style="margin-top:30px;">
                     <p>Thanks!</p>
@@ -78,7 +78,9 @@ const renderEmailProperties = (user, items, interval) => {
     } shopped:</p>
     ${
       pluralise
-        ? `<ul>${items.map((i) => `<li><strong>${i.name}</strong></li>`)}</ul>`
+        ? `<ul>${items
+            .map((i) => `<li><strong>${i.name}</strong></li>`)
+            .join('\n')}</ul>`
         : `<strong>${items[0].name}</strong>`
     }
     <p>Please remember to mark as sent once ${
@@ -94,7 +96,9 @@ const renderEmailProperties = (user, items, interval) => {
     } shipped:</p>
     ${
       pluralise
-        ? `<ul>${items.map((i) => `<li><strong>${i.name}</strong></li>`)}</ul>`
+        ? `<ul>${items
+            .map((i) => `<li><strong>${i.name}</strong></li>`)
+            .join('\n')}</ul>`
         : `<strong>${items[0].name}</strong>`
     }
     <p>Please remember to mark as received once ${

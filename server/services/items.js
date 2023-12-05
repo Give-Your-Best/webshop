@@ -609,10 +609,10 @@ const getShopNotificationItems = async () => {
  * status update.
  */
 const getStatusReminderItems = async ({
-  interval,
-  currentStatus,
-  updateType,
-  targetUser,
+  interval, // 7 or 14 (days)
+  currentStatus, // 'shopped' or 'shipped-to-shopper'
+  updateType, // 'shoppedDate' or 'shopperShippedDate'
+  targetUser, // 'donor' or 'shopper'
 }) => {
   try {
     // Formatted date relative to now
