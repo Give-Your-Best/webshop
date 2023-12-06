@@ -155,6 +155,9 @@ exports.send_order_status_reminders = async () => {
     // If there was an issue with the query, continue to the next
     if (users.success === false) continue;
 
+    // If there are no users to notify, continue to the next
+    if (users.length < 1) continue;
+
     const reminders = users.map((u) => {
       const { name, subject, content } = renderEmailProperties(
         u,
@@ -165,8 +168,23 @@ exports.send_order_status_reminders = async () => {
       return [subject, emailTemplate(content), u.email, name];
     });
 
-    await Promise.all(reminders.map((r) => sendMail(...r)));
+    console.log(
+      `[${new Date().toJSON()}]`,
+      `${users.length} "${
+        { 7: 'one week', 14: 'two weeks' }[s.interval]
+      } since item(s) ${s.currentStatus.replaceAll(
+        '-',
+        ' '
+      )} date" reminder emails to send.`
+    );
 
-    // TODO - we should log the result here
+    const result = await Promise.all(reminders.map((r) => sendMail(...r)));
+
+    console.log(
+      `[${new Date().toJSON()}]`,
+      `${result.length} reminder emails sent with ${
+        result.filter((r) => !r.success).length
+      } failures.`
+    );
   }
 };
