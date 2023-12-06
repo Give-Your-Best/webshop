@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form } from 'formik-antd';
 import {
   StyledSubmitButton,
@@ -7,13 +7,12 @@ import {
   StyledError,
   StyledCheckboxGroup,
 } from './EditForm.styles';
-import {
-  clothingSizeOptions,
-  shoeSizeOptions,
-  colours,
-} from '../../../utils/constants';
+import RenderBatchOptions from './RenderBatchOptions';
+import RenderItemOptions from './RenderItemOptions';
+import { colours } from '../../../utils/constants';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
+import { getItem } from '../../../services/items';
 
 export const ItemMiniEditForm = ({
   editingKey,
@@ -24,6 +23,33 @@ export const ItemMiniEditForm = ({
   const [uploadedImages, setUploadedImages] = useState(
     photos.sort((a, b) => b.front - a.front)
   );
+
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+  const [item, setItem] = useState(null);
+
+  useEffect(() => {
+    const fetchItemDetails = async () => {
+      // Fetch the item details using recordId
+      const itemDetails = await getItem(recordId);
+      console.log('itemDetails: ', itemDetails);
+      setItem(itemDetails);
+      setSelectedCategory(itemDetails?.category || '');
+      setSelectedSubCategory(itemDetails?.subCategory || '');
+    };
+
+    fetchItemDetails();
+  }, [recordId]);
+
+  const handleCategoryChange = (category, subCategory) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(subCategory);
+  };
+
+  if (!item) {
+    // Render loading state or return null while waiting for the item details to be fetched
+    return <div>Loading...</div>;
+  }
 
   return (
     <Form>
@@ -39,7 +65,11 @@ export const ItemMiniEditForm = ({
       </StyledLabel>
       <StyledError name="description" component="div" />
 
-      <CategoryFields editingKey={editingKey} recordId={recordId} />
+      <CategoryFields
+        editingKey={editingKey}
+        recordId={recordId}
+        onCategoryChange={handleCategoryChange}
+      />
 
       <StyledLabel>
         Brand
@@ -47,7 +77,25 @@ export const ItemMiniEditForm = ({
       </StyledLabel>
       <StyledError name="brand" component="div" />
 
-      <StyledLabel>
+      {item?.batchId ? (
+        <RenderBatchOptions
+          category={selectedCategory}
+          subcategory={selectedSubCategory}
+          editingKey={editingKey}
+          recordId={recordId}
+        />
+      ) : (
+        <>
+          <RenderItemOptions
+            category={selectedCategory}
+            subcategory={selectedSubCategory}
+            editingKey={editingKey}
+            recordId={recordId}
+          />
+        </>
+      )}
+
+      {/* <StyledLabel>
         Clothing sizes
         <StyledCheckboxGroup
           disabled={editingKey !== recordId}
@@ -64,7 +112,7 @@ export const ItemMiniEditForm = ({
           name="shoeSize"
           options={shoeSizeOptions}
         />
-      </StyledLabel>
+      </StyledLabel> */}
       <StyledError name="shoeSize" component="div" />
 
       <StyledLabel>
