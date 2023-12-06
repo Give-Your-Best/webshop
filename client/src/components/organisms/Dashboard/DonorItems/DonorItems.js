@@ -175,7 +175,6 @@ export const DonorItems = () => {
             recordId={record._id}
             editingKey={editingKey}
             handleImageUpdate={setImages}
-            isBatchItem={!!record.batchId}
           />
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

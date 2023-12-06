@@ -6,7 +6,6 @@ const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data) => {
-  console.log('data: ', data);
   var new_photos = [];
   var success = true;
   const promises = data.photos.map((photo) => {
@@ -46,7 +45,6 @@ const createItem = async (data) => {
   }
   data.photos = new_photos;
   try {
-    console.log('data: ', data);
     const item = new Item(data);
     await item.save();
     return { success: true, message: 'Item created', item: item };
@@ -88,7 +86,6 @@ const createBatchItem = async (data) => {
       childrenClothingSize,
       childrenShoeSize,
     };
-    console.log('itemData: ', itemData);
     const newItemData = await createItem(itemData);
     const newItem = newItemData.item;
     if (newItem) {

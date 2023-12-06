@@ -2,12 +2,7 @@ import React from 'react';
 import SizeSelector from './SizeSelector';
 import { sizeOptions } from '../../../utils/sizeOptions';
 
-const RenderBatchOptions = ({
-  category,
-  subcategory,
-  editingKey,
-  recordId,
-}) => {
+const RenderBatchOptions = ({ category, subcategory }) => {
   const options = sizeOptions(category, subcategory);
 
   return (
@@ -18,10 +13,6 @@ const RenderBatchOptions = ({
           sizeOptions={option.sizeOption}
           fieldName={option.fieldName}
           label={option.label}
-          editingKey={editingKey}
-          recordId={recordId}
-          category={category}
-          subcategory={subcategory}
         />
       ))}
     </>

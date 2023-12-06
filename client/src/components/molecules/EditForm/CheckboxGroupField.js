@@ -6,19 +6,14 @@ import {
   StyledError,
 } from './EditForm.styles';
 
-const CheckboxGroupField = ({ options, name, label, editingKey, recordId }) => {
+const CheckboxGroupField = ({ options, name, label }) => {
   const field = useField(name);
 
   return (
     <div>
       <StyledLabel>
         {label}
-        <StyledCheckboxGroup
-          {...field}
-          name={name}
-          options={options}
-          disabled={editingKey !== recordId}
-        />
+        <StyledCheckboxGroup {...field} name={name} options={options} />
       </StyledLabel>
       <StyledError name={name} component="div" />
     </div>

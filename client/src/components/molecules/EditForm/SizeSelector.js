@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   StyledInputNumber,
   SizeQuantityContainer,
@@ -7,28 +7,8 @@ import {
 } from './EditForm.styles';
 import { useFormikContext } from 'formik';
 
-const SizeSelector = ({
-  sizeOptions,
-  fieldName,
-  label,
-  editingKey,
-  recordId,
-  category,
-  subcategory,
-}) => {
+const SizeSelector = ({ sizeOptions, fieldName, label }) => {
   const formikProps = useFormikContext();
-
-  useEffect(() => {
-    formikProps.setFieldValue('shoeSize', {});
-    formikProps.setFieldValue('clothingSize', {});
-    formikProps.setFieldValue('childrenShoeSize', {});
-    formikProps.setFieldValue('childrenClothingSize', {});
-    console.log('formikProps.values useEffect: ', formikProps.values);
-    console.log(
-      'formikProps.values[fieldName]?.[size]: ',
-      formikProps.values[fieldName]?.['UK0']
-    );
-  }, [category, subcategory]);
 
   const handleQuantityChange = (size, quantity) => {
     const validQuantity = Math.max(quantity, 0);
@@ -37,7 +17,6 @@ const SizeSelector = ({
       [size]: validQuantity,
     };
     formikProps.setFieldValue(fieldName, updatedQuantities);
-    console.log('formikProps.values handQuantityChange: ', formikProps.values);
   };
 
   return (
@@ -51,12 +30,10 @@ const SizeSelector = ({
           >
             <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
-              value={formikProps.values[fieldName]?.[size] || 0}
               className={fieldName}
-              name={`['${fieldName}]`}
+              name={`['${fieldName}-${size}']`}
               min="0"
               onChange={(quantity) => handleQuantityChange(size, quantity)}
-              disabled={editingKey !== recordId}
             />
           </SizeQuantityPair>
         ))}
