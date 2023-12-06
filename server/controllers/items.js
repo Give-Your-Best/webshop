@@ -28,6 +28,7 @@ const createBatchItem = async (req, res) => {
       .send({ message: 'Service error: batch item details are required' });
   }
   try {
+    console.log('req.body: ', req.body);
     const response = await ItemService.createBatchItem(req.body);
     return res.status(200).send({
       success: 'success',
