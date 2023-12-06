@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const Bugsnag = require('./server/utils/bugsnag');
 
-const tasks = require('./server/tasks');
+const handlers = require('./server/tasks');
 
 /**
  * Simple task runner triggered by the heroku scheduler to handle infrequent,
@@ -22,12 +22,12 @@ const tasks = require('./server/tasks');
     // Parse the command
     const [, , taskName, ...rest] = process.argv;
 
-    if (typeof tasks[taskName] !== 'function') {
+    if (typeof handlers[taskName] !== 'function') {
       throw new Error('Invalid task name: ' + taskName);
     }
 
     // Invoke the task
-    await tasks[taskName](...rest);
+    await handlers[taskName](...rest);
   } catch (err) {
     console.warn(err);
     Bugsnag.notify(err);
