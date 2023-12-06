@@ -615,10 +615,10 @@ const getStatusReminderItems = async ({
   targetUser, // 'donor' or 'shopper'
 }) => {
   try {
-    // Formatted date relative to now
+    // Formatted date `interval` days ago
     const date = moment().subtract(interval, 'days').format('YYYY-MM-DD');
 
-    // Status is `status` and status date is exactly `delta` days ago...
+    // Status is `currentStatus` and `updateType` was `interval` days ago...
     const condition = {
       status: currentStatus,
       approvedStatus: 'approved',
