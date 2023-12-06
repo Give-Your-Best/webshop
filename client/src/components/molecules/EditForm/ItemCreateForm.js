@@ -18,7 +18,8 @@ import {
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 import RenderBatchOptions from './RenderBatchOptions';
-import RenderItemOptions from './RenderItemOptions';
+// import RenderItemOptions from './RenderItemOptions';
+import { shoeSizeOptions, clothingSizeOptions } from '../../../utils/constants';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -112,10 +113,23 @@ export const ItemCreateForm = (data) => {
             />
           ) : (
             <>
-              <RenderItemOptions
-                category={selectedCategory}
-                subcategory={selectedSubCategory}
-              />
+              <StyledLabel>
+                Clothing size
+                <StyledCheckboxGroup
+                  name="clothingSize"
+                  options={clothingSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="clothingSize" component="div" />
+
+              <StyledLabel>
+                Shoe size
+                <StyledCheckboxGroup
+                  name="shoeSize"
+                  options={shoeSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="shoeSize" component="div" />
             </>
           )}
 
