@@ -51,8 +51,8 @@ const emailTemplate = (content) => `
 
 const renderEmailProperties = (user, items, interval) => {
   const period = {
-    7: '1 week',
-    14: '2 weeks',
+    7: 'One week',
+    14: 'Two weeks',
   }[interval];
 
   const plural = items.length > 1;
@@ -70,12 +70,12 @@ const renderEmailProperties = (user, items, interval) => {
     donor: `
 <div style="margin-top:30px;">
   <p>Dear ${name},</p>
-  <p>It is ${period} since your ${
+  <p>It is ${period.toLowerCase()} since your ${
     plural ? 'items were' : 'item was'
   } shopped:</p>
   ${
     plural
-      ? `<ul>${items
+      ? `<ul style="display:inline-block;text-align:left;">${items
           .map((i) => `<li><strong>${i.name}</strong></li>`)
           .join('\n')}</ul>`
       : `<strong>${items[0].name}</strong>`
@@ -88,12 +88,12 @@ const renderEmailProperties = (user, items, interval) => {
     shopper: `
 <div style="margin-top:30px;">
   <p>Dear ${name},</p>
-  <p>It is ${period} since your ${
+  <p>It is ${period.toLowerCase()} since your ${
     plural ? 'items were' : 'item was'
   } shipped:</p>
   ${
     plural
-      ? `<ul>${items
+      ? `<ul style="display:inline-block;text-align:left;">${items
           .map((i) => `<li><strong>${i.name}</strong></li>`)
           .join('\n')}</ul>`
       : `<strong>${items[0].name}</strong>`
