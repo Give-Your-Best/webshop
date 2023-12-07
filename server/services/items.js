@@ -1,4 +1,5 @@
 const { ObjectId } = require('bson');
+const moment = require('moment');
 const Item = require('../models/Item');
 const User_ = require('../models/User');
 const Location = require('../models/Location');
@@ -600,6 +601,62 @@ const getShopNotificationItems = async () => {
   }
 };
 
+/**
+ * Get items grouped by donor or shopper id for sending status update reminders:
+ * where user is a donor, items are shopped but not yet marked as shipped, where
+ * user is a shopper, items are shipped but not yet marked as received. Items
+ * are selected on the basis of the interval between present moment and the last
+ * status update.
+ */
+const getStatusReminderItems = async ({
+  interval, // 7 or 14 (days)
+  currentStatus, // 'shopped' or 'shipped-to-shopper'
+  updateType, // 'shoppedDate' or 'shopperShippedDate'
+  targetUser, // 'donor' or 'shopper'
+}) => {
+  try {
+    // Formatted date `interval` days ago
+    const date = moment().subtract(interval, 'days').format('YYYY-MM-DD');
+
+    // Status is `currentStatus` and `updateType` was `interval` days ago...
+    const condition = {
+      status: currentStatus,
+      approvedStatus: 'approved',
+      $expr: {
+        $eq: [
+          date,
+          {
+            $dateToString: {
+              date: `$statusUpdateDates.${updateType}`,
+              format: '%Y-%m-%d',
+            },
+          },
+        ],
+      },
+    };
+
+    const items = await Item.find(condition).lean();
+
+    // Group items under target user reference id
+    const result = items.reduce((acc, cur) => {
+      const key = cur[`${targetUser}Id`];
+
+      acc[key] = acc[key] || [];
+      acc[key].push(cur);
+
+      return acc;
+    }, {});
+
+    return result;
+  } catch (error) {
+    console.error(`Error in get status reminder items: ${error}`);
+    return {
+      success: false,
+      message: `Error in get status reminder items: ${error}`,
+    };
+  }
+};
+
 const getItem = async (id) => {
   try {
     const item = await Item.findById(id);
@@ -639,6 +696,7 @@ module.exports = {
   getDonorItems,
   getAdminItems,
   getAccountNotificationItems,
+  getStatusReminderItems,
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,

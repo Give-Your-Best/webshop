@@ -242,6 +242,19 @@ const getUser = async (id) => {
   }
 };
 
+const getUsers = async (ids) => {
+  try {
+    const users = await User_.User.find({
+      _id: { $in: ids },
+    }).select('id kind email firstName lastName');
+
+    return users;
+  } catch (error) {
+    console.error(`Error in getUsers: ${error}`);
+    return { success: false, message: `Error in getUsers: ${error}` };
+  }
+};
+
 const getGYBDummyUser = async (name) => {
   try {
     const user = await User_.User.find({ firstName: name });
@@ -258,6 +271,7 @@ const getGYBDummyUser = async (name) => {
 module.exports = {
   createUser,
   getUser,
+  getUsers,
   getAllUsers,
   countAllUsers,
   listAllUsers,
