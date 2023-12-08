@@ -1,9 +1,27 @@
 require('dotenv').config();
+require('winston-mongodb');
+const winston = require('winston');
 const mongoose = require('mongoose');
 
+const env = require('./server/config/environment');
+const handlers = require('./server/tasks');
 const Bugsnag = require('./server/utils/bugsnag');
 
-const handlers = require('./server/tasks');
+const { combine, timestamp, json } = winston.format;
+
+const metadata = winston.format((logEntry) => {
+  const metaEntries = Object.entries(logEntry).filter(([key]) => {
+    return (
+      key !== 'level' &&
+      key !== 'message' &&
+      key !== 'timestamp' &&
+      typeof key !== 'symbol'
+    );
+  });
+
+  logEntry.metadata = Object.fromEntries(metaEntries);
+  return logEntry;
+});
 
 /**
  * Simple task runner triggered by the heroku scheduler to handle infrequent,
@@ -26,8 +44,37 @@ const handlers = require('./server/tasks');
       throw new Error('Invalid task name: ' + taskName);
     }
 
-    // Invoke the task
-    await handlers[taskName](...rest);
+    // Configuration for the MongoDB logs transport
+    const options = {
+      db: mongoose.connection,
+      collection: 'logs',
+    };
+
+    // Configure the logger instance
+    const logger = winston.createLogger({
+      level: 'info',
+      defaultMeta: {
+        service: 'task-runner',
+        event: taskName,
+      },
+      format: combine(timestamp(), json(), metadata()),
+      transports:
+        env === 'production'
+          ? [new winston.transports.MongoDB(options)]
+          : [new winston.transports.Console()],
+    });
+
+    // Because we are writing the logs to MongoDB via the dedicated transport,
+    // we need to ennsure that the process cannot exit (and the connection be
+    // closed) until the log stream is terminated...
+    await new Promise((resolve) => {
+      logger.on('error', resolve);
+      logger.on('finish', resolve);
+
+      // Invoke the task (logger is always the first argument)...
+      // Once the handler is finished, terminate the logger
+      handlers[taskName](logger, ...rest).then(() => logger.end());
+    });
   } catch (err) {
     console.warn(err);
     Bugsnag.notify(err);
