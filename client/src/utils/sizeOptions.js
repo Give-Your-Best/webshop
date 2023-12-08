@@ -42,19 +42,15 @@ export const sizeOptions = (category, subcategory) => {
         ];
       }
       break;
-    // case 'accessories':
-    //   if (subcategory === 'winter') {
-    //     sizeOptions = [
-    //       {
-    //         sizeOption: clothingSizeOptions,
-    //         fieldName: 'clothingSize',
-    //         label: 'Clothing Size',
-    //       },
-    //     ];
-    //   } else {
-    //     sizeOptions = [];
-    //   }
-    //   break;
+    case 'accessories':
+      sizeOptions = [
+        {
+          sizeOption: clothingSizeOptions,
+          fieldName: 'clothingSize',
+          label: 'Clothing Size',
+        },
+      ];
+      break;
     case 'shoes':
       sizeOptions = [
         {
@@ -64,7 +60,7 @@ export const sizeOptions = (category, subcategory) => {
         },
       ];
       break;
-    default:
+    case 'other':
       sizeOptions = [
         {
           sizeOption: clothingSizeOptions,
@@ -72,6 +68,9 @@ export const sizeOptions = (category, subcategory) => {
           label: 'Clothing Size',
         },
       ];
+      break;
+    default:
+      sizeOptions = [];
       break;
   }
 

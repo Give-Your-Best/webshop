@@ -6,7 +6,6 @@ const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data) => {
-  console.log('data: ', data);
   var new_photos = [];
   var success = true;
   const promises = data.photos.map((photo) => {
@@ -46,7 +45,6 @@ const createItem = async (data) => {
   }
   data.photos = new_photos;
   try {
-    console.log('data: ', data);
     const item = new Item(data);
     await item.save();
     return { success: true, message: 'Item created', item: item };
@@ -56,39 +54,48 @@ const createItem = async (data) => {
   }
 };
 
+const convertKeys = (input) => {
+  const result = {};
+  for (const key in input) {
+    const convertedKey = key.replace(/\./g, '_');
+    result[convertedKey] = input[key];
+  }
+  return result;
+};
+
 const createBatchItem = async (data) => {
   try {
     const batchItem = new BatchItem();
     const savedBatchItem = await batchItem.save();
     const batchId = savedBatchItem.id;
 
-    savedBatchItem.clothingSizes = data.clothingSize;
-    savedBatchItem.shoeSizes = data.shoeSize;
-    savedBatchItem.childrenClothingSizes = data.childrenClothingSize;
-    savedBatchItem.childrenShoeSizes = data.childrenShoeSize;
+    const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } =
+      data;
 
-    // Extract sizes without quantities to create an item with
-    const clothingSize = data.clothingSize
-      ? Object.keys(data.clothingSize)
+    // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
+    savedBatchItem.clothingSizes = clothingSizeBatchValues
+      ? convertKeys(clothingSizeBatchValues)
+      : {};
+    savedBatchItem.shoeSizes = shoeSizeBatchValues
+      ? convertKeys(shoeSizeBatchValues)
+      : {};
+
+    // Extract sizes without quantities to create a template item with
+    const clothingSize = clothingSizeBatchValues
+      ? Object.keys(clothingSizeBatchValues)
       : [];
-    const shoeSize = data.shoeSize ? Object.keys(data.shoeSize) : [];
-    const childrenClothingSize = data.childrenClothingSize
-      ? Object.keys(data.childrenClothingSize)
-      : [];
-    const childrenShoeSize = data.childrenShoeSize
-      ? Object.keys(data.childrenShoeSize)
+    const shoeSize = shoeSizeBatchValues
+      ? Object.keys(shoeSizeBatchValues)
       : [];
 
     // Create a new data object for createItem()
     const itemData = {
-      ...data,
+      ...restOfData,
       batchId,
       clothingSize,
       shoeSize,
-      childrenClothingSize,
-      childrenShoeSize,
     };
-    console.log('itemData: ', itemData);
+
     const newItemData = await createItem(itemData);
     const newItem = newItemData.item;
     if (newItem) {
@@ -589,6 +596,19 @@ const getItem = async (id) => {
   }
 };
 
+const getBatchItem = async (id) => {
+  try {
+    const batchItem = await BatchItem.findById(id);
+    if (!batchItem) {
+      throw Error('Cannot find batch item');
+    }
+    return { success: true, batchItem: batchItem };
+  } catch (error) {
+    console.error(`Error in getBatchItem: ${error}`);
+    return { success: false, message: `Error in getBatchItem: ${error}` };
+  }
+};
+
 const deleteDonorItems = async (id) => {
   if (!id || id === '') {
     throw Error('No donor id provided');
@@ -620,4 +640,5 @@ module.exports = {
   deleteBatchItem,
   updateItem,
   createBatchItem,
+  getBatchItem,
 };

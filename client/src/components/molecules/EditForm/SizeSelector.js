@@ -19,25 +19,18 @@ const SizeSelector = ({
   const formikProps = useFormikContext();
 
   useEffect(() => {
-    formikProps.setFieldValue('shoeSize', {});
-    formikProps.setFieldValue('clothingSize', {});
-    formikProps.setFieldValue('childrenShoeSize', {});
-    formikProps.setFieldValue('childrenClothingSize', {});
-    console.log('formikProps.values useEffect: ', formikProps.values);
-    console.log(
-      'formikProps.values[fieldName]?.[size]: ',
-      formikProps.values[fieldName]?.['UK0']
-    );
+    // clear quantity values when category is changed
+    formikProps.setFieldValue(`shoeSizeBatchValues`, {});
+    formikProps.setFieldValue('clothingSizeBatchValues', {});
   }, [category, subcategory]);
 
   const handleQuantityChange = (size, quantity) => {
     const validQuantity = Math.max(quantity, 0);
     const updatedQuantities = {
-      ...formikProps.values[fieldName],
+      ...formikProps.values[`${fieldName}BatchValues`],
       [size]: validQuantity,
     };
-    formikProps.setFieldValue(fieldName, updatedQuantities);
-    console.log('formikProps.values handQuantityChange: ', formikProps.values);
+    formikProps.setFieldValue(`${fieldName}BatchValues`, updatedQuantities);
   };
 
   return (
@@ -51,9 +44,9 @@ const SizeSelector = ({
           >
             <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
-              value={formikProps.values[fieldName]?.[size] || 0}
+              value={formikProps.values[`${fieldName}BatchValues`]?.[size] || 0}
               className={fieldName}
-              name={`['${fieldName}]`}
+              name={`${fieldName}BatchValues`}
               min="0"
               onChange={(quantity) => handleQuantityChange(size, quantity)}
               disabled={editingKey !== recordId}

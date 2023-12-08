@@ -10,4 +10,5 @@ export { deleteBatchItem } from './deleteBatchItem';
 export { deleteDonorItems } from './deleteDonorItems';
 export { createItem } from './createItem';
 export { getItem } from './getItem';
+export { getBatchItem } from './getBatchItem';
 export { createBatchItem } from './createBatchItem';

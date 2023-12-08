@@ -28,8 +28,6 @@ const itemSchema = new Schema(
     description: String,
     clothingSize: [String],
     shoeSize: [String],
-    childrenClothingSize: [String],
-    childrenShoeSize: [String],
     photos: [
       {
         url: String,

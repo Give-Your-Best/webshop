@@ -16,16 +16,6 @@ const batchItemSchema = new Schema({
     of: Number,
     default: new Map(),
   },
-  childreClothingSizes: {
-    type: Map,
-    of: Number,
-    default: new Map(),
-  },
-  childreShoeSizes: {
-    type: Map,
-    of: Number,
-    default: new Map(),
-  },
 });
 
 const BatchItem = mongoose.model('BatchItem', batchItemSchema);

@@ -4,7 +4,11 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
-import { colours } from '../../../utils/constants';
+import {
+  colours,
+  shoeSizeOptions,
+  clothingSizeOptions,
+} from '../../../utils/constants';
 import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
@@ -18,8 +22,6 @@ import {
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 import RenderBatchOptions from './RenderBatchOptions';
-// import RenderItemOptions from './RenderItemOptions';
-import { shoeSizeOptions, clothingSizeOptions } from '../../../utils/constants';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);

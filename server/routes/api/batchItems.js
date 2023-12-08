@@ -13,4 +13,9 @@ router.delete('/:id', async (req, res) => {
   await Items.deleteBatchItem(req, res);
 });
 
+// get batch item endoint api/batchItems/:id
+router.get('/:id', async (req, res) => {
+  await Items.getBatchItem(req, res);
+});
+
 module.exports = router;

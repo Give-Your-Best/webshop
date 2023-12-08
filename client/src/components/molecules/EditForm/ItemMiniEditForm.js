@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form } from 'formik-antd';
+import { useFormikContext } from 'formik';
 import {
   StyledSubmitButton,
   StyledInput,
@@ -8,11 +9,15 @@ import {
   StyledCheckboxGroup,
 } from './EditForm.styles';
 import RenderBatchOptions from './RenderBatchOptions';
-import RenderItemOptions from './RenderItemOptions';
-import { colours } from '../../../utils/constants';
+import {
+  colours,
+  shoeSizeOptions,
+  clothingSizeOptions,
+} from '../../../utils/constants';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
-import { getItem } from '../../../services/items';
+import { getItem, getBatchItem } from '../../../services/items';
+import { convertUnderscoreToDot } from '../../../utils/convertUnderscoreToDot';
 
 export const ItemMiniEditForm = ({
   editingKey,
@@ -23,22 +28,47 @@ export const ItemMiniEditForm = ({
   const [uploadedImages, setUploadedImages] = useState(
     photos.sort((a, b) => b.front - a.front)
   );
-
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [item, setItem] = useState(null);
 
-  useEffect(() => {
-    const fetchItemDetails = async () => {
-      // Fetch the item details using recordId
-      const itemDetails = await getItem(recordId);
-      console.log('itemDetails: ', itemDetails);
-      setItem(itemDetails);
-      setSelectedCategory(itemDetails?.category || '');
-      setSelectedSubCategory(itemDetails?.subCategory || '');
-    };
+  const formikProps = useFormikContext();
 
-    fetchItemDetails();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const itemDetails = await getItem(recordId);
+        setItem(itemDetails);
+        setSelectedCategory(itemDetails.category);
+        setSelectedSubCategory(itemDetails.subCategory);
+        if (itemDetails?.batchId) {
+          const batchItemDetails = await getBatchItem(itemDetails.batchId);
+          if (batchItemDetails?.batchItem.clothingSizes) {
+            // Converting keys from underscore to dot -> mongoose maps don't allow for dots in their keys
+            const convertedClothingSizes = convertUnderscoreToDot(
+              batchItemDetails.batchItem.clothingSizes
+            );
+            formikProps.setFieldValue(
+              'clothingSizeBatchValues',
+              convertedClothingSizes
+            );
+          }
+          if (batchItemDetails?.batchItem.shoeSizes) {
+            // Converting keys from underscore to dot -> mongoose maps don't allow for dots in their keys
+            const convertedShoeSizes = convertUnderscoreToDot(
+              batchItemDetails.batchItem.shoeSizes
+            );
+            formikProps.setFieldValue(
+              'shoeSizeBatchValues',
+              convertedShoeSizes
+            );
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching item details:', error);
+      }
+    };
+    fetchData();
   }, [recordId]);
 
   const handleCategoryChange = (category, subCategory) => {
@@ -86,34 +116,27 @@ export const ItemMiniEditForm = ({
         />
       ) : (
         <>
-          <RenderItemOptions
-            category={selectedCategory}
-            subcategory={selectedSubCategory}
-            editingKey={editingKey}
-            recordId={recordId}
-          />
+          <StyledLabel>
+            Clothing sizes
+            <StyledCheckboxGroup
+              disabled={editingKey !== recordId}
+              name="clothingSize"
+              options={clothingSizeOptions}
+            />
+          </StyledLabel>
+          <StyledError name="clothingSize" component="div" />
+
+          <StyledLabel>
+            Shoe sizes
+            <StyledCheckboxGroup
+              disabled={editingKey !== recordId}
+              name="shoeSize"
+              options={shoeSizeOptions}
+            />
+          </StyledLabel>
+          <StyledError name="shoeSize" component="div" />
         </>
       )}
-
-      {/* <StyledLabel>
-        Clothing sizes
-        <StyledCheckboxGroup
-          disabled={editingKey !== recordId}
-          name="clothingSize"
-          options={clothingSizeOptions}
-        />
-      </StyledLabel>
-      <StyledError name="clothingSize" component="div" />
-
-      <StyledLabel>
-        Shoe sizes
-        <StyledCheckboxGroup
-          disabled={editingKey !== recordId}
-          name="shoeSize"
-          options={shoeSizeOptions}
-        />
-      </StyledLabel> */}
-      <StyledError name="shoeSize" component="div" />
 
       <StyledLabel>
         Colours
