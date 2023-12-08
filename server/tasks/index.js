@@ -112,7 +112,7 @@ const renderEmailProperties = (user, items, interval) => {
  * Dispatch reminder emails for status updates on items either shoppe (donor
  * user reminders) or shipped (shopper user reminders).
  */
-exports.send_order_status_reminders = async () => {
+exports.send_order_status_reminders = async (logger) => {
   const settings = [
     // 1 week since item shopped, please confirm sent
     {
@@ -168,23 +168,15 @@ exports.send_order_status_reminders = async () => {
       return [subject, emailTemplate(content), u.email, name];
     });
 
-    console.log(
-      `[${new Date().toJSON()}]`,
-      `${users.length} "${
-        { 7: 'one week', 14: 'two weeks' }[s.interval]
-      } since item(s) ${s.currentStatus.replaceAll(
-        '-',
-        ' '
-      )} date" reminder emails to send.`
-    );
-
     const result = await Promise.all(reminders.map((r) => sendMail(...r)));
 
-    console.log(
-      `[${new Date().toJSON()}]`,
-      `${result.length} reminder emails sent with ${
+    logger.info(
+      `Sent ${result.length} reminder emails with ${
         result.filter((r) => !r.success).length
-      } failures.`
+      } failures`,
+      {
+        data: s,
+      }
     );
   }
 };
