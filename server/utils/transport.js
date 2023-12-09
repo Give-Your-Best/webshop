@@ -2,6 +2,14 @@ const Transport = require('winston-transport');
 
 const LogEntry = require('../models/LogEntry');
 
+/**
+ * https://github.com/winstonjs/winston/blob/HEAD/docs/transports.md
+ * https://github.com/winstonjs/winston-transport
+ *
+ * Custom transport for winston logger - write the log entries to MongoDB via
+ * the mongoose schema...
+ */
+
 class CustomTransport extends Transport {
   constructor(opts) {
     super(opts);
