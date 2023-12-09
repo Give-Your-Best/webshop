@@ -39,7 +39,7 @@
     "node-mailjet": "^6.0.4",
     "uuid": "^9.0.1",
     "winston": "^3.11.0",
-    "winston-mongodb": "^5.1.1"
+    "winston-transport": "^4.6.0"
   },
   "devDependencies": {
     "eslint": "^8.53.0",
