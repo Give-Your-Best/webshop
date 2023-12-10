@@ -612,7 +612,7 @@ const getStatusReminderItems = async ({
   interval, // 7 or 14 (days)
   currentStatus, // 'shopped' or 'shipped-to-shopper'
   updateType, // 'shoppedDate' or 'shopperShippedDate'
-  targetUser, // 'donor' or 'shopper'
+  userType, // 'donor' or 'shopper'
 }) => {
   try {
     // Formatted date `interval` days ago
@@ -639,7 +639,7 @@ const getStatusReminderItems = async ({
 
     // Group items under target user reference id
     const result = items.reduce((acc, cur) => {
-      const key = cur[`${targetUser}Id`];
+      const key = cur[`${userType}Id`];
 
       acc[key] = acc[key] || [];
       acc[key].push(cur);

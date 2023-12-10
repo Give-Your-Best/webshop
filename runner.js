@@ -1,9 +1,13 @@
 require('dotenv').config();
+const winston = require('winston');
 const mongoose = require('mongoose');
 
-const Bugsnag = require('./server/utils/bugsnag');
-
+const env = require('./server/config/environment');
 const handlers = require('./server/tasks');
+const Bugsnag = require('./server/utils/bugsnag');
+const MongoTransport = require('./server/utils/transport');
+
+const { combine, timestamp, json } = winston.format;
 
 /**
  * Simple task runner triggered by the heroku scheduler to handle infrequent,
@@ -26,8 +30,30 @@ const handlers = require('./server/tasks');
       throw new Error('Invalid task name: ' + taskName);
     }
 
-    // Invoke the task
-    await handlers[taskName](...rest);
+    // Configure the logger instance
+    const logger = winston.createLogger({
+      level: 'info',
+      defaultMeta: {
+        service: 'task-runner',
+        event: taskName,
+      },
+      format: combine(timestamp(), json()),
+      transports:
+        // There is no need to use the custom transport (log entries to MongoDB)
+        // outside of production at present - for all other environments we can
+        // log to the console...
+        env === 'production'
+          ? [new MongoTransport()]
+          : [new winston.transports.Console()],
+    });
+
+    // Pass it over to bugsnag in the catch block
+    logger.on('error', (error) => {
+      throw error;
+    });
+
+    // Invoke the handler - logger is always the first argument
+    await handlers[taskName](logger, ...rest);
   } catch (err) {
     console.warn(err);
     Bugsnag.notify(err);

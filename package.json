@@ -37,7 +37,9 @@
     "moment": "^2.29.4",
     "mongoose": "^8.0.0",
     "node-mailjet": "^6.0.4",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0",
+    "winston-transport": "^4.6.0"
   },
   "devDependencies": {
     "eslint": "^8.53.0",
