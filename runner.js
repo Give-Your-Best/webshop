@@ -40,8 +40,8 @@ const { combine, timestamp, json } = winston.format;
       format: combine(timestamp(), json()),
       transports:
         // There is no need to use the custom transport (log entries to MongoDB)
-        // putside of production - for all other environments we can log to the
-        // console...
+        // outside of production at present - for all other environments we can
+        // log to the console...
         env === 'production'
           ? [new MongoTransport()]
           : [new winston.transports.Console()],
