@@ -28,6 +28,9 @@ const logEntrySchema = new Schema({
   },
 });
 
+// Set a time to live on documents of 30 days.
+logEntrySchema.index({ timestamp: 1 }, { expireAfterSeconds: 2592000 });
+
 const LogEntry = mongoose.model('Log', logEntrySchema);
 
 module.exports = LogEntry;
