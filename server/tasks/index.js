@@ -119,28 +119,28 @@ exports.send_order_status_reminders = async (logger) => {
       interval: 7,
       currentStatus: 'shopped',
       updateType: 'shoppedDate',
-      targetUser: 'donor',
+      userType: 'donor',
     },
     // 2 weeks since item shopped, please confirm sent
     {
       interval: 14,
       currentStatus: 'shopped',
       updateType: 'shoppedDate',
-      targetUser: 'donor',
+      userType: 'donor',
     },
     // 1 week since item shipped, please confirm received
     {
       interval: 7,
       currentStatus: 'shipped-to-shopper',
       updateType: 'shopperShippedDate',
-      targetUser: 'shopper',
+      userType: 'shopper',
     },
     // 2 weeks since item shipped, please confirm received
     {
       interval: 14,
       currentStatus: 'shipped-to-shopper',
       updateType: 'shopperShippedDate',
-      targetUser: 'shopper',
+      userType: 'shopper',
     },
   ];
 
@@ -173,9 +173,12 @@ exports.send_order_status_reminders = async (logger) => {
     logger.info(
       `Sent ${result.length} reminder emails with ${
         result.filter((r) => !r.success).length
-      } failures`,
+      } failures.`,
       {
-        data: s,
+        metadata: {
+          ...s,
+          recipients: Object.keys(items),
+        },
       }
     );
   }

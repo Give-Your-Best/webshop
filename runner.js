@@ -1,27 +1,13 @@
 require('dotenv').config();
-require('winston-mongodb');
 const winston = require('winston');
 const mongoose = require('mongoose');
 
 const env = require('./server/config/environment');
 const handlers = require('./server/tasks');
 const Bugsnag = require('./server/utils/bugsnag');
+const MongoTransport = require('./server/utils/transport');
 
 const { combine, timestamp, json } = winston.format;
-
-const metadata = winston.format((logEntry) => {
-  const metaEntries = Object.entries(logEntry).filter(([key]) => {
-    return (
-      key !== 'level' &&
-      key !== 'message' &&
-      key !== 'timestamp' &&
-      typeof key !== 'symbol'
-    );
-  });
-
-  logEntry.metadata = Object.fromEntries(metaEntries);
-  return logEntry;
-});
 
 /**
  * Simple task runner triggered by the heroku scheduler to handle infrequent,
@@ -44,12 +30,6 @@ const metadata = winston.format((logEntry) => {
       throw new Error('Invalid task name: ' + taskName);
     }
 
-    // Configuration for the MongoDB logs transport
-    const options = {
-      db: mongoose.connection,
-      collection: 'logs',
-    };
-
     // Configure the logger instance
     const logger = winston.createLogger({
       level: 'info',
@@ -57,24 +37,23 @@ const metadata = winston.format((logEntry) => {
         service: 'task-runner',
         event: taskName,
       },
-      format: combine(timestamp(), json(), metadata()),
+      format: combine(timestamp(), json()),
       transports:
+        // There is no need to use the custom transport (log entries to MongoDB)
+        // putside of production - for all other environments we can log to the
+        // console...
         env === 'production'
-          ? [new winston.transports.MongoDB(options)]
+          ? [new MongoTransport()]
           : [new winston.transports.Console()],
     });
 
-    // Because we are writing the logs to MongoDB via the dedicated transport,
-    // we need to ennsure that the process cannot exit (and the connection be
-    // closed) until the log stream is terminated...
-    await new Promise((resolve) => {
-      logger.on('error', resolve);
-      logger.on('finish', resolve);
-
-      // Invoke the task (logger is always the first argument)...
-      // Once the handler is finished, terminate the logger
-      handlers[taskName](logger, ...rest).then(() => logger.end());
+    // Pass it over to bugsnag in the catch block
+    logger.on('error', (error) => {
+      throw error;
     });
+
+    // Invoke the handler - logger is always the first argument
+    await handlers[taskName](logger, ...rest);
   } catch (err) {
     console.warn(err);
     Bugsnag.notify(err);
