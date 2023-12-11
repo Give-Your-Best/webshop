@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const env = require('./server/config/environment');
 const handlers = require('./server/tasks');
 const Bugsnag = require('./server/utils/bugsnag');
-const MongoTransport = require('./server/utils/transport');
+const CustomMongoTransport = require('./server/utils/transport');
 
 const { combine, timestamp, json } = winston.format;
 
@@ -43,17 +43,22 @@ const { combine, timestamp, json } = winston.format;
         // outside of production at present - for all other environments we can
         // log to the console...
         env === 'production'
-          ? [new MongoTransport()]
+          ? [new CustomMongoTransport()]
           : [new winston.transports.Console()],
     });
 
-    // Pass it over to bugsnag in the catch block
-    logger.on('error', (error) => {
-      throw error;
-    });
+    // Logs are written to the db by a custom transport using our mongoose
+    // connection, so we need to ensure all entries are written before it is
+    // closed. We cannot await `logger.log()` so we are explicitly calling
+    // `logger.end()` and awaiting the 'finish' event.
+    // https://www.npmjs.com/package/winston#awaiting-logs-to-be-written-in-winston
+    // https://github.com/winstonjs/winston/blob/master/examples/finish-event.js
+    await new Promise((resolve, reject) => {
+      logger.on('error', reject);
+      logger.on('finish', resolve);
 
-    // Invoke the handler - logger is always the first argument
-    await handlers[taskName](logger, ...rest);
+      handlers[taskName](logger, ...rest).then(() => logger.end());
+    });
   } catch (err) {
     console.warn(err);
     Bugsnag.notify(err);
