@@ -34,6 +34,7 @@ export const ItemMiniEditForm = ({
 
   const formikProps = useFormikContext();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchData = async () => {
       try {

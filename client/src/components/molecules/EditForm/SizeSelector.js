@@ -18,6 +18,7 @@ const SizeSelector = ({
 }) => {
   const formikProps = useFormikContext();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // clear quantity values when category is changed
     formikProps.setFieldValue(`shoeSizeBatchValues`, {});
