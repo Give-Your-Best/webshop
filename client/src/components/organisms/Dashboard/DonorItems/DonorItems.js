@@ -16,6 +16,7 @@ import {
 import {
   getDonorItems,
   updateItem,
+  updateBatchItem,
   deleteItem,
   deleteBatchItem,
   getItem,
@@ -149,7 +150,12 @@ export const DonorItems = () => {
       if (images.length > 0) {
         values.photos = images;
       }
-      const res = await updateItem(record._id, values, token);
+      let res = {};
+      if (values.batchId) {
+        res = await updateBatchItem(record._id, values, token);
+      } else {
+        res = await updateItem(record._id, values, token);
+      }
       if (res.success) {
         handleEditSave(res.item);
         setEditingKey('');
@@ -175,7 +181,6 @@ export const DonorItems = () => {
             recordId={record._id}
             editingKey={editingKey}
             handleImageUpdate={setImages}
-            isBatchItem={!!record.batchId}
           />
         </Formik>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

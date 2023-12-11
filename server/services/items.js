@@ -195,6 +195,53 @@ const updateItem = async (id, updateData) => {
   return results;
 };
 
+const updateBatchItem = async (id, updateData) => {
+  const templateItem = await Item.findById(id);
+  if (!templateItem) {
+    return {
+      success: false,
+      message: 'Template item not found',
+    };
+  }
+  const batchItem = await BatchItem.findById(templateItem.batchId);
+  if (!batchItem) {
+    return {
+      success: false,
+      message: 'Batch item not found',
+    };
+  }
+  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } =
+    updateData;
+
+  // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
+  batchItem.clothingSizes = clothingSizeBatchValues
+    ? convertKeys(clothingSizeBatchValues)
+    : {};
+  batchItem.shoeSizes = shoeSizeBatchValues
+    ? convertKeys(shoeSizeBatchValues)
+    : {};
+  await batchItem.save();
+  // Extract sizes without quantities to create a template item with
+  const clothingSize = clothingSizeBatchValues
+    ? Object.keys(clothingSizeBatchValues)
+    : [];
+  const shoeSize = shoeSizeBatchValues ? Object.keys(shoeSizeBatchValues) : [];
+  // Create a new data object for updateItem()
+  const newItemData = {
+    ...restOfData,
+    clothingSize,
+    shoeSize,
+  };
+  const updatedItemData = await updateItem(id, newItemData);
+  const updatedItem = updatedItemData.item;
+  return {
+    success: true,
+    message: 'BatchItem and associated item updated',
+    batchItem: batchItem,
+    item: updatedItem,
+  };
+};
+
 const deleteItem = async (id) => {
   try {
     const item = await Item.findByIdAndDelete(id);
@@ -641,4 +688,5 @@ module.exports = {
   updateItem,
   createBatchItem,
   getBatchItem,
+  updateBatchItem,
 };

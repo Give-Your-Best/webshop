@@ -18,4 +18,7 @@ router.get('/:id', async (req, res) => {
   await Items.getBatchItem(req, res);
 });
 
+// update batch item endpoint put to api/batchItems/:id
+router.put('/:id', Items.updateBatchItem);
+
 module.exports = router;

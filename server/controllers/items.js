@@ -28,7 +28,6 @@ const createBatchItem = async (req, res) => {
       .send({ message: 'Service error: batch item details are required' });
   }
   try {
-    console.log('req.body: ', req.body);
     const response = await ItemService.createBatchItem(req.body);
     return res.status(200).send({
       success: 'success',
@@ -104,10 +103,34 @@ const updateItem = async (req, res) => {
   }
 };
 
+const updateBatchItem = async (req, res) => {
+  if (Object.keys(req.body).length === 0) {
+    return res
+      .status(400)
+      .send({ message: 'Service error: Item details are required' });
+  }
+  const id = req.params.id,
+    data = req.body;
+  try {
+    const response = await ItemService.updateBatchItem(id, data);
+    return res.status(200).send({
+      success: response.success,
+      message: response.message,
+      batchItem: response.batchItem,
+      item: response.item,
+    });
+  } catch (err) {
+    req.bugsnag.notify(err);
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({ message: `Service error: ${err}` });
+  }
+};
+
 module.exports = {
   createItem,
   createBatchItem,
   updateItem,
   deleteBatchItem,
   getBatchItem,
+  updateBatchItem,
 };
