@@ -146,7 +146,7 @@ export const AdminItems = () => {
       onOk() {
         getItem(id).then((itemToDelete) => {
           if (itemToDelete.batchId !== null) {
-            deleteBatchItem(id).then(fetchItems);
+            deleteBatchItem(id, token).then(fetchItems);
           } else {
             deleteItem(id, token).then(fetchItems);
           }

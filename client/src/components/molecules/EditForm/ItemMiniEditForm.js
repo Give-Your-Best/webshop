@@ -32,9 +32,8 @@ export const ItemMiniEditForm = ({
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [item, setItem] = useState(null);
 
-  const formikProps = useFormikContext();
+  const { setFieldValue } = useFormikContext();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,20 +48,14 @@ export const ItemMiniEditForm = ({
             const convertedClothingSizes = convertUnderscoreToDot(
               batchItemDetails.batchItem.clothingSizes
             );
-            formikProps.setFieldValue(
-              'clothingSizeBatchValues',
-              convertedClothingSizes
-            );
+            setFieldValue('clothingSizeBatchValues', convertedClothingSizes);
           }
           if (batchItemDetails?.batchItem.shoeSizes) {
             // Converting keys from underscore to dot -> mongoose maps don't allow for dots in their keys
             const convertedShoeSizes = convertUnderscoreToDot(
               batchItemDetails.batchItem.shoeSizes
             );
-            formikProps.setFieldValue(
-              'shoeSizeBatchValues',
-              convertedShoeSizes
-            );
+            setFieldValue('shoeSizeBatchValues', convertedShoeSizes);
           }
         }
       } catch (error) {
@@ -70,7 +63,7 @@ export const ItemMiniEditForm = ({
       }
     };
     fetchData();
-  }, [recordId]);
+  }, [recordId, setFieldValue]);
 
   const handleCategoryChange = (category, subCategory) => {
     setSelectedCategory(category);

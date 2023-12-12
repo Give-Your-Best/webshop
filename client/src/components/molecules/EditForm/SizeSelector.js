@@ -16,14 +16,13 @@ const SizeSelector = ({
   category,
   subcategory,
 }) => {
-  const formikProps = useFormikContext();
+  const { setFieldValue, ...formikProps } = useFormikContext();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // clear quantity values when category is changed
-    formikProps.setFieldValue(`shoeSizeBatchValues`, {});
-    formikProps.setFieldValue('clothingSizeBatchValues', {});
-  }, [category, subcategory]);
+    setFieldValue(`shoeSizeBatchValues`, {});
+    setFieldValue('clothingSizeBatchValues', {});
+  }, [category, subcategory, setFieldValue]);
 
   const handleQuantityChange = (size, quantity) => {
     const validQuantity = Math.max(quantity, 0);
@@ -31,7 +30,7 @@ const SizeSelector = ({
       ...formikProps.values[`${fieldName}BatchValues`],
       [size]: validQuantity,
     };
-    formikProps.setFieldValue(`${fieldName}BatchValues`, updatedQuantities);
+    setFieldValue(`${fieldName}BatchValues`, updatedQuantities);
   };
 
   return (

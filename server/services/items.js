@@ -65,21 +65,20 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
+  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } = data;
+
+  // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
+  const clothingSizes = clothingSizeBatchValues
+    ? convertKeys(clothingSizeBatchValues)
+    : {};
+  const shoeSizes = shoeSizeBatchValues ? convertKeys(shoeSizeBatchValues) : {};
+
   try {
-    const batchItem = new BatchItem();
-    const savedBatchItem = await batchItem.save();
-    const batchId = savedBatchItem.id;
-
-    const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } =
-      data;
-
-    // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
-    savedBatchItem.clothingSizes = clothingSizeBatchValues
-      ? convertKeys(clothingSizeBatchValues)
-      : {};
-    savedBatchItem.shoeSizes = shoeSizeBatchValues
-      ? convertKeys(shoeSizeBatchValues)
-      : {};
+    const batchItem = await BatchItem.create({
+      clothingSizes: clothingSizes,
+      shoeSizes: shoeSizes,
+    });
+    const batchId = batchItem.id;
 
     // Extract sizes without quantities to create a template item with
     const clothingSize = clothingSizeBatchValues
@@ -100,12 +99,12 @@ const createBatchItem = async (data) => {
     const newItemData = await createItem(itemData);
     const newItem = newItemData.item;
     if (newItem) {
-      savedBatchItem.templateItem = newItem.id;
-      await savedBatchItem.save();
+      batchItem.templateItem = newItem.id;
+      await batchItem.save();
       return {
         success: true,
         message: 'BatchItem and associated item created',
-        batchItem: savedBatchItem,
+        batchItem: batchItem,
         item: newItem,
       };
     }
@@ -264,11 +263,11 @@ const deleteBatchItem = async (id) => {
     if (!batchItem) {
       throw Error('BatchItem not found');
     }
-    const deletedItem = await Item.findOneAndDelete(id);
+    const deletedItem = await Item.findByIdAndDelete(id);
     if (!deletedItem) {
       throw Error(`Cannot delete item with ID ${id}`);
     }
-    await BatchItem.findOneAndDelete(batchItem.id);
+    await BatchItem.findByIdAndDelete(batchItem.id);
     return {
       success: true,
       message: 'BatchItem and associated template item deleted',
