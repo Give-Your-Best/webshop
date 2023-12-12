@@ -55,83 +55,64 @@ const createItem = async (data) => {
   }
 };
 
-// const createBatchItem = async (data) => {
-//   try {
-//     const batchItem = new BatchItem({ itemIds: [] });
-//     // Saved initially to generate the batchItemId
-//     const savedBatchItem = await batchItem.save();
-//     // Create multiple Items associated with the BatchItem
-//     const createdItems = [];
-//     console.log('data: ', data);
-//     const [items] = Object.values(data);
-//     for (const item of items) {
-//       var new_photos = [];
-//       var success = true;
-//       const promises = item.photos.map((photo) => {
-//         if (photo.status !== 'removed') {
-//           return cloudinary.uploader
-//             .upload(photo.imageUrl, {
-//               resource_type: 'auto',
-//               public_id: photo.uid,
-//               overwrite: false,
-//               secure: true,
-//             })
-//             .then((result) => {
-//               console.log(
-//                 '*** Success: Cloudinary Upload: ',
-//                 result.secure_url
-//               );
-//               new_photos.push({
-//                 url: result.secure_url,
-//                 name: photo.name,
-//                 createdAt: result.created_at,
-//                 publicId: photo.uid,
-//                 success: true,
-//                 front: photo.front ? true : false,
-//               });
-//             })
-//             .catch((err) => {
-//               console.error(err);
-//               console.log('*** Error: Cloudinary Upload');
-//               success = false;
-//               return;
-//             });
-//         }
-//       });
-//       await Promise.all(promises);
-//       if (!success) {
-//         return {
-//           success: false,
-//           message: 'Failed to upload one or more of your images',
-//         };
-//       }
-//       data.photos = new_photos;
-//       try {
-//         const newItem = new Item({
-//           ...itemWithPhotos,
-//           batchId: savedBatchItem._id,
-//         });
-//         const savedItem = await newItem.save();
-//         createdItems.push(savedItem);
-//         savedBatchItem.itemIds.push(savedItem._id);
-//       } catch (err) {
-//         console.error(err);
-//         return { success: false, message: err };
-//       }
-//     }
-//     // Save the batchItem again to update the itemIds array
-//     await savedBatchItem.save();
-//     return {
-//       success: true,
-//       message: 'BatchItem and associated items created',
-//       batchItem: savedBatchItem,
-//       items: createdItems,
-//     };
-//   } catch (err) {
-//     console.error(err);
-//     return { success: false, message: err };
-//   }
-// };
+const convertKeys = (input) => {
+  const result = {};
+  for (const key in input) {
+    const convertedKey = key.replace(/\./g, '_');
+    result[convertedKey] = input[key];
+  }
+  return result;
+};
+
+const createBatchItem = async (data) => {
+  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } = data;
+
+  // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
+  const clothingSizes = clothingSizeBatchValues
+    ? convertKeys(clothingSizeBatchValues)
+    : {};
+  const shoeSizes = shoeSizeBatchValues ? convertKeys(shoeSizeBatchValues) : {};
+
+  try {
+    const batchItem = await BatchItem.create({
+      clothingSizes: clothingSizes,
+      shoeSizes: shoeSizes,
+    });
+    const batchId = batchItem.id;
+
+    // Extract sizes without quantities to create a template item with
+    const clothingSize = clothingSizeBatchValues
+      ? Object.keys(clothingSizeBatchValues)
+      : [];
+    const shoeSize = shoeSizeBatchValues
+      ? Object.keys(shoeSizeBatchValues)
+      : [];
+
+    // Create a new data object for createItem()
+    const itemData = {
+      ...restOfData,
+      batchId,
+      clothingSize,
+      shoeSize,
+    };
+
+    const newItemData = await createItem(itemData);
+    const newItem = newItemData.item;
+    if (newItem) {
+      batchItem.templateItem = newItem.id;
+      await batchItem.save();
+      return {
+        success: true,
+        message: 'BatchItem and associated item created',
+        batchItem: batchItem,
+        item: newItem,
+      };
+    }
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: err };
+  }
+};
 
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
@@ -214,6 +195,53 @@ const updateItem = async (id, updateData) => {
   return results;
 };
 
+const updateBatchItem = async (id, updateData) => {
+  const templateItem = await Item.findById(id);
+  if (!templateItem) {
+    return {
+      success: false,
+      message: 'Template item not found',
+    };
+  }
+  const batchItem = await BatchItem.findById(templateItem.batchId);
+  if (!batchItem) {
+    return {
+      success: false,
+      message: 'Batch item not found',
+    };
+  }
+  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } =
+    updateData;
+
+  // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
+  batchItem.clothingSizes = clothingSizeBatchValues
+    ? convertKeys(clothingSizeBatchValues)
+    : {};
+  batchItem.shoeSizes = shoeSizeBatchValues
+    ? convertKeys(shoeSizeBatchValues)
+    : {};
+  await batchItem.save();
+  // Extract sizes without quantities to create a template item with
+  const clothingSize = clothingSizeBatchValues
+    ? Object.keys(clothingSizeBatchValues)
+    : [];
+  const shoeSize = shoeSizeBatchValues ? Object.keys(shoeSizeBatchValues) : [];
+  // Create a new data object for updateItem()
+  const newItemData = {
+    ...restOfData,
+    clothingSize,
+    shoeSize,
+  };
+  const updatedItemData = await updateItem(id, newItemData);
+  const updatedItem = updatedItemData.item;
+  return {
+    success: true,
+    message: 'BatchItem and associated item updated',
+    batchItem: batchItem,
+    item: updatedItem,
+  };
+};
+
 const deleteItem = async (id) => {
   try {
     const item = await Item.findByIdAndDelete(id);
@@ -230,20 +258,20 @@ const deleteItem = async (id) => {
 
 const deleteBatchItem = async (id) => {
   try {
-    const batchItem = await BatchItem.findById(id);
+    const templateItem = await Item.findById(id);
+    const batchItem = await BatchItem.findById(templateItem?.batchId);
     if (!batchItem) {
       throw Error('BatchItem not found');
     }
-    const itemIds = batchItem.itemIds;
-    const itemDeletionPromises = itemIds.map(async (itemId) => {
-      const deletedItem = await Item.findByIdAndDelete(itemId);
-      if (!deletedItem) {
-        throw Error(`Cannot delete item with ID ${itemId}`);
-      }
-    });
-    await Promise.all(itemDeletionPromises);
-    await BatchItem.findByIdAndDelete(id);
-    return { success: true, message: 'BatchItem and associated items deleted' };
+    const deletedItem = await Item.findByIdAndDelete(id);
+    if (!deletedItem) {
+      throw Error(`Cannot delete item with ID ${id}`);
+    }
+    await BatchItem.findByIdAndDelete(batchItem.id);
+    return {
+      success: true,
+      message: 'BatchItem and associated template item deleted',
+    };
   } catch (error) {
     console.error(`Error in deleteBatchItem: ${error}`);
     return {
@@ -671,6 +699,19 @@ const getItem = async (id) => {
   }
 };
 
+const getBatchItem = async (id) => {
+  try {
+    const batchItem = await BatchItem.findById(id);
+    if (!batchItem) {
+      throw Error('Cannot find batch item');
+    }
+    return { success: true, batchItem: batchItem };
+  } catch (error) {
+    console.error(`Error in getBatchItem: ${error}`);
+    return { success: false, message: `Error in getBatchItem: ${error}` };
+  }
+};
+
 const deleteDonorItems = async (id) => {
   if (!id || id === '') {
     throw Error('No donor id provided');
@@ -702,4 +743,7 @@ module.exports = {
   deleteDonorItems,
   deleteBatchItem,
   updateItem,
+  createBatchItem,
+  getBatchItem,
+  updateBatchItem,
 };
