@@ -3,6 +3,7 @@ import {
   // childrenClothingSizeOptions,
   shoeSizeOptions,
   clothingSizeOptions,
+  oneSizeOptions,
 } from './constants';
 
 export const sizeOptions = (category, subcategory) => {
@@ -45,9 +46,9 @@ export const sizeOptions = (category, subcategory) => {
     case 'accessories':
       sizeOptions = [
         {
-          sizeOption: clothingSizeOptions,
+          sizeOption: oneSizeOptions,
           fieldName: 'clothingSize',
-          label: 'Clothing Size',
+          label: 'Accessories Size',
         },
       ];
       break;
@@ -63,9 +64,9 @@ export const sizeOptions = (category, subcategory) => {
     case 'other':
       sizeOptions = [
         {
-          sizeOption: clothingSizeOptions,
+          sizeOption: oneSizeOptions,
           fieldName: 'clothingSize',
-          label: 'Clothing Size',
+          label: 'Other Size',
         },
       ];
       break;

@@ -36,7 +36,7 @@ const SizeSelector = ({
   return (
     <div>
       <StyledLabel>{`${label} Quantities`}</StyledLabel>
-      <SizeQuantityContainer name="sizeQuantityContainer">
+      <SizeQuantityContainer name="sizeQuantityContainer" className={fieldName}>
         {sizeOptions.map((size) => (
           <SizeQuantityPair
             className={fieldName}
