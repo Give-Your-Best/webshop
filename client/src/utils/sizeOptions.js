@@ -48,7 +48,7 @@ export const sizeOptions = (category, subcategory) => {
         {
           sizeOption: oneSizeOptions,
           fieldName: 'clothingSize',
-          label: 'Accessories Size',
+          label: 'Accessories',
         },
       ];
       break;
@@ -66,7 +66,7 @@ export const sizeOptions = (category, subcategory) => {
         {
           sizeOption: oneSizeOptions,
           fieldName: 'clothingSize',
-          label: 'Other Size',
+          label: 'Other',
         },
       ];
       break;
