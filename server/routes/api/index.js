@@ -13,6 +13,7 @@ const statisticsRoutes = require('./statistics');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const { getSetting } = require('../../services/settings');
+const { getAllBanners } = require('../../services/banners');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
@@ -26,6 +27,11 @@ router.get('/settings/:name', async (req, res) => {
   const name = req.params.name;
   const setting = await getSetting(name);
   res.json(setting);
+});
+
+router.use('/banners', async (req, res) => {
+  const banners = await getAllBanners();
+  res.json(banners);
 });
 
 router.use('/batchItems', batchItemRoutes);
