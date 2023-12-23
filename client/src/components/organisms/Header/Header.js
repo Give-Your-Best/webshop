@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { AppHeading } from '../../';
+import { Banner } from '../Banners';
 import { CategoryMenu } from '../CategoryMenu';
 import { MobileMenu } from '../MobileMenu';
 import { HeaderMenu } from '../HeaderMenu';
@@ -20,6 +21,7 @@ export const Header = () => {
         <MobileMenu />
         <HeaderMenu />
       </HeaderWrapper>
+      <Banner />
       <CategoryMenu />
     </div>
   );
