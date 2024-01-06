@@ -20,17 +20,17 @@ const SizeSelector = ({
 
   useEffect(() => {
     // clear quantity values when category is changed
-    setFieldValue(`shoeSizeBatchValues`, {});
-    setFieldValue('clothingSizeBatchValues', {});
+    setFieldValue(`shoeSizes`, {});
+    setFieldValue('clothingSizes', {});
   }, [category, subcategory, setFieldValue]);
 
   const handleQuantityChange = (size, quantity) => {
     const validQuantity = Math.max(quantity, 0);
     const updatedQuantities = {
-      ...formikProps.values[`${fieldName}BatchValues`],
+      ...formikProps.values[`${fieldName}`],
       [size]: validQuantity,
     };
-    setFieldValue(`${fieldName}BatchValues`, updatedQuantities);
+    setFieldValue(`${fieldName}`, updatedQuantities);
   };
 
   return (
@@ -44,9 +44,9 @@ const SizeSelector = ({
           >
             <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
-              value={formikProps.values[`${fieldName}BatchValues`]?.[size] || 0}
+              value={formikProps.values[`${fieldName}`]?.[size] || 0}
               className={fieldName}
-              name={`${fieldName}BatchValues`}
+              name={`${fieldName}`}
               min="0"
               onChange={(quantity) => handleQuantityChange(size, quantity)}
               disabled={editingKey !== recordId}

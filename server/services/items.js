@@ -55,6 +55,17 @@ const createItem = async (data) => {
   }
 };
 
+const createItemWithoutImageUpload = async (data) => {
+  try {
+    const item = new Item(data);
+    await item.save();
+    return { success: true, message: 'Item created', item: item };
+  } catch (err) {
+    console.error(err);
+    return { success: false, message: err };
+  }
+};
+
 const convertKeys = (input) => {
   const result = {};
   for (const key in input) {
@@ -65,13 +76,15 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
-  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } = data;
-
+  let { clothingSizes, shoeSizes, ...restOfData } = data;
+  console.log('data: ', data);
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
-  const clothingSizes = clothingSizeBatchValues
-    ? convertKeys(clothingSizeBatchValues)
-    : {};
-  const shoeSizes = shoeSizeBatchValues ? convertKeys(shoeSizeBatchValues) : {};
+  if (clothingSizes) {
+    clothingSizes = convertKeys(clothingSizes);
+  }
+  if (shoeSizes) {
+    shoeSizes = convertKeys(shoeSizes);
+  }
 
   try {
     const batchItem = await BatchItem.create({
@@ -81,16 +94,13 @@ const createBatchItem = async (data) => {
     const batchId = batchItem.id;
 
     // Extract sizes without quantities to create a template item with
-    const clothingSize = clothingSizeBatchValues
-      ? Object.keys(clothingSizeBatchValues)
-      : [];
-    const shoeSize = shoeSizeBatchValues
-      ? Object.keys(shoeSizeBatchValues)
-      : [];
+    const clothingSize = clothingSizes ? Object.keys(clothingSizes) : [];
+    const shoeSize = shoeSizes ? Object.keys(shoeSizes) : [];
 
     // Create a new data object for createItem()
     const itemData = {
       ...restOfData,
+      isTemplateBatchItem: true,
       batchId,
       clothingSize,
       shoeSize,
@@ -196,36 +206,30 @@ const updateItem = async (id, updateData) => {
 };
 
 const updateBatchItem = async (id, updateData) => {
-  const templateItem = await Item.findById(id);
-  if (!templateItem) {
+  const tempItem = await Item.findById(id);
+  if (!tempItem) {
     return {
       success: false,
       message: 'Template item not found',
     };
   }
-  const batchItem = await BatchItem.findById(templateItem.batchId);
+  const batchItem = await BatchItem.findById(tempItem.batchId);
   if (!batchItem) {
     return {
       success: false,
       message: 'Batch item not found',
     };
   }
-  const { clothingSizeBatchValues, shoeSizeBatchValues, ...restOfData } =
-    updateData;
+
+  const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
 
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
-  batchItem.clothingSizes = clothingSizeBatchValues
-    ? convertKeys(clothingSizeBatchValues)
-    : {};
-  batchItem.shoeSizes = shoeSizeBatchValues
-    ? convertKeys(shoeSizeBatchValues)
-    : {};
+  batchItem.clothingSizes = clothingSizes ? convertKeys(clothingSizes) : {};
+  batchItem.shoeSizes = shoeSizes ? convertKeys(shoeSizes) : {};
   await batchItem.save();
   // Extract sizes without quantities to create a template item with
-  const clothingSize = clothingSizeBatchValues
-    ? Object.keys(clothingSizeBatchValues)
-    : [];
-  const shoeSize = shoeSizeBatchValues ? Object.keys(shoeSizeBatchValues) : [];
+  const clothingSize = clothingSizes ? Object.keys(clothingSizes) : [];
+  const shoeSize = shoeSizes ? Object.keys(shoeSizes) : [];
   // Create a new data object for updateItem()
   const newItemData = {
     ...restOfData,
@@ -234,6 +238,7 @@ const updateBatchItem = async (id, updateData) => {
   };
   const updatedItemData = await updateItem(id, newItemData);
   const updatedItem = updatedItemData.item;
+
   return {
     success: true,
     message: 'BatchItem and associated item updated',
@@ -483,12 +488,13 @@ const getAllItems = async (
         // if item not in basket or item in basket is more than an hour old
         { inBasket: null },
         { inBasket: false },
-        {
-          $and: [
-            { 'statusUpdateDates.inBasketDate': { $lte: new Date(anHourAgo) } },
-            { inBasket: true },
-          ],
-        },
+        // removing this to only return items that are NOT in basket (the below seems to not be working as intended)
+        // {
+        //   $and: [
+        //     { 'statusUpdateDates.inBasketDate': { $lte: new Date(anHourAgo) } },
+        //     { inBasket: true },
+        //   ],
+        // },
       ],
     };
     const limiti = parseInt(limit);
@@ -746,4 +752,5 @@ module.exports = {
   createBatchItem,
   getBatchItem,
   updateBatchItem,
+  createItemWithoutImageUpload,
 };

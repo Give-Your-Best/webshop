@@ -18,6 +18,10 @@ const itemSchema = new Schema(
       ref: 'BatchItem',
       default: null,
     },
+    isTemplateBatchItem: {
+      type: Boolean,
+      default: false,
+    },
     approvedStatus: {
       type: String,
       enum: ['in-progress', 'approved', 'rejected'],

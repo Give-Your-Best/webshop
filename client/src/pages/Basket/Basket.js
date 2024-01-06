@@ -11,9 +11,10 @@ import {
   AddressLink,
 } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
-import { updateItem } from '../../services/items';
+import { updateItem, deleteItem } from '../../services/items';
 import { getUser } from '../../services/user';
 import { sendAutoEmail, getDate, name } from '../../utils/helpers';
+import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
 
 export const Basket = () => {
   const {
@@ -62,11 +63,25 @@ export const Basket = () => {
         setBasket(
           basket.filter((item) => {
             if (item._id === itemId) {
-              updateItem(
-                item._id,
-                { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-                token
-              );
+              if (item.batchId && !item.isTemplateBatchItem) {
+                const size =
+                  item.shoeSize.length > 0 ? item.shoeSize : item.clothingSize;
+                updateBatchItemQuantity(
+                  size,
+                  item.category,
+                  item.batchId,
+                  1,
+                  true,
+                  token
+                );
+                deleteItem(item._id, token);
+              } else {
+                updateItem(
+                  item._id,
+                  { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
+                  token
+                );
+              }
             }
             return item._id !== itemId;
           })
@@ -76,6 +91,7 @@ export const Basket = () => {
   };
 
   const basketList = () => {
+    console.log('basket: ', basket);
     if (basket && basket.length) {
       return (
         <div>
