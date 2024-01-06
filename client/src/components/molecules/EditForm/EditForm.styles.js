@@ -102,6 +102,9 @@ const StyledInput = styled(Input)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
+  &.batchSizeInput {
+    width: 100px;
+  }
 `;
 
 const StyledInputArea = styled(Input.TextArea)`
@@ -203,6 +206,9 @@ const StyledInputNumber = styled(InputNumber)`
   &.shoeSizess {
     width: 60px;
     font-size: 17px;
+  }
+  &.batchSizeInput {
+    width: 100px;
   }
 `;
 
@@ -343,6 +349,9 @@ const SizeQuantityContainer = styled.div`
     @media (min-width: 525px) {
       max-height: 235px;
     }
+  }
+  &.batchSizeSelector {
+    width: 100px;
   }
 `;
 

@@ -25,6 +25,9 @@ const StyledSelect = styled(Select)`
     .ant-select-item {
       color: ${({ theme }) => theme.colorMappings.primary};
     }
+    &.batchSizeSelector { 
+      min-width: unset;
+    }
   &:disabled {
     background-color: transparent;
     color: black;

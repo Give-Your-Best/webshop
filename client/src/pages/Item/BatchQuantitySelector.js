@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import {
   StyledInputNumber,
   StyledLabel,
+  SizeQuantityContainer,
 } from '../../components/molecules/EditForm/EditForm.styles';
 import { StyledSelect } from '../../components/atoms';
 
@@ -16,6 +17,7 @@ const BatchQuantitySelector = ({
   useEffect(() => {}, [selectedSize, quantity]);
 
   const handleQuantityChange = (quantity) => {
+    console.log('sizes', sizes);
     const maxQuantity = sizes[selectedSize];
     if (quantity <= maxQuantity) {
       setQuantity(quantity);
@@ -24,26 +26,29 @@ const BatchQuantitySelector = ({
 
   return (
     <div>
+      <SizeQuantityContainer className="batchSizeSelector">
+        <StyledLabel>
+          Size
+          <StyledSelect
+            name="size"
+            className="batchSizeSelector"
+            onChange={(value) => {
+              setSelectedSize(value);
+            }}
+          >
+            {Object.keys(sizes).map((size) => (
+              <StyledSelect.Option key={size} value={size}>
+                {size}
+              </StyledSelect.Option>
+            ))}
+          </StyledSelect>
+        </StyledLabel>
+      </SizeQuantityContainer>
       <StyledLabel>
-        Size:
-        <StyledSelect
-          name="size"
-          onChange={(value) => {
-            setSelectedSize(value);
-          }}
-        >
-          {Object.keys(sizes).map((size) => (
-            <StyledSelect.Option key={size} value={size}>
-              {size}
-            </StyledSelect.Option>
-          ))}
-        </StyledSelect>
-      </StyledLabel>
-
-      <StyledLabel>
-        Quantity:
+        Quantity
         <StyledInputNumber
           name="quantity"
+          className="batchSizeInput"
           value={quantity}
           min={1}
           max={sizes[selectedSize]}

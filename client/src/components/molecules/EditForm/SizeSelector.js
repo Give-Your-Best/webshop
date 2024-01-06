@@ -5,6 +5,7 @@ import {
   SizeQuantityPair,
   StyledLabel,
 } from './EditForm.styles';
+import { clothingSizeOptions, shoeSizeOptions } from '../../../utils/constants';
 import { useFormikContext } from 'formik';
 
 const SizeSelector = ({
@@ -30,13 +31,27 @@ const SizeSelector = ({
       ...formikProps.values[`${fieldName}`],
       [size]: validQuantity,
     };
-    setFieldValue(`${fieldName}`, updatedQuantities);
+
+    // perform a sort on the selected sizes as this will be important when they are displayed.
+    let sizeOrder = [];
+    if (fieldName === 'shoeSizes') {
+      sizeOrder = shoeSizeOptions;
+    } else {
+      sizeOrder = clothingSizeOptions;
+    }
+    const keyValueArray = Object.entries(updatedQuantities);
+    keyValueArray.sort(
+      (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
+    );
+    const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
+    console.log('sortedObject: ', sortedUpdatedQuantities);
+    setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
   };
 
   return (
     <div>
       <StyledLabel>{`${label} Quantities`}</StyledLabel>
-      <SizeQuantityContainer name="sizeQuantityContainer" className={fieldName}>
+      <SizeQuantityContainer className={fieldName}>
         {sizeOptions.map((size) => (
           <SizeQuantityPair
             className={fieldName}
