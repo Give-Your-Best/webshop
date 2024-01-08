@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyledInputNumber,
   StyledLabel,
@@ -14,10 +13,19 @@ const BatchQuantitySelector = ({
   quantity,
   setQuantity,
 }) => {
-  useEffect(() => {}, [selectedSize, quantity]);
+  const [options, setOptions] = useState([]);
+
+  useEffect(() => {
+    const updatedOptions = Object.keys(sizes).map((size) => ({
+      label: size,
+      value: size,
+      disabled: sizes[size] === 0,
+    }));
+
+    setOptions(updatedOptions);
+  }, [selectedSize, quantity, sizes]);
 
   const handleQuantityChange = (quantity) => {
-    console.log('sizes', sizes);
     const maxQuantity = sizes[selectedSize];
     if (quantity <= maxQuantity) {
       setQuantity(quantity);
@@ -32,13 +40,18 @@ const BatchQuantitySelector = ({
           <StyledSelect
             name="size"
             className="batchSizeSelector"
+            value={selectedSize}
             onChange={(value) => {
               setSelectedSize(value);
             }}
           >
-            {Object.keys(sizes).map((size) => (
-              <StyledSelect.Option key={size} value={size}>
-                {size}
+            {options.map((option) => (
+              <StyledSelect.Option
+                key={option.value}
+                value={option.value}
+                disabled={option.disabled}
+              >
+                {option.label}
               </StyledSelect.Option>
             ))}
           </StyledSelect>
@@ -49,7 +62,7 @@ const BatchQuantitySelector = ({
         <StyledInputNumber
           name="quantity"
           className="batchSizeInput"
-          value={quantity}
+          value={selectedSize ? quantity : 0}
           min={1}
           max={sizes[selectedSize]}
           disabled={!selectedSize}

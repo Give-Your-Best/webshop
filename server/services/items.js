@@ -488,13 +488,13 @@ const getAllItems = async (
         // if item not in basket or item in basket is more than an hour old
         { inBasket: null },
         { inBasket: false },
-        // removing this to only return items that are NOT in basket (the below seems to not be working as intended)
-        // {
-        //   $and: [
-        //     { 'statusUpdateDates.inBasketDate': { $lte: new Date(anHourAgo) } },
-        //     { inBasket: true },
-        //   ],
-        // },
+        {
+          $and: [
+            { 'statusUpdateDates.inBasketDate': { $lte: new Date(anHourAgo) } },
+            { inBasket: true },
+            { batchId: null },
+          ],
+        },
       ],
     };
     const limiti = parseInt(limit);

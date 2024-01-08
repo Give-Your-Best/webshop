@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../context/app-context';
@@ -6,7 +5,6 @@ import { getItem, getBatchItem } from '../../services/items';
 import { ItemDetailsWrapper, ItemWrapper, DonorLink } from './Item.styles';
 import { Container, ImageGallery, CategoryBreadcrumbs } from '../../components';
 import { ColourCircles } from '../../components/atoms';
-import { batchItemOrderSchema } from '../../utils/validation';
 import { getSetting } from '../../services/settings';
 import { sizeOptions } from '../../utils/sizeOptions';
 import BatchQuantitySelector from './BatchQuantitySelector';
@@ -17,8 +15,7 @@ import { Formik } from 'formik';
 import { convertUnderscoreToDot } from '../../utils/convertUnderscoreToDot';
 
 export const Item = () => {
-  const { user, setBasket, basket, token, basketTimer, setBasketTimer } =
-    useContext(AppContext);
+  const { token } = useContext(AppContext);
   const { itemId } = useParams();
   const [itemDetails, setItemDetails] = useState({});
   const [mainImage, setMainImage] = useState({});
@@ -92,7 +89,7 @@ export const Item = () => {
 
   useEffect(() => {
     const fetchBatchItem = async () => {
-      if (itemDetails.batchId) {
+      if (itemDetails.batchId && itemDetails.isTemplateBatchItem) {
         const batchItemData = await getBatchItem(itemDetails.batchId);
         const batchItem = batchItemData.batchItem;
         console.log('batchItem: ', batchItem);
@@ -109,7 +106,7 @@ export const Item = () => {
       }
     };
     fetchBatchItem();
-  }, [itemDetails.batchId]);
+  }, [itemDetails.batchId, itemDetails.isTemplateBatchItem]);
 
   const changeMainImage = (e) => {
     const imageId = e.target.getAttribute('data-id');
@@ -127,12 +124,14 @@ export const Item = () => {
     );
   };
 
+  const resetSizeAndQuantity = () => {
+    setSelectedSize('');
+    setQuantity(0);
+  };
+
   return (
     <Container>
-      <Formik
-        initialValues={{ size: '', quantity: 1 }}
-        validationSchema={batchItemOrderSchema}
-      >
+      <Formik initialValues={{ size: '', quantity: 1 }}>
         <Form>
           <CategoryBreadcrumbs
             category={itemDetails.category}
@@ -177,6 +176,7 @@ export const Item = () => {
                     limit={limit}
                     selectedSize={selectedSize}
                     quantity={quantity}
+                    afterAddToBasket={resetSizeAndQuantity}
                   />
                 ) : (
                   <AddItemToBasket item={itemDetails} limit={limit} />

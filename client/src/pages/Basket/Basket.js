@@ -91,7 +91,6 @@ export const Basket = () => {
   };
 
   const basketList = () => {
-    console.log('basket: ', basket);
     if (basket && basket.length) {
       return (
         <div>

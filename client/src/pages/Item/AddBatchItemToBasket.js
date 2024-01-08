@@ -1,10 +1,8 @@
-/* eslint-disable */
 import React, { useContext } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
 import { updateItem } from '../../services/items';
 import { Notification, Button } from '../../components/atoms';
-import { useHistory } from 'react-router-dom';
 import { getDate } from '../../utils/helpers';
 import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
 import { createItemWithoutImageUpload } from '../../services/items';
@@ -16,13 +14,12 @@ const AddBatchItemToBasketButton = ({
   limit,
   selectedSize,
   quantity,
+  afterAddToBasket,
 }) => {
   const { user, setBasket, basket, token, basketTimer, setBasketTimer } =
     useContext(AppContext);
 
   const { confirm } = Modal;
-
-  const history = useHistory();
 
   const calculateUserLimit = (category) => {
     const userShoppingFor = user
@@ -71,6 +68,15 @@ const AddBatchItemToBasketButton = ({
       return;
     }
 
+    if (selectedSize === '') {
+      //if size is not selected
+      confirm({
+        title: `Please select a size for the item!`,
+        className: 'modalStyle',
+      });
+      return;
+    }
+
     // shopping limit reached
     if (availableQuantity === 0) {
       const shoppingLimitMessage =
@@ -97,6 +103,7 @@ const AddBatchItemToBasketButton = ({
 
     // create items per quantity
     const items = [];
+    // eslint-disable-next-line
     const { _id, ...itemWithoutId } = item;
     const categoryKey = category === 'shoes' ? 'shoeSize' : 'clothingSize';
     // Construct data for each item in the quantity (based on the templateItem: re-use photos that have already been uploaded)
@@ -150,18 +157,9 @@ const AddBatchItemToBasketButton = ({
     const message =
       items.length > 1 ? 'Items added to basket' : 'Item added to basket';
     Notification('Success', message, 'success');
-    // confirm({
-    //   title: `Item added to basket.`,
-    //   className: 'modalStyle',
-    //   onOk() {
-    //     history.push('/basket');
-    //   },
-    //   okText: 'View Basket',
-    //   onCancel() {
-    //     history.push(`/products`);
-    //   },
-    //   cancelText: 'Continue Shopping',
-    // });
+
+    // reset the size and quantity values
+    afterAddToBasket();
   };
 
   return (
