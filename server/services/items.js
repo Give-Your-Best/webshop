@@ -77,7 +77,6 @@ const convertKeys = (input) => {
 
 const createBatchItem = async (data) => {
   let { clothingSizes, shoeSizes, ...restOfData } = data;
-  console.log('data: ', data);
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   if (clothingSizes) {
     clothingSizes = convertKeys(clothingSizes);
