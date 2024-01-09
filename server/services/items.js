@@ -219,7 +219,7 @@ const updateBatchItem = async (id, updateData) => {
       message: 'Batch item not found',
     };
   }
-
+  // eslint-disable-next-line rule-name
   const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
 
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
