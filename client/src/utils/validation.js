@@ -100,11 +100,3 @@ export const itemCreateschema = yup.object().shape({
   subCategory: yup.string().required('Please enter a sub-category'),
   photos: yup.array().min(2, 'Please upload a front and back image'),
 });
-
-export const batchItemOrderSchema = yup.object().shape({
-  size: yup.string().required('Size is required'),
-  quantity: yup
-    .number()
-    .required('Quantity is required')
-    .min(1, 'Quantity must be at least 1'),
-});
