@@ -219,6 +219,9 @@ const updateBatchItem = async (id, updateData) => {
       message: 'Batch item not found',
     };
   }
+  // templateItem is the itemId that is associated with the bulk-item.
+  // I get rid of it here because the updateItem() method takes id as a param and it shouldn't be inside the data param.
+  // eslint was complaining because templateItem is otherwise.
   // eslint-disable-next-line rule-name
   const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
 
