@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
 import { getItem, updateItem } from '../../services/items';
-import { Button } from '../../components/atoms';
+import { Notification, Button } from '../../components/atoms';
 import { useHistory } from 'react-router-dom';
 import { getDate } from '../../utils/helpers';
-import { resetBasketTimer } from '../../utils/resetBasketTimer';
+import { resetBasketItems } from '../../utils/resetBasketItems';
 
 const AddToBasketButton = ({ item, limit }) => {
   const { user, setBasket, basket, token, basketTimer, setBasketTimer } =
@@ -15,32 +15,27 @@ const AddToBasketButton = ({ item, limit }) => {
 
   const history = useHistory();
 
-  // const basketReset = (itemDetails) => {
-  //   console.log('regular item timer set');
-  //   clearTimeout(basketTimer);
-  //   setBasketTimer(
-  //     setTimeout(() => {
-  //       if (basket && basket.length) {
-  //         //clear basket from db
-  //         basket.concat(itemDetails).forEach(async (item) => {
-  //           await updateItem(
-  //             item._id,
-  //             { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-  //             token
-  //           );
-  //         });
-  //         Notification(
-  //           'Items expired!',
-  //           'The items in your basket have expired.',
-  //           'warning'
-  //         );
-  //       }
-
-  //       setBasket(null);
-  //       setBasketTimer(null);
-  //     }, 3600000)
-  //   ); //expires after an hour
-  // };
+  // may need to look into this, but for now, the eslint is complaining that basketTimer and setBasketTimer are missing [they cause infinite loops otherwise]
+  /* eslint-disable */
+  useEffect(() => {
+    clearTimeout(basketTimer);
+    const handleBasketTimeout = async () => {
+      if (basket && basket.length) {
+        await resetBasketItems(basket, token);
+        Notification(
+          'Items expired!',
+          'The items in your basket have expired.',
+          'warning'
+        );
+      }
+      setBasket(null);
+      if (basketTimer) {
+        setBasketTimer(null);
+      }
+    };
+    setBasketTimer(setTimeout(handleBasketTimeout, 3600000)); //expires after an hour
+  }, [basket, setBasket, token]);
+  /* eslint-enable */
 
   const addToBasket = async () => {
     const isShopped = basket && basket.some((i) => i._id === item._id);
@@ -146,16 +141,6 @@ const AddToBasketButton = ({ item, limit }) => {
 
     setBasket(
       basket && basket.length ? basket.concat([itemDetails]) : [itemDetails]
-    );
-
-    // set up timer for resetting the basket - to expire
-    resetBasketTimer(
-      basket,
-      setBasket,
-      basketTimer,
-      setBasketTimer,
-      item,
-      token
     );
 
     confirm({

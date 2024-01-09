@@ -32,6 +32,11 @@ const BatchQuantitySelector = ({
     }
   };
 
+  const handleSizeChange = (size) => {
+    setSelectedSize(size);
+    setQuantity(1);
+  };
+
   return (
     <div>
       <SizeQuantityContainer className="batchSizeSelector">
@@ -41,9 +46,7 @@ const BatchQuantitySelector = ({
             name="size"
             className="batchSizeSelector"
             value={selectedSize}
-            onChange={(value) => {
-              setSelectedSize(value);
-            }}
+            onChange={(size) => handleSizeChange(size)}
           >
             {options.map((option) => (
               <StyledSelect.Option

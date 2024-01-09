@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
 import { updateItem } from '../../services/items';
@@ -6,7 +6,7 @@ import { Notification, Button } from '../../components/atoms';
 import { getDate } from '../../utils/helpers';
 import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
 import { createItemWithoutImageUpload } from '../../services/items';
-import { resetBasketTimer } from '../../utils/resetBasketTimer';
+import { resetBasketItems } from '../../utils/resetBasketItems';
 
 const AddBatchItemToBasketButton = ({
   item,
@@ -49,6 +49,28 @@ const AddBatchItemToBasketButton = ({
         ).length
       : 0;
   };
+
+  // may need to look into this, but for now, the eslint is complaining that basketTimer and setBasketTimer are missing [they cause infinite loops otherwise]
+  /* eslint-disable */
+  useEffect(() => {
+    clearTimeout(basketTimer);
+    const handleBasketTimeout = async () => {
+      if (basket && basket.length) {
+        await resetBasketItems(basket, token);
+        Notification(
+          'Items expired!',
+          'The items in your basket have expired.',
+          'warning'
+        );
+      }
+      setBasket(null);
+      if (basketTimer) {
+        setBasketTimer(null);
+      }
+    };
+    setBasketTimer(setTimeout(handleBasketTimeout, 3600000)); //expires after an hour
+  }, [basket, setBasket, token]);
+  /* eslint-enable */
 
   const addToBasket = async () => {
     // Calculate the available quantity based on the limit and items in the basket
@@ -143,16 +165,6 @@ const AddBatchItemToBasketButton = ({
     }
 
     setBasket(basket && basket.length ? basket.concat(items) : items);
-
-    // set up timer for resetting the basket - to expire
-    resetBasketTimer(
-      basket,
-      setBasket,
-      basketTimer,
-      setBasketTimer,
-      items,
-      token
-    );
 
     const message =
       items.length > 1 ? 'Items added to basket' : 'Item added to basket';
