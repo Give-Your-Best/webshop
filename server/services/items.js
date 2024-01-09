@@ -222,7 +222,7 @@ const updateBatchItem = async (id, updateData) => {
   // templateItem is the itemId that is associated with the bulk-item.
   // I get rid of it here because the updateItem() method takes id as a param and it shouldn't be inside the data param.
   // eslint was complaining because templateItem is otherwise.
-  // eslint-disable-next-line rule-name
+  // eslint-disable-next-line no-unused-vars
   const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
 
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
