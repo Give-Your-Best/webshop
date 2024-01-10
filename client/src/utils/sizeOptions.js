@@ -3,6 +3,7 @@ import {
   // childrenClothingSizeOptions,
   shoeSizeOptions,
   clothingSizeOptions,
+  oneSizeOptions,
 } from './constants';
 
 export const sizeOptions = (category, subcategory) => {
@@ -42,19 +43,15 @@ export const sizeOptions = (category, subcategory) => {
         ];
       }
       break;
-    // case 'accessories':
-    //   if (subcategory === 'winter') {
-    //     sizeOptions = [
-    //       {
-    //         sizeOption: clothingSizeOptions,
-    //         fieldName: 'clothingSize',
-    //         label: 'Clothing Size',
-    //       },
-    //     ];
-    //   } else {
-    //     sizeOptions = [];
-    //   }
-    //   break;
+    case 'accessories':
+      sizeOptions = [
+        {
+          sizeOption: oneSizeOptions,
+          fieldName: 'clothingSize',
+          label: 'Accessories',
+        },
+      ];
+      break;
     case 'shoes':
       sizeOptions = [
         {
@@ -64,14 +61,17 @@ export const sizeOptions = (category, subcategory) => {
         },
       ];
       break;
-    default:
+    case 'other':
       sizeOptions = [
         {
-          sizeOption: clothingSizeOptions,
+          sizeOption: oneSizeOptions,
           fieldName: 'clothingSize',
-          label: 'Clothing Size',
+          label: 'Other',
         },
       ];
+      break;
+    default:
+      sizeOptions = [];
       break;
   }
 

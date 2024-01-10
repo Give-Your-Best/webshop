@@ -224,11 +224,15 @@ export const ItemsCollapsedList = ({
                 hideOnSinglePage: false,
               }
         }
-        onChange={(pagination, _filters, sorter) => {
-          const { current } = pagination;
-          const { field, order } = sorter;
-          handleChange({ current, field, order });
-        }}
+        onChange={
+          !admin
+            ? () => {}
+            : (pagination, _filters, sorter) => {
+                const { current } = pagination;
+                const { field, order } = sorter;
+                handleChange({ current, field, order });
+              }
+        }
         columns={columns}
         rowKey={(record) => record._id || 0}
         showHeader={!admin ? false : true}
