@@ -64,14 +64,13 @@ const createMessage = async (data) => {
     const thread = await Message.findOneAndUpdate(
       { threadId: data.threadId },
       { $push: { messages: updateData } },
-      { returnDocument: 'after' }
-    ).then((t) =>
-      t
-        .populate('user')
-        .populate('messages.sender')
-        .populate('messages.recipient')
-        .execPopulate()
-    );
+      { new: true }
+    )
+      .populate('user')
+      .populate('messages.sender')
+      .populate('messages.recipient')
+      .exec();
+
     if (thread) {
       return { success: true, message: 'Message sent', thread: thread };
     } else {
@@ -80,16 +79,14 @@ const createMessage = async (data) => {
   }
   try {
     const message = new Message(data);
-    let saveMessage = await message
-      .save()
-      .then((t) =>
-        t
-          .populate('user')
-          .populate('messages.sender')
-          .populate('messages.recipient')
-          .execPopulate()
-      );
-    return { success: true, message: `message created`, thread: saveMessage };
+    let saveMessage = await message.save();
+
+    const thread = Message.findById(saveMessage._id)
+      .populate('user')
+      .populate('messages.sender')
+      .populate('messages.recipient')
+      .exec();
+    return { success: true, message: `message created`, thread: thread };
   } catch (err) {
     console.error(err);
     return { success: false, message: err };
