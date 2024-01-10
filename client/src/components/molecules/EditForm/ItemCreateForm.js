@@ -4,8 +4,12 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
-import { colours } from '../../../utils/constants';
-import { createItem } from '../../../services/items';
+import {
+  colours,
+  shoeSizeOptions,
+  clothingSizeOptions,
+} from '../../../utils/constants';
+import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
   StyledSubmitButton,
@@ -18,8 +22,6 @@ import {
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 import RenderBatchOptions from './RenderBatchOptions';
-// import RenderItemOptions from './RenderItemOptions';
-import { shoeSizeOptions, clothingSizeOptions } from '../../../utils/constants';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -40,7 +42,7 @@ export const ItemCreateForm = (data) => {
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     let res;
     if (showBatchOptions === true) {
-      // res = await createBatchItem(values, token);
+      res = await createBatchItem(values, token);
     } else {
       res = await createItem(values, token);
     }

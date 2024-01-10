@@ -3,7 +3,12 @@ import { AutoComplete, Menu, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { AccountContext } from '../../../../context/account-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
-import { getAdminItems, deleteItem } from '../../../../services/items';
+import {
+  getAdminItems,
+  deleteItem,
+  deleteBatchItem,
+  getItem,
+} from '../../../../services/items';
 import { tabList } from '../../../../utils/helpers';
 import { categories } from '../../../../utils/constants';
 import { adminAllItemStatus } from '../../../atoms/ProgressBar/constants';
@@ -139,7 +144,13 @@ export const AdminItems = () => {
       title: `Are you sure you want to delete this item?`,
       className: 'modalStyle',
       onOk() {
-        deleteItem(id, token).then(fetchItems);
+        getItem(id).then((itemToDelete) => {
+          if (itemToDelete.batchId !== null) {
+            deleteBatchItem(id, token).then(fetchItems);
+          } else {
+            deleteItem(id, token).then(fetchItems);
+          }
+        });
       },
     });
   };

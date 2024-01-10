@@ -16,7 +16,10 @@ import {
 import {
   getDonorItems,
   updateItem,
+  updateBatchItem,
   deleteItem,
+  deleteBatchItem,
+  getItem,
 } from '../../../../services/items';
 import { Button, H2 } from '../../../atoms';
 import { openHiddenTab, reopenTab, tabList } from '../../../../utils/helpers';
@@ -37,12 +40,24 @@ export const DonorItems = () => {
       title: `Are you sure you want to delete this item?`,
       className: 'modalStyle',
       onOk() {
-        deleteItem(id, token).then(() => {
-          setItems(
-            items.filter((item) => {
-              return item._id !== id;
-            })
-          );
+        getItem(id).then((itemToDelete) => {
+          if (itemToDelete.batchId !== null) {
+            deleteBatchItem(id).then(() => {
+              setItems(
+                items.filter((item) => {
+                  return item._id !== id;
+                })
+              );
+            });
+          } else {
+            deleteItem(id, token).then(() => {
+              setItems(
+                items.filter((item) => {
+                  return item._id !== id;
+                })
+              );
+            });
+          }
         });
       },
     });
@@ -135,7 +150,12 @@ export const DonorItems = () => {
       if (images.length > 0) {
         values.photos = images;
       }
-      const res = await updateItem(record._id, values, token);
+      let res = {};
+      if (values.batchId) {
+        res = await updateBatchItem(record._id, values, token);
+      } else {
+        res = await updateItem(record._id, values, token);
+      }
       if (res.success) {
         handleEditSave(res.item);
         setEditingKey('');
