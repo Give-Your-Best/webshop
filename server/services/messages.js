@@ -36,7 +36,7 @@ const markMessageAsViewed = async (id, messageIds) => {
     const thread = await Message.findOneAndUpdate(
       { _id: id, 'messages._id': { $in: messageIds } },
       { $set: { 'messages.$.viewed': true } },
-      { returnDocument: 'after' }
+      { new: true }
     );
     if (thread) {
       return { success: true, message: 'marked as viewed', thread: thread };
