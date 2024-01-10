@@ -78,14 +78,14 @@ const createMessage = async (data) => {
     }
   }
   try {
-    const message = new Message(data);
-    let saveMessage = await message.save();
+    const message = await Message.create(data);
 
-    const thread = Message.findById(saveMessage._id)
+    const thread = await Message.findById(message._id)
       .populate('user')
       .populate('messages.sender')
       .populate('messages.recipient')
       .exec();
+
     return { success: true, message: `message created`, thread: thread };
   } catch (err) {
     console.error(err);
