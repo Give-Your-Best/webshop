@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../context/app-context';
 import { Button, H2 } from '../../atoms/';
-import { updateItem } from '../../../services/items';
+import { resetBasketItems } from '../../../utils/resetBasketItems';
 
 export const Logout = () => {
   let history = useHistory();
@@ -11,17 +11,10 @@ export const Logout = () => {
   const { setUser, setToken, basket, setBasket, token, setBasketTimer } =
     React.useContext(AppContext);
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     setUser(null);
     if (basket && basket.length) {
-      //clear basket from db
-      basket.forEach(async (b) => {
-        await updateItem(
-          b._id,
-          { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-          token
-        );
-      });
+      await resetBasketItems(basket, token);
     }
     setBasket(null);
     setBasketTimer(null);

@@ -102,6 +102,9 @@ const StyledInput = styled(Input)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
+  &.batchSizeInput {
+    width: 100px;
+  }
 `;
 
 const StyledInputArea = styled(Input.TextArea)`
@@ -199,10 +202,13 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
-  &.clothingSize,
-  &.shoeSize {
+  &.clothingSizes,
+  &.shoeSizes {
     width: 60px;
     font-size: 17px;
+  }
+  &.batchSizeInput {
+    width: 100px;
   }
 `;
 
@@ -258,8 +264,8 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
-  &.shoeSize,
-  &.clothingSize {
+  &.shoeSizes,
+  &.clothingSizes {
     margin-right: 10px;
     width: 30%;
     font-size: 16px !important;
@@ -332,17 +338,20 @@ const SizeQuantityContainer = styled.div`
   align-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  &.clothingSize {
+  &.clothingSizes {
     max-height: 450px;
     @media (min-width: 525px) {
       max-height: 300px;
     }
   }
-  &.shoeSize {
+  &.shoeSizes {
     max-height: 350px;
     @media (min-width: 525px) {
       max-height: 235px;
     }
+  }
+  &.batchSizeSelector {
+    width: 100px;
   }
 `;
 
@@ -351,8 +360,8 @@ const SizeQuantityPair = styled.div`
   align-items: center;
   margin-bottom: 10px;
   margin-right: 10px;
-  &.clothingSize,
-  &.shoeSize {
+  &.clothingSizes,
+  &.shoeSizes {
     width: 50%;
     @media (min-width: 525px) {
       width: 35%;

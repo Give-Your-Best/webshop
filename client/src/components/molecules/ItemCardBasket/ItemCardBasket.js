@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   CardLongWithBackground,
   CardLongImageWithBackground,
@@ -12,6 +13,15 @@ const { Meta } = AntCard;
 
 export const ItemCardBasket = ({ item, actionText, action }) => {
   let history = useHistory();
+  const [displaySizes, setDisplaySizes] = useState([]);
+
+  useEffect(() => {
+    if (item.shoeSize && item.shoeSize.length > 0) {
+      setDisplaySizes(item.shoeSize);
+    } else if (item.clothingSize && item.clothingSize.length > 0) {
+      setDisplaySizes(item.clothingSize);
+    }
+  }, [item.shoeSize, item.clothingSize]);
 
   return (
     <CardLongWithBackground
@@ -28,7 +38,13 @@ export const ItemCardBasket = ({ item, actionText, action }) => {
       <Meta
         bordered={'false'}
         title={item.name}
-        description={trunc(item.description)}
+        description={
+          <>
+            {trunc(item.description)}
+            <br />
+            size {displaySizes.join(', ')}
+          </>
+        }
       />
       {actionText && (
         <Button

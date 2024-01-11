@@ -16,7 +16,7 @@ const RenderBatchOptions = ({
         <SizeSelector
           key={`${option.fieldName}-${category}`}
           sizeOptions={option.sizeOption}
-          fieldName={option.fieldName}
+          fieldName={`${option.fieldName}s`}
           label={option.label}
           editingKey={editingKey}
           recordId={recordId}
