@@ -44,7 +44,6 @@ const SizeSelector = ({
       (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
     );
     const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
-    console.log('sortedObject: ', sortedUpdatedQuantities);
     setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
   };
 

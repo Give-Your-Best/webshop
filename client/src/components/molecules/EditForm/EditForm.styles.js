@@ -202,8 +202,8 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
-  &.clothingSizess,
-  &.shoeSizess {
+  &.clothingSizes,
+  &.shoeSizes {
     width: 60px;
     font-size: 17px;
   }

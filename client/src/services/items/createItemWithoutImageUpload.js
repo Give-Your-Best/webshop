@@ -1,5 +1,3 @@
-// import { convertHeic } from '../../utils/helpers';
-
 export const createItemWithoutImageUpload = async (values, token) => {
   //call api to create item without images
   try {
