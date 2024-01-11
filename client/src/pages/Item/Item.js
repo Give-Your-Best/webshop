@@ -92,7 +92,6 @@ export const Item = () => {
       if (itemDetails.batchId && itemDetails.isTemplateBatchItem) {
         const batchItemData = await getBatchItem(itemDetails.batchId);
         const batchItem = batchItemData.batchItem;
-        console.log('batchItem: ', batchItem);
         if (
           batchItem.clothingSizes !== null &&
           batchItem.clothingSizes !== undefined &&
