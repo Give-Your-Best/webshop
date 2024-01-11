@@ -26,25 +26,40 @@ const SizeSelector = ({
   }, [category, subcategory, setFieldValue]);
 
   const handleQuantityChange = (size, quantity) => {
-    const validQuantity = Math.max(quantity, 0);
-    const updatedQuantities = {
+    let updatedQuantities = {
       ...formikProps.values[`${fieldName}`],
-      [size]: validQuantity,
     };
 
-    // perform a sort on the selected sizes as this will be important when they are displayed.
-    let sizeOrder = [];
-    if (fieldName === 'shoeSizes') {
-      sizeOrder = shoeSizeOptions;
+    if (quantity === 0) {
+      // If quantity is 0, check if the size exists and remove it
+      // [case: when a user inputs a number but decides that's the wrong size and puts it back to zero, we don't want to record those in the db.]
+      if (Object.prototype.hasOwnProperty.call(updatedQuantities, size)) {
+        delete updatedQuantities[size];
+      }
     } else {
-      sizeOrder = clothingSizeOptions;
+      const validQuantity = Math.max(quantity, 1);
+      updatedQuantities = {
+        ...updatedQuantities,
+        [size]: validQuantity,
+      };
     }
-    const keyValueArray = Object.entries(updatedQuantities);
-    keyValueArray.sort(
-      (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
-    );
-    const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
-    setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
+
+    // will still re-factor this to do the sorting once on the backend, but for now, I've added the extra check as it was failign a particular case in testing.
+    if (Object.keys(updatedQuantities).length > 0) {
+      // perform a sort on the selected sizes as this will be important when they are displayed.
+      let sizeOrder = [];
+      if (fieldName === 'shoeSizes') {
+        sizeOrder = shoeSizeOptions;
+      } else {
+        sizeOrder = clothingSizeOptions;
+      }
+      const keyValueArray = Object.entries(updatedQuantities);
+      keyValueArray.sort(
+        (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
+      );
+      const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
+      setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
+    }
   };
 
   return (
