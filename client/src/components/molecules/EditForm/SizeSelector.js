@@ -5,6 +5,7 @@ import {
   SizeQuantityPair,
   StyledLabel,
 } from './EditForm.styles';
+import { clothingSizeOptions, shoeSizeOptions } from '../../../utils/constants';
 import { useFormikContext } from 'formik';
 
 const SizeSelector = ({
@@ -20,23 +21,36 @@ const SizeSelector = ({
 
   useEffect(() => {
     // clear quantity values when category is changed
-    setFieldValue(`shoeSizeBatchValues`, {});
-    setFieldValue('clothingSizeBatchValues', {});
+    setFieldValue(`shoeSizes`, {});
+    setFieldValue('clothingSizes', {});
   }, [category, subcategory, setFieldValue]);
 
   const handleQuantityChange = (size, quantity) => {
     const validQuantity = Math.max(quantity, 0);
     const updatedQuantities = {
-      ...formikProps.values[`${fieldName}BatchValues`],
+      ...formikProps.values[`${fieldName}`],
       [size]: validQuantity,
     };
-    setFieldValue(`${fieldName}BatchValues`, updatedQuantities);
+
+    // perform a sort on the selected sizes as this will be important when they are displayed.
+    let sizeOrder = [];
+    if (fieldName === 'shoeSizes') {
+      sizeOrder = shoeSizeOptions;
+    } else {
+      sizeOrder = clothingSizeOptions;
+    }
+    const keyValueArray = Object.entries(updatedQuantities);
+    keyValueArray.sort(
+      (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
+    );
+    const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
+    setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
   };
 
   return (
     <div>
       <StyledLabel>{`${label} Quantities`}</StyledLabel>
-      <SizeQuantityContainer name="sizeQuantityContainer" className={fieldName}>
+      <SizeQuantityContainer className={fieldName}>
         {sizeOptions.map((size) => (
           <SizeQuantityPair
             className={fieldName}
@@ -44,9 +58,9 @@ const SizeSelector = ({
           >
             <StyledLabel className={fieldName}>{size}</StyledLabel>
             <StyledInputNumber
-              value={formikProps.values[`${fieldName}BatchValues`]?.[size] || 0}
+              value={formikProps.values[`${fieldName}`]?.[size] || 0}
               className={fieldName}
-              name={`${fieldName}BatchValues`}
+              name={`${fieldName}`}
               min="0"
               onChange={(quantity) => handleQuantityChange(size, quantity)}
               disabled={editingKey !== recordId}

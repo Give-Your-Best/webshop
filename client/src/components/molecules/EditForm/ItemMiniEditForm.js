@@ -48,14 +48,14 @@ export const ItemMiniEditForm = ({
             const convertedClothingSizes = convertUnderscoreToDot(
               batchItemDetails.batchItem.clothingSizes
             );
-            setFieldValue('clothingSizeBatchValues', convertedClothingSizes);
+            setFieldValue('clothingSizes', convertedClothingSizes);
           }
           if (batchItemDetails?.batchItem.shoeSizes) {
             // Converting keys from underscore to dot -> mongoose maps don't allow for dots in their keys
             const convertedShoeSizes = convertUnderscoreToDot(
               batchItemDetails.batchItem.shoeSizes
             );
-            setFieldValue('shoeSizeBatchValues', convertedShoeSizes);
+            setFieldValue('shoeSizes', convertedShoeSizes);
           }
         }
       } catch (error) {

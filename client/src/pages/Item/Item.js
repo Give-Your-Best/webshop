@@ -1,25 +1,31 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Modal } from 'antd';
 import { AppContext } from '../../context/app-context';
-import { getItem, updateItem } from '../../services/items';
+import { getItem, getBatchItem } from '../../services/items';
 import { ItemDetailsWrapper, ItemWrapper, DonorLink } from './Item.styles';
 import { Container, ImageGallery, CategoryBreadcrumbs } from '../../components';
-import { ColourCircles, Button, Notification } from '../../components/atoms';
-import { useHistory } from 'react-router-dom';
+import { ColourCircles } from '../../components/atoms';
 import { getSetting } from '../../services/settings';
-import { getDate } from '../../utils/helpers';
+import { sizeOptions } from '../../utils/sizeOptions';
+import BatchQuantitySelector from './BatchQuantitySelector';
+import AddItemToBasket from './AddItemToBasket';
+import AddBatchItemToBasket from './AddBatchItemToBasket';
+import { Form } from 'formik-antd';
+import { Formik } from 'formik';
+import { convertUnderscoreToDot } from '../../utils/convertUnderscoreToDot';
 
 export const Item = () => {
-  const { user, setBasket, basket, token, basketTimer, setBasketTimer } =
-    useContext(AppContext);
+  const { token } = useContext(AppContext);
   const { itemId } = useParams();
   const [itemDetails, setItemDetails] = useState({});
   const [mainImage, setMainImage] = useState({});
   const [otherImages, setOtherImages] = useState([]);
   const [limit, setLimit] = useState(0);
-  const { confirm } = Modal;
-  let history = useHistory();
+  const [batchItem, setBatchItem] = useState(null);
+  const [sizes, setSizes] = useState([]);
+  const [batchSizes, setBatchSizes] = useState({});
+  const [selectedSize, setSelectedSize] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const mountedRef = useRef(true);
 
   const colours = () => {
@@ -28,42 +34,6 @@ export const Item = () => {
           return <ColourCircles key={c} colour={c} />;
         })
       : '';
-  };
-
-  const size = () => {
-    return itemDetails.category === 'shoes'
-      ? itemDetails.shoeSize
-        ? itemDetails.shoeSize.join(', ')
-        : ''
-      : itemDetails.clothingSize
-      ? itemDetails.clothingSize.join(', ')
-      : '';
-  };
-
-  const basketReset = (itemDetails) => {
-    clearTimeout(basketTimer);
-    setBasketTimer(
-      setTimeout(() => {
-        if (basket && basket.length) {
-          //clear basket from db
-          basket.concat(itemDetails).forEach(async (b) => {
-            await updateItem(
-              b._id,
-              { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-              token
-            );
-          });
-          Notification(
-            'Items expired!',
-            'The items in your basket have expired.',
-            'warning'
-          );
-        }
-
-        setBasket(null);
-        setBasketTimer(null);
-      }, 3600000)
-    ); //expires after an hour
   };
 
   useEffect(() => {
@@ -100,6 +70,44 @@ export const Item = () => {
     };
   }, [itemId, token]);
 
+  useEffect(() => {
+    const fetchSizes = async () => {
+      const options = sizeOptions(
+        itemDetails.category,
+        itemDetails.subCategory
+      );
+      if (options.length > 0) {
+        if (options[0].fieldName === 'clothingSize') {
+          setSizes(itemDetails.clothingSize);
+        } else {
+          setSizes(itemDetails.shoeSize);
+        }
+      }
+    };
+    fetchSizes();
+  }, [itemDetails]);
+
+  useEffect(() => {
+    const fetchBatchItem = async () => {
+      if (itemDetails.batchId && itemDetails.isTemplateBatchItem) {
+        const batchItemData = await getBatchItem(itemDetails.batchId);
+        const batchItem = batchItemData.batchItem;
+        console.log('batchItem: ', batchItem);
+        if (
+          batchItem.clothingSizes !== null &&
+          batchItem.clothingSizes !== undefined &&
+          Object.keys(batchItem.clothingSizes).length !== 0
+        ) {
+          setBatchSizes(batchItem.clothingSizes);
+        } else {
+          setBatchSizes(batchItem.shoeSizes);
+        }
+        setBatchItem(batchItem);
+      }
+    };
+    fetchBatchItem();
+  }, [itemDetails.batchId, itemDetails.isTemplateBatchItem]);
+
   const changeMainImage = (e) => {
     const imageId = e.target.getAttribute('data-id');
 
@@ -116,169 +124,67 @@ export const Item = () => {
     );
   };
 
-  const addToBasket = async (item) => {
-    const isShopped = basket && basket.some((i) => i._id === item._id);
-
-    //recent items shopped count and items in basket count needs to be within limit. Limit is calculated from the shop settings and multiplied by the number of people the user is shopping for
-    let cannotShop = false;
-
-    if (item.category === 'children') {
-      cannotShop =
-        (user
-          ? user.recentItems.filter((i) => i.category === 'children').length
-          : 0) +
-          (basket
-            ? basket.filter((i) => i.category === 'children').length
-            : 0) >=
-        limit * (user ? user.shoppingForChildren : 0);
-    } else {
-      cannotShop =
-        (user
-          ? user.recentItems.filter((i) => i.category !== 'children').length
-          : 0) +
-          (basket
-            ? basket.filter((i) => i.category !== 'children').length
-            : 0) >=
-        limit * (user ? user.shoppingFor : 1);
-    }
-
-    if (!user || user.type !== 'shopper') {
-      //if not signed in
-      confirm({
-        title: `Please sign up as a shopper to shop!`,
-        className: 'modalStyle',
-      });
-      return;
-    }
-
-    if (isShopped) {
-      //if alerady in basket
-      confirm({
-        className: 'modalStyle',
-        title: `This item is already in your basket`,
-      });
-      return;
-    }
-
-    if (cannotShop && item.category === 'children') {
-      //if limit reached
-      confirm({
-        className: 'modalStyle',
-        title: `You have reached your weekly shopping limit for children's items!`,
-        content:
-          'Please check your current orders on your account profile or update your profile info!',
-      });
-      return;
-    }
-
-    if (cannotShop && item.category !== 'children') {
-      //if limit reached
-      confirm({
-        className: 'modalStyle',
-        title: `You have reached your weekly shopping limit!`,
-        content: 'Please check your current orders on your account profile.',
-      });
-      return;
-    }
-
-    const itemDetails = await getItem(item._id);
-    let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
-    let basketDate =
-      itemDetails.statusUpdateDates &&
-      itemDetails.statusUpdateDates.inBasketDate
-        ? new Date(itemDetails.statusUpdateDates.inBasketDate)
-        : '';
-
-    if (
-      (itemDetails.inBasket === true && basketDate >= anHourAgo) ||
-      itemDetails.status !== 'in-shop'
-    ) {
-      //if already added to basket by someone else with the hour
-      confirm({
-        className: 'modalStyle',
-        title: `Sorry! This item has been shopped.`,
-      });
-      history.push(`/`);
-      return;
-    }
-
-    updateItem(
-      itemId,
-      { inBasket: true, 'statusUpdateDates.inBasketDate': getDate() },
-      token
-    );
-    //update basket date for each item in basket
-    if (basket && basket.length) {
-      basket.forEach((b) => {
-        updateItem(
-          b._id,
-          { inBasket: true, 'statusUpdateDates.inBasketDate': getDate() },
-          token
-        );
-      });
-    }
-
-    setBasket(
-      basket && basket.length ? basket.concat([itemDetails]) : [itemDetails]
-    );
-
-    // set up timer for resetting the basket - to expire
-    basketReset(itemDetails);
-
-    confirm({
-      title: `Item added to basket.`,
-      className: 'modalStyle',
-      onOk() {
-        history.push('/basket');
-      },
-      okText: 'View Basket',
-      onCancel() {
-        history.push(`/products`);
-      },
-      cancelText: 'Continue Shopping',
-    });
+  const resetSizeAndQuantity = () => {
+    setSelectedSize('');
+    setQuantity(0);
   };
 
   return (
     <Container>
-      <CategoryBreadcrumbs
-        category={itemDetails.category}
-        subCategory={itemDetails.subCategory}
-      />
-      <ItemWrapper>
-        <ImageGallery
-          changeMainImage={changeMainImage}
-          mainImage={mainImage}
-          otherImages={otherImages}
-        />
-        <ItemDetailsWrapper>
-          <h1>{itemDetails.name}</h1>
-          <p>{itemDetails.description || ''}</p>
-          <p>Colour: {colours()}</p>
-          <p>Brand: {itemDetails.brand || ''}</p>
-          <p>
-            Size: {size()}{' '}
-            <a target="_blank" rel="noreferrer" href="/sizing-guide">
-              size guide
-            </a>
-          </p>
-          <DonorLink to={'/donorproducts/' + itemDetails.donorId}>
-            See other items by this donor
-          </DonorLink>
-          {itemDetails.status === 'in-shop' && (
-            <Button
-              primary
-              left
-              small
-              onClick={() => {
-                addToBasket(itemDetails);
-              }}
-            >
-              Add to Basket
-            </Button>
-          )}
-        </ItemDetailsWrapper>
-      </ItemWrapper>
+      <Formik initialValues={{ size: '', quantity: 1 }}>
+        <Form>
+          <CategoryBreadcrumbs
+            category={itemDetails.category}
+            subCategory={itemDetails.subCategory}
+          />
+          <ItemWrapper>
+            <ImageGallery
+              changeMainImage={changeMainImage}
+              mainImage={mainImage}
+              otherImages={otherImages}
+            />
+            <ItemDetailsWrapper>
+              <h1>{itemDetails.name}</h1>
+              <p>{itemDetails.description || ''}</p>
+              <p>Colour: {colours()}</p>
+              <p>Brand: {itemDetails.brand || ''}</p>
+
+              {batchItem && batchSizes ? (
+                <BatchQuantitySelector
+                  sizes={convertUnderscoreToDot(batchSizes)}
+                  selectedSize={selectedSize}
+                  setSelectedSize={setSelectedSize}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                />
+              ) : (
+                <p>
+                  Size: {sizes.join(', ')}{' '}
+                  <a target="_blank" rel="noreferrer" href="/sizing-guide">
+                    size guide
+                  </a>
+                </p>
+              )}
+              <DonorLink to={'/donorproducts/' + itemDetails.donorId}>
+                See other items by this donor
+              </DonorLink>
+              {itemDetails.status === 'in-shop' &&
+                (batchItem ? (
+                  <AddBatchItemToBasket
+                    item={itemDetails}
+                    batchItem={batchItem}
+                    limit={limit}
+                    selectedSize={selectedSize}
+                    quantity={quantity}
+                    afterAddToBasket={resetSizeAndQuantity}
+                  />
+                ) : (
+                  <AddItemToBasket item={itemDetails} limit={limit} />
+                ))}
+            </ItemDetailsWrapper>
+          </ItemWrapper>
+        </Form>
+      </Formik>
     </Container>
   );
 };

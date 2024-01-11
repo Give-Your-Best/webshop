@@ -109,6 +109,9 @@ router.put('/:id', Items.updateItem);
 // create item endpoint post to api/items
 router.post('/', Items.createItem);
 
+// create item without images endpoint post to api/items
+router.post('/without-image-upload', Items.createItemWithoutImageUpload);
+
 // get items endpoint api/items
 router.post('/dummy', async (req, res) => {
   res.json({ success: true });
