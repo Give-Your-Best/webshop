@@ -12,16 +12,20 @@ export const Logout = () => {
     React.useContext(AppContext);
 
   const handleLogoutClick = async () => {
-    setUser(null);
+    // Handle basket reset
     if (basket && basket.length) {
       await resetBasketItems(basket, token);
     }
     setBasket(null);
     setBasketTimer(null);
 
-    setToken(null);
-    removeCookie('jwt_user', { path: '/' });
+    // Trigger the navigation
     history.push(`/`);
+
+    // Clear the auth settings
+    removeCookie('jwt_user', { path: '/' });
+    setToken(null);
+    setUser(null);
   };
 
   return (
