@@ -3,7 +3,7 @@ const Location = require('../models/Location');
 const updateLocation = async (id, updateData) => {
   try {
     const location = await Location.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (location) {
       return { success: true, message: 'setting updated', location: location };

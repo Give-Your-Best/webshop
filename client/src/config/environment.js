@@ -6,4 +6,4 @@
  * 'staging' or 'production' accordingly.
  */
 
-module.exports = process.env.REACT_APP_ENV || 'development';
+export default process.env.REACT_APP_ENV || 'development';
