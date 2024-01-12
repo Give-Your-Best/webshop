@@ -171,7 +171,7 @@ const updateItem = async (id, updateData) => {
     }
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        returnDocument: 'after',
+        new: true,
       });
 
       if (item) {
@@ -188,7 +188,7 @@ const updateItem = async (id, updateData) => {
     delete updateData.photos;
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
-        returnDocument: 'after',
+        new: true,
       });
 
       if (item) {

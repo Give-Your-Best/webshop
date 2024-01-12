@@ -31,7 +31,7 @@ const deleteTag = async (id) => {
 const updateTag = async (id, updateData) => {
   try {
     const tag = await Tag.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (tag) {
       return { success: true, message: 'setting updated', tag: tag };
