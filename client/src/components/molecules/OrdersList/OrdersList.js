@@ -10,10 +10,12 @@ import {
   StyledTabListHidden,
   InfoNote,
 } from './OrdersList.styles';
+import { updateBatchItemQuantity } from '../../../utils/updateBatchItemQuantity';
 import {
   getShopperItems,
   getDonorItems,
   updateItem,
+  deleteItem,
 } from '../../../services/items';
 import { H2, Button } from '../../atoms';
 import { getUser } from '../../../services/user';
@@ -129,17 +131,33 @@ export const OrdersList = () => {
                 //send email to shopper that order cancelled
                 sendAutoEmail('order_cancelled_shopper', user, [item]);
 
-                updateItem(
-                  item._id,
-                  {
-                    $unset: { shopperId: '' },
-                    status: 'in-shop',
-                    'statusUpdateDates.shoppedDate': '',
-                    inBasket: false,
-                    'statusUpdateDates.inBasketDate': '',
-                  },
-                  token
-                );
+                if (item.batchId && !item.isTemplateBatchItem) {
+                  const size =
+                    item.shoeSize.length > 0
+                      ? item.shoeSize
+                      : item.clothingSize;
+                  updateBatchItemQuantity(
+                    size,
+                    item.category,
+                    item.batchId,
+                    1,
+                    true,
+                    token
+                  );
+                  deleteItem(item._id, token);
+                } else {
+                  updateItem(
+                    item._id,
+                    {
+                      $unset: { shopperId: '' },
+                      status: 'in-shop',
+                      'statusUpdateDates.shoppedDate': '',
+                      inBasket: false,
+                      'statusUpdateDates.inBasketDate': '',
+                    },
+                    token
+                  );
+                }
               });
             }
             return item._id !== itemId;
