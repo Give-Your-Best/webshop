@@ -5,7 +5,7 @@ import { updateItem } from '../../services/items';
 import { Notification, Button } from '../../components/atoms';
 import { getDate } from '../../utils/helpers';
 import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
-import { createItemWithoutImageUpload } from '../../services/items';
+import { createItem } from '../../services/items';
 import { resetBasketItems } from '../../utils/resetBasketItems';
 
 const AddBatchItemToBasketButton = ({
@@ -138,10 +138,8 @@ const AddBatchItemToBasketButton = ({
     };
     for (let i = 0; i < quantity; i++) {
       // For each item in the batch, create a new item and add it to the basket
-      const newItemDetails = await createItemWithoutImageUpload(
-        itemDetails,
-        token
-      );
+      // Note: items are created without uploading images to cloudinary, instead, the templateItem's images are simply re-used: [3rd param]
+      const newItemDetails = await createItem(itemDetails, token, true);
       items.push(newItemDetails.item);
     }
     // update batch item with reduced quantity

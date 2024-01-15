@@ -13,4 +13,3 @@ export { getItem } from './getItem';
 export { getBatchItem } from './getBatchItem';
 export { createBatchItem } from './createBatchItem';
 export { updateBatchItem } from './updateBatchItem';
-export { createItemWithoutImageUpload } from './createItemWithoutImageUpload';

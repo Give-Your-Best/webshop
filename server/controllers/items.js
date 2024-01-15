@@ -7,28 +7,9 @@ const createItem = async (req, res) => {
       .status(400)
       .send({ message: 'Service error: new item details are required' });
   }
+  const bypassImageUpload = req.query.bypassImageUpload === 'true' || false;
   try {
-    const response = await ItemService.createItem(req.body);
-    return res.status(200).send({
-      success: response.success,
-      message: response.message,
-      item: response.item || {},
-    });
-  } catch (err) {
-    req.bugsnag.notify(err);
-    console.error(`Service error: ${err}`);
-    return res.status(500).send({ message: `Service error: ${err}` });
-  }
-};
-
-const createItemWithoutImageUpload = async (req, res) => {
-  if (!req.body.name) {
-    return res
-      .status(400)
-      .send({ message: 'Service error: new item details are required' });
-  }
-  try {
-    const response = await ItemService.createItemWithoutImageUpload(req.body);
+    const response = await ItemService.createItem(req.body, bypassImageUpload);
     return res.status(200).send({
       success: response.success,
       message: response.message,
@@ -148,7 +129,6 @@ const updateBatchItem = async (req, res) => {
 
 module.exports = {
   createItem,
-  createItemWithoutImageUpload,
   createBatchItem,
   updateItem,
   deleteBatchItem,
