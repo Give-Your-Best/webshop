@@ -5,7 +5,6 @@ import {
   SizeQuantityPair,
   StyledLabel,
 } from './EditForm.styles';
-// import { clothingSizeOptions, shoeSizeOptions } from '../../../utils/constants';
 import { useFormikContext } from 'formik';
 
 const SizeSelector = ({
