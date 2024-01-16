@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { updateItem, deleteItem } from '../../services/items';
 import { getUser } from '../../services/user';
 import { sendAutoEmail, getDate, name } from '../../utils/helpers';
-import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
+import { updateBatchItemQuantity } from '../../utils/batchItemHelpers';
 
 export const Basket = () => {
   const {

@@ -4,9 +4,11 @@ import { AppContext } from '../../context/app-context';
 import { updateItem } from '../../services/items';
 import { Notification, Button } from '../../components/atoms';
 import { getDate } from '../../utils/helpers';
-import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
+import {
+  updateBatchItemQuantity,
+  resetBasketItems,
+} from '../../utils/batchItemHelpers';
 import { createItem } from '../../services/items';
-import { resetBasketItems } from '../../utils/resetBasketItems';
 
 const AddBatchItemToBasketButton = ({
   item,
