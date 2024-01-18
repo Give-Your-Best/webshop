@@ -55,8 +55,7 @@ const updateBatchItemQuantity = async (
   try {
     const sizeType = category === 'shoes' ? 'shoeSizes' : 'clothingSizes';
     const { batchItem } = await getBatchItem(batchId);
-
-    if (batchItem[sizeType] && batchItem[sizeType][size]) {
+    if (batchItem[sizeType] && size in batchItem[sizeType]) {
       let updatedQuantity;
       if (increaseFlag) {
         // bring quantity back to batchItem (e.g. used when an item associated with a batch-item is removed from order)
@@ -78,7 +77,6 @@ const updateBatchItemQuantity = async (
         ...batchItemWithoutId,
         [sizeType]: updatedSizes,
       };
-
       const response = await updateBatchItem(
         batchItem.templateItem,
         updatedBatchItemDetails,

@@ -119,7 +119,7 @@ const AddBatchItemToBasketButton = ({
       // quantity too large for available size
       confirm({
         className: 'modalStyle',
-        title: `Not enough available quantity!`,
+        title: `Too many items selected!`,
         content: `You can only add up to ${availableQuantity} ${item.category}'s items to your basket.`,
       });
       return;

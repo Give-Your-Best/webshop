@@ -13,9 +13,10 @@ import AddBatchItemToBasket from './AddBatchItemToBasket';
 import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { convertUnderscoreToDot } from '../../utils/convertUnderscoreToDot';
+import RemoveFromBasketButton from '../../components/molecules/Button/RemoveFromBasketButton';
 
 export const Item = () => {
-  const { token } = useContext(AppContext);
+  const { token, basket } = useContext(AppContext);
   const { itemId } = useParams();
   const [itemDetails, setItemDetails] = useState({});
   const [mainImage, setMainImage] = useState({});
@@ -26,6 +27,7 @@ export const Item = () => {
   const [batchSizes, setBatchSizes] = useState({});
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [isShopped, setIsShopped] = useState(false);
   const mountedRef = useRef(true);
 
   const colours = () => {
@@ -71,6 +73,12 @@ export const Item = () => {
   }, [itemId, token]);
 
   useEffect(() => {
+    const updatedIsShopped =
+      basket && basket.some((i) => i._id === itemDetails._id);
+    setIsShopped(updatedIsShopped);
+  }, [basket, itemDetails]);
+
+  useEffect(() => {
     const fetchSizes = async () => {
       const options = sizeOptions(
         itemDetails.category,
@@ -105,7 +113,7 @@ export const Item = () => {
       }
     };
     fetchBatchItem();
-  }, [itemDetails.batchId, itemDetails.isTemplateBatchItem]);
+  }, [itemDetails.batchId, itemDetails.isTemplateBatchItem, quantity]);
 
   const changeMainImage = (e) => {
     const imageId = e.target.getAttribute('data-id');
@@ -123,7 +131,7 @@ export const Item = () => {
     );
   };
 
-  const resetSizeAndQuantity = () => {
+  const resetBatchItemDetails = () => {
     setSelectedSize('');
     setQuantity(0);
   };
@@ -167,19 +175,28 @@ export const Item = () => {
               <DonorLink to={'/donorproducts/' + itemDetails.donorId}>
                 See other items by this donor
               </DonorLink>
-              {itemDetails.status === 'in-shop' &&
-                (batchItem ? (
-                  <AddBatchItemToBasket
-                    item={itemDetails}
-                    batchItem={batchItem}
-                    limit={limit}
-                    selectedSize={selectedSize}
-                    quantity={quantity}
-                    afterAddToBasket={resetSizeAndQuantity}
-                  />
-                ) : (
-                  <AddItemToBasket item={itemDetails} limit={limit} />
-                ))}
+              {isShopped ? (
+                <RemoveFromBasketButton itemId={itemDetails._id}>
+                  Remove from Basket
+                </RemoveFromBasketButton>
+              ) : (
+                itemDetails.status === 'in-shop' && (
+                  <>
+                    {batchItem ? (
+                      <AddBatchItemToBasket
+                        item={itemDetails}
+                        batchItem={batchItem}
+                        limit={limit}
+                        selectedSize={selectedSize}
+                        quantity={quantity}
+                        afterAddToBasket={resetBatchItemDetails}
+                      />
+                    ) : (
+                      <AddItemToBasket item={itemDetails} limit={limit} />
+                    )}
+                  </>
+                )
+              )}
             </ItemDetailsWrapper>
           </ItemWrapper>
         </Form>
