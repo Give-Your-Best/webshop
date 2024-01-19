@@ -1,12 +1,16 @@
 import { convertHeic } from '../../utils/helpers';
 
-export const createItem = async (values, token) => {
+export const createItem = async (values, token, bypassImageUpload = false) => {
   //call api to create item
-  if (values.photos) {
+  if (!bypassImageUpload && values.photos) {
     values.photos = await convertHeic(values.photos);
   }
   try {
-    const response = await fetch('/api/items/', {
+    // Construct the URL with the query parameter
+    const url = bypassImageUpload
+      ? '/api/items/?bypassImageUpload=true'
+      : '/api/items/';
+    const response = await fetch(url, {
       method: 'post',
       headers: {
         Accept: 'application/json',

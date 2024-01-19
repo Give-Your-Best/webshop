@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../../context/app-context';
 import { Button, H2 } from '../../atoms/';
-import { resetBasketItems } from '../../../utils/resetBasketItems';
+import { resetBasketItems } from '../../../utils/batchItemHelpers';
 
 export const Logout = () => {
   let history = useHistory();

@@ -6,12 +6,12 @@ import {
   CardLongImageWithBackground,
 } from './ItemCardBasket.styles';
 import { Card as AntCard } from 'antd';
-import { Button } from '../../atoms';
 import { trunc } from '../../../utils/helpers';
+import RemoveFromBasketButton from '../Button/RemoveFromBasketButton';
 
 const { Meta } = AntCard;
 
-export const ItemCardBasket = ({ item, actionText, action }) => {
+export const ItemCardBasket = ({ item, actionText }) => {
   let history = useHistory();
   const [displaySizes, setDisplaySizes] = useState([]);
 
@@ -47,16 +47,9 @@ export const ItemCardBasket = ({ item, actionText, action }) => {
         }
       />
       {actionText && (
-        <Button
-          primary
-          small
-          onClick={(e) => {
-            e.stopPropagation();
-            action(item._id);
-          }}
-        >
+        <RemoveFromBasketButton itemId={item._id}>
           {actionText}
-        </Button>
+        </RemoveFromBasketButton>
       )}
     </CardLongWithBackground>
   );
