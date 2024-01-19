@@ -81,7 +81,7 @@ const AddBatchItemToBasketButton = ({
     const userLimit = calculateUserLimit(category);
     const recentItemsCount = calculateRecentItemsCount(category);
     const basketItemsCount = calculateBasketItemsCount(category);
-    const availableQuantity = userLimit - recentItemsCount + basketItemsCount;
+    const availableQuantity = userLimit - (recentItemsCount + basketItemsCount);
 
     if (!user || user.type !== 'shopper') {
       //if not signed in
