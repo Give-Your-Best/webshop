@@ -5,7 +5,6 @@ import {
   SizeQuantityPair,
   StyledLabel,
 } from './EditForm.styles';
-import { clothingSizeOptions, shoeSizeOptions } from '../../../utils/constants';
 import { useFormikContext } from 'formik';
 
 const SizeSelector = ({
@@ -43,22 +42,8 @@ const SizeSelector = ({
         [size]: validQuantity,
       };
     }
-
-    // will still re-factor this to do the sorting once on the backend, but for now, I've added the extra check as it was failign a particular case in testing.
     if (Object.keys(updatedQuantities).length > 0) {
-      // perform a sort on the selected sizes as this will be important when they are displayed.
-      let sizeOrder = [];
-      if (fieldName === 'shoeSizes') {
-        sizeOrder = shoeSizeOptions;
-      } else {
-        sizeOrder = clothingSizeOptions;
-      }
-      const keyValueArray = Object.entries(updatedQuantities);
-      keyValueArray.sort(
-        (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
-      );
-      const sortedUpdatedQuantities = Object.fromEntries(keyValueArray);
-      setFieldValue(`${fieldName}`, sortedUpdatedQuantities);
+      setFieldValue(`${fieldName}`, updatedQuantities);
     }
   };
 

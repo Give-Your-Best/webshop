@@ -5,7 +5,7 @@ import { getItem, updateItem } from '../../services/items';
 import { Notification, Button } from '../../components/atoms';
 import { useHistory } from 'react-router-dom';
 import { getDate } from '../../utils/helpers';
-import { resetBasketItems } from '../../utils/resetBasketItems';
+import { resetBasketItems } from '../../utils/batchItemHelpers';
 
 const AddToBasketButton = ({ item, limit }) => {
   const { user, setBasket, basket, token, basketTimer, setBasketTimer } =

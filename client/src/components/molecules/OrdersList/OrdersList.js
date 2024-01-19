@@ -10,7 +10,7 @@ import {
   StyledTabListHidden,
   InfoNote,
 } from './OrdersList.styles';
-import { updateBatchItemQuantity } from '../../../utils/updateBatchItemQuantity';
+import { updateBatchItemQuantity } from '../../../utils/batchItemHelpers';
 import {
   getShopperItems,
   getDonorItems,

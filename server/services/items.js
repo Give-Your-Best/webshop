@@ -6,56 +6,48 @@ const Location = require('../models/Location');
 const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
-const createItem = async (data) => {
-  var new_photos = [];
-  var success = true;
-  const promises = data.photos.map((photo) => {
-    if (photo.status !== 'removed') {
-      return cloudinary.uploader
-        .upload(photo.imageUrl, {
-          resource_type: 'auto',
-          public_id: photo.uid,
-          overwrite: false,
-          secure: true,
-        })
-        .then((result) => {
-          console.log('*** Success: Cloudinary Upload: ', result.secure_url);
-          new_photos.push({
-            url: result.secure_url,
-            name: photo.name,
-            createdAt: result.created_at,
-            publicId: photo.uid,
-            success: true,
-            front: photo.front ? true : false,
+const createItem = async (data, bypassImageUpload = false) => {
+  if (!bypassImageUpload) {
+    console.log('uploading image');
+    var new_photos = [];
+    var success = true;
+    const promises = data.photos.map((photo) => {
+      if (photo.status !== 'removed') {
+        return cloudinary.uploader
+          .upload(photo.imageUrl, {
+            resource_type: 'auto',
+            public_id: photo.uid,
+            overwrite: false,
+            secure: true,
+          })
+          .then((result) => {
+            console.log('*** Success: Cloudinary Upload: ', result.secure_url);
+            new_photos.push({
+              url: result.secure_url,
+              name: photo.name,
+              createdAt: result.created_at,
+              publicId: photo.uid,
+              success: true,
+              front: photo.front ? true : false,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            console.log('*** Error: Cloudinary Upload');
+            success = false;
+            return;
           });
-        })
-        .catch((err) => {
-          console.error(err);
-          console.log('*** Error: Cloudinary Upload');
-          success = false;
-          return;
-        });
+      }
+    });
+    await Promise.all(promises);
+    if (!success) {
+      return {
+        success: false,
+        message: 'Failed to upload one or more of your images',
+      };
     }
-  });
-  await Promise.all(promises);
-  if (!success) {
-    return {
-      success: false,
-      message: 'Failed to upload one or more of your images',
-    };
+    data.photos = new_photos;
   }
-  data.photos = new_photos;
-  try {
-    const item = new Item(data);
-    await item.save();
-    return { success: true, message: 'Item created', item: item };
-  } catch (err) {
-    console.error(err);
-    return { success: false, message: err };
-  }
-};
-
-const createItemWithoutImageUpload = async (data) => {
   try {
     const item = new Item(data);
     await item.save();
@@ -771,5 +763,4 @@ module.exports = {
   createBatchItem,
   getBatchItem,
   updateBatchItem,
-  createItemWithoutImageUpload,
 };

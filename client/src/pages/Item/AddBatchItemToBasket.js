@@ -4,9 +4,11 @@ import { AppContext } from '../../context/app-context';
 import { updateItem } from '../../services/items';
 import { Notification, Button } from '../../components/atoms';
 import { getDate } from '../../utils/helpers';
-import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
-import { createItemWithoutImageUpload } from '../../services/items';
-import { resetBasketItems } from '../../utils/resetBasketItems';
+import {
+  updateBatchItemQuantity,
+  resetBasketItems,
+} from '../../utils/batchItemHelpers';
+import { createItem } from '../../services/items';
 
 const AddBatchItemToBasketButton = ({
   item,
@@ -79,7 +81,7 @@ const AddBatchItemToBasketButton = ({
     const userLimit = calculateUserLimit(category);
     const recentItemsCount = calculateRecentItemsCount(category);
     const basketItemsCount = calculateBasketItemsCount(category);
-    const availableQuantity = userLimit - recentItemsCount + basketItemsCount;
+    const availableQuantity = userLimit - (recentItemsCount + basketItemsCount);
 
     if (!user || user.type !== 'shopper') {
       //if not signed in
@@ -117,7 +119,7 @@ const AddBatchItemToBasketButton = ({
       // quantity too large for available size
       confirm({
         className: 'modalStyle',
-        title: `Not enough available quantity!`,
+        title: `Too many items selected!`,
         content: `You can only add up to ${availableQuantity} ${item.category}'s items to your basket.`,
       });
       return;
@@ -138,10 +140,8 @@ const AddBatchItemToBasketButton = ({
     };
     for (let i = 0; i < quantity; i++) {
       // For each item in the batch, create a new item and add it to the basket
-      const newItemDetails = await createItemWithoutImageUpload(
-        itemDetails,
-        token
-      );
+      // Note: items are created without uploading images to cloudinary, instead, the templateItem's images are simply re-used: [3rd param]
+      const newItemDetails = await createItem(itemDetails, token, true);
       items.push(newItemDetails.item);
     }
     // update batch item with reduced quantity

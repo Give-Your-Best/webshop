@@ -11,21 +11,13 @@ import {
   AddressLink,
 } from './Basket.styles';
 import { useHistory } from 'react-router-dom';
-import { updateItem, deleteItem } from '../../services/items';
+import { updateItem } from '../../services/items';
 import { getUser } from '../../services/user';
 import { sendAutoEmail, getDate, name } from '../../utils/helpers';
-import { updateBatchItemQuantity } from '../../utils/updateBatchItemQuantity';
 
 export const Basket = () => {
-  const {
-    setBasket,
-    basket,
-    user,
-    token,
-    setUser,
-    basketTimer,
-    setBasketTimer,
-  } = useContext(AppContext);
+  const { setBasket, basket, user, token, setUser, setBasketTimer } =
+    useContext(AppContext);
   let history = useHistory();
   const { confirm } = Modal;
 
@@ -54,54 +46,13 @@ export const Basket = () => {
     ''
   );
 
-  const removeFromBasket = (itemId) => {
-    confirm({
-      title: `Are you sure you wish to remove from your basket?`,
-      className: 'modalStyle',
-      onOk() {
-        clearTimeout(basketTimer);
-        setBasket(
-          basket.filter((item) => {
-            if (item._id === itemId) {
-              if (item.batchId && !item.isTemplateBatchItem) {
-                const size =
-                  item.shoeSize.length > 0 ? item.shoeSize : item.clothingSize;
-                updateBatchItemQuantity(
-                  size,
-                  item.category,
-                  item.batchId,
-                  1,
-                  true,
-                  token
-                );
-                deleteItem(item._id, token);
-              } else {
-                updateItem(
-                  item._id,
-                  { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-                  token
-                );
-              }
-            }
-            return item._id !== itemId;
-          })
-        );
-      },
-    });
-  };
-
   const basketList = () => {
     if (basket && basket.length) {
       return (
         <div>
           {basket.map((b) => {
             return (
-              <ItemCardBasket
-                key={b._id}
-                item={b}
-                actionText={'Remove'}
-                action={removeFromBasket}
-              />
+              <ItemCardBasket key={b._id} item={b} actionText={'Remove'} />
             );
           })}
         </div>
