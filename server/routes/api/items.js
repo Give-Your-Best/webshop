@@ -61,6 +61,7 @@ router.get('/admin', async (req, res) => {
   const category = req.query.category;
   const status = req.query.status;
   const sort = req.query.sort;
+  const search = req.query.search;
   const items = await getAdminItems({
     isCurrent,
     withCount,
@@ -71,6 +72,7 @@ router.get('/admin', async (req, res) => {
     category,
     status,
     sort,
+    search,
   });
   res.json(items);
 });
