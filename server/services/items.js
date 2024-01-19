@@ -746,5 +746,4 @@ module.exports = {
   createBatchItem,
   getBatchItem,
   updateBatchItem,
-  // createItemWithoutImageUpload,
 };
