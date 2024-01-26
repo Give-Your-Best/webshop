@@ -1,4 +1,5 @@
 const Item = require('../models/Item');
+const BatchItem = require('../models/BatchItem');
 const User_ = require('../models/User');
 
 const getReportData = async (from, to) => {
@@ -316,6 +317,70 @@ const getReportData = async (from, to) => {
         ]).collation({ locale: 'en_US', numericOrdering: true });
         reportData[g] = d;
       }
+
+      // work in progress
+      // const d = await BatchItem.aggregate([
+      //   {
+      //     $project: {
+      //       sizes: {
+      //         $concatArrays: [
+      //           { $objectToArray: '$clothingSizes' },
+      //           { $objectToArray: '$shoeSizes' },
+      //         ],
+      //       },
+      //     },
+      //   },
+      //   {
+      //     $unwind: '$sizes',
+      //   },
+      //   {
+      //     $group: {
+      //       _id: {
+      //         $replaceOne: { input: '$sizes.k', find: '_', replacement: '.' },
+      //       },
+      //       sum: { $sum: '$sizes.v' },
+      //       count: { $sum: 1 },
+      //     },
+      //   },
+      //   {
+      //     $sort: { _id: 1 },
+      //   },
+      // ]);
+      // reportData['totalBatchQuantity'] = d;
+      // console.log('reportData: ', reportData);
+      // console.log('d: ', d);
+
+      // const totalBatchQuantity = d.map((item) => ({
+      //   _id: item._id,
+      //   sum: item.sum,
+      //   count: item.count,
+      // }));
+
+      // // Merge totalBatchQuantity with existing data in reportData
+      // const mergeBatchSizes = (reportData, totalBatchQuantity, field) => {
+      //   totalBatchQuantity.forEach((item) => {
+      //     const existingItem = reportData[field].find(
+      //       (existing) => existing._id === item._id
+      //     );
+      //     if (existingItem) {
+      //       existingItem.total += item.sum;
+      //       existingItem.available += item.sum; // Assuming available should be updated as well
+      //     } else {
+      //       reportData[field].push({
+      //         _id: item._id,
+      //         total: item.sum,
+      //         shopped: 0,
+      //         available: item.sum,
+      //         shopperUnique: [],
+      //       });
+      //     }
+      //   });
+      // };
+
+      // mergeBatchSizes(reportData, totalBatchQuantity, 'clothingSize');
+      // mergeBatchSizes(reportData, totalBatchQuantity, 'shoeSize');
+
+      // console.log('reportData:', reportData);
     }
 
     return { success: true, data: reportData };
@@ -352,16 +417,53 @@ const getAllStatistics = async () => {
         $gte: today,
       },
       approvedStatus: 'approved',
+      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
     });
     statistics['donationsToday'] = await Item.countDocuments({
       createdAt: {
         $gte: today,
       },
+      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
     });
     statistics['itemsInShop'] = await Item.countDocuments({
       status: 'in-shop',
       approvedStatus: 'approved',
+      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
     });
+
+    // add the batch counts to the above statistics
+    // batch item donations today
+    const batchDonationsToday = await BatchItem.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: today },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: '$quantity' },
+        },
+      },
+    ]).exec();
+    statistics['donationsToday'] +=
+      batchDonationsToday?.[0]?.totalQuantity || 0;
+
+    // bath items in shop today
+    const batchInShopToday = await BatchItem.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: today },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: '$quantity' },
+        },
+      },
+    ]).exec();
+    statistics['itemsInShop'] += batchInShopToday?.[0]?.totalQuantity || 0;
 
     const donorData = await User_.Donor.aggregate([
       {
@@ -437,6 +539,14 @@ const getAllStatistics = async () => {
 
     const itemsDonatedData = await Item.aggregate([
       {
+        $match: {
+          $or: [
+            { isTemplateBatchItem: { $ne: true } },
+            { batchId: { $eq: null } },
+          ],
+        },
+      },
+      {
         $group: {
           _id: 'donated',
           total: { $sum: 1 },
@@ -451,6 +561,51 @@ const getAllStatistics = async () => {
       },
     ]);
 
+    console.log('itemsDonatedData: ', itemsDonatedData);
+
+    const batchItemsDonatedData = await BatchItem.aggregate([
+      {
+        $group: {
+          _id: 'donated',
+          total: { $sum: '$quantity' },
+          today: {
+            $sum: { $cond: [{ $gte: ['$createdAt', today] }, '$quantity', 0] },
+          },
+          thisWeek: {
+            $sum: {
+              $cond: [{ $gte: ['$createdAt', sevenDays] }, '$quantity', 0],
+            },
+          },
+          thisMonth: {
+            $sum: { $cond: [{ $gte: ['$createdAt', month] }, '$quantity', 0] },
+          },
+        },
+      },
+    ]);
+
+    const safeSum = (a, b) => (a || 0) + (b || 0);
+
+    // Sum up the values for batchItem and item aggregations
+    const summedDonationData = {
+      _id: 'donated',
+      total: safeSum(
+        itemsDonatedData[0]?.total,
+        batchItemsDonatedData[0]?.total
+      ),
+      today: safeSum(
+        itemsDonatedData[0]?.today,
+        batchItemsDonatedData[0]?.today
+      ),
+      thisWeek: safeSum(
+        itemsDonatedData[0]?.thisWeek,
+        batchItemsDonatedData[0]?.thisWeek
+      ),
+      thisMonth: safeSum(
+        itemsDonatedData[0]?.thisMonth,
+        batchItemsDonatedData[0]?.thisMonth
+      ),
+    };
+
     const statuses = [
       'shopped',
       'shipped-to-gyb',
@@ -459,6 +614,14 @@ const getAllStatistics = async () => {
       'received',
     ];
     const itemsShoppedData = await Item.aggregate([
+      {
+        $match: {
+          $or: [
+            { isTemplateBatchItem: { $ne: true } },
+            { batchId: { $eq: null } },
+          ],
+        },
+      },
       {
         $group: {
           _id: 'shopped',
@@ -495,7 +658,7 @@ const getAllStatistics = async () => {
     ]);
 
     statistics['itemsChart'] = [];
-    statistics['itemsChart'].push(itemsDonatedData[0], itemsShoppedData[0]);
+    statistics['itemsChart'].push(summedDonationData, itemsShoppedData[0]);
 
     return statistics;
   } catch (error) {
