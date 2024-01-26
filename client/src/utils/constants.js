@@ -160,6 +160,8 @@ export const shoeSizeOptions = [
   '10',
 ];
 
+export const oneSizeOptions = ['One Size'];
+
 export const colours = [
   'Black',
   'Blue',

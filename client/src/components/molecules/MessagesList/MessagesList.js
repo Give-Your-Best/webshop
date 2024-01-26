@@ -115,7 +115,7 @@ export const MessagesList = (data) => {
       title: '',
       dataIndex: 'messages',
       key: 'messages',
-      render: (value) => {
+      render: (value = []) => {
         return value.length;
       },
     },
@@ -123,7 +123,7 @@ export const MessagesList = (data) => {
       title: '',
       dataIndex: 'messages',
       key: 'messages',
-      render: (value) => {
+      render: (value = []) => {
         return (
           <Note>
             {checkUnread(data.type, data.userId, value)[0] > 0

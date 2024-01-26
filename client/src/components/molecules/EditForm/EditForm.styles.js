@@ -102,6 +102,9 @@ const StyledInput = styled(Input)`
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
   }
+  &.batchSizeInput {
+    width: 100px;
+  }
 `;
 
 const StyledInputArea = styled(Input.TextArea)`
@@ -199,8 +202,12 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
-  &.childrenShoeSize,
-  &.childrenClothingSize {
+  &.clothingSizes,
+  &.shoeSizes {
+    width: 60px;
+    font-size: 17px;
+  }
+  &.batchSizeInput {
     width: 100px;
   }
 `;
@@ -257,16 +264,13 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
-  &.shoeSize,
-  &.clothingSize {
-    width: 40%;
-  }
-  &.shoeSize,
-  &.clothingSize,
-  &.childrenClothingSize,
-  &.childrenShoeSize {
+  &.shoeSizes,
+  &.clothingSizes {
+    margin-right: 10px;
+    width: 30%;
     font-size: 16px !important;
     @media (min-width: 525px) {
+      width: 20%;
       font-size: 18px !important;
     }
   }
@@ -333,52 +337,34 @@ const SizeQuantityContainer = styled.div`
   justify-content: flex-start;
   align-content: flex-start;
   align-items: flex-start;
-  height: 600px;
   width: 100%;
-  &.clothingSize,
-  &.shoeSize,
-  &.childrenClothingSize {
-    height: 550px;
+  &.clothingSizes {
+    max-height: 450px;
     @media (min-width: 525px) {
-      height: 400px;
+      max-height: 300px;
     }
   }
-  &.childrenShoeSize {
-    height: 750px;
+  &.shoeSizes {
+    max-height: 350px;
     @media (min-width: 525px) {
-      height: 600px;
+      max-height: 235px;
     }
+  }
+  &.batchSizeSelector {
+    width: 100px;
   }
 `;
 
 const SizeQuantityPair = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 10px;
   margin-right: 10px;
-  &.clothingSize {
+  &.clothingSizes,
+  &.shoeSizes {
     width: 50%;
     @media (min-width: 525px) {
-      width: 30%;
-    }
-  }
-  &.shoeSize {
-    margin-right: 0;
-    width: 50%;
-    @media (min-width: 525px) {
-      width: 36%;
-    }
-  }
-  &.childrenClothingSize {
-    width: 40%;
-    @media (min-width: 525px) {
-      width: 36%;
-    }
-  }
-  &.childrenShoeSize {
-    width: 50%;
-    @media (min-width: 525px) {
-      width: 30%;
+      width: 35%;
     }
   }
   &:last-child {

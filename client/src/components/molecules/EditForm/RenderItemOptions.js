@@ -2,7 +2,7 @@ import React from 'react';
 import CheckboxGroupField from './CheckboxGroupField';
 import { sizeOptions } from '../../../utils/sizeOptions';
 
-const RenderItemOptions = ({ category, subcategory }) => {
+const RenderItemOptions = ({ category, subcategory, editingKey, recordId }) => {
   const itemOptions = sizeOptions(category, subcategory);
 
   return (
@@ -11,8 +11,10 @@ const RenderItemOptions = ({ category, subcategory }) => {
         <CheckboxGroupField
           key={`${option.fieldName}-${category}`}
           options={option.sizeOption}
-          name={`${option.fieldName}-checkbox'`}
+          name={option.fieldName}
           label={option.label}
+          editingKey={editingKey}
+          recordId={recordId}
         />
       ))}
     </>

@@ -28,7 +28,7 @@ const createUser = async (data) => {
 const updateUser = async (id, updateData) => {
   try {
     const user = await User_.User.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -50,7 +50,7 @@ const updateDonor = async (id, updateData) => {
   }
   try {
     const user = await User_.Donor.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -66,7 +66,7 @@ const updateDonor = async (id, updateData) => {
 const updateShopper = async (id, updateData) => {
   try {
     const user = await User_.Shopper.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -82,7 +82,7 @@ const updateShopper = async (id, updateData) => {
 const updateAdmin = async (id, updateData) => {
   try {
     const user = await User_.Admin.findOneAndUpdate({ _id: id }, updateData, {
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
