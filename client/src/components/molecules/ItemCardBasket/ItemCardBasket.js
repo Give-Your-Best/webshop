@@ -1,17 +1,27 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   CardLongWithBackground,
   CardLongImageWithBackground,
 } from './ItemCardBasket.styles';
 import { Card as AntCard } from 'antd';
-import { Button } from '../../atoms';
 import { trunc } from '../../../utils/helpers';
+import RemoveFromBasketButton from '../Button/RemoveFromBasketButton';
 
 const { Meta } = AntCard;
 
-export const ItemCardBasket = ({ item, actionText, action }) => {
+export const ItemCardBasket = ({ item, actionText }) => {
   let history = useHistory();
+  const [displaySizes, setDisplaySizes] = useState([]);
+
+  useEffect(() => {
+    if (item.shoeSize && item.shoeSize.length > 0) {
+      setDisplaySizes(item.shoeSize);
+    } else if (item.clothingSize && item.clothingSize.length > 0) {
+      setDisplaySizes(item.clothingSize);
+    }
+  }, [item.shoeSize, item.clothingSize]);
 
   return (
     <CardLongWithBackground
@@ -28,19 +38,18 @@ export const ItemCardBasket = ({ item, actionText, action }) => {
       <Meta
         bordered={'false'}
         title={item.name}
-        description={trunc(item.description)}
+        description={
+          <>
+            {trunc(item.description)}
+            <br />
+            size {displaySizes.join(', ')}
+          </>
+        }
       />
       {actionText && (
-        <Button
-          primary
-          small
-          onClick={(e) => {
-            e.stopPropagation();
-            action(item._id);
-          }}
-        >
+        <RemoveFromBasketButton itemId={item._id}>
           {actionText}
-        </Button>
+        </RemoveFromBasketButton>
       )}
     </CardLongWithBackground>
   );

@@ -13,6 +13,15 @@ const itemSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    batchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BatchItem',
+      default: null,
+    },
+    isTemplateBatchItem: {
+      type: Boolean,
+      default: false,
+    },
     approvedStatus: {
       type: String,
       enum: ['in-progress', 'approved', 'rejected'],

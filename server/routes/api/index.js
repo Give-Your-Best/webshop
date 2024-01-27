@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const itemsRoutes = require('./items');
+const batchItemRoutes = require('./batchItems');
 const usersRoutes = require('./users');
 const locationRoutes = require('./locations');
 const settingsRoutes = require('./settings');
@@ -12,6 +13,7 @@ const statisticsRoutes = require('./statistics');
 const Authentication = require('../../controllers/authentication');
 const Users = require('../../controllers/users');
 const { getSetting } = require('../../services/settings');
+const { getAllBanners } = require('../../services/banners');
 const authRoutes = require('./auth');
 
 router.get('/', (req, res) => {
@@ -27,6 +29,12 @@ router.get('/settings/:name', async (req, res) => {
   res.json(setting);
 });
 
+router.use('/banners', async (req, res) => {
+  const banners = await getAllBanners();
+  res.json(banners);
+});
+
+router.use('/batchItems', batchItemRoutes);
 router.use('/items', itemsRoutes);
 router.use('/auth', authRoutes);
 router.use('/mail', mailerRoutes);

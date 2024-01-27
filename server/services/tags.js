@@ -16,7 +16,7 @@ const getTags = async () => {
 
 const deleteTag = async (id) => {
   try {
-    const tag = await Tag.findByIdAndRemove(id, { useFindAndModify: false });
+    const tag = await Tag.findByIdAndDelete(id);
     if (tag) {
       return { success: true, message: 'tag deleted' };
     } else {
@@ -31,8 +31,7 @@ const deleteTag = async (id) => {
 const updateTag = async (id, updateData) => {
   try {
     const tag = await Tag.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+      new: true,
     });
     if (tag) {
       return { success: true, message: 'setting updated', tag: tag };

@@ -40,6 +40,17 @@ export const DonorMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
         <StyledError name="trustedDonor" component="div" />
       </div>
 
+      {/* hiding the bulk feature to free-up staging  */}
+      {/* <div>
+        <StyledCheckbox
+          name="canAddItemInBulk"
+          disabled={editingKey !== recordId}
+        >
+          User can add items in bulk
+        </StyledCheckbox>
+        <StyledError name="canAddItemInBulk" component="div" />
+      </div> */}
+
       {editingKey === recordId && !approvalAction && (
         <StyledSubmitButton>Save</StyledSubmitButton>
       )}

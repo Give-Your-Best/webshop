@@ -8,6 +8,7 @@ export const getAdminItems = async ({
   category = undefined,
   status = undefined,
   sortBy = undefined,
+  searchTerm = undefined,
 }) => {
   const params = new URLSearchParams({ isCurrent, withCount, limit, page });
 
@@ -27,6 +28,10 @@ export const getAdminItems = async ({
 
   if (sortBy) {
     params.set('sort', sortBy);
+  }
+
+  if (searchTerm) {
+    params.set('search', searchTerm.trim().replace(/\s+/g, ','));
   }
 
   const response = await fetch(`/api/items/admin?${params.toString()}`, {

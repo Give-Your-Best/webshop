@@ -5,11 +5,11 @@ import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
 import { reopenTab, sendAutoEmail } from '../../../utils/helpers';
 import {
-  clothingSizeOptions,
-  shoeSizeOptions,
   colours,
+  shoeSizeOptions,
+  clothingSizeOptions,
 } from '../../../utils/constants';
-import { createItem } from '../../../services/items';
+import { createItem, createBatchItem } from '../../../services/items';
 import { Button, Notification } from '../../atoms';
 import {
   StyledSubmitButton,
@@ -17,16 +17,50 @@ import {
   StyledError,
   StyledLabel,
   StyledCheckboxGroup,
+  StyledSwitch,
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
+import RenderBatchOptions from './RenderBatchOptions';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [showBatchOptions, setShowBatchOptions] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+
+  const handleCategoryChange = (category, subCategory) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(subCategory);
+  };
+
+  const handleSwitchChange = (checked) => {
+    setShowBatchOptions(checked);
+  };
+
+  const sortQuantities = (formValues) => {
+    const fieldName =
+      formValues.shoeSizes.length > 0 ? 'shoeSizes' : 'clothingSizes';
+    const sizeOrder =
+      formValues.shoeSizes.length > 0 ? shoeSizeOptions : clothingSizeOptions;
+    const quantities = formValues[fieldName];
+    const keyValueArray = Object.entries(quantities);
+    keyValueArray.sort(
+      (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
+    );
+    const sortedQuantities = Object.fromEntries(keyValueArray);
+    return { ...formValues, [fieldName]: sortedQuantities };
+  };
 
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
-    const res = await createItem(values, token);
+    let res;
+    if (showBatchOptions === true) {
+      const sortedValues = sortQuantities(values);
+      res = await createBatchItem(sortedValues, token);
+    } else {
+      res = await createItem(values, token);
+    }
     if (res.success) {
       Notification('Success!', 'New item created', 'success');
       if (!user.trustedDonor) {
@@ -59,6 +93,16 @@ export const ItemCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
+          {user.canAddItemInBulk && (
+            <>
+              <StyledLabel>Bulk Item?</StyledLabel>
+              <StyledSwitch
+                name="showBatchOptions"
+                onChange={handleSwitchChange}
+              />
+            </>
+          )}
+
           <StyledLabel>
             Item Name
             <StyledInput name="name" />
@@ -71,7 +115,7 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="description" component="div" />
 
-          <CategoryFields />
+          <CategoryFields onCategoryChange={handleCategoryChange} />
 
           <StyledLabel>
             Brand
@@ -79,20 +123,32 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="brand" component="div" />
 
-          <StyledLabel>
-            Clothing size
-            <StyledCheckboxGroup
-              name="clothingSize"
-              options={clothingSizeOptions}
+          {showBatchOptions ? (
+            <RenderBatchOptions
+              category={selectedCategory}
+              subcategory={selectedSubCategory}
             />
-          </StyledLabel>
-          <StyledError name="clothingSize" component="div" />
+          ) : (
+            <>
+              <StyledLabel>
+                Clothing size
+                <StyledCheckboxGroup
+                  name="clothingSize"
+                  options={clothingSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="clothingSize" component="div" />
 
-          <StyledLabel>
-            Shoe size
-            <StyledCheckboxGroup name="shoeSize" options={shoeSizeOptions} />
-          </StyledLabel>
-          <StyledError name="shoeSize" component="div" />
+              <StyledLabel>
+                Shoe size
+                <StyledCheckboxGroup
+                  name="shoeSize"
+                  options={shoeSizeOptions}
+                />
+              </StyledLabel>
+              <StyledError name="shoeSize" component="div" />
+            </>
+          )}
 
           <StyledLabel>
             Colours

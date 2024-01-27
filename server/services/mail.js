@@ -23,13 +23,14 @@ const sendMail = async (subject, emailHTML, recipient, recipientName) => {
       },
     ],
   });
-  if (request.response.statusCode === 200) {
+
+  if (request.response.status === 200) {
     return { success: true, message: `Email sent!` };
   } else {
     return {
       success: false,
       message: 'Failed to send email',
-      err: request.response.statusCode,
+      err: request.response.status,
     };
   }
 };

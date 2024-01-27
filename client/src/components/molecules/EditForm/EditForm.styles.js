@@ -9,6 +9,7 @@ import {
   Select,
   AutoComplete,
 } from 'formik-antd';
+import { Switch } from 'antd';
 import { ErrorMessage } from 'formik';
 
 const StyledError = styled(ErrorMessage)`
@@ -100,6 +101,9 @@ const StyledInput = styled(Input)`
   &:disabled {
     background-color: transparent;
     color: ${({ theme }) => theme.colorMappings.primary} !important;
+  }
+  &.batchSizeInput {
+    width: 100px;
   }
 `;
 
@@ -198,6 +202,14 @@ const StyledInputNumber = styled(InputNumber)`
     background-color: transparent;
     color: black;
   }
+  &.clothingSizes,
+  &.shoeSizes {
+    width: 60px;
+    font-size: 17px;
+  }
+  &.batchSizeInput {
+    width: 100px;
+  }
 `;
 
 const StyledCheckbox = styled(Checkbox)`
@@ -252,6 +264,16 @@ const StyledLabel = styled.label`
   margin: 1px 0;
   color: ${({ theme }) => theme.colorMappings.primary};
   font-size: 22px !important;
+  &.shoeSizes,
+  &.clothingSizes {
+    margin-right: 10px;
+    width: 30%;
+    font-size: 16px !important;
+    @media (min-width: 525px) {
+      width: 20%;
+      font-size: 18px !important;
+    }
+  }
 `;
 
 const NewPasswordLink = styled.label`
@@ -307,6 +329,54 @@ const FieldContainerUneven = styled.div`
   }
 `;
 
+const SizeQuantityContainer = styled.div`
+  margin: 7.5px 0;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  &.clothingSizes {
+    max-height: 450px;
+    @media (min-width: 525px) {
+      max-height: 300px;
+    }
+  }
+  &.shoeSizes {
+    max-height: 350px;
+    @media (min-width: 525px) {
+      max-height: 235px;
+    }
+  }
+  &.batchSizeSelector {
+    width: 100px;
+  }
+`;
+
+const SizeQuantityPair = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  &.clothingSizes,
+  &.shoeSizes {
+    width: 50%;
+    @media (min-width: 525px) {
+      width: 35%;
+    }
+  }
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const StyledSwitch = styled(Switch)`
+  color: ${({ theme }) => theme.colorMappings.primary};
+  margin-bottom: 15px;
+`;
+
 export {
   StyledInput,
   StyledSubmitButton,
@@ -327,4 +397,7 @@ export {
   FieldContainerUneven,
   StyledInputAreaInLine,
   NewPasswordLink,
+  SizeQuantityContainer,
+  SizeQuantityPair,
+  StyledSwitch,
 };

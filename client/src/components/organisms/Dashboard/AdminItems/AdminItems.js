@@ -1,10 +1,15 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react';
-import { AutoComplete, Menu, Modal, Select, Space } from 'antd';
+import { AutoComplete, Input, Menu, Modal, Select, Space } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { AccountContext } from '../../../../context/account-context';
 import { ItemCardLong, ItemsCollapsedList } from '../../../molecules';
-import { getAdminItems, deleteItem } from '../../../../services/items';
-import { tabList } from '../../../../utils/helpers';
+import {
+  getAdminItems,
+  deleteItem,
+  deleteBatchItem,
+  getItem,
+} from '../../../../services/items';
+import { debounce, tabList } from '../../../../utils/helpers';
 import { categories } from '../../../../utils/constants';
 import { adminAllItemStatus } from '../../../atoms/ProgressBar/constants';
 
@@ -17,6 +22,7 @@ export const AdminItems = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentUser, setCurrentUser] = useState({});
   const [conditions, setConditions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState(undefined);
 
   // Transform the users data from context to a formatted autocomplete options
@@ -65,11 +71,12 @@ export const AdminItems = () => {
       category,
       status,
       sortBy,
+      searchTerm,
     });
 
     setItems(items);
     count && setItemsCount(count);
-  }, [conditions, currentPage, currentUser, sortBy, view]);
+  }, [conditions, currentPage, currentUser, sortBy, searchTerm, view]);
 
   useEffect(fetchItems, [
     token,
@@ -77,6 +84,7 @@ export const AdminItems = () => {
     view,
     currentPage,
     currentUser,
+    searchTerm,
     fetchItems,
   ]);
 
@@ -139,9 +147,19 @@ export const AdminItems = () => {
       title: `Are you sure you want to delete this item?`,
       className: 'modalStyle',
       onOk() {
-        deleteItem(id, token).then(fetchItems);
+        getItem(id).then((itemToDelete) => {
+          if (itemToDelete.batchId !== null) {
+            deleteBatchItem(id, token).then(fetchItems);
+          } else {
+            deleteItem(id, token).then(fetchItems);
+          }
+        });
       },
     });
+  };
+
+  const handleTypeSearchTerm = ({ target }) => {
+    setSearchTerm(target.value.length > 2 ? target.value : '');
   };
 
   const editForm = (record) => {
@@ -177,12 +195,20 @@ export const AdminItems = () => {
         <AutoComplete
           value={(currentUser || {}).label}
           options={publicUserOptions}
-          style={{ width: 300 }}
+          style={{ minWidth: 175 }}
           size="large"
           onClear={handleClearUser}
           onSelect={handleSelectUser}
           filterOption={handleFilterOptions}
           placeholder="Shopper or Donor"
+          allowClear
+        />
+
+        <Input
+          size="large"
+          style={{ minWidth: 150 }}
+          onChange={debounce(handleTypeSearchTerm, 600)}
+          placeholder="Item name / decription"
           allowClear
         />
 

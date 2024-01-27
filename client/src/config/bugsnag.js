@@ -1,6 +1,6 @@
-const env = require('./environment');
+import env from './environment';
 
-module.exports = {
+export default {
   apiKey:
     env === 'production'
       ? '38171f6c0c506918a19deac49c1a5a19'

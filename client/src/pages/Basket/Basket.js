@@ -16,15 +16,8 @@ import { getUser } from '../../services/user';
 import { sendAutoEmail, getDate, name } from '../../utils/helpers';
 
 export const Basket = () => {
-  const {
-    setBasket,
-    basket,
-    user,
-    token,
-    setUser,
-    basketTimer,
-    setBasketTimer,
-  } = useContext(AppContext);
+  const { setBasket, basket, user, token, setUser, setBasketTimer } =
+    useContext(AppContext);
   let history = useHistory();
   const { confirm } = Modal;
 
@@ -53,40 +46,13 @@ export const Basket = () => {
     ''
   );
 
-  const removeFromBasket = (itemId) => {
-    confirm({
-      title: `Are you sure you wish to remove from your basket?`,
-      className: 'modalStyle',
-      onOk() {
-        clearTimeout(basketTimer);
-        setBasket(
-          basket.filter((item) => {
-            if (item._id === itemId) {
-              updateItem(
-                item._id,
-                { inBasket: false, 'statusUpdateDates.inBasketDate': '' },
-                token
-              );
-            }
-            return item._id !== itemId;
-          })
-        );
-      },
-    });
-  };
-
   const basketList = () => {
     if (basket && basket.length) {
       return (
         <div>
           {basket.map((b) => {
             return (
-              <ItemCardBasket
-                key={b._id}
-                item={b}
-                actionText={'Remove'}
-                action={removeFromBasket}
-              />
+              <ItemCardBasket key={b._id} item={b} actionText={'Remove'} />
             );
           })}
         </div>

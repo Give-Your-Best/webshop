@@ -28,8 +28,7 @@ const createUser = async (data) => {
 const updateUser = async (id, updateData) => {
   try {
     const user = await User_.User.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -51,8 +50,7 @@ const updateDonor = async (id, updateData) => {
   }
   try {
     const user = await User_.Donor.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -68,8 +66,7 @@ const updateDonor = async (id, updateData) => {
 const updateShopper = async (id, updateData) => {
   try {
     const user = await User_.Shopper.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -85,8 +82,7 @@ const updateShopper = async (id, updateData) => {
 const updateAdmin = async (id, updateData) => {
   try {
     const user = await User_.Admin.findOneAndUpdate({ _id: id }, updateData, {
-      useFindAndModify: false,
-      returnDocument: 'after',
+      new: true,
     });
     if (user) {
       return { success: true, message: `User updated`, user: user };
@@ -101,9 +97,7 @@ const updateAdmin = async (id, updateData) => {
 
 const deleteUser = async (id) => {
   try {
-    const user = await User_.User.findByIdAndRemove(id, {
-      useFindAndModify: false,
-    });
+    const user = await User_.User.findByIdAndDelete(id);
     if (user) {
       return { success: true, message: 'User deleted' };
     } else {
@@ -248,6 +242,19 @@ const getUser = async (id) => {
   }
 };
 
+const getUsers = async (ids) => {
+  try {
+    const users = await User_.User.find({
+      _id: { $in: ids },
+    }).select('id kind email firstName lastName');
+
+    return users;
+  } catch (error) {
+    console.error(`Error in getUsers: ${error}`);
+    return { success: false, message: `Error in getUsers: ${error}` };
+  }
+};
+
 const getGYBDummyUser = async (name) => {
   try {
     const user = await User_.User.find({ firstName: name });
@@ -264,6 +271,7 @@ const getGYBDummyUser = async (name) => {
 module.exports = {
   createUser,
   getUser,
+  getUsers,
   getAllUsers,
   countAllUsers,
   listAllUsers,

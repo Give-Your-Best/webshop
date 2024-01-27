@@ -1,3 +1,4 @@
+import env from '../config/environment';
 import { sendMail } from '../services/mail';
 import { autoEmails } from '../utils/constants';
 import {
@@ -6,6 +7,16 @@ import {
   shopperTabs,
 } from '../components/organisms/Dashboard/Tabs/constants';
 import heic2any from 'heic2any';
+
+export const debounce = (func, timeout = 300) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+};
 
 export const downloadWorkbook = async (workbook) => {
   const uint8Array = await workbook.xlsx.writeBuffer();
@@ -307,7 +318,7 @@ export const convertHeic = async (fileList) => {
   return newList;
 };
 
-export const checkUnread = (type, userId, messages) => {
+export const checkUnread = (type, userId, messages = []) => {
   let unread = [];
   if (!messages.length) {
     return [0, []];
@@ -528,6 +539,10 @@ export const sendAutoEmail = async (
   items,
   deliveryAddress
 ) => {
+  if (env !== 'production') {
+    return;
+  }
+
   const subject = autoEmails.filter((e) => {
     return e.type === type;
   })[0].subject;
