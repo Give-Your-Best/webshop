@@ -159,7 +159,7 @@ export const AdminItems = () => {
   };
 
   const handleTypeSearchTerm = ({ target }) => {
-    setSearchTerm(target.value);
+    setSearchTerm(target.value.length > 2 ? target.value : '');
   };
 
   const editForm = (record) => {
@@ -195,7 +195,7 @@ export const AdminItems = () => {
         <AutoComplete
           value={(currentUser || {}).label}
           options={publicUserOptions}
-          style={{ width: 200 }}
+          style={{ minWidth: 175 }}
           size="large"
           onClear={handleClearUser}
           onSelect={handleSelectUser}
@@ -206,9 +206,10 @@ export const AdminItems = () => {
 
         <Input
           size="large"
+          style={{ minWidth: 150 }}
           onChange={debounce(handleTypeSearchTerm, 600)}
-          allowClear
           placeholder="Item name / decription"
+          allowClear
         />
 
         <Menu
