@@ -173,36 +173,32 @@ export const AdminMessages = () => {
   };
 
   const onMessage = React.useCallback(
-    (message) => {
-      const { data, event } = JSON.parse(message);
-
+    (data) => {
       console.log({ data });
 
-      if (event === 'NEW_MESSAGE') {
-        if (data.type === 'shopper') {
-          (async () => {
-            const messages = await getMessages('shopper', 'all', token);
-            if (!mountedRef.current) return null;
-            setShoppersMessages(messages);
-          })();
-        }
+      if (data.type === 'shopper') {
+        (async () => {
+          const messages = await getMessages('shopper', 'all', token);
+          if (!mountedRef.current) return null;
+          setShoppersMessages(messages);
+        })();
+      }
 
-        if (data.type === 'donor') {
-          (async () => {
-            const messages = await getMessages('donor', 'all', token);
-            if (!mountedRef.current) return null;
-            setDonorsMessages(messages);
-          })();
-        }
+      if (data.type === 'donor') {
+        (async () => {
+          const messages = await getMessages('donor', 'all', token);
+          if (!mountedRef.current) return null;
+          setDonorsMessages(messages);
+        })();
       }
     },
     [token]
   );
 
   React.useEffect(() => {
-    socket.on(onMessage);
+    socket.bind('NEW_MESSAGE', onMessage);
 
-    return () => socket.off(onMessage);
+    return () => socket.unbind('NEW_MESSAGE', onMessage);
   }, [socket, onMessage]);
 
   useEffect(() => {

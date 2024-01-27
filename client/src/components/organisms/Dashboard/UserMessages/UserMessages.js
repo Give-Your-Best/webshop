@@ -146,35 +146,35 @@ export const UserMessages = () => {
   };
 
   const onMessage = React.useCallback(
-    (message) => {
-      const { data, event } = JSON.parse(message);
+    (data) => {
+      // const { data, event } = JSON.parse(message);
 
       console.log({ data });
 
-      if (event === 'NEW_MESSAGE') {
-        (async () => {
-          const messages = await getMessages('shopper', user.id, token);
-          if (!mountedRef.current) return null;
-          setMessages(messages);
-          // blahblahRef.current.scrollTop = blahblahRef.current.scrollHeight;
-          // blahblahRef.current.lastChild.scrollIntoView({
-          //   behavior: 'smooth',
-          //   block: 'end',
-          // });
-          blahblahRef.current.scroll({
-            top: blahblahRef.current.scrollHeight,
-            behavior: 'smooth',
-          });
-        })();
-      }
+      // if (event === 'NEW_MESSAGE') {
+      (async () => {
+        const messages = await getMessages('shopper', user.id, token);
+        if (!mountedRef.current) return null;
+        setMessages(messages);
+        // blahblahRef.current.scrollTop = blahblahRef.current.scrollHeight;
+        // blahblahRef.current.lastChild.scrollIntoView({
+        //   behavior: 'smooth',
+        //   block: 'end',
+        // });
+        blahblahRef.current.scroll({
+          top: blahblahRef.current.scrollHeight,
+          behavior: 'smooth',
+        });
+      })();
+      // }
     },
     [token, user.id]
   );
 
   React.useEffect(() => {
-    socket.on(onMessage);
+    socket.bind('NEW_MESSAGE', onMessage);
 
-    return () => socket.off(onMessage);
+    return () => socket.unbind('NEW_MESSAGE', onMessage);
   }, [socket, onMessage]);
 
   useEffect(() => {

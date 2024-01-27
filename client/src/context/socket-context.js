@@ -1,19 +1,25 @@
 import * as React from 'react';
+import Pusher from 'pusher-js';
 import { AppContext } from './app-context';
-import handler from '../services/websocket';
+import pusherConfig from '../config/pusher';
+
+const { appKey, cluster } = pusherConfig;
+
+const pusher = new Pusher(appKey, { cluster });
 
 export const SocketContext = React.createContext(null);
 
 export const SocketProvider = (props) => {
   const { user } = React.useContext(AppContext);
 
-  // TODO - will need some logic here for setting the socket uri depending on
-  // current environment etc...s
+  console.log({ user });
 
-  const socket = handler(user ? 'ws://localhost:8000' : undefined);
+  const channel = pusher.subscribe(
+    `notify@${user.type === 'admin' ? 'admin' : user.id}`
+  );
 
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider value={channel}>
       {props.children}
     </SocketContext.Provider>
   );

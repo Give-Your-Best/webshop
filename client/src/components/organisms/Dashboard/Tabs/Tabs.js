@@ -25,7 +25,7 @@ export const Tabs = ({ itemId }) => {
   const { token, user } = useContext(AppContext);
   const { setAllTags, setAllUsers, setCurrentUser } =
     useContext(AccountContext);
-  const socket = useContext(SocketContext);
+  const channel = useContext(SocketContext);
 
   const [tabIndex, setTabIndex] = useState(0);
   const [newMessages, setNewMessages] = useState({});
@@ -51,27 +51,23 @@ export const Tabs = ({ itemId }) => {
   var tabs = tabList(user);
 
   React.useEffect(() => {
-    const onMessage = (message) => {
-      const { event, data } = JSON.parse(message);
+    const onMessage = (data) => {
+      console.log(data);
 
-      if (event !== 'NEW_MESSAGE') {
-        return;
-      }
+      // if (user.id === data.sender) {
+      //   return;
+      // }
 
-      if (user.id === data.sender) {
-        return;
-      }
-
-      setNewMessages((state) => ({
-        ...state,
-        [data.threadId]: (state[data.threadId] || 0) + 1,
-      }));
+      // setNewMessages((state) => ({
+      //   ...state,
+      //   [data.threadId]: (state[data.threadId] || 0) + 1,
+      // }));
     };
 
-    socket.on(onMessage);
+    channel.bind('NEW_MESSAGE', onMessage);
 
-    return () => socket.off(onMessage);
-  }, [newMessages, socket, user.id]);
+    // return () => channel.off(onMessage);
+  }, [newMessages, channel, user.id]);
 
   console.log({ newMessages });
 
