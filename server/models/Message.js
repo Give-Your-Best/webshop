@@ -117,14 +117,14 @@ messageSchema.statics.upsertThread = async function (data) {
   const thread = await this.findOneAndUpdate(
     { threadId },
     { ...rest, $push: { messages } },
-    { new: true, upsert: true, useFindAndModify: false }
-  );
-
-  return thread
+    { new: true, upsert: true }
+  )
     .populate('user')
     .populate('messages.sender')
     .populate('messages.recipient')
-    .execPopulate();
+    .exec();
+
+  return thread;
 };
 
 //export

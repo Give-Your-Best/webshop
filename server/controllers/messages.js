@@ -2,7 +2,7 @@ require('dotenv').config();
 const Message = require('../models/Message');
 const MessagesService = require('../services/messages');
 
-const sockets = require('../services/websocket');
+const pusher = require('../utils/pusher');
 
 const createMessage = async (req, res) => {
   if (!req.body.messages && !req.body.message) {
@@ -13,17 +13,17 @@ const createMessage = async (req, res) => {
     const thread = await Message.upsertThread(req.body);
     const message = [...thread.messages].pop();
 
-    await sockets.push(
-      thread.user._id,
-      JSON.stringify({
-        event: 'NEW_MESSAGE',
-        data: {
-          threadId: thread.threadId,
-          sender: message.sender.id,
-          user: thread.user.id,
-          type: thread.type,
-        },
-      })
+    console.log('REQ.SOC', req.socket_id);
+
+    pusher.trigger(
+      [`notify@${thread.user._id}`, 'notify@admin'],
+      'NEW_MESSAGE',
+      {
+        threadId: thread.threadId,
+        sender: message.sender.id,
+        user: thread.user.id,
+        type: thread.type,
+      }
     );
 
     return res.status(200).send({

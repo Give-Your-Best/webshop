@@ -49,6 +49,29 @@ const markMessageAsViewed = async (id, messageIds) => {
   }
 };
 
+const upsertThread = async function (data) {
+  try {
+    const threadId = data.threadId || new BSON.ObjectId();
+
+    const { messages, ...rest } = data;
+
+    const thread = await Message.findOneAndUpdate(
+      { threadId },
+      { ...rest, $push: { messages } },
+      { new: true, upsert: true }
+    )
+      .populate('user')
+      .populate('messages.sender')
+      .populate('messages.recipient')
+      .exec();
+
+    return thread;
+  } catch (e) {
+    // TODO
+    console.log(e);
+  }
+};
+
 const createMessage = async (data) => {
   if (!data.threadId || data.threadId === '') {
     //if no thread id then add a new one
@@ -97,4 +120,5 @@ module.exports = {
   getMessages,
   createMessage,
   markMessageAsViewed,
+  upsertThread,
 };
