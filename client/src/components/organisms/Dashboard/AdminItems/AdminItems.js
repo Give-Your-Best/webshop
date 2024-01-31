@@ -159,7 +159,10 @@ export const AdminItems = () => {
   };
 
   const handleTypeSearchTerm = ({ target }) => {
-    setSearchTerm(target.value.length > 2 ? target.value : '');
+    // Dispatch the search term with any number of characters as we need to
+    // accommodate searching by numbers as well as words..
+    setSearchTerm(target.value);
+    setCurrentPage(1);
   };
 
   const editForm = (record) => {
