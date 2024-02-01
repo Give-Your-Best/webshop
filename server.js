@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const sockets = require('./server/services/websocket');
-
 const Bugsnag = require('./server/utils/bugsnag');
 
 const app = express();
@@ -46,9 +44,4 @@ if (['production', 'staging'].includes(process.env.NODE_ENV)) {
 
 app.use(errorHandler);
 
-const server = app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
-
-// Register the websocket server on http upgrade events
-server.on('upgrade', sockets.init);
+app.listen(port, () => console.log(`Listening on port ${port}`));
