@@ -376,7 +376,7 @@ const getAdminItems = async ({
       const defaultStatus = [
         'in-shop',
         'shopped',
-        'shipped-by-gyb',
+        'shipped-to-gyb',
         'received-by-gyb',
         'shipped-to-shopper',
       ];
