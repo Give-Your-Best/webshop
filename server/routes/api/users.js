@@ -11,6 +11,7 @@ const {
   listAllUsers,
   listAllUsersPaginated,
 } = require('../../services/users');
+const { getThreadSummaries } = require('../../services/messages');
 
 // get users endpoint api/users
 router.get('/', async (req, res) => {
@@ -56,12 +57,13 @@ router.get('/:id', async (req, res) => {
   res.json(user);
 });
 
-// TODO
+// Currently this covers only message threads but other notifications, actions,
+// approvals etc. are to follow - response will depend on user type...
 router.get('/:id/inbox', async (req, res) => {
   const id = req.params.id;
   const user = await getUser(id);
-  const inbox = await user.getInboxSummary();
-  res.json(inbox);
+  const messages = await getThreadSummaries(user);
+  res.json({ messages });
 });
 
 // get user endoint api/users/:id

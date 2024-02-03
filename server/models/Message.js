@@ -48,7 +48,7 @@ messageSchema.statics.countUnreadMessages = async function (user) {
   };
 
   const $project = {
-    threadId: '$_id',
+    threadId: '$threadId',
     userType: '$type',
     messages: { $size: '$messages' },
     unviewed: {
@@ -71,6 +71,8 @@ messageSchema.statics.countUnreadMessages = async function (user) {
       $project,
     },
   ]);
+
+  console.log(data);
 
   return data;
 };
