@@ -12,11 +12,9 @@ const createMessage = async (req, res) => {
     const thread = await MessagesService.upsertThread(req.body);
     const message = [...thread.messages].pop();
 
-    console.log('REQ.SOC', req.socket_id);
-
     pusher.trigger(
       [`notify@${thread.user._id}`, 'notify@admin'],
-      'NEW_MESSAGE',
+      'new-message',
       {
         threadId: thread.threadId,
         sender: message.sender.id,
