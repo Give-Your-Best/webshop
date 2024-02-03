@@ -8,6 +8,16 @@ import {
 } from '../components/organisms/Dashboard/Tabs/constants';
 import heic2any from 'heic2any';
 
+export const debounce = (func, timeout = 300) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+};
+
 export const downloadWorkbook = async (workbook) => {
   const uint8Array = await workbook.xlsx.writeBuffer();
   const blob = new Blob([uint8Array], { type: 'application/octet-binary' });
