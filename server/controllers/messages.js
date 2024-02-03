@@ -1,5 +1,4 @@
 require('dotenv').config();
-const Message = require('../models/Message');
 const MessagesService = require('../services/messages');
 
 const pusher = require('../utils/pusher');
@@ -10,7 +9,7 @@ const createMessage = async (req, res) => {
   }
 
   try {
-    const thread = await Message.upsertThread(req.body);
+    const thread = await MessagesService.upsertThread(req.body);
     const message = [...thread.messages].pop();
 
     console.log('REQ.SOC', req.socket_id);
@@ -38,8 +37,6 @@ const createMessage = async (req, res) => {
   }
 };
 
-// TODO - need to check that this is protected - is it possible for anyone
-// logged-in to access messages of type x?
 const getMessages = async (req, res) => {
   if (!req.query.id && !req.query.type) {
     return res.status(400).send({ message: 'Service error: invalid request' });
@@ -50,8 +47,8 @@ const getMessages = async (req, res) => {
 
     const threads =
       user === 'all'
-        ? await Message.getAllOfType(type)
-        : await Message.getAllForUser(user);
+        ? await MessagesService.getAdminThreads(type)
+        : await MessagesService.getUserThreads(user);
 
     res.json(threads);
   } catch (err) {
