@@ -32,6 +32,7 @@ const getThreadSummaries = async (user) => {
   };
 
   const $project = {
+    _id: 0,
     threadId: '$threadId',
     userType: '$type',
     messages: { $size: '$messages' },
