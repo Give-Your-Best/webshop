@@ -196,9 +196,9 @@ export const AdminMessages = () => {
   );
 
   React.useEffect(() => {
-    socket.bind('NEW_MESSAGE', onMessage);
+    socket.bind('new-message', onMessage);
 
-    return () => socket.unbind('NEW_MESSAGE', onMessage);
+    return () => socket.unbind('new-message', onMessage);
   }, [socket, onMessage]);
 
   useEffect(() => {

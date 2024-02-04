@@ -83,7 +83,7 @@ export const Tabs = ({ itemId }) => {
   // Bind the message event listener...
   useEffect(() => {
     channel.bind('new-message', onMessage);
-    return () => channel.unbind(onMessage);
+    return () => channel.unbind('new-message', onMessage);
   }, [channel, onMessage]);
 
   var tabs = tabList(user);

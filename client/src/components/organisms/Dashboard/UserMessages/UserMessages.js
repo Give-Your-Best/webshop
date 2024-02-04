@@ -27,7 +27,7 @@ import { checkUnread, name, tabList } from '../../../../utils/helpers';
 
 export const UserMessages = () => {
   const { token, user } = useContext(AppContext);
-  const socket = useContext(SocketContext); // ('ws://localhost:8000');
+  const channel = useContext(SocketContext);
   const type = user.type;
   const mountedRef = useRef(true);
   const blahblahRef = useRef(null);
@@ -151,10 +151,11 @@ export const UserMessages = () => {
 
       console.log({ data });
 
-      // if (event === 'NEW_MESSAGE') {
+      if (!mountedRef.current) return;
+
       (async () => {
         const messages = await getMessages('shopper', user.id, token);
-        if (!mountedRef.current) return null;
+
         setMessages(messages);
         // blahblahRef.current.scrollTop = blahblahRef.current.scrollHeight;
         // blahblahRef.current.lastChild.scrollIntoView({
@@ -172,10 +173,9 @@ export const UserMessages = () => {
   );
 
   React.useEffect(() => {
-    socket.bind('NEW_MESSAGE', onMessage);
-
-    return () => socket.unbind('NEW_MESSAGE', onMessage);
-  }, [socket, onMessage]);
+    channel.bind('new-message', onMessage);
+    return () => channel.unbind('new-message', onMessage);
+  }, [channel, onMessage]);
 
   useEffect(() => {
     var tabs = tabList(user);
@@ -185,26 +185,20 @@ export const UserMessages = () => {
       }
     });
 
-    const fetchMessages = async () => {
-      const messages = await getMessages('shopper', user.id, token);
-      if (!mountedRef.current) return null;
-      setMessages(messages);
+    const fetchMessages = () => {
+      getMessages('shopper', user.id, token).then(setMessages);
     };
 
-    const getEmailId = async () => {
-      const settingId = await getGYBDummyUser(
-        'GYBAdminAccountForMessages',
-        token
-      );
-      if (!mountedRef.current) return null;
-      setEmailId(settingId);
+    const getEmailId = () => {
+      getGYBDummyUser('GYBAdminAccountForMessages', token).then(setEmailId);
     };
 
-    fetchMessages();
-    getEmailId();
+    if (mountedRef.current) {
+      fetchMessages();
+      getEmailId();
+    }
 
     return () => {
-      // cleanup
       mountedRef.current = false;
     };
   }, [token, user]);
