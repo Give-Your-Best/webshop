@@ -6,6 +6,7 @@ export const AccountProvider = ({ children }) => {
   const [allTags, setAllTags] = React.useState(null);
   const [allUsers, setAllUsers] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState(null);
+  const [inboxSummary, setInboxSummary] = React.useState({});
 
   const value = React.useMemo(
     () => ({
@@ -15,8 +16,10 @@ export const AccountProvider = ({ children }) => {
       setAllUsers,
       currentUser,
       setCurrentUser,
+      inboxSummary,
+      setInboxSummary,
     }),
-    [allTags, allUsers, currentUser]
+    [allTags, allUsers, currentUser, inboxSummary]
   );
 
   return (

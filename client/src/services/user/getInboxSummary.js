@@ -6,7 +6,6 @@ export const getInboxSummary = async (id, token) => {
     },
   });
   const body = await response.json();
-  // console.log('asdasd', { body });
   if (response.status !== 200) {
     throw Error(body.message);
   }

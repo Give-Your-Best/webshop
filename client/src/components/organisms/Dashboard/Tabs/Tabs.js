@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { AppContext } from '../../../../context/app-context';
 import { SocketContext } from '../../../../context/socket-context';
 import { AccountContext } from '../../../../context/account-context';
@@ -23,53 +23,70 @@ import { getUser, getInboxSummary, listUsers } from '../../../../services/user';
 
 export const Tabs = ({ itemId }) => {
   const { token, user } = useContext(AppContext);
-  const { setAllTags, setAllUsers, setCurrentUser } =
-    useContext(AccountContext);
+  const {
+    setAllTags,
+    setAllUsers,
+    setCurrentUser,
+    inboxSummary,
+    setInboxSummary,
+  } = useContext(AccountContext);
   const channel = useContext(SocketContext);
 
   const [tabIndex, setTabIndex] = useState(0);
-  const [newMessages, setNewMessages] = useState({});
 
   const totalUnread = {
-    [`${user.type}Messages`]: Object.values(newMessages).reduce(
-      (a, b) => a + b,
+    [`${user.type}Messages`]: Object.values(inboxSummary).reduce(
+      (a, b) => a + b.unviewed,
       0
     ),
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     getInboxSummary(user.id, token).then(({ messages }) => {
       const data = messages.reduce((acc, cur) => {
-        acc[cur.threadId] = cur.unviewed;
+        acc[cur.threadId] = cur;
         return acc;
       }, {});
 
-      setNewMessages(data);
+      setInboxSummary(data);
     });
-  }, [token, user.id]);
+  }, [setInboxSummary, token, user.id]);
+
+  const onMessage = useCallback(
+    (data) => {
+      const updateBlah = ({ threadId }, state) => {
+        const update = state[threadId] || {
+          threadId,
+          userType: data.type,
+          messages: 1,
+          unviewed: 0,
+        };
+
+        return {
+          ...update,
+          unviewed: (update.unviewed || 0) + 1,
+        };
+      };
+
+      if (user.id === data.sender) {
+        return;
+      }
+
+      setInboxSummary((state) => ({
+        ...state,
+        [data.threadId]: updateBlah(data, state),
+      }));
+    },
+    [setInboxSummary, user.id]
+  );
+
+  // Bind the message event listener...
+  useEffect(() => {
+    channel.bind('new-message', onMessage);
+    return () => channel.unbind(onMessage);
+  }, [channel, onMessage]);
 
   var tabs = tabList(user);
-
-  React.useEffect(() => {
-    const onMessage = (data) => {
-      console.log(data);
-
-      // if (user.id === data.sender) {
-      //   return;
-      // }
-
-      // setNewMessages((state) => ({
-      //   ...state,
-      //   [data.threadId]: (state[data.threadId] || 0) + 1,
-      // }));
-    };
-
-    channel.bind('NEW_MESSAGE', onMessage);
-
-    // return () => channel.off(onMessage);
-  }, [newMessages, channel, user.id]);
-
-  console.log({ newMessages });
 
   useEffect(() => {
     tabs.forEach((t, index) => {
@@ -101,18 +118,18 @@ export const Tabs = ({ itemId }) => {
         .then(buildTransformUsersHash)
         .then(setAllUsers)
         .catch(console.warn);
-  }, [setAllUsers, token, user]);
+  }, [setAllUsers, token, user.type]);
 
   // Set the full current user detail
   useEffect(
     () => getUser(user.id, token).then(setCurrentUser).catch(console.warn),
-    [setCurrentUser, token, user]
+    [setCurrentUser, token, user.id]
   );
 
   // Set the current tags - not sure how useful this is tbh...
   useEffect(
     () => getTags(token).then(setAllTags).catch(console.warn),
-    [setAllTags, token, user]
+    [setAllTags, token, user.id]
   );
 
   return (
