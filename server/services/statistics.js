@@ -60,13 +60,36 @@ const getReportData = async (from, to) => {
 
       //general item counts
       const items = await Item.find({
-        createdAt: { $gt: fromDate, $lt: toDate },
+        $and: [
+          {
+            $or: [{ batchId: null }, { isTemplateBatchItem: false }],
+          },
+          {
+            createdAt: { $gt: fromDate, $lt: toDate },
+          },
+        ],
       });
       const itemsShopped = await Item.find({
         'statusUpdateDates.shoppedDate': { $gt: fromDate, $lt: toDate },
         status: { $in: statuses },
       });
-      reportData['itemsCount'] = items.length;
+      // count batch items' quantities
+      const batchItems = await BatchItem.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: fromDate, $lt: toDate },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalQuantity: { $sum: '$quantity' },
+          },
+        },
+      ]).exec();
+
+      reportData['itemsCount'] =
+        items.length + batchItems?.[0]?.totalQuantity || 0;
       reportData['itemsShopped'] = itemsShopped.length;
 
       // grouped item data for each type
@@ -209,7 +232,9 @@ const getReportData = async (from, to) => {
       ).length;
 
       //general item counts
-      const items = await Item.find({});
+      const items = await Item.find({
+        $or: [{ batchId: null }, { isTemplateBatchItem: false }],
+      });
       const itemsShopped = await Item.find({
         status: {
           $in: [
@@ -221,7 +246,17 @@ const getReportData = async (from, to) => {
           ],
         },
       });
-      reportData['itemsCount'] = items.length;
+      // count all batch items' quantities
+      const batchItems = await BatchItem.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalQuantity: { $sum: '$quantity' },
+          },
+        },
+      ]).exec();
+      reportData['itemsCount'] =
+        items.length + batchItems?.[0]?.totalQuantity || 0;
       reportData['itemsShopped'] = itemsShopped.length;
       reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
@@ -236,7 +271,12 @@ const getReportData = async (from, to) => {
 
       for (const g of groupTypes) {
         let group = g !== 'tags' ? '$' + g : '$tag.name';
-        let d = await Item.aggregate([
+        let pipeline = [
+          {
+            $match: {
+              $or: [{ batchId: null }, { isTemplateBatchItem: false }],
+            },
+          },
           {
             $unwind: '$' + g,
           },
@@ -314,75 +354,192 @@ const getReportData = async (from, to) => {
           {
             $sort: { _id: 1 },
           },
-        ]).collation({ locale: 'en_US', numericOrdering: true });
+        ];
+
+        if (g === 'tags') {
+          pipeline.splice(pipeline.length - 1, 0, {
+            $project: {
+              _id: { $arrayElemAt: ['$_id', 0] },
+              total: 1,
+              shopped: 1,
+              available: 1,
+              shopperUnique: 1,
+            },
+          });
+        }
+
+        let d = await Item.aggregate(pipeline).collation({
+          locale: 'en_US',
+          numericOrdering: true,
+        });
+
         reportData[g] = d;
       }
 
-      // work in progress
-      // const d = await BatchItem.aggregate([
-      //   {
-      //     $project: {
-      //       sizes: {
-      //         $concatArrays: [
-      //           { $objectToArray: '$clothingSizes' },
-      //           { $objectToArray: '$shoeSizes' },
-      //         ],
-      //       },
-      //     },
-      //   },
-      //   {
-      //     $unwind: '$sizes',
-      //   },
-      //   {
-      //     $group: {
-      //       _id: {
-      //         $replaceOne: { input: '$sizes.k', find: '_', replacement: '.' },
-      //       },
-      //       sum: { $sum: '$sizes.v' },
-      //       count: { $sum: 1 },
-      //     },
-      //   },
-      //   {
-      //     $sort: { _id: 1 },
-      //   },
-      // ]);
-      // reportData['totalBatchQuantity'] = d;
-      // console.log('reportData: ', reportData);
-      // console.log('d: ', d);
+      console.log('reportData: ', reportData);
 
-      // const totalBatchQuantity = d.map((item) => ({
-      //   _id: item._id,
-      //   sum: item.sum,
-      //   count: item.count,
-      // }));
+      let batchResults = {};
 
-      // // Merge totalBatchQuantity with existing data in reportData
-      // const mergeBatchSizes = (reportData, totalBatchQuantity, field) => {
-      //   totalBatchQuantity.forEach((item) => {
-      //     const existingItem = reportData[field].find(
-      //       (existing) => existing._id === item._id
-      //     );
-      //     if (existingItem) {
-      //       existingItem.total += item.sum;
-      //       existingItem.available += item.sum; // Assuming available should be updated as well
-      //     } else {
-      //       reportData[field].push({
-      //         _id: item._id,
-      //         total: item.sum,
-      //         shopped: 0,
-      //         available: item.sum,
-      //         shopperUnique: [],
-      //       });
-      //     }
-      //   });
-      // };
+      // Aggregate batch item data for [category] and [subCategory]
+      const batchGroupTypes = [
+        'category',
+        'subCategory',
+        'clothingSizes',
+        'shoeSizes',
+        'tags',
+      ];
+      for (const groupType of batchGroupTypes) {
+        let pipeline = [];
+        if (groupType === 'category' || groupType === 'subCategory') {
+          pipeline = [
+            {
+              $lookup: {
+                from: 'items',
+                localField: 'templateItem',
+                foreignField: '_id',
+                as: 'templateItem',
+              },
+            },
+            {
+              $unwind: '$templateItem',
+            },
+            {
+              $unwind: '$templateItem.' + groupType,
+            },
+            {
+              $group: {
+                _id: '$templateItem.' + groupType,
+                total: {
+                  $sum: '$quantity',
+                },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ];
+        } else if (groupType === 'tags') {
+          pipeline = [
+            {
+              $lookup: {
+                from: 'items',
+                localField: 'templateItem',
+                foreignField: '_id',
+                as: 'templateItem',
+              },
+            },
+            {
+              $unwind: '$templateItem',
+            },
+            {
+              $unwind: '$templateItem.' + groupType,
+            },
+            {
+              $lookup: {
+                from: 'tags',
+                localField: 'templateItem.tags',
+                foreignField: '_id',
+                as: 'tag',
+              },
+            },
+            {
+              $unwind: '$tag',
+            },
+            {
+              $group: {
+                _id: '$tag.name',
+                total: {
+                  $sum: '$quantity',
+                },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ];
+        } else {
+          pipeline = [
+            {
+              $project: {
+                sizes: { $objectToArray: `$${groupType}` },
+              },
+            },
+            {
+              $unwind: '$sizes',
+            },
+            {
+              $group: {
+                _id: {
+                  $replaceAll: {
+                    input: '$sizes.k',
+                    find: '_',
+                    replacement: '.',
+                  },
+                },
+                total: {
+                  $sum: '$sizes.v',
+                },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ];
+        }
 
-      // mergeBatchSizes(reportData, totalBatchQuantity, 'clothingSize');
-      // mergeBatchSizes(reportData, totalBatchQuantity, 'shoeSize');
+        batchResults[groupType] = await BatchItem.aggregate(pipeline).collation(
+          {
+            locale: 'en_US',
+            numericOrdering: true,
+          }
+        );
+      }
+      console.log('batchResults: ', batchResults);
 
-      // console.log('reportData:', reportData);
+      // Create a mapping object to map the plural keys in batchResults to the singular keys in reportData
+      const keyMapping = {
+        category: 'category',
+        subCategory: 'subCategory',
+        clothingSizes: 'clothingSize',
+        shoeSizes: 'shoeSize',
+        tags: 'tags',
+      };
+
+      // Iterate over the keys in batchResults
+      for (const key in batchResults) {
+        // Get the corresponding key in reportData
+        const reportKey = keyMapping[key];
+
+        // Iterate over the items in the current batchResults array
+        for (const item of batchResults[key]) {
+          // Check if an item with the same _id exists in the reportData array
+          let reportItem = reportData[reportKey].find(
+            (i) => i._id === item._id
+          );
+
+          if (reportItem) {
+            // If it does, add the total from the batchResults item to the total and available of the reportData item
+            reportItem.total += item.total;
+            reportItem.available += item.total;
+          } else {
+            // If it doesn't, create a new object and push it to the reportData array
+            reportData[reportKey].push({
+              _id: item._id,
+              total: item.total,
+              shopped: 0,
+              available: item.total,
+              shopperUnique: [
+                {
+                  shopperFirstName: '',
+                  shopperLastName: '',
+                },
+              ],
+            });
+          }
+        }
+      }
+      console.log(JSON.stringify(reportData, null, 2));
     }
-
     return { success: true, data: reportData };
   } catch (error) {
     console.error(`Error in getting report data: ${error}`);
@@ -417,18 +574,18 @@ const getAllStatistics = async () => {
         $gte: today,
       },
       approvedStatus: 'approved',
-      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
+      $or: [{ batchId: null }, { isTemplateBatchItem: false }],
     });
     statistics['donationsToday'] = await Item.countDocuments({
       createdAt: {
         $gte: today,
       },
-      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
+      $or: [{ batchId: null }, { isTemplateBatchItem: false }],
     });
     statistics['itemsInShop'] = await Item.countDocuments({
       status: 'in-shop',
       approvedStatus: 'approved',
-      $or: [{ isTemplateBatchItem: { $ne: true } }, { batchId: { $eq: null } }],
+      $or: [{ batchId: null }, { isTemplateBatchItem: false }],
     });
 
     // add the batch counts to the above statistics
@@ -450,12 +607,7 @@ const getAllStatistics = async () => {
       batchDonationsToday?.[0]?.totalQuantity || 0;
 
     // bath items in shop today
-    const batchInShopToday = await BatchItem.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: today },
-        },
-      },
+    const batchItemsInShop = await BatchItem.aggregate([
       {
         $group: {
           _id: null,
@@ -463,7 +615,7 @@ const getAllStatistics = async () => {
         },
       },
     ]).exec();
-    statistics['itemsInShop'] += batchInShopToday?.[0]?.totalQuantity || 0;
+    statistics['itemsInShop'] += batchItemsInShop?.[0]?.totalQuantity || 0;
 
     const donorData = await User_.Donor.aggregate([
       {
@@ -540,10 +692,7 @@ const getAllStatistics = async () => {
     const itemsDonatedData = await Item.aggregate([
       {
         $match: {
-          $or: [
-            { isTemplateBatchItem: { $ne: true } },
-            { batchId: { $eq: null } },
-          ],
+          $or: [{ batchId: null }, { isTemplateBatchItem: false }],
         },
       },
       {
@@ -560,8 +709,6 @@ const getAllStatistics = async () => {
         },
       },
     ]);
-
-    console.log('itemsDonatedData: ', itemsDonatedData);
 
     const batchItemsDonatedData = await BatchItem.aggregate([
       {
@@ -616,10 +763,7 @@ const getAllStatistics = async () => {
     const itemsShoppedData = await Item.aggregate([
       {
         $match: {
-          $or: [
-            { isTemplateBatchItem: { $ne: true } },
-            { batchId: { $eq: null } },
-          ],
+          $or: [{ batchId: null }, { isTemplateBatchItem: false }],
         },
       },
       {
