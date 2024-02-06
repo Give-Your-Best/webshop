@@ -150,9 +150,13 @@ const resetBasketItems = async (basket, token) => {
 
 const sortQuantities = (formValues) => {
   const fieldName =
-    formValues.shoeSizes.length > 0 ? 'shoeSizes' : 'clothingSizes';
+    Object.keys(formValues.shoeSizes).length > 0
+      ? 'shoeSizes'
+      : 'clothingSizes';
   const sizeOrder =
-    formValues.shoeSizes.length > 0 ? shoeSizeOptions : clothingSizeOptions;
+    Object.keys(formValues.shoeSizes).length > 0
+      ? shoeSizeOptions
+      : clothingSizeOptions;
   const quantities = formValues[fieldName];
   const keyValueArray = Object.entries(quantities);
   keyValueArray.sort(
@@ -163,7 +167,8 @@ const sortQuantities = (formValues) => {
 };
 
 const calculateTotalQuantity = (values) => {
-  const fieldName = values.shoeSizes.length > 0 ? 'shoeSizes' : 'clothingSizes';
+  const fieldName =
+    Object.keys(values.shoeSizes).length > 0 ? 'shoeSizes' : 'clothingSizes';
   let totalQuantity = 0;
 
   const sizes = values[fieldName];
