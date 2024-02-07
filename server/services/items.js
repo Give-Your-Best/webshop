@@ -366,6 +366,7 @@ const getAdminItems = async ({
   category = undefined,
   status = undefined,
   sort = undefined,
+  search = undefined,
 }) => {
   const lim = parseInt(limit);
   const pge = parseInt(page);
@@ -378,7 +379,7 @@ const getAdminItems = async ({
       const defaultStatus = [
         'in-shop',
         'shopped',
-        'shipped-by-gyb',
+        'shipped-to-gyb',
         'received-by-gyb',
         'shipped-to-shopper',
       ];
@@ -410,6 +411,22 @@ const getAdminItems = async ({
       if (category) {
         conditions.$or = category.split(',').map((c) => ({ category: c }));
       }
+    }
+
+    // Apply any search terms on the item names and descriptions
+    if (search) {
+      conditions.$and = conditions.$and || [];
+
+      conditions.$and.push({
+        $or: ['name', 'description'].map((key) => ({
+          $and: search.split(',').map((t) => ({
+            [key]: {
+              $regex: `${t}`,
+              $options: 'i',
+            },
+          })),
+        })),
+      });
     }
 
     // Apply the donor or shopper id if any
