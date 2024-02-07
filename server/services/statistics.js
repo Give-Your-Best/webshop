@@ -2,6 +2,351 @@ const Item = require('../models/Item');
 const BatchItem = require('../models/BatchItem');
 const User_ = require('../models/User');
 
+async function aggregateBatchItemGroupData(fromDate, toDate, batchResults) {
+  // Aggregate batch item data
+  const batchGroupTypes = [
+    'category',
+    'subCategory',
+    'clothingSizes',
+    'shoeSizes',
+    'tags',
+  ];
+
+  for (const groupType of batchGroupTypes) {
+    let pipeline = [];
+
+    // add the date range condition to the pipeline only if fromDate and toDate are provided
+    if (fromDate && toDate) {
+      pipeline.push({
+        $match: {
+          createdAt: {
+            $gte: fromDate,
+            $lte: toDate,
+          },
+        },
+      });
+    }
+
+    // Define the group stage
+    let groupStage = {
+      $group: {
+        _id: null, // This will be updated later
+        total: {
+          $sum: '$quantity',
+        },
+      },
+    };
+
+    // add the available field to the groupStage only if fromDate and toDate are not provided
+    if (!fromDate && !toDate) {
+      groupStage.$group.available = {
+        $sum: {
+          $cond: [
+            {
+              $and: [
+                { $eq: ['$approvedStatus', 'approved'] },
+                { $eq: ['$status', 'in-shop'] },
+              ],
+            },
+            1,
+            0,
+          ],
+        },
+      };
+    }
+
+    if (groupType === 'category' || groupType === 'subCategory') {
+      groupStage.$group._id = '$templateItem.' + groupType;
+
+      pipeline.push(
+        {
+          $lookup: {
+            from: 'items',
+            localField: 'templateItem',
+            foreignField: '_id',
+            as: 'templateItem',
+          },
+        },
+        {
+          $unwind: '$templateItem',
+        },
+        {
+          $unwind: '$templateItem.' + groupType,
+        },
+        groupStage,
+        {
+          $sort: { _id: 1 },
+        }
+      );
+    } else if (groupType === 'tags') {
+      groupStage.$group._id = '$tag.name';
+
+      pipeline.push(
+        {
+          $lookup: {
+            from: 'items',
+            localField: 'templateItem',
+            foreignField: '_id',
+            as: 'templateItem',
+          },
+        },
+        {
+          $unwind: '$templateItem',
+        },
+        {
+          $unwind: '$templateItem.' + groupType,
+        },
+        {
+          $lookup: {
+            from: 'tags',
+            localField: 'templateItem.tags',
+            foreignField: '_id',
+            as: 'tag',
+          },
+        },
+        {
+          $unwind: '$tag',
+        },
+        groupStage,
+        {
+          $sort: { _id: 1 },
+        }
+      );
+    } else {
+      groupStage.$group._id = {
+        $replaceAll: {
+          input: '$sizes.k',
+          find: '_',
+          replacement: '.',
+        },
+      };
+
+      groupStage.$group.total = {
+        $sum: '$sizes.v',
+      };
+
+      pipeline.push(
+        {
+          $project: {
+            sizes: { $objectToArray: `$${groupType}` },
+          },
+        },
+        {
+          $unwind: '$sizes',
+        },
+        groupStage,
+        {
+          $sort: { _id: 1 },
+        }
+      );
+    }
+
+    batchResults[groupType] = await BatchItem.aggregate(pipeline).collation({
+      locale: 'en_US',
+      numericOrdering: true,
+    });
+  }
+}
+
+async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
+  // grouped item data for each type
+  const groupTypes = [
+    'category',
+    'subCategory',
+    'clothingSize',
+    'shoeSize',
+    'tags',
+  ];
+
+  for (const g of groupTypes) {
+    let group = g !== 'tags' ? '$' + g : '$tag.name';
+
+    let groupStage = {
+      $group: {
+        _id: group,
+        total: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $eq: ['$approvedStatus', 'approved'] },
+                  fromDate && toDate ? { $gte: ['$createdAt', fromDate] } : {},
+                  fromDate && toDate ? { $lt: ['$createdAt', toDate] } : {},
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
+        shopped: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $eq: ['$approvedStatus', 'approved'] },
+                  { $in: ['$status', statuses] },
+                  fromDate && toDate
+                    ? { $gte: ['$statusUpdateDates.shoppedDate', fromDate] }
+                    : {},
+                  fromDate && toDate
+                    ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
+                    : {},
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
+        shopperUnique: {
+          $addToSet: {
+            shopperFirstName: {
+              $cond: [
+                {
+                  $and: [
+                    fromDate && toDate
+                      ? {
+                          $gte: ['$statusUpdateDates.shoppedDate', fromDate],
+                        }
+                      : {},
+                    fromDate && toDate
+                      ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
+                      : {},
+                    { $in: ['$status', statuses] },
+                  ],
+                },
+                '$shopper.firstName',
+                '',
+              ],
+            },
+            shopperLastName: {
+              $cond: [
+                {
+                  $and: [
+                    fromDate && toDate
+                      ? {
+                          $gte: ['$statusUpdateDates.shoppedDate', fromDate],
+                        }
+                      : {},
+                    fromDate && toDate
+                      ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
+                      : {},
+                    { $in: ['$status', statuses] },
+                  ],
+                },
+                '$shopper.lastName',
+                '',
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    // add the available field to the groupStage only if fromDate and toDate are not provided
+    if (!fromDate && !toDate) {
+      groupStage.$group.available = {
+        $sum: {
+          $cond: [
+            {
+              $and: [
+                { $eq: ['$approvedStatus', 'approved'] },
+                { $eq: ['$status', 'in-shop'] },
+              ],
+            },
+            1,
+            0,
+          ],
+        },
+      };
+    }
+
+    let pipeline = [
+      // exclude batch-template items
+      {
+        $match: {
+          $or: [
+            { batchId: { $exists: false } },
+            { isTemplateBatchItem: false },
+          ],
+        },
+      },
+      {
+        $unwind: '$' + g,
+      },
+      {
+        $lookup: {
+          from: 'tags',
+          localField: 'tags',
+          foreignField: '_id',
+          as: 'tag',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'shopperId',
+          foreignField: '_id',
+          as: 'shopper',
+        },
+      },
+      groupStage,
+      {
+        $sort: { _id: 1 },
+      },
+    ];
+
+    let d = await Item.aggregate(pipeline).collation({
+      locale: 'en_US',
+      numericOrdering: true,
+    });
+
+    reportData[g] = d;
+  }
+}
+
+// merge the results from batchItems with the Items data
+function updateReportData(batchResults, reportData, dateFrom, dateTo) {
+  // a mapping object to map the plural keys in batchResults to the singular keys in reportData [e.g. clothingSizes -> clothingSize]
+  const keyMapping = {
+    category: 'category',
+    subCategory: 'subCategory',
+    clothingSizes: 'clothingSize',
+    shoeSizes: 'shoeSize',
+    tags: 'tags',
+  };
+
+  for (const key in batchResults) {
+    const reportKey = keyMapping[key];
+    for (const result of batchResults[key]) {
+      let reportItem = reportData[reportKey].find((i) => i._id === result._id);
+      if (reportItem) {
+        reportItem.total += result.total;
+        if (!dateFrom && !dateTo) {
+          reportItem.available += result.total;
+        }
+      } else {
+        const newItem = {
+          _id: result._id,
+          total: result.total,
+          shopped: 0,
+          shopperUnique: [
+            {
+              shopperFirstName: '',
+              shopperLastName: '',
+            },
+          ],
+        };
+        if (!dateFrom && !dateTo) {
+          newItem.available = result.total;
+        }
+        reportData[reportKey].push(newItem);
+      }
+    }
+  }
+}
+
 const getReportData = async (from, to) => {
   //get dates with time 0
   var fromDate = new Date(
@@ -92,114 +437,12 @@ const getReportData = async (from, to) => {
         items.length + batchItems?.[0]?.totalQuantity || 0;
       reportData['itemsShopped'] = itemsShopped.length;
 
-      // grouped item data for each type
-      const groupTypes = [
-        'category',
-        'subCategory',
-        'clothingSize',
-        'shoeSize',
-        'tags',
-      ];
+      await aggregateItemGroupData(fromDate, toDate, statuses, reportData);
 
-      for (const g of groupTypes) {
-        let group = g !== 'tags' ? '$' + g : '$tag.name';
-        let d = await Item.aggregate([
-          {
-            $unwind: '$' + g,
-          },
-          {
-            $lookup: {
-              from: 'tags',
-              localField: 'tags',
-              foreignField: '_id',
-              as: 'tag',
-            },
-          },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'shopperId',
-              foreignField: '_id',
-              as: 'shopper',
-            },
-          },
-          {
-            $group: {
-              _id: group,
-              total: {
-                $sum: {
-                  $cond: [
-                    {
-                      $and: [
-                        { $eq: ['$approvedStatus', 'approved'] },
-                        { $gte: ['$createdAt', fromDate] },
-                        { $lt: ['$createdAt', toDate] },
-                      ],
-                    },
-                    1,
-                    0,
-                  ],
-                },
-              },
-              shopped: {
-                $sum: {
-                  $cond: [
-                    {
-                      $and: [
-                        { $eq: ['$approvedStatus', 'approved'] },
-                        { $in: ['$status', statuses] },
-                        { $gte: ['$statusUpdateDates.shoppedDate', fromDate] },
-                        { $lt: ['$statusUpdateDates.shoppedDate', toDate] },
-                      ],
-                    },
-                    1,
-                    0,
-                  ],
-                },
-              },
-              shopperUnique: {
-                $addToSet: {
-                  shopperFirstName: {
-                    $cond: [
-                      {
-                        $and: [
-                          {
-                            $gte: ['$statusUpdateDates.shoppedDate', fromDate],
-                          },
-                          { $lt: ['$statusUpdateDates.shoppedDate', toDate] },
-                          { $in: ['$status', statuses] },
-                        ],
-                      },
-                      '$shopper.firstName',
-                      '',
-                    ],
-                  },
-                  shopperLastName: {
-                    $cond: [
-                      {
-                        $and: [
-                          {
-                            $gte: ['$statusUpdateDates.shoppedDate', fromDate],
-                          },
-                          { $lt: ['$statusUpdateDates.shoppedDate', toDate] },
-                          { $in: ['$status', statuses] },
-                        ],
-                      },
-                      '$shopper.lastName',
-                      '',
-                    ],
-                  },
-                },
-              },
-            },
-          },
-          {
-            $sort: { _id: 1 },
-          },
-        ]).collation({ locale: 'en_US', numericOrdering: true });
-        reportData[g] = d;
-      }
+      let batchResults = {};
+      await aggregateBatchItemGroupData(fromDate, toDate, batchResults);
 
+      updateReportData(batchResults, reportData, fromDate, toDate);
       //run queries to pull data with no date restrictions (all data)
     } else {
       //general shopper and donor counts
@@ -260,285 +503,14 @@ const getReportData = async (from, to) => {
       reportData['itemsShopped'] = itemsShopped.length;
       reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
-      // grouped item data for each type
-      const groupTypes = [
-        'category',
-        'subCategory',
-        'clothingSize',
-        'shoeSize',
-        'tags',
-      ];
+      // call with null arguments to ignore the date-range filter
+      await aggregateItemGroupData(null, null, statuses, reportData);
 
-      for (const g of groupTypes) {
-        let group = g !== 'tags' ? '$' + g : '$tag.name';
-        let pipeline = [
-          {
-            $match: {
-              $or: [{ batchId: null }, { isTemplateBatchItem: false }],
-            },
-          },
-          {
-            $unwind: '$' + g,
-          },
-          {
-            $lookup: {
-              from: 'tags',
-              localField: 'tags',
-              foreignField: '_id',
-              as: 'tag',
-            },
-          },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'shopperId',
-              foreignField: '_id',
-              as: 'shopper',
-            },
-          },
-          {
-            $group: {
-              _id: group,
-              total: {
-                $sum: {
-                  $cond: [{ $eq: ['$approvedStatus', 'approved'] }, 1, 0],
-                },
-              },
-              shopped: {
-                $sum: { $cond: [{ $in: ['$status', statuses] }, 1, 0] },
-              },
-              available: {
-                $sum: {
-                  $cond: [
-                    {
-                      $and: [
-                        { $eq: ['$approvedStatus', 'approved'] },
-                        { $eq: ['$status', 'in-shop'] },
-                      ],
-                    },
-                    1,
-                    0,
-                  ],
-                },
-              },
-              shopperUnique: {
-                $addToSet: {
-                  shopperFirstName: {
-                    $cond: [
-                      {
-                        $and: [
-                          { $eq: ['$approvedStatus', 'approved'] },
-                          { $in: ['$status', statuses] },
-                        ],
-                      },
-                      '$shopper.firstName',
-                      '',
-                    ],
-                  },
-                  shopperLastName: {
-                    $cond: [
-                      {
-                        $and: [
-                          { $eq: ['$approvedStatus', 'approved'] },
-                          { $in: ['$status', statuses] },
-                        ],
-                      },
-                      '$shopper.lastName',
-                      '',
-                    ],
-                  },
-                },
-              },
-            },
-          },
-          {
-            $sort: { _id: 1 },
-          },
-        ];
-
-        if (g === 'tags') {
-          pipeline.splice(pipeline.length - 1, 0, {
-            $project: {
-              _id: { $arrayElemAt: ['$_id', 0] },
-              total: 1,
-              shopped: 1,
-              available: 1,
-              shopperUnique: 1,
-            },
-          });
-        }
-
-        let d = await Item.aggregate(pipeline).collation({
-          locale: 'en_US',
-          numericOrdering: true,
-        });
-
-        reportData[g] = d;
-      }
-
-      console.log('reportData: ', reportData);
-
+      // call with null arguments to ignore the date-range filter
       let batchResults = {};
+      await aggregateBatchItemGroupData(null, null, batchResults);
 
-      // Aggregate batch item data for [category] and [subCategory]
-      const batchGroupTypes = [
-        'category',
-        'subCategory',
-        'clothingSizes',
-        'shoeSizes',
-        'tags',
-      ];
-      for (const groupType of batchGroupTypes) {
-        let pipeline = [];
-        if (groupType === 'category' || groupType === 'subCategory') {
-          pipeline = [
-            {
-              $lookup: {
-                from: 'items',
-                localField: 'templateItem',
-                foreignField: '_id',
-                as: 'templateItem',
-              },
-            },
-            {
-              $unwind: '$templateItem',
-            },
-            {
-              $unwind: '$templateItem.' + groupType,
-            },
-            {
-              $group: {
-                _id: '$templateItem.' + groupType,
-                total: {
-                  $sum: '$quantity',
-                },
-              },
-            },
-            {
-              $sort: { _id: 1 },
-            },
-          ];
-        } else if (groupType === 'tags') {
-          pipeline = [
-            {
-              $lookup: {
-                from: 'items',
-                localField: 'templateItem',
-                foreignField: '_id',
-                as: 'templateItem',
-              },
-            },
-            {
-              $unwind: '$templateItem',
-            },
-            {
-              $unwind: '$templateItem.' + groupType,
-            },
-            {
-              $lookup: {
-                from: 'tags',
-                localField: 'templateItem.tags',
-                foreignField: '_id',
-                as: 'tag',
-              },
-            },
-            {
-              $unwind: '$tag',
-            },
-            {
-              $group: {
-                _id: '$tag.name',
-                total: {
-                  $sum: '$quantity',
-                },
-              },
-            },
-            {
-              $sort: { _id: 1 },
-            },
-          ];
-        } else {
-          pipeline = [
-            {
-              $project: {
-                sizes: { $objectToArray: `$${groupType}` },
-              },
-            },
-            {
-              $unwind: '$sizes',
-            },
-            {
-              $group: {
-                _id: {
-                  $replaceAll: {
-                    input: '$sizes.k',
-                    find: '_',
-                    replacement: '.',
-                  },
-                },
-                total: {
-                  $sum: '$sizes.v',
-                },
-              },
-            },
-            {
-              $sort: { _id: 1 },
-            },
-          ];
-        }
-
-        batchResults[groupType] = await BatchItem.aggregate(pipeline).collation(
-          {
-            locale: 'en_US',
-            numericOrdering: true,
-          }
-        );
-      }
-      console.log('batchResults: ', batchResults);
-
-      // Create a mapping object to map the plural keys in batchResults to the singular keys in reportData
-      const keyMapping = {
-        category: 'category',
-        subCategory: 'subCategory',
-        clothingSizes: 'clothingSize',
-        shoeSizes: 'shoeSize',
-        tags: 'tags',
-      };
-
-      // Iterate over the keys in batchResults
-      for (const key in batchResults) {
-        // Get the corresponding key in reportData
-        const reportKey = keyMapping[key];
-
-        // Iterate over the items in the current batchResults array
-        for (const item of batchResults[key]) {
-          // Check if an item with the same _id exists in the reportData array
-          let reportItem = reportData[reportKey].find(
-            (i) => i._id === item._id
-          );
-
-          if (reportItem) {
-            // If it does, add the total from the batchResults item to the total and available of the reportData item
-            reportItem.total += item.total;
-            reportItem.available += item.total;
-          } else {
-            // If it doesn't, create a new object and push it to the reportData array
-            reportData[reportKey].push({
-              _id: item._id,
-              total: item.total,
-              shopped: 0,
-              available: item.total,
-              shopperUnique: [
-                {
-                  shopperFirstName: '',
-                  shopperLastName: '',
-                },
-              ],
-            });
-          }
-        }
-      }
-      console.log(JSON.stringify(reportData, null, 2));
+      updateReportData(batchResults, reportData, null, null);
     }
     return { success: true, data: reportData };
   } catch (error) {
