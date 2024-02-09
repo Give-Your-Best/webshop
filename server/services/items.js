@@ -68,7 +68,7 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
-  let { clothingSizes, shoeSizes, ...restOfData } = data;
+  let { clothingSizes, shoeSizes, quantity, ...restOfData } = data;
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   if (clothingSizes) {
     clothingSizes = convertKeys(clothingSizes);
@@ -81,6 +81,7 @@ const createBatchItem = async (data) => {
     const batchItem = await BatchItem.create({
       clothingSizes: clothingSizes,
       shoeSizes: shoeSizes,
+      quantity: quantity,
     });
     const batchId = batchItem.id;
 
@@ -215,11 +216,13 @@ const updateBatchItem = async (id, updateData) => {
   // I get rid of it here because the updateItem() method takes id as a param and it shouldn't be inside the data param.
   // eslint was complaining because templateItem is otherwise.
   // eslint-disable-next-line no-unused-vars
-  const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
+  const { clothingSizes, shoeSizes, templateItem, quantity, ...restOfData } =
+    updateData;
 
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   batchItem.clothingSizes = clothingSizes ? convertKeys(clothingSizes) : {};
   batchItem.shoeSizes = shoeSizes ? convertKeys(shoeSizes) : {};
+  batchItem.quantity = quantity ? quantity : 0;
   await batchItem.save();
   // Extract sizes without quantities to create a template item with
   const clothingSize = clothingSizes ? Object.keys(clothingSizes) : [];

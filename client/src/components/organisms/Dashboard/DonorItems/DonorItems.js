@@ -23,6 +23,10 @@ import {
 } from '../../../../services/items';
 import { Button, H2 } from '../../../atoms';
 import { openHiddenTab, reopenTab, tabList } from '../../../../utils/helpers';
+import {
+  sortQuantities,
+  calculateTotalQuantity,
+} from '../../../../utils/batchItemHelpers';
 import { itemCreateschema } from '../../../../utils/validation';
 
 export const DonorItems = () => {
@@ -152,7 +156,9 @@ export const DonorItems = () => {
       }
       let res = {};
       if (values.batchId) {
-        res = await updateBatchItem(record._id, values, token);
+        const sortedValues = sortQuantities(values);
+        sortedValues.quantity = calculateTotalQuantity(sortedValues);
+        res = await updateBatchItem(record._id, sortedValues, token);
       } else {
         res = await updateItem(record._id, values, token);
       }

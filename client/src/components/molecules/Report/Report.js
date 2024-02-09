@@ -234,18 +234,16 @@ export const Report = () => {
       // tags worksheet rows
 
       res.data.tags.forEach((c) => {
-        if (c._id.length === 1 && c._id[0] !== '') {
-          //deleted tags sometimes return item data
-          sheetFour.addRow({
-            tag: c._id[0],
-            uploaded: c.total || 0,
-            shopped: c.shopped || 0,
-            unique:
-              c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
-                .length || 0,
-            available: c.available || '',
-          });
-        }
+        //deleted tags sometimes return item data
+        sheetFour.addRow({
+          tag: c._id,
+          uploaded: c.total || 0,
+          shopped: c.shopped || 0,
+          unique:
+            c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
+              .length || 0,
+          available: c.available || '',
+        });
       });
 
       //create link and download excel

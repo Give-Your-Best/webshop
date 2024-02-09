@@ -22,6 +22,10 @@ import {
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
 import RenderBatchOptions from './RenderBatchOptions';
+import {
+  sortQuantities,
+  calculateTotalQuantity,
+} from '../../../utils/batchItemHelpers';
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
@@ -39,24 +43,11 @@ export const ItemCreateForm = (data) => {
     setShowBatchOptions(checked);
   };
 
-  const sortQuantities = (formValues) => {
-    const fieldName =
-      formValues.shoeSizes.length > 0 ? 'shoeSizes' : 'clothingSizes';
-    const sizeOrder =
-      formValues.shoeSizes.length > 0 ? shoeSizeOptions : clothingSizeOptions;
-    const quantities = formValues[fieldName];
-    const keyValueArray = Object.entries(quantities);
-    keyValueArray.sort(
-      (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
-    );
-    const sortedQuantities = Object.fromEntries(keyValueArray);
-    return { ...formValues, [fieldName]: sortedQuantities };
-  };
-
   const handleSubmit = async (values, { resetForm, setFieldValue }) => {
     let res;
     if (showBatchOptions === true) {
       const sortedValues = sortQuantities(values);
+      sortedValues.quantity = calculateTotalQuantity(sortedValues);
       res = await createBatchItem(sortedValues, token);
     } else {
       res = await createItem(values, token);

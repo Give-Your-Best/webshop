@@ -5,6 +5,8 @@ import {
   updateBatchItem,
 } from '../services/items';
 
+import { shoeSizeOptions, clothingSizeOptions } from './constants';
+
 // updates multiple batch items with changes to different sizes per each batch-item
 // example scenario: when resetting the whole basket, we need to clear all items (which may have multiple batch-items)
 // note: it takes a map of batch-items as param
@@ -25,6 +27,7 @@ const bulkUpdateBatchItemQuantity = async (updateDataMap, token) => {
       // Exclude _id from batchItem (eslint complains that '_id' is not used).
       // eslint-disable-next-line
       const { _id, ...batchItemWithoutId } = batchItem;
+      batchItemWithoutId.quantity = calculateTotalQuantity(batchItemWithoutId);
       await updateBatchItem(
         batchItemWithoutId.templateItem,
         batchItemWithoutId,
@@ -77,6 +80,9 @@ const updateBatchItemQuantity = async (
         ...batchItemWithoutId,
         [sizeType]: updatedSizes,
       };
+      updatedBatchItemDetails.quantity = calculateTotalQuantity(
+        updatedBatchItemDetails
+      );
       const response = await updateBatchItem(
         batchItem.templateItem,
         updatedBatchItemDetails,
@@ -142,8 +148,41 @@ const resetBasketItems = async (basket, token) => {
   }
 };
 
+const sortQuantities = (formValues) => {
+  const fieldName =
+    Object.keys(formValues.shoeSizes).length > 0
+      ? 'shoeSizes'
+      : 'clothingSizes';
+  const sizeOrder =
+    Object.keys(formValues.shoeSizes).length > 0
+      ? shoeSizeOptions
+      : clothingSizeOptions;
+  const quantities = formValues[fieldName];
+  const keyValueArray = Object.entries(quantities);
+  keyValueArray.sort(
+    (a, b) => sizeOrder.indexOf(a[0]) - sizeOrder.indexOf(b[0])
+  );
+  const sortedQuantities = Object.fromEntries(keyValueArray);
+  return { ...formValues, [fieldName]: sortedQuantities };
+};
+
+const calculateTotalQuantity = (values) => {
+  const fieldName =
+    Object.keys(values.shoeSizes).length > 0 ? 'shoeSizes' : 'clothingSizes';
+  let totalQuantity = 0;
+
+  const sizes = values[fieldName];
+  Object.values(sizes).forEach((quantity) => {
+    totalQuantity += quantity;
+  });
+
+  return totalQuantity;
+};
+
 export {
   resetBasketItems,
   updateBatchItemQuantity,
   bulkUpdateBatchItemQuantity,
+  sortQuantities,
+  calculateTotalQuantity,
 };

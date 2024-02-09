@@ -16,6 +16,14 @@ const batchItemSchema = new Schema({
     of: Number,
     default: new Map(),
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  quantity: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const BatchItem = mongoose.model('BatchItem', batchItemSchema);
