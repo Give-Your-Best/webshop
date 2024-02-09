@@ -434,7 +434,7 @@ const getReportData = async (from, to) => {
       ]).exec();
 
       reportData['itemsCount'] =
-        items.length + batchItems?.[0]?.totalQuantity || 0;
+        items.length + (batchItems?.[0]?.totalQuantity || 0);
       reportData['itemsShopped'] = itemsShopped.length;
 
       await aggregateItemGroupData(fromDate, toDate, statuses, reportData);
@@ -499,7 +499,7 @@ const getReportData = async (from, to) => {
         },
       ]).exec();
       reportData['itemsCount'] =
-        items.length + batchItems?.[0]?.totalQuantity || 0;
+        items.length + (batchItems?.[0]?.totalQuantity || 0);
       reportData['itemsShopped'] = itemsShopped.length;
       reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
