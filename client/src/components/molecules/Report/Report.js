@@ -171,7 +171,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -198,7 +198,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -212,7 +212,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -227,7 +227,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -242,7 +242,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
