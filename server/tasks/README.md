@@ -8,7 +8,7 @@
    be called from the command line
 
 3. The logger writes ephemeral messages (ttl 30 days) to the Mongo DB under the
-   `LogEntry` model - it is very usefult for observability and debugging etc. to
+   `LogEntry` model - it is very useful for observability and debugging etc. to
    persist logs to the DB
 
 4. Test the implementation locally by calling the task runner directly on the
