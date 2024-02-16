@@ -125,8 +125,12 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
         description={
           <>
             {trunc(item.description)}
-            <br />
-            size {displaySizes.join(', ')}
+            {displaySizes.length > 0 && (
+              <>
+                <br />
+                size {displaySizes.join(', ')}
+              </>
+            )}
           </>
         }
         onClick={() => history.push(`/item/${item._id}`)}
