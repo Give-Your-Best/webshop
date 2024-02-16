@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { useHistory } from 'react-router-dom';
 import {
@@ -30,6 +30,15 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
   const [FAOshopperName, setFAOShopperName] = useState('');
+  const [displaySizes, setDisplaySizes] = useState([]);
+
+  useEffect(() => {
+    if (item.shoeSize && item.shoeSize.length > 0) {
+      setDisplaySizes(item.shoeSize);
+    } else if (item.clothingSize && item.clothingSize.length > 0) {
+      setDisplaySizes(item.clothingSize);
+    }
+  }, [item.shoeSize, item.clothingSize]);
 
   const additionalItemDetails =
     type === 'all' || type === 'admin' ? getItemDetails(item) : false;
@@ -113,7 +122,17 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
       <Meta
         bordered={'false'}
         title={item.name}
-        description={trunc(item.description)}
+        description={
+          <>
+            {trunc(item.description)}
+            {displaySizes.length > 0 && (
+              <>
+                <br />
+                size {displaySizes.join(', ')}
+              </>
+            )}
+          </>
+        }
         onClick={() => history.push(`/item/${item._id}`)}
       />
       {/* show progress bar depending on type of user logged in */}
