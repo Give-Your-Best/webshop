@@ -1,5 +1,59 @@
-const Message = require('../models/Message');
 const BSON = require('bson');
+const moment = require('moment');
+const Message = require('../models/Message');
+
+// Mark a message thread archived - this will prevent the thread appearing in
+// the default view for admin messages. Archived threads will be accessible by a
+// specific view. Archived threads are also candidates for deletion...
+const archiveThread = async (threadId) => {
+  const thread = await Message.findOneAndUpdate(
+    { threadId },
+    { $set: { archived: true } },
+    { new: true }
+  );
+  if (thread) {
+    return { success: true, message: 'thread archived', thread: thread };
+  } else {
+    throw Error('Cannot archive thread');
+  }
+};
+
+// Archive many...
+const archiveThreads = async (threadIds) => {
+  await Message.updateMany(
+    { threadId: { $in: threadIds } },
+    { $set: { archived: true } }
+  );
+};
+
+// Only archived threads can be deleted.
+const deleteThread = async (threadId) => {
+  const thread = await Message.findOneAndDelete({ threadId, archived: true });
+  if (thread) {
+    return { success: true, message: 'thread deleted', thread: thread };
+  } else {
+    throw Error('Cannot delete thread');
+  }
+};
+
+// Find all threads neither active in the last six months nor archived.
+const getStaleThreads = async () => {
+  // Formatted date exactly 6 months ago
+  const date = moment().subtract(6, 'months').format('YYYY-MM-DD');
+
+  // We only want threads where the archived property has not yet been set -
+  // this will distinguish them from previously archived threads that have been
+  // deliberately unarchived...
+  const threads = await Message.find(
+    {
+      updatedAt: { $lt: date },
+      archived: { $exists: false },
+    },
+    'threadId'
+  );
+
+  return threads;
+};
 
 const getMessages = async (type, userId) => {
   try {
@@ -94,6 +148,10 @@ const createMessage = async (data) => {
 };
 
 module.exports = {
+  archiveThread,
+  archiveThreads,
+  deleteThread,
+  getStaleThreads,
   getMessages,
   createMessage,
   markMessageAsViewed,
