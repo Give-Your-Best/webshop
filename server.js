@@ -1,13 +1,14 @@
 require('dotenv').config();
-const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
+const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const Bugsnag = require('./server/utils/bugsnag');
 
 const app = express();
+
 const { requestHandler, errorHandler } = Bugsnag.getPlugin('express');
 
 const port = process.env.PORT || 5000;

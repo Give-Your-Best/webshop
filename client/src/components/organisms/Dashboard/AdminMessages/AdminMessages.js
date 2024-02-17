@@ -1,5 +1,6 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { AppContext } from '../../../../context/app-context';
+import { SocketContext } from '../../../../context/socket-context';
 import {
   StyledTab,
   StyledTabList,
@@ -35,6 +36,7 @@ import { Formik } from 'formik';
 
 export const AdminMessages = () => {
   const { token, user } = useContext(AppContext);
+  const socket = useContext(SocketContext); // ('ws://localhost:8000');
   const mountedRef = useRef(true);
   const [shoppersMessages, setShoppersMessages] = useState([]);
   const [donorsMessages, setDonorsMessages] = useState([]);
@@ -64,9 +66,23 @@ export const AdminMessages = () => {
     const handleSubmit = async (values, { resetForm }) => {
       const d = new Date();
       let date = d.toISOString();
-      values.sentDate = date;
 
-      const res = await sendMessage(values, token);
+      const { message, recipient, sender, threadId } = values;
+
+      const newMessage = {
+        threadId,
+        messages: [
+          {
+            sender,
+            recipient,
+            message,
+            sentDate: date,
+            viewed: false,
+          },
+        ],
+      };
+
+      const res = await sendMessage(newMessage, token);
 
       if (res.success) {
         Notification('Success!', 'Message sent', 'success');
@@ -155,6 +171,35 @@ export const AdminMessages = () => {
       </div>
     );
   };
+
+  const onMessage = React.useCallback(
+    (data) => {
+      console.log({ data });
+
+      if (data.type === 'shopper') {
+        (async () => {
+          const messages = await getMessages('shopper', 'all', token);
+          if (!mountedRef.current) return null;
+          setShoppersMessages(messages);
+        })();
+      }
+
+      if (data.type === 'donor') {
+        (async () => {
+          const messages = await getMessages('donor', 'all', token);
+          if (!mountedRef.current) return null;
+          setDonorsMessages(messages);
+        })();
+      }
+    },
+    [token]
+  );
+
+  React.useEffect(() => {
+    socket.bind('new-message', onMessage);
+
+    return () => socket.unbind('new-message', onMessage);
+  }, [socket, onMessage]);
 
   useEffect(() => {
     var tabs = tabList(user);
