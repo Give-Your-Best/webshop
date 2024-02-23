@@ -283,11 +283,52 @@ const deleteBatchItem = async (id) => {
   }
 };
 
+/* given that the basket state is not persisted between refreshes,
+   items which are created from the batchItem can get lost
+   this method is used for the task-scheduler which will periodically fetch 
+   these lost items, update their batchItem & delete the item accordingly. */
+const getLostItems = async () => {
+  var conditions = {
+    batchId: { $ne: null },
+    isTemplateBatchItem: false,
+    status: 'in-shop',
+    inBasket: true,
+  };
+  try {
+    var items = await Item.find(conditions)
+      .sort({ shopperId: -1 })
+      .populate('shopperId')
+      .exec();
+
+    console.log('items: ', items);
+    return items;
+  } catch (error) {
+    console.error(`Error in getting specific items: ${error}`);
+    return {
+      success: false,
+      message: `Error in getting specific items: ${error}`,
+    };
+  }
+};
+
 const getDonorItems = async (userId, itemStatus) => {
   var conditions = {};
   try {
     if (itemStatus !== '') {
       conditions = {
+        /* 
+          Extra condition to exclude "lost-batch-items",
+          which happen when a shopper adds a batch-item to their basket and then refreshes the page.
+          There is a seperate scheduled-task which cleans up these lost items, 
+          but here we don't want to show them to the donor in the first place.
+        */
+        $nor: [
+          {
+            batchId: { $ne: null },
+            isTemplateBatchItem: false,
+            status: { $eq: 'in-shop' },
+          },
+        ],
         $or: [
           { approvedStatus: 'approved' },
           { approvedStatus: 'in-progress' },
@@ -297,6 +338,13 @@ const getDonorItems = async (userId, itemStatus) => {
       };
     } else {
       conditions = {
+        $nor: [
+          {
+            batchId: { $ne: null },
+            isTemplateBatchItem: false,
+            status: { $eq: 'in-shop' },
+          },
+        ],
         approvedStatus: 'approved',
         donorId: userId,
         $or: [
