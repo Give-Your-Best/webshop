@@ -295,12 +295,7 @@ const getLostItems = async () => {
     inBasket: true,
   };
   try {
-    var items = await Item.find(conditions)
-      .sort({ shopperId: -1 })
-      .populate('shopperId')
-      .exec();
-
-    console.log('items: ', items);
+    var items = await Item.find(conditions).exec();
     return items;
   } catch (error) {
     console.error(`Error in getting specific items: ${error}`);
@@ -814,4 +809,5 @@ module.exports = {
   createBatchItem,
   getBatchItem,
   updateBatchItem,
+  getLostItems,
 };
