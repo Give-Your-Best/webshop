@@ -45,7 +45,6 @@ module.exports = async (logger) => {
 
     logger.info(`Processed ${lostItems.length} lost items.`);
   } catch (error) {
-    console.error(error);
     logger.error(`Error processing lost items: ${error}`);
   }
 };
