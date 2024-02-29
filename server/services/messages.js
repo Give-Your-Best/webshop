@@ -2,28 +2,28 @@ const BSON = require('bson');
 const moment = require('moment');
 const Message = require('../models/Message');
 
-// Mark a message thread archived - this will prevent the thread appearing in
-// the default view for admin messages. Archived threads will be accessible by a
-// specific view. Archived threads are also candidates for deletion...
-const archiveThread = async (threadId) => {
-  const thread = await Message.findOneAndUpdate(
-    { threadId },
-    { $set: { archived: true } },
-    { new: true }
-  );
-  if (thread) {
-    return { success: true, message: 'thread archived', thread: thread };
-  } else {
-    throw Error('Cannot archive thread');
-  }
-};
-
 // Archive many...
 const archiveThreads = async (threadIds) => {
   await Message.updateMany(
     { threadId: { $in: threadIds } },
     { $set: { archived: true } }
   );
+};
+
+// Marking a message thread archived will prevent it appearing in the default
+// view for admin messages. Archived threads will be accessible by a specific
+// view. Archived threads are also candidates for deletion...
+const toggleArchived = async (threadId, archived) => {
+  const thread = await Message.findOneAndUpdate(
+    { threadId },
+    { $set: { archived } },
+    { new: true }
+  );
+  if (thread) {
+    return { success: true, message: 'status updated', thread: thread };
+  } else {
+    throw Error('Cannot update thread');
+  }
 };
 
 // Only archived threads can be deleted.
@@ -148,8 +148,8 @@ const createMessage = async (data) => {
 };
 
 module.exports = {
-  archiveThread,
   archiveThreads,
+  toggleArchived,
   deleteThread,
   getStaleThreads,
   getMessages,
