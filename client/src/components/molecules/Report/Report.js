@@ -18,6 +18,12 @@ export const Report = () => {
   var res = {};
 
   const handleGenerate = async (values, { resetForm }) => {
+    // disabling the ability to generate a full-report (without date-range) for now
+    if (values.dateRange.length === 0) {
+      Notification('Error', 'Please select a date range', 'error');
+      return false;
+    }
+
     if (values.dateRange) {
       res = await getReportData(
         values.dateRange.length ? values.dateRange[0] : '',
