@@ -109,7 +109,7 @@ const renderEmailProperties = (user, items, interval) => {
 };
 
 /**
- * Dispatch reminder emails for status updates on items either shoppe (donor
+ * Dispatch reminder emails for status updates on items either shopped (donor
  * user reminders) or shipped (shopper user reminders).
  */
 module.exports = async (logger) => {
