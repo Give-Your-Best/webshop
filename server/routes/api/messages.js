@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const Messages = require('../../controllers/messages');
-const { getMessages } = require('../../services/messages');
+const { getAdminThreads, getUserThreads } = require('../../services/messages');
 
 // get messages endpoint api/messages
 router.get('/', async (req, res) => {
   let type = req.query.type || '';
   let userId = req.query.id || '';
-  const messages = await getMessages(type, userId);
+  let archived = req.query.archived || false;
+
+  const messages = type
+    ? await getAdminThreads(type, archived)
+    : userId
+      ? await getUserThreads(userId, archived)
+      : [];
+
   res.json(messages);
 });
 

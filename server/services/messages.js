@@ -55,6 +55,36 @@ const getStaleThreads = async () => {
   return threads;
 };
 
+// TODO
+const getAdminThreads = async (type, archived) => {
+  const conditions = archived
+    ? { type, archived }
+    : { type, $or: [{ archived: { $exists: false } }, { archived: false }] };
+
+  const threads = await Message.find(conditions)
+    .populate('user')
+    .populate('messages.sender')
+    .populate('messages.recipient')
+    .sort({ updatedAt: -1 });
+
+  return threads;
+};
+
+// TODO
+const getUserThreads = async (user, archived) => {
+  const conditions = archived
+    ? { user, archived }
+    : { user, $or: [{ archived: { $exists: false } }, { archived: false }] };
+
+  const threads = await Message.find(conditions)
+    .populate('user')
+    .populate('messages.sender')
+    .populate('messages.recipient')
+    .sort({ updatedAt: -1 });
+
+  return threads;
+};
+
 const getMessages = async (type, userId) => {
   try {
     if (userId === 'all') {
@@ -152,6 +182,8 @@ module.exports = {
   toggleArchived,
   deleteThread,
   getStaleThreads,
+  getAdminThreads,
+  getUserThreads,
   getMessages,
   createMessage,
   markMessageAsViewed,
