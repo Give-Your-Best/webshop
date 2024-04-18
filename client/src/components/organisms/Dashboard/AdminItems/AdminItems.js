@@ -10,6 +10,7 @@ import {
   getItem,
 } from '../../../../services/items';
 import { debounce, tabList } from '../../../../utils/helpers';
+import { updateBatchItemQuantity } from '../../../../utils/batchItemHelpers';
 import { categories } from '../../../../utils/constants';
 import { adminAllItemStatus } from '../../../atoms/ProgressBar/constants';
 
@@ -148,8 +149,28 @@ export const AdminItems = () => {
       className: 'modalStyle',
       onOk() {
         getItem(id).then((itemToDelete) => {
-          if (itemToDelete.batchId !== null) {
+          if (
+            itemToDelete.batchId !== null &&
+            itemToDelete.isTemplateBatchItem !== false
+          ) {
             deleteBatchItem(id, token).then(fetchItems);
+          } else if (
+            itemToDelete.batchId !== null &&
+            itemToDelete.isTemplateBatchItem === false
+          ) {
+            const size =
+              itemToDelete.shoeSize.length > 0
+                ? itemToDelete.shoeSize
+                : itemToDelete.clothingSize;
+            updateBatchItemQuantity(
+              size,
+              itemToDelete.category,
+              itemToDelete.batchId,
+              1,
+              true,
+              token
+            );
+            deleteItem(id, token).then(fetchItems);
           } else {
             deleteItem(id, token).then(fetchItems);
           }
