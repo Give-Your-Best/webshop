@@ -354,8 +354,8 @@ export const getFrontImageUrl = (images) => {
   let image_url = imagesList.length
     ? setImageSrc(imagesList[0])
     : images.length
-    ? setImageSrc(images[0])
-    : '';
+      ? setImageSrc(images[0])
+      : '';
 
   return image_url;
 };
