@@ -12,8 +12,8 @@ router.get('/', async (req, res) => {
   const messages = type
     ? await getAdminThreads(type, archived)
     : userId
-      ? await getUserThreads(userId, archived)
-      : [];
+    ? await getUserThreads(userId, archived)
+    : [];
 
   res.json(messages);
 });
