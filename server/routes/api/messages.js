@@ -9,11 +9,11 @@ router.get('/', async (req, res) => {
   let userId = req.query.id || '';
   let archived = req.query.archived === 'true';
 
-  const messages = type
-    ? await getAdminThreads(type, archived)
-    : userId
-    ? await getUserThreads(userId, archived)
-    : [];
+  // TODO this is ugly but will be fixed soon...
+  const messages =
+    userId === 'all'
+      ? await getAdminThreads(type, archived)
+      : await getUserThreads(userId, archived);
 
   res.json(messages);
 });

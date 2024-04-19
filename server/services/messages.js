@@ -55,7 +55,8 @@ const getStaleThreads = async () => {
   return threads;
 };
 
-// TODO
+// Admin users want to see all messages for a type of user - they can chose to
+// view only the archived threads if desired...
 const getAdminThreads = async (type, archived) => {
   const conditions = archived
     ? { type, archived }
@@ -70,13 +71,11 @@ const getAdminThreads = async (type, archived) => {
   return threads;
 };
 
-// TODO
-const getUserThreads = async (user, archived) => {
-  const conditions = archived
-    ? { user, archived }
-    : { user, $or: [{ archived: { $exists: false } }, { archived: false }] };
-
-  const threads = await Message.find(conditions)
+// End users (shopper or donor) get to see only their own exchanges with the
+// admins - we do not yet provide a distinct 'archived' view utility on the UI
+// for these users but should do soon...
+const getUserThreads = async (user) => {
+  const threads = await Message.find({ user })
     .populate('user')
     .populate('messages.sender')
     .populate('messages.recipient')
