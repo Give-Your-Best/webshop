@@ -1,5 +1,7 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { Select } from 'antd';
 import { AppContext } from '../../../../context/app-context';
+import { AccountContext } from '../../../../context/account-context';
 import {
   StyledTab,
   StyledTabList,
@@ -27,7 +29,6 @@ import {
   name,
   tabList,
 } from '../../../../utils/helpers';
-import { getUsers } from '../../../../services/user';
 import { MessagesList, StartMessageThreadAdmin } from '../../../molecules';
 import { Notification } from '../../../atoms';
 import { Button } from '../../../atoms';
@@ -35,13 +36,18 @@ import { Formik } from 'formik';
 
 export const AdminMessages = () => {
   const { token, user } = useContext(AppContext);
-  const mountedRef = useRef(true);
+  const { allUsers } = useContext(AccountContext);
+  const [currentView, setCurrentView] = useState('active');
   const [shoppersMessages, setShoppersMessages] = useState([]);
   const [donorsMessages, setDonorsMessages] = useState([]);
   const [newShopperThread, setNewShopperThread] = useState(false);
   const [newDonorThread, setNewDonorThread] = useState(false);
   const [donors, setDonors] = useState([]);
   const [shoppers, setShoppers] = useState([]);
+
+  const handleSelectView = (view) => {
+    setCurrentView(view);
+  };
 
   const handleSubmit = (type, values) => {
     if (type === 'donor') {
@@ -157,53 +163,61 @@ export const AdminMessages = () => {
   };
 
   useEffect(() => {
+    if (!allUsers) return;
+
+    const result = Object.values(allUsers).reduce((acc, cur) => {
+      acc[cur.type] = acc[cur.type] || [];
+      acc[cur.type].push(cur);
+      return acc;
+    }, {});
+
+    console.log({ result });
+
+    setDonors(result.donor);
+    setShoppers(result.shopper);
+  }, [allUsers]);
+
+  useEffect(() => {
+    // If true we want to view archived message threads, else only show current
+    // active threads (threads are archived on a nightly basis after 6 months
+    // inactivity - it will soon be possible to manually archive, unarchive and
+    // permanently delete threads soon...)
+    const archived = currentView === 'archived';
+
+    // Load the threads
+    getMessages('donor', 'all', archived, token).then(setDonorsMessages);
+    getMessages('shopper', 'all', archived, token).then(setShoppersMessages);
+  }, [currentView, token, user]);
+
+  useEffect(() => {
     var tabs = tabList(user);
     tabs.forEach((t) => {
       if (t.name === 'Messaging') {
         window.history.pushState({}, '', '/dashboard/' + t.id);
       }
     });
-
-    const fetchMessagesShoppers = async () => {
-      const messages = await getMessages('shopper', 'all', token);
-
-      if (!mountedRef.current) return null;
-      setShoppersMessages(messages);
-    };
-
-    const fetchMessagesDonors = async () => {
-      const messages = await getMessages('donor', 'all', token);
-
-      if (!mountedRef.current) return null;
-      setDonorsMessages(messages);
-    };
-
-    const fetchShoppers = async () => {
-      const users = await getUsers('shopper', 'approved', token);
-      if (!mountedRef.current) return null;
-      setShoppers(users);
-    };
-
-    const fetchDonors = async () => {
-      const users = await getUsers('donor', 'approved', token);
-      if (!mountedRef.current) return null;
-      setDonors(users);
-    };
-
-    fetchShoppers();
-    fetchDonors();
-
-    fetchMessagesShoppers();
-    fetchMessagesDonors();
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
   }, [token, user]);
 
   return (
     <StyledTabs forceRenderTabPanel={true}>
+      <Select
+        size="large"
+        style={{ width: 180 }}
+        value={currentView}
+        defaultValue="active"
+        onSelect={handleSelectView}
+        options={[
+          {
+            label: 'Active Threads',
+            value: 'active',
+          },
+          {
+            label: 'Archived Threads',
+            value: 'archived',
+          },
+        ]}
+      />
+
       <StyledTabList>
         <StyledTab>Shoppers</StyledTab>
         <StyledTab>Donors</StyledTab>

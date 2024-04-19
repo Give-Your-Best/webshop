@@ -136,7 +136,7 @@ export const UserMessages = () => {
     });
 
     const fetchMessages = async () => {
-      const messages = await getMessages('shopper', user.id, token);
+      const messages = await getMessages('shopper', user.id, false, token);
       if (!mountedRef.current) return null;
       setMessages(messages);
     };
