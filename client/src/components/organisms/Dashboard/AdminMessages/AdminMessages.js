@@ -171,8 +171,6 @@ export const AdminMessages = () => {
       return acc;
     }, {});
 
-    console.log({ result });
-
     setDonors(result.donor);
     setShoppers(result.shopper);
   }, [allUsers]);

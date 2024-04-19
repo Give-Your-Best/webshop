@@ -1,5 +1,4 @@
 export const getMessages = async (type, id, archived = false, token) => {
-  console.log(archived);
   const response = await fetch(
     `/api/messages?type=${type}&id=${id}&archived=${archived}`,
     {
