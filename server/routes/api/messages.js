@@ -7,7 +7,7 @@ const { getAdminThreads, getUserThreads } = require('../../services/messages');
 router.get('/', async (req, res) => {
   let type = req.query.type || '';
   let userId = req.query.id || '';
-  let archived = req.query.archived || false;
+  let archived = req.query.archived === 'true';
 
   const messages = type
     ? await getAdminThreads(type, archived)
