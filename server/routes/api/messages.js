@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Messages = require('../../controllers/messages');
-const { getAdminThreads, getUserThreads } = require('../../services/messages');
+const {
+  deleteThread,
+  getAdminThreads,
+  getUserThreads,
+  toggleArchived,
+} = require('../../services/messages');
 
 // get messages endpoint api/messages
 router.get('/', async (req, res) => {
@@ -23,5 +28,26 @@ router.post('/', Messages.createMessage);
 
 // update message endpoint put to api/messages/:id
 router.put('/:id', Messages.markMessageAsViewed);
+
+// archive the message thread
+router.put('/archive/:id', async (req, res) => {
+  let threadId = req.params.id || '';
+  const message = await toggleArchived(threadId, true);
+  res.json(message);
+});
+
+// unarchive the message thread
+router.put('/unarchive/:id', async (req, res) => {
+  let threadId = req.params.id || '';
+  const message = await toggleArchived(threadId, false);
+  res.json(message);
+});
+
+// delete the message thread
+router.delete('/:id', async (req, res) => {
+  let threadId = req.params.id || '';
+  const message = await deleteThread(threadId);
+  res.json(message);
+});
 
 module.exports = router;
