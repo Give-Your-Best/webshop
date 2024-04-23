@@ -1,5 +1,88 @@
-const Message = require('../models/Message');
 const BSON = require('bson');
+const moment = require('moment');
+const Message = require('../models/Message');
+
+// Archive many...
+const archiveThreads = async (threadIds) => {
+  await Message.updateMany(
+    { threadId: { $in: threadIds } },
+    { $set: { archived: true } }
+  );
+};
+
+// Marking a message thread archived will prevent it appearing in the default
+// view for admin messages. Archived threads will be accessible by a specific
+// view. Archived threads are also candidates for deletion...
+const toggleArchived = async (threadId, archived) => {
+  const thread = await Message.findOneAndUpdate(
+    { threadId },
+    { $set: { archived } },
+    { new: true }
+  );
+  if (thread) {
+    return { success: true, message: 'status updated', thread: thread };
+  } else {
+    throw Error('Cannot update thread');
+  }
+};
+
+// Only archived threads can be deleted.
+const deleteThread = async (threadId) => {
+  const thread = await Message.findOneAndDelete({ threadId, archived: true });
+  if (thread) {
+    return { success: true, message: 'thread deleted', thread: thread };
+  } else {
+    throw Error('Cannot delete thread');
+  }
+};
+
+// Find all threads neither active in the last six months nor archived.
+const getStaleThreads = async () => {
+  // Formatted date exactly 6 months ago
+  const date = moment().subtract(6, 'months').format('YYYY-MM-DD');
+
+  // We only want threads where the archived property has not yet been set -
+  // this will distinguish them from previously archived threads that have been
+  // deliberately unarchived...
+  const threads = await Message.find(
+    {
+      updatedAt: { $lt: date },
+      archived: { $exists: false },
+    },
+    'threadId'
+  );
+
+  return threads;
+};
+
+// Admin users want to see all messages for a type of user - they can chose to
+// view only the archived threads if desired...
+const getAdminThreads = async (type, archived) => {
+  const conditions = archived
+    ? { type, archived }
+    : { type, $or: [{ archived: { $exists: false } }, { archived: false }] };
+
+  const threads = await Message.find(conditions)
+    .populate('user')
+    .populate('messages.sender')
+    .populate('messages.recipient')
+    .sort({ updatedAt: -1 });
+
+  return threads;
+};
+
+// End users (shopper or donor) get to see only their own exchanges with the
+// admins - we do not yet provide a distinct 'archived' view utility on the UI
+// for these users but should do soon...
+const getUserThreads = async (user) => {
+  const threads = await Message.find({ user })
+    .populate('user')
+    .populate('messages.sender')
+    .populate('messages.recipient')
+    .sort({ updatedAt: -1 });
+
+  return threads;
+};
 
 const getMessages = async (type, userId) => {
   try {
@@ -94,6 +177,12 @@ const createMessage = async (data) => {
 };
 
 module.exports = {
+  archiveThreads,
+  toggleArchived,
+  deleteThread,
+  getStaleThreads,
+  getAdminThreads,
+  getUserThreads,
   getMessages,
   createMessage,
   markMessageAsViewed,
