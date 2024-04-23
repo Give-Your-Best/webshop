@@ -185,8 +185,10 @@ export const UserMessages = () => {
       }
     });
 
-    const fetchMessages = () => {
-      getMessages('shopper', user.id, token).then(setMessages);
+    const fetchMessages = async () => {
+      const messages = await getMessages('shopper', user.id, false, token);
+      if (!mountedRef.current) return null;
+      setMessages(messages);
     };
 
     const getEmailId = () => {

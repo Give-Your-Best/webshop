@@ -18,6 +18,12 @@ export const Report = () => {
   var res = {};
 
   const handleGenerate = async (values, { resetForm }) => {
+    // disabling the ability to generate a full-report (without date-range) for now
+    if (values.dateRange.length === 0) {
+      Notification('Error', 'Please select a date range', 'error');
+      return false;
+    }
+
     if (values.dateRange) {
       res = await getReportData(
         values.dateRange.length ? values.dateRange[0] : '',
@@ -171,7 +177,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -198,7 +204,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -212,7 +218,7 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
@@ -227,25 +233,23 @@ export const Report = () => {
           unique:
             c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
               .length || 0,
-          available: c.available || '',
+          available: c.available || 0,
         });
       });
 
       // tags worksheet rows
 
       res.data.tags.forEach((c) => {
-        if (c._id.length === 1 && c._id[0] !== '') {
-          //deleted tags sometimes return item data
-          sheetFour.addRow({
-            tag: c._id[0],
-            uploaded: c.total || 0,
-            shopped: c.shopped || 0,
-            unique:
-              c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
-                .length || 0,
-            available: c.available || '',
-          });
-        }
+        //deleted tags sometimes return item data
+        sheetFour.addRow({
+          tag: c._id,
+          uploaded: c.total || 0,
+          shopped: c.shopped || 0,
+          unique:
+            c.shopperUnique.filter((obj) => obj.shopperFirstName !== '')
+              .length || 0,
+          available: c.available || 0,
+        });
       });
 
       //create link and download excel

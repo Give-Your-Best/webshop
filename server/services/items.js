@@ -68,7 +68,7 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
-  let { clothingSizes, shoeSizes, ...restOfData } = data;
+  let { clothingSizes, shoeSizes, quantity, ...restOfData } = data;
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   if (clothingSizes) {
     clothingSizes = convertKeys(clothingSizes);
@@ -81,6 +81,7 @@ const createBatchItem = async (data) => {
     const batchItem = await BatchItem.create({
       clothingSizes: clothingSizes,
       shoeSizes: shoeSizes,
+      quantity: quantity,
     });
     const batchId = batchItem.id;
 
@@ -215,11 +216,13 @@ const updateBatchItem = async (id, updateData) => {
   // I get rid of it here because the updateItem() method takes id as a param and it shouldn't be inside the data param.
   // eslint was complaining because templateItem is otherwise.
   // eslint-disable-next-line no-unused-vars
-  const { clothingSizes, shoeSizes, templateItem, ...restOfData } = updateData;
+  const { clothingSizes, shoeSizes, templateItem, quantity, ...restOfData } =
+    updateData;
 
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   batchItem.clothingSizes = clothingSizes ? convertKeys(clothingSizes) : {};
   batchItem.shoeSizes = shoeSizes ? convertKeys(shoeSizes) : {};
+  batchItem.quantity = quantity ? quantity : 0;
   await batchItem.save();
   // Extract sizes without quantities to create a template item with
   const clothingSize = clothingSizes ? Object.keys(clothingSizes) : [];
@@ -280,11 +283,47 @@ const deleteBatchItem = async (id) => {
   }
 };
 
+/* given that the basket state is not persisted between refreshes,
+   items which are created from the batchItem can get lost
+   this method is used for the task-scheduler which will periodically fetch 
+   these lost items, update their batchItem & delete the item accordingly. */
+const getLostItems = async () => {
+  var conditions = {
+    batchId: { $ne: null },
+    isTemplateBatchItem: false,
+    status: 'in-shop',
+    inBasket: true,
+  };
+  try {
+    var items = await Item.find(conditions).exec();
+    return items;
+  } catch (error) {
+    console.error(`Error in getting specific items: ${error}`);
+    return {
+      success: false,
+      message: `Error in getting specific items: ${error}`,
+    };
+  }
+};
+
 const getDonorItems = async (userId, itemStatus) => {
   var conditions = {};
   try {
     if (itemStatus !== '') {
       conditions = {
+        /* 
+          Extra condition to exclude "lost-batch-items",
+          which happen when a shopper adds a batch-item to their basket and then refreshes the page.
+          There is a seperate scheduled-task which cleans up these lost items, 
+          but here we don't want to show them to the donor in the first place.
+        */
+        $nor: [
+          {
+            batchId: { $ne: null },
+            isTemplateBatchItem: false,
+            status: { $eq: 'in-shop' },
+          },
+        ],
         $or: [
           { approvedStatus: 'approved' },
           { approvedStatus: 'in-progress' },
@@ -294,6 +333,13 @@ const getDonorItems = async (userId, itemStatus) => {
       };
     } else {
       conditions = {
+        $nor: [
+          {
+            batchId: { $ne: null },
+            isTemplateBatchItem: false,
+            status: { $eq: 'in-shop' },
+          },
+        ],
         approvedStatus: 'approved',
         donorId: userId,
         $or: [
@@ -763,4 +809,5 @@ module.exports = {
   createBatchItem,
   getBatchItem,
   updateBatchItem,
+  getLostItems,
 };

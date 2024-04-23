@@ -103,15 +103,23 @@ const AddBatchItemToBasketButton = ({
 
     // shopping limit reached
     if (availableQuantity === 0) {
-      const shoppingLimitMessage =
-        item.category === 'children'
-          ? `weekly shopping limit for children's items`
-          : `weekly shopping limit`;
-      confirm({
-        className: 'modalStyle',
-        title: `Shopping Limit Reached!`,
-        content: `You have reached your ${shoppingLimitMessage}. Please check your current orders on your account profile or update your profile info!`,
-      });
+      if (basketItemsCount !== 0) {
+        const shoppingLimitMessage =
+          item.category === 'children'
+            ? `weekly shopping limit for children's items`
+            : `weekly shopping limit`;
+        confirm({
+          className: 'modalStyle',
+          title: `Shopping Limit Reached!`,
+          content: `You have reached your ${shoppingLimitMessage}. Please check your current orders on your account profile or update your profile info!`,
+        });
+      } else if (basketItemsCount === 0) {
+        confirm({
+          className: 'modalStyle',
+          title: `Basket Full`,
+          content: `Please proceed to checkout or remove some items from your basket if you wish to add others.`,
+        });
+      }
       return;
     }
 
