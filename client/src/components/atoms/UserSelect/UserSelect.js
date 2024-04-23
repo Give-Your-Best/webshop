@@ -27,7 +27,7 @@ export const UserSelect = ({
       {users.map((d) => {
         return (
           <StyledSelect.Option key={d._id} value={d._id}>
-            {name(d)}
+            {d.name || name(d)}
           </StyledSelect.Option>
         );
       })}

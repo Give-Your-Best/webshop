@@ -32,6 +32,10 @@ const messageSchema = new Schema(
         sentDate: Date,
       },
     ],
+    archived: {
+      type: Boolean,
+      required: false,
+    },
   },
   options
 );
