@@ -414,12 +414,14 @@ export const donorItemsOrdering = (items) => {
       if (foundIndex !== -1) {
         itemsAwaitingReceived[foundIndex].items.push(i);
       } else {
-        itemsAwaitingReceived.push({
-          shopper: name(i.shopperId),
-          shopperId: i.shopperId._id,
-          items: [i],
-          packageId: i.packageId,
-        });
+        if (i.shopperId) {
+          itemsAwaitingReceived.push({
+            shopper: name(i.shopperId),
+            shopperId: i.shopperId._id,
+            items: [i],
+            packageId: i.packageId,
+          });
+        }
       }
     }
   });
