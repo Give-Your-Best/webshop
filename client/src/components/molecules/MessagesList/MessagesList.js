@@ -1,17 +1,19 @@
 import React, { useRef } from 'react';
-import { Input, Space, Button } from 'antd';
+import { Input, Space, Button, Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import {
   ListWrapper,
   ExpandButton,
   StyledTable,
   DeleteButton,
+  ToggleButton,
   Note,
 } from './MessagesList.styles';
 import { checkUnread, name } from '../../../utils/helpers';
 
 export const MessagesList = (data) => {
   const searchInput = useRef(null);
+  const { confirm } = Modal;
 
   const getName = (value) => {
     let result = '';
@@ -135,20 +137,42 @@ export const MessagesList = (data) => {
     },
   ];
 
-  if (data.handleDelete) {
+  if (data.type === 'admin' && data.actions) {
     columns.push({
       title: 'Action',
       key: 'action',
       width: 20,
-      render: (record) => (
-        <Space size="middle">
-          <DeleteButton
-            onClick={() => data.handleDelete(record._id, record.kind)}
-          >
-            Delete
-          </DeleteButton>
-        </Space>
-      ),
+      render: ({ archived, threadId }) => {
+        const { actions } = data;
+
+        return archived ? (
+          <Space size="middle">
+            <ToggleButton onClick={() => actions.handleRestore(threadId)}>
+              Restore
+            </ToggleButton>
+            <DeleteButton
+              onClick={() => {
+                confirm({
+                  title:
+                    'Are you sure you want to delete this thread? It cannot be undone!',
+                  className: 'modalStyle',
+                  onOk() {
+                    actions.handleDelete(threadId);
+                  },
+                });
+              }}
+            >
+              Delete
+            </DeleteButton>
+          </Space>
+        ) : (
+          <Space size="middle">
+            <ToggleButton onClick={() => actions.handleArchive(threadId)}>
+              Archive
+            </ToggleButton>
+          </Space>
+        );
+      },
     });
   }
 
