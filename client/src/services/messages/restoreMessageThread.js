@@ -1,6 +1,6 @@
 export const restoreMessageThread = async (threadId, token) => {
   try {
-    const response = await fetch(`/api/messages/unarchive/${threadId}`, {
+    const response = await fetch(`/api/messages/restore/${threadId}`, {
       method: 'put',
       headers: {
         Accept: 'application/json',

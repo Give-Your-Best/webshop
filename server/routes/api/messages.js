@@ -37,7 +37,7 @@ router.put('/archive/:id', async (req, res) => {
 });
 
 // unarchive the message thread
-router.put('/unarchive/:id', async (req, res) => {
+router.put('/restore/:id', async (req, res) => {
   let threadId = req.params.id || '';
   const message = await toggleArchived(threadId, false);
   res.json(message);

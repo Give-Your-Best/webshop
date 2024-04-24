@@ -15,8 +15,6 @@ export const MessagesList = (data) => {
   const searchInput = useRef(null);
   const { confirm } = Modal;
 
-  console.log(data);
-
   const getName = (value) => {
     let result = '';
     if (data.type !== 'admin') {
