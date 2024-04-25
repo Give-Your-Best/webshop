@@ -50,6 +50,16 @@ export const DonorMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
         <StyledError name="canAddItemInBulk" component="div" />
       </div>
 
+      <div>
+        <StyledCheckbox
+          name="canViewShopperAddress"
+          disabled={editingKey !== recordId}
+        >
+          User can view shopper address
+        </StyledCheckbox>
+        <StyledError name="canViewShopperAddress" component="div" />
+      </div>
+
       {editingKey === recordId && !approvalAction && (
         <StyledSubmitButton>Save</StyledSubmitButton>
       )}
