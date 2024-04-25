@@ -25,7 +25,7 @@ import {
 const { Meta } = AntCard;
 
 export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
-  const { token } = useContext(AppContext);
+  const { token, user } = useContext(AppContext);
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
   const [addressFound, setAddressFound] = useState(false);
@@ -93,7 +93,18 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
       shopper = item.shopperId;
     }
 
-    if (shopper.deliveryPreference === 'via-gyb' && item.sendVia) {
+    // Special case, if the donor is trusted and approved by admin to view any
+    // shopper address regardless of shopper delivery preference then show the
+    // address on request...
+    if (
+      shopper.deliveryPreference === 'via-gyb' &&
+      shopper.deliveryAddress &&
+      user.canViewShopperAddress &&
+      user.trustedDonor
+    ) {
+      shopper.deliveryAddress.name = name(shopper);
+      setDeliveryAddress(shopper.deliveryAddress);
+    } else if (shopper.deliveryPreference === 'via-gyb' && item.sendVia) {
       const location = await getLocation(item.sendVia, token);
       setFAOShopperName(name(shopper));
       setDeliveryAddress(location[0]);
