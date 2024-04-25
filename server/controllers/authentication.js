@@ -41,6 +41,7 @@ const setUserDetails = (user) => {
   if (user.kind === 'donor') {
     UserDetails.trustedDonor = user.trustedDonor || false;
     UserDetails.canAddItemInBulk = user.canAddItemInBulk || false;
+    UserDetails.canViewShopperAddress = user.canViewShopperAddress || false;
   }
 
   if (user.kind === 'shopper') {
