@@ -54,6 +54,11 @@ const StyledSelect = styled(Select)`
   }
 `;
 
+const StyledSelectTags = styled(StyledSelect)`
+  font-size: 12px;
+  margin-bottom: 16px;
+`;
+
 const StyledSubmitButton = styled(SubmitButton)`
   width: 150px;
   float: right;
@@ -387,6 +392,7 @@ export {
   StyledForm,
   StyledRadio,
   StyledSelect,
+  StyledSelectTags,
   StyledError,
   InfoNote,
   StyledCheckboxGroup,
