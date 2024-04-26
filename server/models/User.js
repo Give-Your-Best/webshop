@@ -93,6 +93,10 @@ const Donor = User.discriminator(
         type: Boolean,
         default: false,
       },
+      canAddItemTags: {
+        type: Boolean,
+        default: false,
+      },
       canViewShopperAddress: {
         type: Boolean,
         default: false,
