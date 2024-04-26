@@ -42,6 +42,16 @@ export const DonorMiniEditForm = ({ editingKey, recordId, approvalAction }) => {
 
       <div>
         <StyledCheckbox
+          name="canAddItemTags"
+          disabled={editingKey !== recordId}
+        >
+          User can tag items
+        </StyledCheckbox>
+        <StyledError name="canAddItemTags" component="div" />
+      </div>
+
+      <div>
+        <StyledCheckbox
           name="canAddItemInBulk"
           disabled={editingKey !== recordId}
         >
