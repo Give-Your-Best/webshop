@@ -223,16 +223,28 @@ const updateBatchItem = async (id, updateData) => {
   batchItem.clothingSizes = clothingSizes ? convertKeys(clothingSizes) : {};
   batchItem.shoeSizes = shoeSizes ? convertKeys(shoeSizes) : {};
   batchItem.quantity = quantity ? quantity : 0;
+
   await batchItem.save();
   // Extract sizes without quantities to create a template item with
   const clothingSize = clothingSizes ? Object.keys(clothingSizes) : [];
   const shoeSize = shoeSizes ? Object.keys(shoeSizes) : [];
-  // Create a new data object for updateItem()
+
+  // If the quantity is zero, we want to remove the templateItem from the shop
+  let status;
+  if (batchItem.quantity === 0) {
+    status = 'empty';
+  } else if (batchItem.quantity > 0 && tempItem.status === 'empty') {
+    // if the batchItem is then edited again and the quantity is greater than 0, we want to bring the item back into shop
+    status = 'in-shop';
+  }
+  // Create a new data object for updateItem() with the new status
   const newItemData = {
     ...restOfData,
     clothingSize,
     shoeSize,
+    status,
   };
+
   const updatedItemData = await updateItem(id, newItemData);
   const updatedItem = updatedItemData.item;
 
@@ -329,7 +341,10 @@ const getDonorItems = async (userId, itemStatus) => {
           { approvedStatus: 'in-progress' },
         ],
         donorId: userId,
-        status: itemStatus,
+        $or: [
+          { status: itemStatus },
+          { status: itemStatus === 'received' ? 'empty' : itemStatus }, // when templateItem is empty, it can still be viewed in the "past items" for the donor
+        ],
       };
     } else {
       conditions = {
