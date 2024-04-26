@@ -93,7 +93,7 @@ const Donor = User.discriminator(
         type: Boolean,
         default: false,
       },
-      canTagItems: {
+      canAddItemTags: {
         type: Boolean,
         default: false,
       },
