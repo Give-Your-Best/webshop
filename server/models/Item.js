@@ -48,6 +48,7 @@ const itemSchema = new Schema(
         'received-by-gyb',
         'shipped-to-shopper',
         'received',
+        'empty', // used for the template item of a batch-item to indicate that the batch-item is empty
       ],
       // in-shop then shopped when a shopper selects it. shipped-to-gyb and received-by-gyb only used if shopper is sending via gyb
       default: 'in-shop',
