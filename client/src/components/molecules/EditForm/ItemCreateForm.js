@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { itemCreateschema } from '../../../utils/validation';
@@ -18,6 +19,7 @@ import {
   StyledLabel,
   StyledCheckboxGroup,
   StyledSwitch,
+  StyledSelectTags,
 } from './EditForm.styles';
 import { Images } from '../Images';
 import { CategoryFields } from './CategoryFields';
@@ -29,6 +31,7 @@ import {
 
 export const ItemCreateForm = (data) => {
   const { token, user } = useContext(AppContext);
+  const { allTags } = useContext(AccountContext);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [showBatchOptions, setShowBatchOptions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -113,6 +116,17 @@ export const ItemCreateForm = (data) => {
             <StyledInput name="brand" />
           </StyledLabel>
           <StyledError name="brand" component="div" />
+
+          <StyledLabel>
+            Tags
+            <StyledSelectTags mode="tags" name="tags">
+              {(allTags || []).map((tag) => (
+                <StyledSelectTags.Option key={tag.name} value={tag._id}>
+                  {tag.name}
+                </StyledSelectTags.Option>
+              ))}
+            </StyledSelectTags>
+          </StyledLabel>
 
           {showBatchOptions ? (
             <RenderBatchOptions

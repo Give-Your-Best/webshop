@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { AccountContext } from '../../../context/account-context';
 import { Form } from 'formik-antd';
 import { useFormikContext } from 'formik';
 import {
@@ -7,6 +8,7 @@ import {
   StyledLabel,
   StyledError,
   StyledCheckboxGroup,
+  StyledSelectTags,
 } from './EditForm.styles';
 import RenderBatchOptions from './RenderBatchOptions';
 import {
@@ -25,6 +27,8 @@ export const ItemMiniEditForm = ({
   photos,
   handleImageUpdate,
 }) => {
+  const { allTags } = useContext(AccountContext);
+
   const [uploadedImages, setUploadedImages] = useState(
     photos.sort((a, b) => b.front - a.front)
   );
@@ -100,6 +104,21 @@ export const ItemMiniEditForm = ({
         <StyledInput name="brand" disabled={editingKey !== recordId} />
       </StyledLabel>
       <StyledError name="brand" component="div" />
+
+      <StyledLabel>
+        Tags
+        <StyledSelectTags
+          mode="tags"
+          name="tags"
+          disabled={editingKey !== recordId}
+        >
+          {(allTags || []).map((tag) => (
+            <StyledSelectTags.Option key={tag.name} value={tag._id}>
+              {tag.name}
+            </StyledSelectTags.Option>
+          ))}
+        </StyledSelectTags>
+      </StyledLabel>
 
       {item?.batchId ? (
         <RenderBatchOptions
