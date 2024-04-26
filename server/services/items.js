@@ -323,27 +323,35 @@ const getDonorItems = async (userId, itemStatus) => {
   try {
     if (itemStatus !== '') {
       conditions = {
-        /* 
-          Extra condition to exclude "lost-batch-items",
-          which happen when a shopper adds a batch-item to their basket and then refreshes the page.
-          There is a seperate scheduled-task which cleans up these lost items, 
-          but here we don't want to show them to the donor in the first place.
-        */
-        $nor: [
+        $and: [
           {
-            batchId: { $ne: null },
-            isTemplateBatchItem: false,
-            status: { $eq: 'in-shop' },
+            /* 
+              Extra condition to exclude "lost-batch-items",
+              which happen when a shopper adds a batch-item to their basket and then refreshes the page.
+              There is a seperate scheduled-task which cleans up these lost items, 
+              but here we don't want to show them to the donor in the first place.
+            */
+            $nor: [
+              {
+                batchId: { $ne: null },
+                isTemplateBatchItem: false,
+                status: { $eq: 'in-shop' },
+              },
+            ],
           },
-        ],
-        $or: [
-          { approvedStatus: 'approved' },
-          { approvedStatus: 'in-progress' },
-        ],
-        donorId: userId,
-        $or: [
-          { status: itemStatus },
-          { status: itemStatus === 'received' ? 'empty' : itemStatus }, // when templateItem is empty, it can still be viewed in the "past items" for the donor
+          {
+            $or: [
+              { approvedStatus: 'approved' },
+              { approvedStatus: 'in-progress' },
+            ],
+          },
+          { donorId: userId },
+          {
+            $or: [
+              { status: itemStatus },
+              { status: itemStatus === 'received' ? 'empty' : itemStatus }, // when templateItem is empty, it can still be viewed in the "past items" for the donor
+            ],
+          },
         ],
       };
     } else {
