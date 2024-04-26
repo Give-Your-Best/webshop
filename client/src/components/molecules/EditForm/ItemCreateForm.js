@@ -117,16 +117,18 @@ export const ItemCreateForm = (data) => {
           </StyledLabel>
           <StyledError name="brand" component="div" />
 
-          <StyledLabel>
-            Tags
-            <StyledSelectTags mode="tags" name="tags">
-              {(allTags || []).map((tag) => (
-                <StyledSelectTags.Option key={tag.name} value={tag._id}>
-                  {tag.name}
-                </StyledSelectTags.Option>
-              ))}
-            </StyledSelectTags>
-          </StyledLabel>
+          {user.trustedDonor && user.canAddItemTags ? (
+            <StyledLabel>
+              Tags
+              <StyledSelectTags mode="tags" name="tags">
+                {(allTags || []).map((tag) => (
+                  <StyledSelectTags.Option key={tag.name} value={tag._id}>
+                    {tag.name}
+                  </StyledSelectTags.Option>
+                ))}
+              </StyledSelectTags>
+            </StyledLabel>
+          ) : null}
 
           {showBatchOptions ? (
             <RenderBatchOptions

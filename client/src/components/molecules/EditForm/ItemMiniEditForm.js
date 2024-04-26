@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AccountContext } from '../../../context/account-context';
 import { Form } from 'formik-antd';
 import { useFormikContext } from 'formik';
+import { AppContext } from '../../../context/app-context';
+import { AccountContext } from '../../../context/account-context';
 import {
   StyledSubmitButton,
   StyledInput,
@@ -27,6 +28,7 @@ export const ItemMiniEditForm = ({
   photos,
   handleImageUpdate,
 }) => {
+  const { user } = useContext(AppContext);
   const { allTags } = useContext(AccountContext);
 
   const [uploadedImages, setUploadedImages] = useState(
@@ -105,20 +107,22 @@ export const ItemMiniEditForm = ({
       </StyledLabel>
       <StyledError name="brand" component="div" />
 
-      <StyledLabel>
-        Tags
-        <StyledSelectTags
-          mode="tags"
-          name="tags"
-          disabled={editingKey !== recordId}
-        >
-          {(allTags || []).map((tag) => (
-            <StyledSelectTags.Option key={tag.name} value={tag._id}>
-              {tag.name}
-            </StyledSelectTags.Option>
-          ))}
-        </StyledSelectTags>
-      </StyledLabel>
+      {user.trustedDonor && user.canAddItemTags ? (
+        <StyledLabel>
+          Tags
+          <StyledSelectTags
+            mode="tags"
+            name="tags"
+            disabled={editingKey !== recordId}
+          >
+            {(allTags || []).map((tag) => (
+              <StyledSelectTags.Option key={tag.name} value={tag._id}>
+                {tag.name}
+              </StyledSelectTags.Option>
+            ))}
+          </StyledSelectTags>
+        </StyledLabel>
+      ) : null}
 
       {item?.batchId ? (
         <RenderBatchOptions
