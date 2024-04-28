@@ -23,6 +23,9 @@ import {
   getMessages,
   sendMessage,
   markMessageAsViewed,
+  deleteMessageThread,
+  archiveMessageThread,
+  restoreMessageThread,
 } from '../../../../services/messages';
 import {
   sendAutoEmail,
@@ -47,6 +50,11 @@ export const AdminMessages = () => {
   const [newDonorThread, setNewDonorThread] = useState(false);
   const [donors, setDonors] = useState([]);
   const [shoppers, setShoppers] = useState([]);
+
+  const removeItem =
+    (id) =>
+    ({ threadId }) =>
+      threadId !== id;
 
   const handleSelectView = (view) => {
     setCurrentView(view);
@@ -272,6 +280,20 @@ export const AdminMessages = () => {
           data={shoppersMessages}
           expandRow={viewConversation}
           type="admin"
+          actions={{
+            handleDelete: (id) => {
+              setShoppersMessages((state) => state.filter(removeItem(id)));
+              deleteMessageThread(id, token);
+            },
+            handleArchive: (id) => {
+              setShoppersMessages((state) => state.filter(removeItem(id)));
+              archiveMessageThread(id, token);
+            },
+            handleRestore: (id) => {
+              setShoppersMessages((state) => state.filter(removeItem(id)));
+              restoreMessageThread(id, token);
+            },
+          }}
         />
         {!newShopperThread && (
           <Button
@@ -297,6 +319,20 @@ export const AdminMessages = () => {
           data={donorsMessages}
           expandRow={viewConversation}
           type="admin"
+          actions={{
+            handleDelete: (id) => {
+              setDonorsMessages((state) => state.filter(removeItem(id)));
+              deleteMessageThread(id, token);
+            },
+            handleArchive: (id) => {
+              setDonorsMessages((state) => state.filter(removeItem(id)));
+              archiveMessageThread(id, token);
+            },
+            handleRestore: (id) => {
+              setDonorsMessages((state) => state.filter(removeItem(id)));
+              restoreMessageThread(id, token);
+            },
+          }}
         />
         {!newDonorThread && (
           <Button

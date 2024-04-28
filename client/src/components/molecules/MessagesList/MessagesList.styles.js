@@ -13,6 +13,12 @@ const ExpandButton = styled.span`
 
 const DeleteButton = styled.span`
   cursor: pointer;
+  font-size: 1rem;
+`;
+
+const ToggleButton = styled.span`
+  cursor: pointer;
+  font-size: 1rem;
 `;
 
 const StyledTable = styled((props) => <Table {...props} />)`
@@ -59,4 +65,11 @@ const Note = styled.span`
   margin: 0;
 `;
 
-export { ListWrapper, ExpandButton, StyledTable, DeleteButton, Note };
+export {
+  ListWrapper,
+  ExpandButton,
+  StyledTable,
+  DeleteButton,
+  ToggleButton,
+  Note,
+};
