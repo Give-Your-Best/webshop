@@ -90,6 +90,7 @@ const getThreadSummaries = async (user) => {
 
   const $match = {
     ...(kind === 'admin' ? {} : { user: user._id }),
+    $or: [{ archived: { $exists: false } }, { archived: false }],
   };
 
   const $project = {

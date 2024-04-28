@@ -54,7 +54,7 @@ export const Tabs = ({ itemId }) => {
 
   const onMessage = useCallback(
     (data) => {
-      const updateBlah = ({ threadId }, state) => {
+      const updateSummary = ({ threadId }, state) => {
         const update = state[threadId] || {
           threadId,
           userType: data.type,
@@ -74,7 +74,7 @@ export const Tabs = ({ itemId }) => {
 
       setInboxSummary((state) => ({
         ...state,
-        [data.threadId]: updateBlah(data, state),
+        [data.threadId]: updateSummary(data, state),
       }));
     },
     [setInboxSummary, user.id]

@@ -30,7 +30,7 @@ export const UserMessages = () => {
   const channel = useContext(SocketContext);
   const type = user.type;
   const mountedRef = useRef(true);
-  const blahblahRef = useRef(null);
+  const elementRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [newThread, setNewThread] = useState(false);
   const [emailId, setEmailId] = useState('');
@@ -90,7 +90,7 @@ export const UserMessages = () => {
 
     return (
       <div>
-        <MessagesContainer ref={blahblahRef}>
+        <MessagesContainer ref={elementRef}>
           {conversation.messages.map((m) => {
             if (m.recipient.kind === 'admin') {
               return (
@@ -147,29 +147,17 @@ export const UserMessages = () => {
 
   const onMessage = React.useCallback(
     (data) => {
-      // const { data, event } = JSON.parse(message);
+      if (!data) return;
 
-      console.log({ data });
+      // Load the threads
+      getMessages(user.type, user.id, false, token).then(setMessages);
 
-      if (!mountedRef.current) return;
-
-      (async () => {
-        const messages = await getMessages('shopper', user.id, token);
-
-        setMessages(messages);
-        // blahblahRef.current.scrollTop = blahblahRef.current.scrollHeight;
-        // blahblahRef.current.lastChild.scrollIntoView({
-        //   behavior: 'smooth',
-        //   block: 'end',
-        // });
-        blahblahRef.current.scroll({
-          top: blahblahRef.current.scrollHeight,
-          behavior: 'smooth',
-        });
-      })();
-      // }
+      elementRef.current.scroll({
+        top: elementRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
     },
-    [token, user.id]
+    [token, user.id, user.type]
   );
 
   React.useEffect(() => {
@@ -185,19 +173,9 @@ export const UserMessages = () => {
       }
     });
 
-    const fetchMessages = async () => {
-      const messages = await getMessages('shopper', user.id, false, token);
-      if (!mountedRef.current) return null;
-      setMessages(messages);
-    };
-
-    const getEmailId = () => {
-      getGYBDummyUser('GYBAdminAccountForMessages', token).then(setEmailId);
-    };
-
     if (mountedRef.current) {
-      fetchMessages();
-      getEmailId();
+      getMessages(user.type, user.id, false, token).then(setMessages);
+      getGYBDummyUser('GYBAdminAccountForMessages', token).then(setEmailId);
     }
 
     return () => {

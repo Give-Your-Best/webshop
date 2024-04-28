@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Select } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import { SocketContext } from '../../../../context/socket-context';
@@ -39,9 +39,8 @@ import { Button } from '../../../atoms';
 import { Formik } from 'formik';
 
 export const AdminMessages = () => {
+  const socket = useContext(SocketContext);
   const { token, user } = useContext(AppContext);
-  const socket = useContext(SocketContext); // ('ws://localhost:8000');
-  const mountedRef = useRef(true);
   const { allUsers } = useContext(AccountContext);
   const [currentView, setCurrentView] = useState('active');
   const [shoppersMessages, setShoppersMessages] = useState([]);
@@ -189,30 +188,23 @@ export const AdminMessages = () => {
 
   const onMessage = React.useCallback(
     (data) => {
-      console.log({ data });
+      if (!data) return;
 
-      if (data.type === 'shopper') {
-        (async () => {
-          const messages = await getMessages('shopper', 'all', token);
-          if (!mountedRef.current) return null;
-          setShoppersMessages(messages);
-        })();
-      }
+      if (currentView === 'archived') return;
 
-      if (data.type === 'donor') {
-        (async () => {
-          const messages = await getMessages('donor', 'all', token);
-          if (!mountedRef.current) return null;
-          setDonorsMessages(messages);
-        })();
-      }
+      // Load the threads
+      getMessages(data.type, 'all', false, token).then(
+        {
+          donor: setDonorsMessages,
+          shopper: setShoppersMessages,
+        }[data.type]
+      );
     },
-    [token]
+    [currentView, token]
   );
 
   React.useEffect(() => {
     socket.bind('new-message', onMessage);
-
     return () => socket.unbind('new-message', onMessage);
   }, [socket, onMessage]);
 

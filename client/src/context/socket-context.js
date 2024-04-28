@@ -12,8 +12,6 @@ export const SocketContext = React.createContext(null);
 export const SocketProvider = (props) => {
   const { user } = React.useContext(AppContext);
 
-  console.log({ user });
-
   const channel = pusher.subscribe(
     `notify@${user.type === 'admin' ? 'admin' : user.id}`
   );
