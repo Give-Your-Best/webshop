@@ -108,8 +108,8 @@ export const UserDetails = () => {
             type === 'donor'
               ? donorCreateSchema
               : type === 'shopper'
-              ? shopperCreateSchema
-              : adminSchema
+                ? shopperCreateSchema
+                : adminSchema
           }
           onSubmit={updateCurrentUserWrapper}
         >
