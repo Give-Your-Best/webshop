@@ -206,17 +206,25 @@ async function createWorkbook(data) {
 }
 
 async function saveReportToDatabase(reportData, name) {
-  // delete previous existing report
-  await Report.deleteMany({});
-
-  const newReport = new Report({
+  const report = {
     name: name,
     data: reportData,
     size: reportData.length,
-  });
-  await newReport.save();
-}
+  };
 
+  const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+  // Find the report with the given name and update it with the new data,
+  // or create a new report if one doesn't exist
+  // ensures only one report is stored in the database (updated with the latest data)
+  const updatedReport = await Report.findOneAndUpdate(
+    { name: name },
+    report,
+    options
+  );
+
+  return updatedReport;
+}
 async function generateReport() {
   try {
     const data = await getHistoricReportData();
