@@ -229,7 +229,7 @@ async function generateReport() {
     const workbook = await createWorkbook(data);
 
     // Write the workbook to an Excel file on disk - used for local testing
-    // await workbook.xlsx.writeFile('#.xlsx');
+    // await workbook.xlsx.writeFile('report.xlsx');
 
     const reportBuffer = await workbook.xlsx.writeBuffer();
     await saveReportToDatabase(reportBuffer, workbook.name);
