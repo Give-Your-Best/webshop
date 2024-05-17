@@ -4,7 +4,7 @@ const {
   getAllStatistics,
   getReportData,
 } = require('../../services/statistics');
-const { generateReport } = require('../../services/report/reportFactory');
+const { generateReport } = require('../../services/reports');
 const Report = require('../../models/report');
 
 // get settings endpoint api/statistics

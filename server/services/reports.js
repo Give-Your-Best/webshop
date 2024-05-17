@@ -1,8 +1,8 @@
 const ExcelJS = require('exceljs');
 const fs = require('fs');
 const mongoose = require('mongoose');
-const { getHistoricReportData } = require('../statistics');
-Report = require('../../models/report');
+const { getHistoricReportData } = require('./statistics');
+Report = require('../models/report');
 
 async function createWorkbook(data) {
   const workbook = new ExcelJS.Workbook();
@@ -221,9 +221,8 @@ async function generateReport() {
   try {
     const data = await getHistoricReportData();
     const workbook = await createWorkbook(data);
-    console.log({ workbook });
 
-    // Write the workbook to an Excel file - for local testing
+    // Write the workbook to an Excel file on disk - used for local testing
     // await workbook.xlsx.writeFile('report.xlsx');
 
     const reportBuffer = await workbook.xlsx.writeBuffer();
