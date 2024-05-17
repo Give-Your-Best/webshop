@@ -158,6 +158,27 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
     'tags',
   ];
 
+  // Check fromDate and toDate once and store the results in variables
+  const dateCondition =
+    fromDate && toDate
+      ? {
+          $and: [
+            { $gte: ['$createdAt', fromDate] },
+            { $lt: ['$createdAt', toDate] },
+          ],
+        }
+      : {};
+
+  const shoppedDateCondition =
+    fromDate && toDate
+      ? {
+          $and: [
+            { $gte: ['$statusUpdateDates.shoppedDate', fromDate] },
+            { $lt: ['$statusUpdateDates.shoppedDate', toDate] },
+          ],
+        }
+      : {};
+
   for (const g of groupTypes) {
     let group = g !== 'tags' ? '$' + g : '$tag.name';
 
@@ -168,11 +189,7 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
           $sum: {
             $cond: [
               {
-                $and: [
-                  { $eq: ['$approvedStatus', 'approved'] },
-                  fromDate && toDate ? { $gte: ['$createdAt', fromDate] } : {},
-                  fromDate && toDate ? { $lt: ['$createdAt', toDate] } : {},
-                ],
+                $and: [{ $eq: ['$approvedStatus', 'approved'] }, dateCondition],
               },
               1,
               0,
@@ -186,12 +203,7 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
                 $and: [
                   { $eq: ['$approvedStatus', 'approved'] },
                   { $in: ['$status', statuses] },
-                  fromDate && toDate
-                    ? { $gte: ['$statusUpdateDates.shoppedDate', fromDate] }
-                    : {},
-                  fromDate && toDate
-                    ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
-                    : {},
+                  shoppedDateCondition,
                 ],
               },
               1,
@@ -204,17 +216,7 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
             shopperFirstName: {
               $cond: [
                 {
-                  $and: [
-                    fromDate && toDate
-                      ? {
-                          $gte: ['$statusUpdateDates.shoppedDate', fromDate],
-                        }
-                      : {},
-                    fromDate && toDate
-                      ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
-                      : {},
-                    { $in: ['$status', statuses] },
-                  ],
+                  $and: [shoppedDateCondition, { $in: ['$status', statuses] }],
                 },
                 '$shopper.firstName',
                 '',
@@ -223,17 +225,7 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
             shopperLastName: {
               $cond: [
                 {
-                  $and: [
-                    fromDate && toDate
-                      ? {
-                          $gte: ['$statusUpdateDates.shoppedDate', fromDate],
-                        }
-                      : {},
-                    fromDate && toDate
-                      ? { $lt: ['$statusUpdateDates.shoppedDate', toDate] }
-                      : {},
-                    { $in: ['$status', statuses] },
-                  ],
+                  $and: [shoppedDateCondition, { $in: ['$status', statuses] }],
                 },
                 '$shopper.lastName',
                 '',
@@ -372,146 +364,93 @@ const getReportData = async (from, to) => {
 
   try {
     //run queries to pull data with date restrictions
-    if (from && to) {
-      //general shopper and donor counts
-      const shoppers = await User_.User.find({
-        approvedStatus: 'approved',
-        kind: 'shopper',
-        createdAt: { $gt: fromDate, $lt: toDate },
-      }).populate('shoppedItems');
-      reportData['shopperCount'] = shoppers.length;
-      reportData['shopperConvertedCount'] = shoppers.filter(
-        (s) => s.shoppedItems > 0
-      ).length;
-      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce(
-        (a, s) =>
-          a + (s.shoppedItems > 0 ? s.shoppingFor + s.shoppingForChildren : 0),
-        0
-      );
-      reportData['shopperCountWithAdditional'] = shoppers.reduce(
-        (a, s) => a + s.shoppingFor + s.shoppingForChildren,
-        0
-      );
+    // fetch shopper data
+    const shoppers = await User_.Shopper.find({
+      approvedStatus: 'approved',
+      createdAt: { $gt: fromDate, $lt: toDate },
+    })
+      .populate('shoppedItems', '_id') // only return the _id field for associated shoppedItems
+      .select('shoppedItems shoppingFor shoppingForChildren') // only return the shoppedItems, shoppingFor & shoppingForChildren to make it more lightweight
+      .lean(); // returns plain javascript objects instead of mongoose documents, making it more lightweight and faster
 
-      const donors = await User_.User.find({
-        approvedStatus: 'approved',
-        kind: 'donor',
-        createdAt: { $gt: fromDate, $lt: toDate },
-      }).populate('donatedItems');
-      reportData['donorCount'] = donors.length;
-      reportData['donorConvertedCount'] = donors.filter(
-        (d) => d.donatedItems > 0
-      ).length;
+    // count shopper data
+    reportData['shopperCount'] = shoppers.length;
+    reportData['shopperConvertedCount'] = shoppers.filter(
+      (s) => s.shoppedItems.length > 0
+    ).length;
+    reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce(
+      (a, s) =>
+        a +
+        (s.shoppedItems.length > 0 ? s.shoppingFor + s.shoppingForChildren : 0),
+      0
+    );
+    reportData['shopperCountWithAdditional'] = shoppers.reduce(
+      (a, s) => a + s.shoppingFor + s.shoppingForChildren,
+      0
+    );
 
-      //general item counts
-      const items = await Item.find({
-        $and: [
-          {
-            $or: [{ batchId: null }, { isTemplateBatchItem: false }],
-          },
-          {
-            createdAt: { $gt: fromDate, $lt: toDate },
-          },
-        ],
-      });
-      const itemsShopped = await Item.find({
-        'statusUpdateDates.shoppedDate': { $gt: fromDate, $lt: toDate },
-        status: { $in: statuses },
-      });
-      // count batch items' quantities
-      const batchItems = await BatchItem.aggregate([
+    // fetch donor data
+    const donors = await User_.Donor.find({
+      approvedStatus: 'approved',
+      createdAt: { $gt: fromDate, $lt: toDate },
+    })
+      .populate('donatedItems', '_id') // only return the _id field for associated donatedItems
+      .lean();
+    // count donor data
+    reportData['donorCount'] = donors.length;
+    reportData['donorConvertedCount'] = donors.filter(
+      (d) => d.donatedItems > 0
+    ).length;
+
+    // count all items (in date-range)
+    const items = await Item.find({
+      $and: [
         {
-          $match: {
-            createdAt: { $gte: fromDate, $lt: toDate },
-          },
+          $or: [{ batchId: null }, { isTemplateBatchItem: false }],
         },
         {
-          $group: {
-            _id: null,
-            totalQuantity: { $sum: '$quantity' },
-          },
+          createdAt: { $gt: fromDate, $lt: toDate },
         },
-      ]).exec();
+      ],
+    })
+      .select('_id')
+      .lean();
 
-      reportData['itemsCount'] =
-        items.length + (batchItems?.[0]?.totalQuantity || 0);
-      reportData['itemsShopped'] = itemsShopped.length;
+    // count all shopped items (in date-range)
+    const itemsShopped = await Item.find({
+      'statusUpdateDates.shoppedDate': { $gt: fromDate, $lt: toDate },
+      status: { $in: statuses },
+    })
+      .select('_id')
+      .lean();
 
-      await aggregateItemGroupData(fromDate, toDate, statuses, reportData);
-
-      let batchResults = {};
-      await aggregateBatchItemGroupData(fromDate, toDate, batchResults);
-
-      updateReportData(batchResults, reportData, fromDate, toDate);
-      //run queries to pull data with no date restrictions (all data)
-    } else {
-      //general shopper and donor counts
-      const shoppers = await User_.User.find({
-        approvedStatus: 'approved',
-        kind: 'shopper',
-      }).populate('shoppedItems');
-      reportData['shopperCount'] = shoppers.length;
-
-      reportData['shopperConvertedCount'] = shoppers.filter(
-        (s) => s.shoppedItems > 0
-      ).length;
-      reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce(
-        (a, s) =>
-          a + (s.shoppedItems > 0 ? s.shoppingFor + s.shoppingForChildren : 0),
-        0
-      );
-      reportData['shopperCountWithAdditional'] = shoppers.reduce(
-        (a, s) => a + s.shoppingFor + s.shoppingForChildren,
-        0
-      );
-
-      const donors = await User_.User.find({
-        approvedStatus: 'approved',
-        kind: 'donor',
-      }).populate('donatedItems');
-      reportData['donorCount'] = donors.length;
-      reportData['donorConvertedCount'] = donors.filter(
-        (d) => d.donatedItems > 0
-      ).length;
-
-      //general item counts
-      const items = await Item.find({
-        $or: [{ batchId: null }, { isTemplateBatchItem: false }],
-      });
-      const itemsShopped = await Item.find({
-        status: {
-          $in: [
-            'shopped',
-            'shipped-to-gyb',
-            'received-by-gyb',
-            'shipped-to-shopper',
-            'received',
-          ],
+    // count batch items' quantities
+    const batchItems = await BatchItem.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: fromDate, $lt: toDate },
         },
-      });
-      // count all batch items' quantities
-      const batchItems = await BatchItem.aggregate([
-        {
-          $group: {
-            _id: null,
-            totalQuantity: { $sum: '$quantity' },
-          },
+      },
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: '$quantity' },
         },
-      ]).exec();
-      reportData['itemsCount'] =
-        items.length + (batchItems?.[0]?.totalQuantity || 0);
-      reportData['itemsShopped'] = itemsShopped.length;
-      reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
+      },
+    ]).exec();
 
-      // call with null arguments to ignore the date-range filter
-      await aggregateItemGroupData(null, null, statuses, reportData);
+    reportData['itemsCount'] =
+      items.length + (batchItems?.[0]?.totalQuantity || 0);
 
-      // call with null arguments to ignore the date-range filter
-      let batchResults = {};
-      await aggregateBatchItemGroupData(null, null, batchResults);
+    reportData['itemsShopped'] = itemsShopped.length;
 
-      updateReportData(batchResults, reportData, null, null);
-    }
+    await aggregateItemGroupData(fromDate, toDate, statuses, reportData);
+
+    let batchResults = {};
+    await aggregateBatchItemGroupData(fromDate, toDate, batchResults);
+
+    updateReportData(batchResults, reportData, fromDate, toDate);
+
     return { success: true, data: reportData };
   } catch (error) {
     console.error(`Error in getting report data: ${error}`);
@@ -521,6 +460,109 @@ const getReportData = async (from, to) => {
     };
   }
 };
+
+async function getHistoricReportData() {
+  try {
+    const statuses = [
+      'shopped',
+      'shipped-to-gyb',
+      'received-by-gyb',
+      'shipped-to-shopper',
+      'received',
+    ];
+
+    const reportData = {};
+
+    // fetch shopper data
+    const shoppers = await User_.User.find({
+      approvedStatus: 'approved',
+      kind: 'shopper',
+    })
+      .populate('shoppedItems', '_id') // only return the _id field for associated shoppedItems
+      .select('shoppedItems shoppingFor shoppingForChildren') // only return the properties that are needed field
+      .lean(); // convert mongoose documents to plain javascript objects
+
+    // count shopper data
+    reportData['shopperCount'] = shoppers.length;
+    reportData['shopperConvertedCount'] = shoppers.filter(
+      (s) => s.shoppedItems.length > 0
+    ).length;
+    reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce(
+      (a, s) =>
+        a +
+        (s.shoppedItems.length > 0 ? s.shoppingFor + s.shoppingForChildren : 0),
+      0
+    );
+    reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => {
+      return (
+        a +
+        (Number.isFinite(s.shoppingFor) ? s.shoppingFor : 0) +
+        (Number.isFinite(s.shoppingForChildren) ? s.shoppingForChildren : 0)
+      );
+    }, 0);
+
+    // fetch donor data
+    const donors = await User_.User.find({
+      approvedStatus: 'approved',
+      kind: 'donor',
+    })
+      .populate('donatedItems', '_id')
+      .lean();
+
+    // count donor data
+    reportData['donorCount'] = donors.length;
+    reportData['donorConvertedCount'] = donors.filter(
+      (d) => d.donatedItems.length > 0
+    ).length;
+
+    // fetch all items
+    const items = await Item.find({
+      $or: [{ batchId: null }, { isTemplateBatchItem: false }],
+    })
+      .select('_id')
+      .lean();
+
+    // fetch all shopped items
+    const itemsShopped = await Item.find({
+      status: { $in: statuses },
+    })
+      .select('_id')
+      .lean();
+
+    // fetch all batch items' quantities
+    const batchItems = await BatchItem.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalQuantity: { $sum: '$quantity' },
+        },
+      },
+    ]).exec();
+
+    // count item data
+    reportData['itemsCount'] =
+      items.length + (batchItems?.[0]?.totalQuantity || 0);
+    reportData['itemsShopped'] = itemsShopped.length;
+    reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
+
+    // call with null arguments to ignore the date-range filter
+    await aggregateItemGroupData(null, null, statuses, reportData);
+
+    // call with null arguments to ignore the date-range filter
+    let batchResults = {};
+    await aggregateBatchItemGroupData(null, null, batchResults);
+
+    updateReportData(batchResults, reportData, null, null);
+
+    return reportData;
+  } catch (error) {
+    console.error(`Error in getting report data: ${error}`);
+    return {
+      success: false,
+      message: `Error in getting report data: ${error}`,
+    };
+  }
+}
 
 const getAllStatistics = async () => {
   const now = new Date();
@@ -786,4 +828,5 @@ const getAllStatistics = async () => {
 module.exports = {
   getAllStatistics,
   getReportData,
+  getHistoricReportData,
 };
