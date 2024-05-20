@@ -203,11 +203,12 @@ async function createWorkbook(data) {
   return workbook;
 }
 
-async function saveReportToDatabase(reportData, name) {
+async function saveReportToDatabase(reportData, name, type) {
   const report = {
     name: name,
     data: reportData,
     size: reportData.length,
+    type: type,
   };
 
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
@@ -232,7 +233,7 @@ async function generateReport() {
     // await workbook.xlsx.writeFile('report.xlsx');
 
     const reportBuffer = await workbook.xlsx.writeBuffer();
-    await saveReportToDatabase(reportBuffer, workbook.name);
+    await saveReportToDatabase(reportBuffer, workbook.name, 'historic'); // Pass 'historic' as the type of report
 
     return {
       success: true,
@@ -243,6 +244,15 @@ async function generateReport() {
   }
 }
 
+async function getLatestReportByType(type) {
+  // Fetch the latest report of the specified type from the database
+  const report = await Report.findOne({ type: type }).sort({
+    createdAt: -1,
+  });
+  return report;
+}
+
 module.exports = {
   generateReport,
+  getLatestReportByType,
 };
