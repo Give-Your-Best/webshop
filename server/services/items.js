@@ -676,9 +676,18 @@ const getShopNotificationItems = async () => {
       '_id'
     ).lean();
 
+    // We don't need items created by the GYB admins donor account
+    const excludeDonorId = await User_.Donor.findOne(
+      {
+        email: 'giveyourbest.uk@gmail.com',
+      },
+      '_id'
+    );
+
     const condition = {
       $and: [
         { approvedStatus: 'approved' },
+        { donorId: { $ne: excludeDonorId } },
         { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
         { shopperId: { $in: shopperIds } },
       ],
