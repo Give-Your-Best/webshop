@@ -1,5 +1,5 @@
 export const generateHistoricReport = async (token) => {
-  const response = await fetch(`/api/statistics/historic`, {
+  const response = await fetch(`/api/statistics/generate-historic-report`, {
     headers: {
       'Content-Type': 'application/json',
       'x-access-token': token,

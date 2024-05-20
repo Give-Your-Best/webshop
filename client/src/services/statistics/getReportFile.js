@@ -1,15 +1,21 @@
-export const getReportFile = async (reportName, token) => {
+export const getReportFile = async (token) => {
   try {
-    const response = await fetch(`/api/statistics/download/${reportName}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token,
-      },
-    });
+    const response = await fetch(
+      `/api/statistics/download-latest-report/historic`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+
+    // Get the report name from the 'Report-Name' header
+    const reportName = response.headers.get('Report-Name');
 
     // Get the blob from the response
     const blob = await response.blob();

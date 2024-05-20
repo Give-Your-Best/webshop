@@ -5,7 +5,7 @@ const {
   getReportData,
 } = require('../../services/statistics');
 const { generateReport } = require('../../services/reports');
-const Report = require('../../models/report');
+const { downloadReport } = require('../../controllers/statistics');
 
 // get settings endpoint api/statistics
 router.get('/', async (req, res) => {
@@ -21,33 +21,18 @@ router.get('/report', async (req, res) => {
   res.json(data);
 });
 
-// generate historic report
-router.get('/historic', async (req, res) => {
+// used for test purposes to manually generate the report whilst testing
+// this endpoint should not be used in production as generating the historic report crashes the app.
+// we have a dedicated scheduled task which calls the generateReport function on a periodic basis
+router.get('/generate-historic-report', async (req, res) => {
   const response = await generateReport();
   res.json(response);
 });
 
-router.get('/download/:reportName', async (req, res) => {
-  try {
-    // Fetch the report from the database
-    const report = await Report.findOne({ name: req.params.reportName });
-
-    // Set the response headers
-    res.setHeader(
-      'Content-Type',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${report.reportName}.xlsx`
-    );
-
-    // Send the report data as a response
-    res.send(report.data);
-  } catch (error) {
-    console.error(`Error in downloading report: ${error}`);
-    res.status(500).send('An error occurred while downloading the report');
-  }
+// endpoint used for the client to download the latest report from the server
+// currently we only have one report that is held at a time, and it's of type 'historic'. In the future, there might be others held
+router.get('/download-latest-report/:type', async (req, res) => {
+  await downloadReport(req, res);
 });
 
 module.exports = router;
