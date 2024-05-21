@@ -1,15 +1,29 @@
+const moment = require('moment');
 const {
   generateReport,
   getLatestReportByType,
 } = require('../services/reports');
-const { sendMail } = require('../services/mail');
+const { sendBulkMail, sendMail } = require('../services/mail');
+const { getAllSettings } = require('../services/settings');
 
 module.exports = async (logger) => {
+  // Get the day of the month
+  const date = moment().date();
+
+  // This job is triggered on a daily schedule but we only want it to run once
+  // a month at the start of the month...
+  if (date !== 1) {
+    return;
+  }
+
   try {
     const response = await generateReport();
 
-    const recipient = 'r.sahakyan1@gmail.com'; // need to replace with the emails of the actual recipients - waiting for confirmation
-    const recipientName = 'GYB'; // waiting for confirmation
+    // Get the email recipients from settings collection
+    const settings = await getAllSettings();
+    const recipients = settings
+      .filter(({ name }) => name === 'reportRecipient')
+      .map(({ value }) => value);
 
     if (response.success) {
       // generated report successfully
@@ -23,13 +37,13 @@ module.exports = async (logger) => {
         const emailHTML =
           '<p>A new report with historic data (to-date) is available.</p>';
         // Send the report
-        const mailResponse = await sendMail(
+        const mailResponse = await sendBulkMail(
           subject,
           emailHTML,
-          recipient,
-          recipientName,
+          recipients,
           report
         );
+
         if (mailResponse.success) {
           logger.info(mailResponse.message);
         } else {
@@ -49,8 +63,7 @@ module.exports = async (logger) => {
       const mailResponse = await sendMail(
         subject,
         emailHTML,
-        recipient,
-        recipientName
+        'gyb.developers@gmail.com'
       );
       if (mailResponse.success) {
         logger.info(mailResponse.message);
