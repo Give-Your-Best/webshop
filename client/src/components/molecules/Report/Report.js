@@ -6,18 +6,39 @@ import {
   StyledDatePicker,
   StyledSubmitButton,
   ReportWrapper,
+  FiltersWrapper,
 } from './Report.styles';
 // import { clothingSizeOptions, shoeSizeOptions } from '../../../utils/constants';
 import { downloadWorkbook, formatDate } from '../../../utils/helpers';
 import { Formik } from 'formik';
 import { getReportData } from '../../../services/statistics';
+import { StyledSelect } from '../../atoms/Select';
+import { AccountContext } from '../../../context/account-context';
 const ExcelJS = require('exceljs');
 
 export const Report = () => {
   const { token } = useContext(AppContext);
+  const { allTags, allUsers } = useContext(AccountContext);
+
+  // Filter out only donor users
+  const donorUsers = allUsers
+    ? Object.values(allUsers).filter((user) => user.type === 'donor')
+    : [];
+
+  // Map over donorUsers to create a new array for the options prop
+  const userOptions = donorUsers.map((user) => ({
+    value: user._id,
+    label: user.name,
+  }));
+  // Map over allTags to create a new array for the options prop
+  const tagOptions = allTags.map((tag) => ({
+    value: tag.name,
+    label: tag.name,
+  }));
   var res = {};
 
   const handleGenerate = async (values, { resetForm }) => {
+    console.log({ values });
     // disabling the ability to generate a full-report (without date-range) for now
     if (values.dateRange.length === 0) {
       Notification('Error', 'Please select a date range', 'error');
@@ -28,6 +49,8 @@ export const Report = () => {
       res = await getReportData(
         values.dateRange.length ? values.dateRange[0] : '',
         values.dateRange.length ? values.dateRange[1] : '',
+        values.donor.length ? values.donor : '',
+        values.tag.length ? values.tag : '',
         token
       );
     }
@@ -263,10 +286,16 @@ export const Report = () => {
 
   return (
     <ReportWrapper>
-      <Formik initialValues={{ dateRange: [] }} onSubmit={handleGenerate}>
+      <Formik
+        initialValues={{ dateRange: [], tag: '', donor: '' }}
+        onSubmit={handleGenerate}
+      >
         <StyledForm>
-          <StyledDatePicker.RangePicker name="dateRange" />
-
+          <FiltersWrapper>
+            <StyledDatePicker.RangePicker name="dateRange" />
+            <StyledSelect reportStyle name="tag" options={tagOptions} />
+            <StyledSelect reportStyle name="donor" options={userOptions} />
+          </FiltersWrapper>
           <StyledSubmitButton>Generate Report</StyledSubmitButton>
         </StyledForm>
       </Formik>

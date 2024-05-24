@@ -33,6 +33,14 @@ const StyledSelect = styled(Select)`
     color: black;
     border: none;spotif
   }
+
+  ${({ reportStyle }) =>
+    reportStyle &&
+    `
+    // Override styles for report here...
+    min-width: 100px;
+    max-width: 200px;
+  `}
 `;
 
 export { StyledSelect };

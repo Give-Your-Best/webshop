@@ -22,19 +22,31 @@ export const ReportWrapper = styled.div`
   }
 `;
 
+export const FiltersWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+`;
+
 export const StyledForm = styled(Form)`
   display: flex;
-  align-items: end;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 100%;
+  gap: 20px;
 `;
 
 export const StyledDatePicker = styled(DatePicker)`
   color: ${({ theme }) => theme.colorMappings.primary};
   border: 1px solid ${({ theme }) => theme.colorMappings.primary};
-  height: 50px;
   margin: 0;
   padding: 0;
   display: block;
-  height: 50px !important;
+  max-height: 50px !important;
   background-color: transparent;
   color: ${({ theme }) => theme.colorMappings.primary};
   background: transparent;
@@ -54,7 +66,6 @@ export const StyledSubmitButton = styled(SubmitButton)`
   border: 2px solid ${({ theme }) => theme.colorMappings.buttonBorder} !important;
   color: ${({ theme }) => theme.colorMappings.primary};
   padding: 3px 15px 4px 10px !important;
-  margin-left: 10px;
 
   @media (max-width: ${({ theme }) => theme.mid}) {
     font-size: 18px;
