@@ -1,6 +1,6 @@
 const ExcelJS = require('exceljs');
 const { getHistoricReportData } = require('./statistics');
-const Report = require('../models/report');
+const Report = require('../models/Report');
 
 async function createWorkbook(data) {
   const workbook = new ExcelJS.Workbook();
