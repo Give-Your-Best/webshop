@@ -88,10 +88,9 @@ itemSchema.post('update', function () {
   this.getUpdate().$set;
 });
 
-itemSchema.index({ batchId: 1 });
-itemSchema.index({ isTemplateBatchItem: 1 });
 itemSchema.index({ tags: 1 });
 itemSchema.index({ shopperId: 1 });
+itemSchema.index({ status: 1 });
 
 // Before saving set approved status to approved if donor is a trusted donor (default is in-progress)
 itemSchema.pre('save', async function (next) {
