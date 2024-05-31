@@ -38,7 +38,6 @@ export const Report = () => {
   var res = {};
 
   const handleGenerate = async (values, { resetForm }) => {
-    console.log({ values });
     // disabling the ability to generate a full-report (without date-range) for now
     if (values.dateRange.length === 0) {
       Notification('Error', 'Please select a date range', 'error');
@@ -46,13 +45,14 @@ export const Report = () => {
     }
 
     if (values.dateRange) {
-      res = await getReportData(
-        values.dateRange.length ? values.dateRange[0] : '',
-        values.dateRange.length ? values.dateRange[1] : '',
-        values.donor.length ? values.donor : '',
-        values.tag.length ? values.tag : '',
-        token
-      );
+      // create filters object which has the dateRange, donor and tag
+      const filters = {
+        from: values.dateRange ? values.dateRange[0] : '',
+        to: values.dateRange ? values.dateRange[1] : '',
+        donor: values.donor ? values.donor : '',
+        tag: values.tag ? values.tag : '',
+      };
+      res = await getReportData(filters, token);
     }
 
     if (res.success) {
@@ -152,20 +152,20 @@ export const Report = () => {
       // sheet one rows
 
       sheet.addRow({
-        name: 'Number of Shoppers',
+        name: 'Number of Shoppers signed-up',
         value: res.data.shopperCount || 0,
       });
       sheet.addRow({
-        name: 'Number of Shoppers plus additional shoppers',
+        name: 'Number of Shoppers signed-up plus additional shoppers',
         value: res.data.shopperCountWithAdditional || 0,
       });
       sheet.addRow({
-        name: 'Number of converted Shoppers',
-        value: res.data.shopperConvertedCount || 0,
+        name: 'Number of shoppers who have shopped',
+        value: res.data.shoppersWhoShoppedCount || 0,
       });
       sheet.addRow({
-        name: 'Number of converted Shoppers plus additional shoppers',
-        value: res.data.shopperConvertedCountWithAdditional || 0,
+        name: 'Number of Shoppers who signed-up and shopped',
+        value: res.data.shoppersWhoShoppedAndSignedUpCount || 0,
       });
 
       sheet.addRow({ name: '', value: '' });

@@ -14,10 +14,9 @@ router.get('/', async (req, res) => {
 });
 
 // get settings endpoint api/statistics
-router.get('/report', async (req, res) => {
-  let from = req.query.from || '';
-  let to = req.query.to || '';
-  const data = await getReportData(from, to);
+router.post('/report', async (req, res) => {
+  let { filters } = req.body;
+  const data = await getReportData(filters);
   res.json(data);
 });
 
