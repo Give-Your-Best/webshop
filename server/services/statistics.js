@@ -380,7 +380,7 @@ const getShoppersData = async (fromDate, toDate) => {
 
 // Function to get donors data
 const getDonorsData = async (fromDate, toDate) => {
-  // fetch donor data
+  // fetch fetch
   const donors = await User_.Donor.find({
     approvedStatus: 'approved',
     createdAt: { $gt: fromDate, $lt: toDate },
@@ -388,10 +388,16 @@ const getDonorsData = async (fromDate, toDate) => {
     .populate('donatedItems', '_id')
     .lean();
 
+  // get all items with distinct donorIds which were createdAt in the given date-range
+  const donorsWhoDonatedCount = await Item.distinct('donorId', {
+    createdAt: { $gt: fromDate, $lt: toDate },
+  });
+
   // count donor data
   return {
-    donorCount: donors.length,
-    donorConvertedCount: donors.filter((d) => d.donatedItems > 0).length,
+    donorCount: donors.length, // donors who signed-up in the given date-range
+    donorConvertedCount: donors.filter((d) => d.donatedItems > 0).length, // donors who signed-up AND donated in the given date-range
+    donorsWhoDonatedCount: donorsWhoDonatedCount.length, // all donors who donated in the given date-range
   };
 };
 

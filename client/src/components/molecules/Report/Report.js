@@ -171,12 +171,17 @@ export const Report = () => {
       sheet.addRow({ name: '', value: '' });
 
       sheet.addRow({
-        name: 'Number of Donors',
+        name: 'Number of Donors who signed-up',
         value: res.data.donorCount || 0,
       });
       sheet.addRow({
-        name: 'Number of converted Donors',
+        name: 'Number of Donors who signed-up and donated',
         value: res.data.donorConvertedCount || 0,
+      });
+
+      sheet.addRow({
+        name: 'Number of Donors who donated',
+        value: res.data.donorsWhoDonatedCount || 0,
       });
 
       sheet.addRow({ name: '', value: '' });
