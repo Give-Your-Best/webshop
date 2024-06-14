@@ -32,9 +32,10 @@ export const Report = () => {
   }));
   // Map over allTags to create a new array for the options prop
   const tagOptions = allTags.map((tag) => ({
-    value: tag.name,
+    value: tag._id,
     label: tag.name,
   }));
+
   var res = {};
 
   const handleGenerate = async (values, { resetForm }) => {
@@ -46,6 +47,7 @@ export const Report = () => {
 
     if (values.dateRange) {
       // create filters object which has the dateRange, donor and tag
+      console.log({ tags: values.tag });
       const filters = {
         from: values.dateRange ? values.dateRange[0] : '',
         to: values.dateRange ? values.dateRange[1] : '',

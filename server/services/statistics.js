@@ -1,6 +1,7 @@
 const Item = require('../models/Item');
 const BatchItem = require('../models/BatchItem');
 const User_ = require('../models/User');
+const mongoose = require('mongoose');
 
 async function aggregateBatchItemGroupData(fromDate, toDate, batchResults) {
   // Aggregate batch item data
@@ -148,7 +149,13 @@ async function aggregateBatchItemGroupData(fromDate, toDate, batchResults) {
   }
 }
 
-async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
+async function aggregateItemGroupData(
+  fromDate,
+  toDate,
+  statuses,
+  reportData,
+  query
+) {
   // grouped item data for each type
   const groupTypes = [
     'category',
@@ -255,6 +262,10 @@ async function aggregateItemGroupData(fromDate, toDate, statuses, reportData) {
     }
 
     let pipeline = [
+      // add the match stage to filter documents based on the query
+      {
+        $match: query,
+      },
       // exclude batch-template items
       {
         $match: {
@@ -402,16 +413,16 @@ const getDonorsData = async (fromDate, toDate) => {
 };
 
 // Function to get items data
-const getItemsData = async (fromDate, toDate, statuses) => {
+const getItemsData = async (fromDate, toDate, statuses, query) => {
   // count all items (in date-range)
   const items = await Item.find({
     $and: [
       {
         $or: [{ batchId: null }, { isTemplateBatchItem: false }],
       },
-      {
-        createdAt: { $gt: fromDate, $lt: toDate },
-      },
+      // Assuming 'createdAt' is the date field you want to filter by
+      { createdAt: { $gte: fromDate, $lte: toDate } },
+      query,
     ],
   })
     .select('_id')
@@ -421,16 +432,40 @@ const getItemsData = async (fromDate, toDate, statuses) => {
   const itemsShopped = await Item.find({
     'statusUpdateDates.shoppedDate': { $gt: fromDate, $lt: toDate },
     status: { $in: statuses },
+    ...query,
   })
     .select('_id')
     .lean();
 
+  console.log({ itemsShopped });
+
   // count batch items' quantities
+  const matchQuery = {
+    createdAt: { $gte: fromDate, $lt: toDate },
+  };
+
+  if (query.tags) {
+    matchQuery['templateItem.tags'] = query.tags;
+  }
+
+  if (query.donorId) {
+    matchQuery['templateItem.donorId'] = query.donorId;
+  }
+
   const batchItems = await BatchItem.aggregate([
     {
-      $match: {
-        createdAt: { $gte: fromDate, $lt: toDate },
+      $lookup: {
+        from: 'items',
+        localField: 'templateItem',
+        foreignField: '_id',
+        as: 'templateItem',
       },
+    },
+    {
+      $unwind: '$templateItem',
+    },
+    {
+      $match: matchQuery,
     },
     {
       $group: {
@@ -439,6 +474,8 @@ const getItemsData = async (fromDate, toDate, statuses) => {
       },
     },
   ]).exec();
+
+  console.log({ batchItems });
 
   return {
     itemsCount: items.length + (batchItems?.[0]?.totalQuantity || 0),
@@ -452,6 +489,25 @@ const getItemsData = async (fromDate, toDate, statuses) => {
 // 3. donor
 // 4. tag
 const getReportData = async (filters) => {
+  // Initialize an empty query object
+  let query = {};
+
+  // If donor is provided, add donorId condition to the query
+  if (filters.donor) {
+    query.donorId = filters.donor;
+  }
+
+  // If tag is provided, add tag condition to the query
+  if (filters.tag) {
+    console.log({ tags: filters.tag });
+    // Ensure filters.tag is an array
+    const tags = Array.isArray(filters.tag) ? filters.tag : [filters.tag];
+    // Convert tag IDs to MongoDB ObjectId
+    const tagIds = tags.map((tag) => new mongoose.Types.ObjectId(tag));
+    query.tags = { $in: tagIds };
+  }
+  console.log({ query });
+
   //get dates with time 0
   var fromDate = new Date(
     new Date(filters.from).getFullYear(),
@@ -485,15 +541,17 @@ const getReportData = async (filters) => {
     Object.assign(reportData, donorsData);
 
     // fetch items data
-    const itemsData = await getItemsData(fromDate, toDate, statuses);
+    const itemsData = await getItemsData(fromDate, toDate, statuses, query);
     Object.assign(reportData, itemsData);
 
-    await aggregateItemGroupData(fromDate, toDate, statuses, reportData);
+    await aggregateItemGroupData(fromDate, toDate, statuses, reportData, query);
 
     let batchResults = {};
     await aggregateBatchItemGroupData(fromDate, toDate, batchResults);
 
     updateReportData(batchResults, reportData, fromDate, toDate);
+
+    console.log({ reportData });
 
     return { success: true, data: reportData };
   } catch (error) {
