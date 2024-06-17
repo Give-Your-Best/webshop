@@ -204,8 +204,10 @@ async function createWorkbook(data) {
 }
 
 async function saveReportToDatabase(reportData, name, type) {
+  const fileName = name.endsWith('.xlsx') ? name : `${name}.xlsx`;
+
   const report = {
-    name: name,
+    name: fileName,
     data: reportData,
     size: reportData.length,
     type: type,
@@ -217,7 +219,7 @@ async function saveReportToDatabase(reportData, name, type) {
   // or create a new report if one doesn't exist
   // ensures only one report is stored in the database (updated with the latest data)
   const updatedReport = await Report.findOneAndUpdate(
-    { name: name },
+    { name: fileName },
     report,
     options
   );
