@@ -478,21 +478,11 @@ async function getHistoricReportData() {
       approvedStatus: 'approved',
       kind: 'shopper',
     })
-      .populate('shoppedItems', '_id') // only return the _id field for associated shoppedItems
-      .select('shoppedItems shoppingFor shoppingForChildren') // only return the properties that are needed field
+      .select('shoppingFor shoppingForChildren') // only return the properties that are needed field
       .lean(); // convert mongoose documents to plain javascript objects
 
     // count shopper data
     reportData['shopperCount'] = shoppers.length;
-    reportData['shopperConvertedCount'] = shoppers.filter(
-      (s) => s.shoppedItems.length > 0
-    ).length;
-    reportData['shopperConvertedCountWithAdditional'] = shoppers.reduce(
-      (a, s) =>
-        a +
-        (s.shoppedItems.length > 0 ? s.shoppingFor + s.shoppingForChildren : 0),
-      0
-    );
     reportData['shopperCountWithAdditional'] = shoppers.reduce((a, s) => {
       return (
         a +
@@ -501,19 +491,25 @@ async function getHistoricReportData() {
       );
     }, 0);
 
+    // count the number of distinct shoppers
+    const shoppersWhoShoppedCount = await Item.distinct('shopperId', {
+      status: 'shopped',
+    });
+
+    reportData['shoppersWhoShopped'] = shoppersWhoShoppedCount.length;
+
     // fetch donor data
+
+    // get all donors
     const donors = await User_.User.find({
       approvedStatus: 'approved',
       kind: 'donor',
-    })
-      .populate('donatedItems', '_id')
-      .lean();
-
-    // count donor data
+    }).lean();
     reportData['donorCount'] = donors.length;
-    reportData['donorConvertedCount'] = donors.filter(
-      (d) => d.donatedItems.length > 0
-    ).length;
+
+    // get all donors who donated
+    const donorsWhoDonatedCount = await Item.distinct('donorId');
+    reportData['donorsWhoDonated'] = donorsWhoDonatedCount.length;
 
     // fetch all items
     const items = await Item.find({
@@ -543,7 +539,6 @@ async function getHistoricReportData() {
     reportData['itemsCount'] =
       items.length + (batchItems?.[0]?.totalQuantity || 0);
     reportData['itemsShopped'] = itemsShopped.length;
-    reportData['uniqueShoppers'] = reportData['shopperConvertedCount'];
 
     // call with null arguments to ignore the date-range filter
     await aggregateItemGroupData(null, null, statuses, reportData);
