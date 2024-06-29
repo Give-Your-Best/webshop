@@ -499,18 +499,17 @@ async function getHistoricReportData() {
     reportData['shoppersWhoShopped'] = shoppersWhoShoppedCount.length;
 
     // fetch donor data
+
+    // get all donors
     const donors = await User_.User.find({
       approvedStatus: 'approved',
       kind: 'donor',
-    })
-      .populate('donatedItems', '_id')
-      .lean();
-
-    // count donor data
+    }).lean();
     reportData['donorCount'] = donors.length;
-    reportData['donorConvertedCount'] = donors.filter(
-      (d) => d.donatedItems.length > 0
-    ).length;
+
+    // get all donors who donated
+    const donorsWhoDonatedCount = await Item.distinct('donorId');
+    reportData['donorsWhoDonated'] = donorsWhoDonatedCount.length;
 
     // fetch all items
     const items = await Item.find({

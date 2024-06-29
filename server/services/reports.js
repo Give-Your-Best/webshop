@@ -85,7 +85,7 @@ async function createWorkbook(data) {
     value: data.shopperCountWithAdditional || 0,
   });
   sheet.addRow({
-    name: 'Number of distinct shoppers who have shopped',
+    name: 'Number of distinct Shoppers who have shopped',
     value: data.shoppersWhoShopped || 0,
   });
 
@@ -96,8 +96,8 @@ async function createWorkbook(data) {
     value: data.donorCount || 0,
   });
   sheet.addRow({
-    name: 'Number of converted Donors',
-    value: data.donorConvertedCount || 0,
+    name: 'Number of distinct Donors who donated',
+    value: data.donorsWhoDonated || 0,
   });
 
   sheet.addRow({ name: '', value: '' });
