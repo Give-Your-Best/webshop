@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { AppHeading } from '../../';
 import { Banner } from '../Banners';
-import { CategoryMenu } from '../CategoryMenu';
-import { MobileMenu } from '../MobileMenu';
-import { HeaderMenu } from '../HeaderMenu';
-import { BurgerMenu } from '../../atoms/BurgerMenu';
+// import { CategoryMenu } from '../CategoryMenu';
+// import { MobileMenu } from '../MobileMenu';
+// import { HeaderMenu } from '../HeaderMenu';
+// import { BurgerMenu } from '../../atoms/BurgerMenu';
 import logo from './gyb_logo_2.svg';
 import { HeaderWrapper, LogoWrapper } from './Header.styles';
 
@@ -17,12 +17,12 @@ export const Header = () => {
             <img alt="give-your-best-logo" src={logo} />
           </LogoWrapper>
         </AppHeading>
-        <BurgerMenu />
+        {/* <BurgerMenu />
         <MobileMenu />
-        <HeaderMenu />
+        <HeaderMenu /> */}
       </HeaderWrapper>
       <Banner />
-      <CategoryMenu />
+      {/* <CategoryMenu /> */}
     </div>
   );
 };
