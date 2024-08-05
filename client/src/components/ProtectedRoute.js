@@ -8,7 +8,9 @@ import { LoadingSpinner } from '../components/atoms';
 function ProtectedRoute({ component: Component, ...restOfProps }) {
   const { user, token, setUser, setToken } = useContext(AppContext);
   const [cookies] = useCookies();
-  const [isAuth, setIsAuth] = useState(token && user && cookies['jwt_user']);
+  const [isAuth, setIsAuth] = useState(
+    token && user && user.type === 'admin' && cookies['jwt_user']
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
       }
     };
 
-    if (!token && !user && cookies['jwt_user']) {
+    if (!token && (!user || user.type !== 'admin') && cookies['jwt_user']) {
       // re-log them in with /authenticate
       authenticate(cookies['jwt_user']);
     } else {
