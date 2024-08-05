@@ -74,6 +74,14 @@ const login = async (req, res) => {
       approvedStatus: 'approved',
     });
 
+    // TEMP!! Reject login requests from all but admin users...
+    if (user && user.kind !== 'admin') {
+      return res.json({
+        success: false,
+        message: `Sorry, the operation of the webshop is temporarily suspended`,
+      });
+    }
+
     if (user && user.kind === 'shopper') {
       const recentItems = await Item.find({
         shopperId: user._id,
@@ -231,6 +239,12 @@ const authenticate = async (req, res) => {
         .send({ success: false, message: 'Failed to authenticate user.' });
     }
     const user = await User_.User.findById(decoded._id);
+    // TEMP!! Reject authentication requests from all but admin users...
+    if (!user || user.kind !== 'admin') {
+      return res
+        .status(401)
+        .send({ success: false, message: 'Authentication failed.' });
+    }
     if (!user || user.approvedStatus != 'approved') {
       return res
         .status(401)
