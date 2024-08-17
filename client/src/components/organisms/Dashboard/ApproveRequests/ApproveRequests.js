@@ -15,7 +15,7 @@ import {
   getDonations,
 } from '../../../../services/user';
 import { updateItem } from '../../../../services/items';
-import { getSetting } from '../../../../services/settings';
+// import { getSetting } from '../../../../services/settings';
 import { sendAutoEmail, tabList } from '../../../../utils/helpers';
 import {
   ShopperMiniEditForm,
@@ -26,7 +26,7 @@ import {
 } from '../../../molecules';
 import { Button } from '../../../atoms';
 import { Formik } from 'formik';
-import { Modal } from 'antd';
+// import { Modal } from 'antd';
 
 export const ApproveRequests = () => {
   const { token, user } = useContext(AppContext);
@@ -35,9 +35,9 @@ export const ApproveRequests = () => {
   const [shoppers, setShoppers] = useState([]);
   const [donations, setDonations] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [trustedDonorLimit, setTrustedDonorLimit] = useState(0);
+  // const [trustedDonorLimit, setTrustedDonorLimit] = useState(0);
   const [approvedItemCount, setApprovedItemCount] = useState(0);
-  const { confirm } = Modal;
+  // const { confirm } = Modal;
 
   const updateDonorWrapper = async (recordId, values) => {
     const res = await updateDonor(recordId, values, token);
@@ -64,31 +64,33 @@ export const ApproveRequests = () => {
       //TO DO Email Notification to say your donation has been approved
       const itemId = e.target.getAttribute('data-item-id');
       updateItem(itemId, { approvedStatus: 'approved' }).then(() => {
-        //if reached trusted donor limit then auto approve donor
         setApprovedItemCount(approvedItemCount + 1);
-        if (approvedItemCount >= trustedDonorLimit) {
-          markAsTrusted([record._id]);
-          confirm({
-            title: `You have marked this donor as trusted!`,
-            className: 'modalStyle',
-            content:
-              'If you wish to continue to approve their items, please uncheck their trusted donor status in the user panel',
-          });
-        } else {
-          //otherwise remove from list of donations and continue
-          record.donationItems = record.donationItems.filter((item) => {
-            return item._id !== itemId;
-          });
-          setDonations(
-            donations.filter((donation) => {
-              if (donation._id !== record._id) {
-                return record;
-              } else {
-                return donation;
-              }
-            })
-          );
-        }
+        // TODO - remove this... We will no longer set the donor auto-trusted on
+        // hitting the approved items `trusted donor limit`...
+        //if reached trusted donor limit then auto approve donor
+        // if (approvedItemCount >= trustedDonorLimit) {
+        //   markAsTrusted([record._id]);
+        //   confirm({
+        //     title: `You have marked this donor as trusted!`,
+        //     className: 'modalStyle',
+        //     content:
+        //       'If you wish to continue to approve their items, please uncheck their trusted donor status in the user panel',
+        //   });
+        // } else {
+        //otherwise remove from list of donations and continue
+        record.donationItems = record.donationItems.filter((item) => {
+          return item._id !== itemId;
+        });
+        setDonations(
+          donations.filter((donation) => {
+            if (donation._id !== record._id) {
+              return record;
+            } else {
+              return donation;
+            }
+          })
+        );
+        // }
       });
     };
     const reject = (e) => {
@@ -220,16 +222,16 @@ export const ApproveRequests = () => {
       );
     };
 
-    const fetchSetting = async () => {
-      if (!token) return null;
-      const settingValue = await getSetting('trustedDonorLimit', token);
-      setTrustedDonorLimit(settingValue);
-    };
+    // const fetchSetting = async () => {
+    //   if (!token) return null;
+    //   const settingValue = await getSetting('trustedDonorLimit', token);
+    //   setTrustedDonorLimit(settingValue);
+    // };
 
     if (mountedRef.current) {
       fetchShoppers();
       fetchDonations();
-      fetchSetting();
+      // fetchSetting();
     }
 
     return () => {
