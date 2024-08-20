@@ -39,6 +39,9 @@ export const DonorItems = () => {
   const [images, setImages] = useState([]);
   const { confirm } = Modal;
 
+  // Donor not yet marked trusted can upload no more than 5 items
+  const canAddItems = user.trustedDonor || items.length < 5;
+
   const handleDelete = (id) => {
     confirm({
       title: `Are you sure you want to delete this item?`,
@@ -226,9 +229,16 @@ export const DonorItems = () => {
         <Button primary small onClick={() => reopenTab('pastitems')}>
           View Past Items
         </Button>
-        <Button primary small onClick={() => openHiddenTab('item')}>
-          Add Item
-        </Button>
+
+        {canAddItems ? (
+          <Button primary small onClick={() => openHiddenTab('item')}>
+            Add Item
+          </Button>
+        ) : (
+          <Button disabled small>
+            Add Item
+          </Button>
+        )}
       </StyledTabPanel>
       <StyledTabPanel>
         <H2>Add Item</H2>
