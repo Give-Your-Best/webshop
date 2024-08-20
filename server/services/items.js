@@ -80,6 +80,12 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
+  // Donor not yet marked trusted can upload no more than 5 items
+  const donor = await User_.Donor.findById(data.donorId);
+  if (donor.trustedDonor === false || donor.canAddItemInBulk === false) {
+    throw new Error('Donor cannot add items in bulk');
+  }
+
   let { clothingSizes, shoeSizes, quantity, ...restOfData } = data;
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.
   if (clothingSizes) {
