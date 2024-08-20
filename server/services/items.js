@@ -7,6 +7,18 @@ const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data, bypassImageUpload = false) => {
+  // Donor not yet marked trusted can upload no more than 5 items
+  const donor = await User_.Donor.findById(data.donorId);
+  if (donor.trustedDonor === false) {
+    const userItemsCount = await Item.countDocuments({
+      donorId: donor.id,
+    });
+
+    if (userItemsCount >= 5) {
+      throw new Error('Cannot exceed new donor items limit');
+    }
+  }
+
   if (!bypassImageUpload) {
     console.log('uploading image');
     var new_photos = [];
