@@ -391,10 +391,29 @@ const getDonorItems = async (userId, itemStatus) => {
         ],
       };
     }
-    var items = await Item.find(conditions)
+
+    const donor = await User_.Donor.findById(userId);
+
+    const items = await Item.find(conditions)
       .sort({ shopperId: -1 })
-      .populate('shopperId')
+      .populate({
+        path: 'shopperId',
+        transform: function (doc) {
+          const { deliveryPreference, deliveryAddress } = doc;
+          if (deliveryPreference === 'direct' && donor.trustedDonor) {
+            return {
+              deliveryPreference,
+              deliveryAddress,
+            };
+          } else {
+            return {
+              deliveryPreference,
+            };
+          }
+        },
+      })
       .exec();
+
     return items;
   } catch (error) {
     console.error(`Error in getting donor items: ${error}`);
