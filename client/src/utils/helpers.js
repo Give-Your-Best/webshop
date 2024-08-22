@@ -98,6 +98,7 @@ export const getItemDetails = (item) => {
     shoppedBy = '',
     shoppedDate = '',
     donatedBy = '',
+    donorTrusted = '',
     locationName = '',
     assignedDate;
 
@@ -105,11 +106,14 @@ export const getItemDetails = (item) => {
   if (item.donorId && item.donorId.firstName) {
     donatedBy = name(item.donorId);
     donatedDate = new Date(item.createdAt).toLocaleString();
+    donorTrusted = item.donorId.trustedDonor ? 'Yes' : 'No';
     detailsHtml +=
       '<span><strong>Donated By:</strong> ' +
       donatedBy +
       '<br /></span><span><strong>Donated On:</strong> ' +
       donatedDate +
+      '<br /></span><span><strong>Donor Trusted:</strong> ' +
+      donorTrusted +
       '<br /></span>';
   }
 
