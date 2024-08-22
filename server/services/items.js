@@ -686,10 +686,20 @@ const getAccountNotificationItems = async (adminUserId) => {
 
 const getShopNotificationItems = async () => {
   try {
-    // We only care about items where shopper requires dispatch via GYB
+    // We care specifically about items where shopper requires dispatch via GYB
     const shopperIds = await User_.Shopper.find(
       {
         deliveryPreference: 'via-gyb',
+      },
+      '_id'
+    ).lean();
+
+    // But also we want to know about items where the donor is not yet trusted
+    // as these will need to be sent via gyb whether the shopper explicitly asks
+    // or not
+    const untrustedDonorIds = await User_.Donor.find(
+      {
+        $or: [{ trustedDonor: { $exists: false } }, { trustedDonor: false }],
       },
       '_id'
     ).lean();
@@ -707,7 +717,12 @@ const getShopNotificationItems = async () => {
         { approvedStatus: 'approved' },
         { donorId: { $ne: excludeDonorId } },
         { status: { $in: ['shopped', 'shipped-to-gyb', 'received-by-gyb'] } },
-        { shopperId: { $in: shopperIds } },
+        {
+          $or: [
+            { shopperId: { $in: shopperIds } },
+            { donorId: { $in: untrustedDonorIds } },
+          ],
+        },
       ],
     };
 
