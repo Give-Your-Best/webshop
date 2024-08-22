@@ -15,7 +15,6 @@ import {
   getDonations,
 } from '../../../../services/user';
 import { updateItem } from '../../../../services/items';
-// import { getSetting } from '../../../../services/settings';
 import { sendAutoEmail, tabList } from '../../../../utils/helpers';
 import {
   ShopperMiniEditForm,
