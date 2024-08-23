@@ -79,8 +79,20 @@ export const Login = () => {
 
   return (
     <Container data-id="LoginRoute">
-      {true && (
-        <>
+      <StyledTabs forceRenderTabPanel={true} defaultIndex={1}>
+        <StyledTabList>
+          <SignUpStyledTab>Sign Up</SignUpStyledTab>
+          <StyledTab>Log In</StyledTab>
+          <HiddenStyledTab className="adddonor">Donor signup</HiddenStyledTab>
+          <HiddenStyledTab className="addshopper">
+            Shopper signup
+          </HiddenStyledTab>
+        </StyledTabList>
+
+        <StyledTabPanel>
+          <SignUpContainer />
+        </StyledTabPanel>
+        <StyledTabPanel>
           <ResetPassword
             visible={visible}
             handleOk={handleReset}
@@ -117,69 +129,14 @@ export const Login = () => {
             </StyledForm>
           </Formik>
           {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-        </>
-      )}
-
-      {false && (
-        <StyledTabs forceRenderTabPanel={true} defaultIndex={1}>
-          <StyledTabList>
-            <SignUpStyledTab>Sign Up</SignUpStyledTab>
-            <StyledTab>Log In</StyledTab>
-            <HiddenStyledTab className="adddonor">Donor signup</HiddenStyledTab>
-            <HiddenStyledTab className="addshopper">
-              Shopper signup
-            </HiddenStyledTab>
-          </StyledTabList>
-
-          <StyledTabPanel>
-            <SignUpContainer />
-          </StyledTabPanel>
-          <StyledTabPanel>
-            <ResetPassword
-              visible={visible}
-              handleOk={handleReset}
-              handleCancel={handleCancelReset}
-              loading={loading}
-            />
-            <Formik
-              initialValues={{ email: '', password: '' }}
-              validationSchema={loginSchema}
-              onSubmit={handleLoginSubmit}
-            >
-              <StyledForm>
-                <div>
-                  <StyledLabel>Email address</StyledLabel>
-                  <StyledInput name="email" placeholder="Enter email address" />
-                  <StyledError name="email" component="div" />
-
-                  <StyledLabel>Password</StyledLabel>
-                  <StyledInputPassword
-                    name="password"
-                    placeholder="Enter password"
-                  />
-                  <StyledError name="password" component="div" />
-                  <NewPasswordLink
-                    onClick={() => {
-                      setVisible(true);
-                    }}
-                  >
-                    Request a new password
-                  </NewPasswordLink>
-                </div>
-
-                <StyledSubmitButton>Log In</StyledSubmitButton>
-              </StyledForm>
-            </Formik>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-          </StyledTabPanel>
-          <StyledTabPanel>
-            <DonorSignUpForm />
-          </StyledTabPanel>
-          <StyledTabPanel>
-            <ShopperSignUpForm />
-          </StyledTabPanel>
-        </StyledTabs>
-      )}
+        </StyledTabPanel>
+        <StyledTabPanel>
+          <DonorSignUpForm />
+        </StyledTabPanel>
+        <StyledTabPanel>
+          <ShopperSignUpForm />
+        </StyledTabPanel>
+      </StyledTabs>
     </Container>
   );
 };

@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { Formik } from 'formik';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import {
   ItemsCollapsedList,
@@ -31,13 +31,41 @@ import { itemCreateschema } from '../../../../utils/validation';
 
 export const DonorItems = () => {
   const { token, user } = useContext(AppContext);
-  const mountedRef = useRef(true);
   const [items, setItems] = useState([]);
+  const [canAddItems, setCanAddItems] = useState(false);
   const [pastItems, setPastItems] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
   const [editingKey, setEditingKey] = useState([]);
   const [images, setImages] = useState([]);
   const { confirm } = Modal;
+
+  useEffect(() => {
+    var tabs = tabList(user);
+
+    tabs.forEach((t) => {
+      if (t.id === 'donorItems') {
+        window.history.pushState({}, '', '/dashboard/' + t.id);
+      }
+    });
+  }, [token, user]);
+
+  const fetchItems = useCallback(async () => {
+    const [shopItems, pastItems, restItems] = await Promise.all([
+      getDonorItems(user.id, 'in-shop'),
+      getDonorItems(user.id, 'received'),
+      getDonorItems(user.id),
+    ]);
+
+    setItems(shopItems);
+    setPastItems(pastItems);
+
+    // Donor not yet marked trusted can upload no more than 5 items
+    setCanAddItems(
+      user.trustedDonor || [...shopItems, ...pastItems, ...restItems].length < 5
+    );
+  }, [user.id, user.trustedDonor]);
+
+  useEffect(fetchItems, [user, token, fetchItems]);
 
   const handleDelete = (id) => {
     confirm({
@@ -46,21 +74,9 @@ export const DonorItems = () => {
       onOk() {
         getItem(id).then((itemToDelete) => {
           if (itemToDelete.batchId !== null) {
-            deleteBatchItem(id).then(() => {
-              setItems(
-                items.filter((item) => {
-                  return item._id !== id;
-                })
-              );
-            });
+            deleteBatchItem(id).then(() => fetchItems());
           } else {
-            deleteItem(id, token).then(() => {
-              setItems(
-                items.filter((item) => {
-                  return item._id !== id;
-                })
-              );
-            });
+            deleteItem(id, token).then(() => fetchItems());
           }
         });
       },
@@ -104,36 +120,6 @@ export const DonorItems = () => {
     });
     return;
   };
-
-  useEffect(() => {
-    //add to url history (added for back button to work)
-    var tabs = tabList(user);
-    tabs.forEach((t) => {
-      if (t.id === 'donorItems') {
-        window.history.pushState({}, '', '/dashboard/' + t.id);
-      }
-    });
-
-    const fetchItems = async () => {
-      const items = await getDonorItems(user.id, 'in-shop');
-      if (!mountedRef.current) return null;
-      setItems(items);
-    };
-
-    const fetchPastItems = async () => {
-      const items = await getDonorItems(user.id, 'received');
-      if (!mountedRef.current) return null;
-      setPastItems(items);
-    };
-
-    fetchItems();
-    fetchPastItems();
-
-    return () => {
-      // cleanup
-      mountedRef.current = false;
-    };
-  }, [token, user]);
 
   const editForm = (record) => {
     const handleEditSave = (newRecord) => {
@@ -200,8 +186,9 @@ export const DonorItems = () => {
       </div>
     );
   };
-  const submitFunction = (item) => {
-    setItems(items.concat(item));
+
+  const submitFunction = () => {
+    fetchItems();
   };
 
   return (
@@ -226,9 +213,20 @@ export const DonorItems = () => {
         <Button primary small onClick={() => reopenTab('pastitems')}>
           View Past Items
         </Button>
-        <Button primary small onClick={() => openHiddenTab('item')}>
-          Add Item
-        </Button>
+
+        {canAddItems ? (
+          <Button primary small onClick={() => openHiddenTab('item')}>
+            Add Item
+          </Button>
+        ) : (
+          <Tooltip title="You cannot add more items at this time">
+            <div>
+              <Button disabled small>
+                Add Item
+              </Button>
+            </div>
+          </Tooltip>
+        )}
       </StyledTabPanel>
       <StyledTabPanel>
         <H2>Add Item</H2>
