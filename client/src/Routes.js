@@ -1,15 +1,15 @@
 import React from 'react';
-import { Switch, Redirect, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import {
   Home,
-  // Item,
+  Item,
   Login,
-  // Register,
+  Register,
   Dashboard,
-  // Products,
-  // Basket,
-  // DonorProducts,
-  // SizingGuide,
+  Products,
+  Basket,
+  DonorProducts,
+  SizingGuide,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -17,39 +17,31 @@ export const Routes = () => {
   return (
     <Switch>
       <Route path={`/item/:itemId`}>
-        <Redirect to="/" />
-        {/* <Item /> */}
+        <Item />
       </Route>
       <Route path={`/products/:category/:subCategory`}>
-        <Redirect to="/" />
-        {/* <Products /> */}
+        <Products />
       </Route>
       <Route path={`/products/:category`}>
-        <Redirect to="/" />
-        {/* <Products /> */}
+        <Products />
       </Route>
       <Route path={`/products/`}>
-        <Redirect to="/" />
-        {/* <Products /> */}
+        <Products />
       </Route>
       <Route path={`/donorproducts/:donorId`}>
-        <Redirect to="/" />
-        {/* <DonorProducts /> */}
+        <DonorProducts />
       </Route>
       <Route path="/login">
         <Login />
       </Route>
       <Route path="/basket">
-        <Redirect to="/" />
-        {/* <Basket /> */}
+        <Basket />
       </Route>
       <Route path="/register">
-        <Redirect to="/" />
-        {/* <Register /> */}
+        <Register />
       </Route>
       <Route path="/sizing-guide">
-        <Redirect to="/" />
-        {/* <SizingGuide /> */}
+        <SizingGuide />
       </Route>
       <ProtectedRoute
         path={`/dashboard/:itemId`}

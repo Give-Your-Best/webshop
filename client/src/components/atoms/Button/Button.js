@@ -1,7 +1,17 @@
 import styled, { css } from 'styled-components';
 
 export const Button = styled.button`
-  ${({ theme, primary, round, small, large, center, left, right }) => css`
+  ${({
+    theme,
+    primary,
+    round,
+    small,
+    large,
+    center,
+    left,
+    right,
+    disabled,
+  }) => css`
     font-size: 22px;
     cursor: pointer;
     border-radius: 0.1rem;
@@ -21,6 +31,13 @@ export const Button = styled.button`
     @media (max-width: ${({ theme }) => theme.mobile}) {
       min-height: 44px;
     }
+
+    ${disabled &&
+    css`
+      cursor: unset;
+      border: 2px solid ${theme.colorMappings.secondary};
+      color: ${theme.colorMappings.secondary};
+    `};
 
     ${left &&
     css`
