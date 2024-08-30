@@ -715,10 +715,13 @@ const getShopNotificationItems = async () => {
 
     // But also we want to know about items where the donor is not yet trusted
     // as these will need to be sent via gyb whether the shopper explicitly asks
-    // or not
+    // or not...
+    // Note: there are legacy cases where the `trustedDonor` property is unset
+    // since there was previously no default value set on the donor schema, but
+    // here we only care about users where the property is explicitly set false
     const untrustedDonorIds = await User_.Donor.find(
       {
-        $or: [{ trustedDonor: { $exists: false } }, { trustedDonor: false }],
+        trustedDonor: false,
       },
       '_id'
     ).lean();
