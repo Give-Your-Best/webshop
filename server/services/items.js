@@ -399,17 +399,42 @@ const getDonorItems = async (userId, itemStatus) => {
       .populate({
         path: 'shopperId',
         transform: function (doc) {
-          const { deliveryPreference, deliveryAddress } = doc;
-          if (deliveryPreference === 'direct' && donor.trustedDonor) {
+          const {
+            _id,
+            deliveryAddress,
+            deliveryPreference,
+            email,
+            firstName,
+            lastName,
+          } = doc;
+
+          // Hide as much as possible in the payload sent to a not yet trusted
+          // donor
+          if (donor.trustedDonor === false) {
             return {
-              deliveryPreference,
-              deliveryAddress,
-            };
-          } else {
-            return {
-              deliveryPreference,
+              _id,
+              email,
             };
           }
+
+          if (deliveryPreference === 'direct') {
+            return {
+              _id,
+              deliveryAddress,
+              deliveryPreference,
+              email,
+              firstName,
+              lastName,
+            };
+          }
+
+          return {
+            _id,
+            deliveryPreference,
+            email,
+            firstName,
+            lastName,
+          };
         },
       })
       .exec();
