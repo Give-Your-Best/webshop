@@ -399,6 +399,8 @@ const getDonorItems = async (userId, itemStatus) => {
       .populate({
         path: 'shopperId',
         transform: function (doc) {
+          if (!doc) return;
+
           const {
             _id,
             deliveryAddress,
