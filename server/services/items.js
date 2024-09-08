@@ -419,7 +419,7 @@ const getDonorItems = async (userId, itemStatus) => {
             };
           }
 
-          if (deliveryPreference === 'direct') {
+          if (donor.canViewShopperAddress || deliveryPreference === 'direct') {
             return {
               _id,
               deliveryAddress,
