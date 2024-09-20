@@ -29,8 +29,13 @@ export const DonorOrdersList = () => {
   const { allTags } = useContext(AccountContext);
   const [itemsToSend, setItemsToSend] = useState([]);
   const [itemsAwaitingReceived, setItemsAwaitingReceived] = useState([]);
+  const [isAddressVisible, setIsAddressVisible] = useState(false);
   const mountedRef = useRef(true);
   const { confirm } = Modal;
+
+  const handleAddressVisibilityChange = (isVisible) => {
+    setIsAddressVisible(isVisible);
+  };
 
   const markAsSent = (itemsList) => {
     confirm({
@@ -140,12 +145,15 @@ export const DonorOrdersList = () => {
                                 actionText={''}
                                 action={null}
                                 allTags={allTags}
+                                onAddressVisibilityChange={
+                                  handleAddressVisibilityChange
+                                }
                               />
                             </div>
                           );
                         })
                       : ''}
-                    {item.items && item.items.length && (
+                    {item.items && item.items.length && isAddressVisible && (
                       <Button
                         primary
                         right
