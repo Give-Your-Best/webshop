@@ -120,7 +120,10 @@ export const Basket = () => {
 
                 //get donor details
                 getUser(item.donorId, token).then((donor) => {
-                  if (user.deliveryPreference === 'direct') {
+                  if (
+                    user.deliveryPreference === 'direct' &&
+                    donor.trustedDonor === true
+                  ) {
                     //send address directly in email
                     user.deliveryAddress.name = name(user);
 
@@ -130,7 +133,10 @@ export const Basket = () => {
                       [item],
                       user.deliveryAddress
                     );
-                  } else if (user.deliveryPreference === 'via-gyb') {
+                  } else if (
+                    user.deliveryPreference === 'via-gyb' ||
+                    donor.trustedDonor === false
+                  ) {
                     //send email without address - to be sent later with gyb address
 
                     sendAutoEmail('item_shopped_pending_address', donor, [
