@@ -679,10 +679,19 @@ const getAccountNotificationItems = async (adminUserId) => {
       '_id'
     ).lean();
 
+    // Exclude items created by the GYB admins donor account
+    const excludeDonorId = await User_.Donor.findOne(
+      {
+        email: 'giveyourbest.uk@gmail.com',
+      },
+      '_id'
+    );
+
     const condition = {
       $and: [
         { approvedStatus: 'approved' },
         { sendVia: locationId },
+        { donorId: { $ne: excludeDonorId._id } }, // Exclude the specific donorId
         {
           status: {
             $in: [
