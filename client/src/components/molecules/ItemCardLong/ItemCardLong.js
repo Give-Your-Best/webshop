@@ -24,7 +24,14 @@ import {
 
 const { Meta } = AntCard;
 
-export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
+export const ItemCardLong = ({
+  item,
+  actionText,
+  action,
+  type,
+  allTags,
+  onAddressVisibilityChange,
+}) => {
   const { token, user } = useContext(AppContext);
   let history = useHistory();
   const [deliveryAddress, setDeliveryAddress] = useState({});
@@ -102,6 +109,9 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
       user.canViewShopperAddress &&
       user.trustedDonor
     ) {
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       shopper.deliveryAddress.name = name(shopper);
       setDeliveryAddress(shopper.deliveryAddress);
     } else if (
@@ -113,6 +123,9 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
       item.sendVia
     ) {
       const location = await getLocation(item.sendVia, token);
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       setFAOShopperName(name(shopper));
       setDeliveryAddress(location[0]);
     } else if (
@@ -122,9 +135,15 @@ export const ItemCardLong = ({ item, actionText, action, type, allTags }) => {
       shopper.deliveryPreference !== 'via-gyb' &&
       shopper.deliveryAddress
     ) {
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       shopper.deliveryAddress.name = name(shopper);
       setDeliveryAddress(shopper.deliveryAddress);
     } else {
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(false);
+      }
       // Else we show the 'address not yet assigned' label.
       setAddressFound(true);
     }
