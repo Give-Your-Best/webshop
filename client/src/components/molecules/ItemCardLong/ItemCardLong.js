@@ -109,7 +109,9 @@ export const ItemCardLong = ({
       user.canViewShopperAddress &&
       user.trustedDonor
     ) {
-      onAddressVisibilityChange(true);
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       shopper.deliveryAddress.name = name(shopper);
       setDeliveryAddress(shopper.deliveryAddress);
     } else if (
@@ -121,7 +123,9 @@ export const ItemCardLong = ({
       item.sendVia
     ) {
       const location = await getLocation(item.sendVia, token);
-      onAddressVisibilityChange(true);
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       setFAOShopperName(name(shopper));
       setDeliveryAddress(location[0]);
     } else if (
@@ -131,11 +135,15 @@ export const ItemCardLong = ({
       shopper.deliveryPreference !== 'via-gyb' &&
       shopper.deliveryAddress
     ) {
-      onAddressVisibilityChange(true);
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(true);
+      }
       shopper.deliveryAddress.name = name(shopper);
       setDeliveryAddress(shopper.deliveryAddress);
     } else {
-      onAddressVisibilityChange(false);
+      if (typeof onAddressVisibilityChange === 'function') {
+        onAddressVisibilityChange(false);
+      }
       // Else we show the 'address not yet assigned' label.
       setAddressFound(true);
     }
