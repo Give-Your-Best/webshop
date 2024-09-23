@@ -148,7 +148,7 @@ export const Basket = () => {
                     // Upon checking-out this basket, it will notify the donor that they have an item to dispatch (and the address will be the GYB office).
 
                     let updateData = {
-                      sendVia: '6539040db9c7d96390fe8f2e', // need to find a better way to get this ID - it's the GYB location ID
+                      sendVia: '63da693b03ae730016ca7e16', // need to find a better way to get this ID - it's the GYB location ID
                       'statusUpdateDates.gybAssignedDate': getDate(),
                     };
                     updateItem(item._id, updateData, token).then(() => {
