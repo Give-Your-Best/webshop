@@ -681,7 +681,7 @@ const getAccountNotificationItems = async (adminUserId) => {
     // Exclude items created by the GYB admins donor account
     const excludeDonorId = await User_.Donor.findOne(
       {
-        email: '_giveyourbest.uk@gmail.com',
+        email: 'giveyourbest.uk@gmail.com',
       },
       '_id'
     );
@@ -764,7 +764,7 @@ const getShopNotificationItems = async () => {
     // We don't need items created by the GYB admins donor account
     const excludeDonorId = await User_.Donor.findOne(
       {
-        email: '_giveyourbest.uk@gmail.com',
+        email: 'giveyourbest.uk@gmail.com',
       },
       '_id'
     );
