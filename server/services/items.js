@@ -415,7 +415,7 @@ const getDonorItems = async (userId, itemStatus) => {
           if (donor.trustedDonor === false) {
             return {
               _id,
-              email,
+              firstName,
             };
           }
 
