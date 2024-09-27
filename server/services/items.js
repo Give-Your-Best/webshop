@@ -416,6 +416,7 @@ const getDonorItems = async (userId, itemStatus) => {
             return {
               _id,
               firstName,
+              lastName, // We require to display the full name, as there are a few people with the same first name
             };
           }
 
