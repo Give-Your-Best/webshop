@@ -415,7 +415,8 @@ const getDonorItems = async (userId, itemStatus) => {
           if (donor.trustedDonor === false) {
             return {
               _id,
-              email,
+              firstName,
+              lastName, // We require to display the full name, as there are a few people with the same first name
             };
           }
 
@@ -433,7 +434,6 @@ const getDonorItems = async (userId, itemStatus) => {
           return {
             _id,
             deliveryPreference,
-            email,
             firstName,
             lastName,
           };
