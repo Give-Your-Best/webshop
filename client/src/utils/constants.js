@@ -695,6 +695,13 @@ export const autoEmails = [
       "/dashboard'>Log In</a>",
   },
   {
+    type: 'item_shopped_auto_send_via_gyb',
+    content:
+      "<p>Hi {{name}}!<p><p>You’ve had an item shopped which will be sent via our Give Your Best office and is waiting for dispatch.</p><a href='" +
+      homeLink +
+      "/dashboard'>Log In</a>",
+  },
+  {
     type: 'new_signup',
     content:
       "<p>Hi Admin!<p><p>There’s been a new sign up! Please log in here to review the application.</p><a href='" +
