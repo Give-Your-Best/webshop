@@ -313,8 +313,6 @@ const evaluateDonorTrust = async (itemId) => {
   }
 };
 
-module.exports = { evaluateDonorTrust }; // Export as part of UserService
-
 module.exports = {
   createUser,
   getUser,
