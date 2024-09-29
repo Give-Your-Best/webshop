@@ -21,7 +21,7 @@ import {
   getItem,
 } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
-import { getUser } from '../../../../services/user';
+import { getUser, evaluateDonorTrust } from '../../../../services/user';
 import {
   sendAutoEmail,
   tabList,
@@ -136,19 +136,36 @@ export const Notifications = () => {
         title: `Are you sure you want to do this?`,
         className: 'modalStyle',
         onOk() {
-          return new Promise((resolve) => {
-            updateItem(itemId, updateData, token).then(() => {
-              setAccountNotificationsPendingReceive((prevState) => {
-                return {
-                  ...prevState,
-                  itemsCount: prevState.itemsCount - 1,
-                  items: prevState.items.filter((item) => {
-                    return item._id !== itemId;
-                  }),
-                };
+          return new Promise((resolve, reject) => {
+            // First, update the item
+            updateItem(itemId, updateData, token)
+              .then(() => {
+                // Upon successful update, proceed to evaluate donor trust
+                evaluateDonorTrust(itemId, token)
+                  .then(() => {
+                    setAccountNotificationsPendingReceive((prevState) => {
+                      return {
+                        ...prevState,
+                        itemsCount: prevState.itemsCount - 1,
+                        items: prevState.items.filter(
+                          (item) => item._id !== itemId
+                        ),
+                      };
+                    });
+                    resolve();
+                  })
+                  .catch((evaluateError) => {
+                    console.error(
+                      'Error evaluating donor trust:',
+                      evaluateError
+                    );
+                    reject(evaluateError); // Reject the promise if evaluating donor trust fails
+                  });
+              })
+              .catch((error) => {
+                console.error('Error updating item:', error);
+                reject(error); // Reject the promise if updating item fails
               });
-              resolve();
-            });
           }).catch(() => console.log('Oops errors!'));
         },
       });
