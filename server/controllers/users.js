@@ -134,6 +134,29 @@ const updateAdmin = async (req, res) => {
   }
 };
 
+const evaluateDonorTrust = async (req, res) => {
+  const itemId = req.params.id;
+  try {
+    const result = await UserService.evaluateDonorTrust(itemId);
+
+    if (result.updated) {
+      return res.status(200).json({
+        success: true,
+        message: 'Donor trust status evaluated and updated successfully.',
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: 'Donor trust status evaluated. No update was necessary.',
+      });
+    }
+  } catch (err) {
+    req.bugsnag.notify(err);
+    console.error(`Service error: ${err}`);
+    return res.status(500).send({ message: `Service error: ${err}` });
+  }
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -141,4 +164,5 @@ module.exports = {
   updateShopper,
   updateAdmin,
   registerUser,
+  evaluateDonorTrust,
 };

@@ -66,6 +66,9 @@ router.get('/dummyadmin/:name', async (req, res) => {
 // update user endpoint put to api/users/:id
 router.put('/:id', Users.updateUser);
 
+// Evaluate trust status endpoint PUT to api/users/donor/trust/:id
+router.put('/donor/trust/:id', Users.evaluateDonorTrust);
+
 // update user endpoint put to api/users/:id
 router.put('/donor/:id', Users.updateDonor);
 
