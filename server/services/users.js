@@ -268,6 +268,51 @@ const getGYBDummyUser = async (name) => {
   }
 };
 
+// Used for auto-trusting donors upon receiving 5 items
+// via the 'Mark received' by an admin in 'Account Notifications'
+const evaluateDonorTrust = async (itemId) => {
+  try {
+    // Fetch the item
+    const item = await Item.findById(itemId);
+    if (!item) throw new Error('Item not found');
+
+    // Fetch the donor associated with the item
+    const donor = await User_.User.findById(item.donorId);
+    if (!donor) throw new Error('Donor not found');
+
+    // If the donor is already trusted, no further action is needed
+    if (donor.trustedDonor) {
+      return { updated: false };
+    }
+
+    // Define the statuses that verify the donor's trust
+    const receivedStatuses = [
+      'received-by-gyb',
+      'shipped-to-shopper',
+      'received',
+    ];
+
+    // Count how many of the donor's items have been received by GYB or are in the verified statuses
+    const receivedByGYBCount = await Item.countDocuments({
+      donorId: donor._id,
+      status: { $in: receivedStatuses },
+    });
+
+    // If the donor has at least 5 items with the verified statuses, mark the donor as trusted
+    // This takes into account the current item being processed as the 5th item, fulfilling the trust criteria
+    if (receivedByGYBCount >= 5) {
+      donor.trustedDonor = true;
+      await donor.save();
+      return { updated: true }; // Donor was updated to trusted
+    }
+
+    return { updated: false }; // Not enough items in verified statuses, no update
+  } catch (error) {
+    console.error('Error in evaluateDonorTrust service:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createUser,
   getUser,
@@ -283,4 +328,5 @@ module.exports = {
   updateAdmin,
   getGYBDummyUser,
   getDonations,
+  evaluateDonorTrust,
 };

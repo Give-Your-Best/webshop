@@ -15,3 +15,4 @@ export { updatePassword } from './updatePassword';
 export { getGYBDummyUser } from './getGYBDummyUser';
 export { listUsers } from './listUsers';
 export { countUsers } from './countUsers';
+export { evaluateDonorTrust } from './evaluateDonorTrust';
