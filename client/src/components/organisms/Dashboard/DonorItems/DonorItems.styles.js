@@ -1,5 +1,20 @@
 import styled from 'styled-components';
+import { Alert } from 'antd';
 import { Tab, TabList, Tabs, TabPanel } from 'react-tabs';
+
+const StyledAlert = styled(Alert)`
+  border: none;
+
+  .ant-alert-message,
+  .ant-alert-description {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  > * {
+    margin: 0.5rem;
+  }
+`;
 
 const StyledTabs = styled(Tabs)`
   background: ${({ theme }) => theme.colorMappings.background};
@@ -100,6 +115,7 @@ const ListWrapper = styled.div`
 
 export {
   ListWrapper,
+  StyledAlert,
   StyledTab,
   StyledTabList,
   StyledTabs,
