@@ -8,6 +8,7 @@ import {
   ItemCreateForm,
 } from '../../../molecules';
 import {
+  StyledAlert,
   StyledTabListHidden,
   StyledTabs,
   StyledTabPanel,
@@ -203,6 +204,18 @@ export const DonorItems = () => {
 
       <StyledTabPanel>
         <H2>My Available Items</H2>
+
+        {user.trustedDonor && (
+          <>
+            <StyledAlert
+              description={
+                'For security reasons, all new donors will be able to upload a maximum of 5 items initially. Once those items have been received and inspected by the GYB team, you will be able to upload more items freely, parcel checks will be conducted periodically and randomly thereafter for safeguarding purposes.'
+              }
+              type={'info'}
+            />
+            <br />
+          </>
+        )}
         <ItemsCollapsedList
           data={items}
           expandRow={editForm}
