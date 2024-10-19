@@ -1,5 +1,6 @@
 const Item = require('../models/Item');
 const User_ = require('../models/User');
+const { sendMail } = require('../services/mail');
 
 const createUser = async (data) => {
   try {
@@ -303,6 +304,15 @@ const evaluateDonorTrust = async (itemId) => {
     if (receivedByGYBCount >= 5) {
       donor.trustedDonor = true;
       await donor.save();
+
+      // Construct the email content
+      const homeLink = 'https://shop.giveyourbest.uk/dashboard';
+      const emailSubject = 'Your Account Has Been Approved';
+      const emailHTML = `<p>Dear ${donor.firstName},</p><p>Great news, your 5 items have been shopped successfully so your account has been approved! You are now able to continue uploading items.</p><p>Thank you for your donations and support.</p><a href='${homeLink}'>Log In</a>`;
+
+      // Send the email
+      await sendMail(emailSubject, emailHTML, donor.email, donor.firstName);
+
       return { updated: true }; // Donor was updated to trusted
     }
 
