@@ -308,7 +308,7 @@ const evaluateDonorTrust = async (itemId) => {
       // Construct the email content
       const homeLink = 'https://shop.giveyourbest.uk/dashboard';
       const emailSubject = 'Your Account Has Been Approved';
-      const emailHTML = `<p>Dear ${donor.firstName},</p><p>Great news, your 5 items have been shopped successfully so your account has been approved! You are now able to upload items again.</p><p>Thank you for your donations and support.</p><a href='${homeLink}'>Log In</a>`;
+      const emailHTML = `<p>Dear ${donor.firstName},</p><p>Great news, your 5 items have been shopped successfully so your account has been approved! You are now able to continue uploading items.</p><p>Thank you for your donations and support.</p><a href='${homeLink}'>Log In</a>`;
 
       // Send the email
       await sendMail(emailSubject, emailHTML, donor.email, donor.firstName);
