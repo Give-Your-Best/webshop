@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { AccountContext } from '../../../context/account-context';
-import { Modal } from 'antd';
+import { Modal, Tooltip } from 'antd';
 import {
   ListWrapper,
   HiddenStyledTab,
@@ -153,15 +153,27 @@ export const DonorOrdersList = () => {
                           );
                         })
                       : ''}
-                    {item.items && item.items.length && isAddressVisible && (
-                      <Button
-                        primary
-                        right
-                        small
-                        onClick={() => markAsSent(item.items)}
+                    {item.items && item.items.length && (
+                      <Tooltip
+                        placement="topRight"
+                        title={
+                          !isAddressVisible
+                            ? 'This button is enabled only whenever the address has been set on the item. Please click `View delivery address` to check if an address has been set.'
+                            : ''
+                        }
                       >
-                        Mark as Sent
-                      </Button>
+                        <div>
+                          <Button
+                            primary
+                            right
+                            small
+                            disabled={!isAddressVisible}
+                            onClick={() => markAsSent(item.items)}
+                          >
+                            Mark as Sent
+                          </Button>
+                        </div>
+                      </Tooltip>
                     )}
                   </ShopperWrapper>
                 );
