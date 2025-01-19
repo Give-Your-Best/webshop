@@ -7,6 +7,7 @@ const {
 const { sendBulkMail, sendMail } = require('../services/mail');
 const { getAllSettings } = require('../services/settings');
 
+// Code for handling the historic report
 async function sendHistoricReport(logger) {
   try {
     const response = await generateReport();
@@ -60,69 +61,61 @@ async function sendHistoricReport(logger) {
   }
 }
 
+// Code for handling the latest shoppers report
+async function sendReportEmail(csvData, logger) {
+  const settings = await getAllSettings();
+  const recipients = settings
+    .filter(({ name }) => name === 'reportRecipient')
+    .map(({ value }) => value);
+
+  const subject = 'GYB Latest Shoppers Data Available';
+  const emailHTML =
+    '<p>This email is automatically generated on the first day of each month. Attached is a csv file with the latest shoppers data available.</p>';
+  const mailResponse = await sendBulkMail(subject, emailHTML, recipients, {
+    name: 'latest_shoppers.csv',
+    data: csvData,
+    size: csvData.length,
+  });
+
+  if (mailResponse.success) {
+    logger.info(mailResponse.message);
+  } else {
+    logger.error(`Failed to send email: ${mailResponse.err}`);
+  }
+}
+
+async function handleReportGenerationFailure(logger) {
+  logger.error('Failed to generate latest shoppers CSV data');
+  const subject = 'Issue with Generating Shoppers Report';
+  const emailHTML =
+    '<p>There was an issue with generating the latest shoppers report.</p>';
+  const mailResponse = await sendBulkMail(
+    subject,
+    emailHTML,
+    'gyb.developers@gmail.com'
+  );
+
+  if (mailResponse.success) {
+    logger.info(mailResponse.message);
+  } else {
+    logger.error(`Failed to send email: ${mailResponse.err}`);
+  }
+}
+
 async function sendLatestShoppersCsv(logger) {
   try {
     const csvData = await generateLatestShoppersReport();
     if (csvData) {
-      const settings = await getAllSettings();
-      const recipients = settings
-        .filter(({ name }) => name === 'reportRecipient')
-        .map(({ value }) => value);
-
-      const subject = 'GYB Latest Shoppers Data Available';
-      const emailHTML =
-        '<p>This email is automatically generated on the first day of each month. Attached is a csv file with the latest shoppers data available.</p>';
-      const mailResponse = await sendBulkMail(subject, emailHTML, recipients, {
-        name: 'latest_shoppers.csv',
-        data: csvData,
-        size: csvData.length,
-      });
-
-      if (mailResponse) {
-        logger.info(mailResponse.message);
-      } else {
-        logger.error(
-          `Failed to send email: ${
-            mailResponse ? mailResponse.err : 'Unknown error'
-          }`
-        );
-      }
+      await sendReportEmail(csvData, logger);
     } else {
-      logger.error('Failed to generate latest shoppers CSV data');
-      const subject = 'Issue with Generating Shoppers Report';
-      const emailHTML =
-        '<p>There was an issue with generating the latest shoppers report.</p>';
-      const mailResponse = await sendBulkMail(
-        subject,
-        emailHTML,
-        'gyb.developers@gmail.com'
-      );
-
-      if (mailResponse.success) {
-        logger.info(mailResponse.message);
-      } else {
-        logger.error(`Failed to send email: ${mailResponse.err}`);
-      }
+      await handleReportGenerationFailure(logger);
     }
   } catch (error) {
     logger.error(`Error generating shoppers report: ${error}`);
-    const subject = 'Error Generating Shoppers Report';
-    const emailHTML =
-      '<p>There was an error generating the latest shoppers report.</p>';
-    const mailResponse = await sendBulkMail(
-      subject,
-      emailHTML,
-      'gyb.developers@gmail.com'
-    );
-
-    if (mailResponse.success) {
-      logger.info(mailResponse.message);
-    } else {
-      logger.error(`Failed to send email: ${mailResponse.err}`);
-    }
   }
 }
 
+// Code for orchestrating the reports. This will be exported and used in the scheduler
 async function reportsOrchestrator(logger) {
   // Get the day of the month
   const date = moment().date();
