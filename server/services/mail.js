@@ -64,15 +64,28 @@ const sendBulkMail = async (
     // If the attachment size is less than 10 MB, attach it (e.g. the historic report is ~11Kb, so not a real concern)
     // Note: 15mb is the size limit for the email, so we are keeping the attachment size less than 10mb
     // to give buffer space for the email content
-    // please adjust if needed
-    // NOTE NOTE: attachment type is excel. If other types are needed, we can expand this function
+    //
+    // Note note: We are only supporting CSV and XLSX attachments for now
     if (attachment && attachment.size < 10 * 1024 * 1024) {
+      let contentType;
+      let base64Content;
+
+      if (attachment.name.endsWith('.csv')) {
+        contentType = 'text/csv';
+        base64Content = Buffer.from(attachment.data, 'utf-8').toString(
+          'base64'
+        );
+      } else if (attachment.name.endsWith('.xlsx')) {
+        contentType =
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        base64Content = attachment.data.toString('base64');
+      }
+
       message.Attachments = [
         {
-          ContentType:
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          ContentType: contentType,
           Filename: attachment.name,
-          Base64Content: attachment.data.toString('base64'),
+          Base64Content: base64Content,
         },
       ];
     }
