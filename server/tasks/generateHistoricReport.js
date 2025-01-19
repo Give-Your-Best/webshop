@@ -66,7 +66,7 @@ async function sendLatestShoppersCsv(logger) {
     if (csvData) {
       const settings = await getAllSettings();
       const recipients = settings
-        .filter(({ name }) => name === 'shoppersReport')
+        .filter(({ name }) => name === 'reportRecipient')
         .map(({ value }) => value);
 
       const subject = 'GYB Latest Shoppers Data Available';
