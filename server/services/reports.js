@@ -1,6 +1,8 @@
 const ExcelJS = require('exceljs');
 const { getHistoricReportData } = require('./statistics');
 const Report = require('../models/Report');
+const { createObjectCsvStringifier } = require('csv-writer');
+const User_ = require('../models/User');
 
 async function createWorkbook(data) {
   const workbook = new ExcelJS.Workbook();
@@ -250,7 +252,47 @@ async function getLatestReportByType(type) {
   return report;
 }
 
+async function generateLatestShoppersReport() {
+  const csvStringifier = createObjectCsvStringifier({
+    header: [
+      { id: 'firstName', title: 'First Name' },
+      { id: 'lastName', title: 'Last Name' },
+      { id: 'email', title: 'Email Address' },
+      { id: 'fullAddress', title: 'Full Address' },
+      { id: 'postCode', title: 'Post Code' },
+    ],
+  });
+
+  try {
+    const shoppers = await User_.User.find({ kind: 'shopper' }).lean();
+
+    const records = shoppers.map((shopper) => ({
+      firstName: shopper.firstName,
+      lastName: shopper.lastName,
+      email: shopper.email,
+      fullAddress: [
+        shopper.deliveryAddress.firstLine,
+        shopper.deliveryAddress.secondLine,
+        shopper.deliveryAddress.city,
+      ]
+        .filter(Boolean)
+        .join(', '),
+      postCode: shopper.deliveryAddress.postcode,
+    }));
+
+    const csvData =
+      csvStringifier.getHeaderString() +
+      csvStringifier.stringifyRecords(records);
+
+    return csvData;
+  } catch (error) {
+    console.error(`Error in creating latest shoppers CSV data: ${error}`);
+    return null;
+  }
+}
+
 module.exports = {
   generateReport,
   getLatestReportByType,
+  generateLatestShoppersReport,
 };
