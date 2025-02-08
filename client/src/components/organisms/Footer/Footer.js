@@ -65,7 +65,7 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://www.canva.com/design/DAFH-_xFQlI/ySjyg9G2R9K2GgGN-LulMw/view?utm_content=DAFH-_xFQlI&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu"
+            href="https://res.cloudinary.com/hnlrfgzzh/image/upload/v1739047282/How_to_Donate_cat3kn.png"
           >
             here
           </a>{' '}
@@ -75,7 +75,7 @@ export const Footer = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href="https://www.canva.com/design/DAFJUR-GbyE/beLl-JUL41S3VNnQWKpl5g/view?utm_content=DAFJUR-GbyE&utm_campaign=designshare&utm_medium=link&utm_source=homepage_design_menu"
+            href="https://res.cloudinary.com/hnlrfgzzh/image/upload/v1739047296/How_to_shop_fuughc.pdf"
           >
             here
           </a>{' '}
