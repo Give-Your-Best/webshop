@@ -816,6 +816,64 @@ const getShopNotificationItems = async () => {
 };
 
 /**
+ * TODO
+ */
+const getMarchIwdPromoItemDonors = async () => {
+  try {
+    // Date to start from is 1st March 2025
+    const startDate = moment([2025, 2]).format('YYYY-MM-DD');
+    const closeDate = moment([2025, 3]).format('YYYY-MM-DD');
+
+    // We don't need items created by the GYB admins donor account
+    const excludeGybDonorId = await User_.Donor.findOne(
+      {
+        email: 'giveyourbest.uk@gmail.com',
+      },
+      '_id'
+    );
+
+    // We don't want to include items uploaded by any donor already in receipt
+    // of the promo offer
+    const excludeExistingPromoRecipients = await User_.Donor.find(
+      {
+        hasReceivedMarchIwnPromoEmail: true,
+      },
+      '_id'
+    );
+
+    const condition = {
+      donorId: { $nin: [excludeGybDonorId, ...excludeExistingPromoRecipients] },
+      createdAt: {
+        $gte: startDate,
+        $lte: closeDate,
+      },
+      live: true,
+    };
+
+    const items = await Item.find(condition)
+      .select('donorId')
+      .populate('donorId', 'email firstName lastName')
+      .lean();
+
+    // Get entries distict for the donor...
+    const result = items.reduce((acc, cur) => {
+      const { _id, email, firstName, lastName } = cur.donorId;
+      const id = _id.toString();
+      acc[id] = acc[id] || { id, email, firstName, lastName };
+      return acc;
+    }, {});
+
+    return result;
+  } catch (error) {
+    console.error(`Error in get march promo items: ${error}`);
+    return {
+      success: false,
+      message: `Error in get march promo items: ${error}`,
+    };
+  }
+};
+
+/**
  * Get items grouped by donor or shopper id for sending status update reminders:
  * where user is a donor, items are shopped but not yet marked as shipped, where
  * user is a shopper, items are shipped but not yet marked as received. Items
@@ -924,6 +982,7 @@ module.exports = {
   getAdminItems,
   getAccountNotificationItems,
   getStatusReminderItems,
+  getMarchIwdPromoItemDonors,
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,

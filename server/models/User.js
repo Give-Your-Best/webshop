@@ -104,6 +104,10 @@ const Donor = User.discriminator(
         type: Boolean,
         default: false,
       },
+      hasReceivedMarchIwnPromoEmail: {
+        type: Boolean,
+        default: false,
+      },
     },
     options
   )
