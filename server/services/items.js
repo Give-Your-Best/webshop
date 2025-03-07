@@ -818,7 +818,7 @@ const getShopNotificationItems = async () => {
 /**
  * TODO
  */
-const getMarchIwdPromoItems = async () => {
+const getMarchIwdPromoItemDonors = async () => {
   try {
     // Date to start from is 1st March 2025
     const date = moment([2025, 2]).format('YYYY-MM-DD');
@@ -980,7 +980,7 @@ module.exports = {
   getAdminItems,
   getAccountNotificationItems,
   getStatusReminderItems,
-  getMarchIwdPromoItems,
+  getMarchIwdPromoItemDonors,
   getShopNotificationItems,
   deleteItem,
   deleteDonorItems,
