@@ -821,7 +821,8 @@ const getShopNotificationItems = async () => {
 const getMarchIwdPromoItemDonors = async () => {
   try {
     // Date to start from is 1st March 2025
-    const date = moment([2025, 2]).format('YYYY-MM-DD');
+    const startDate = moment([2025, 2]).format('YYYY-MM-DD');
+    const closeDate = moment([2025, 3]).format('YYYY-MM-DD');
 
     // We don't need items created by the GYB admins donor account
     const excludeGybDonorId = await User_.Donor.findOne(
@@ -843,7 +844,8 @@ const getMarchIwdPromoItemDonors = async () => {
     const condition = {
       donorId: { $nin: [excludeGybDonorId, ...excludeExistingPromoRecipients] },
       createdAt: {
-        $gte: date,
+        $gte: startDate,
+        $lte: closeDate,
       },
       live: true,
     };
