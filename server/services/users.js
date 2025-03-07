@@ -323,6 +323,16 @@ const evaluateDonorTrust = async (itemId) => {
   }
 };
 
+// March IWM promo donors updates...
+const updatePromoDonors = async (ids) => {
+  const result = await User_.Donor.updateMany(
+    { _id: { $in: ids } },
+    { $set: { hasReceivedMarchIwnPromoEmail: true } }
+  );
+
+  return result;
+};
+
 module.exports = {
   createUser,
   getUser,
@@ -339,4 +349,5 @@ module.exports = {
   getGYBDummyUser,
   getDonations,
   evaluateDonorTrust,
+  updatePromoDonors,
 };
