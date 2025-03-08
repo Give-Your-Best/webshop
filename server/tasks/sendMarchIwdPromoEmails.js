@@ -51,7 +51,7 @@ const renderEmailProperties = (user) => {
 <div style="margin-top:30px;">
   <p>Dear ${name},</p>
   <p>As a gesture of thanks for your donation, our partners at sustainable clothing brand Eleven Loves are giving our Give Your Best contributors 20% off all full price lines.</p>
-  <p>Visit <a href="www.elevenloves.co.uk">www.elevenloves.co.uk</a> to shop.</p>
+  <p>Visit <a href="https://www.elevenloves.co.uk">www.elevenloves.co.uk</a> to shop.</p>
   <p>Enter the code <strong>BESTIE20</strong> at checkout to apply your discount.</p>
 </div>
   `;
