@@ -3,6 +3,7 @@ const { getHistoricReportData } = require('./statistics');
 const Report = require('../models/Report');
 const { createObjectCsvStringifier } = require('csv-writer');
 const User_ = require('../models/User');
+const moment = require('moment');
 
 async function createWorkbook(data) {
   const workbook = new ExcelJS.Workbook();
@@ -291,8 +292,53 @@ async function generateLatestShoppersReport() {
   }
 }
 
+/*
+ * Name & Email address of shoppers who signed up in the last week
+ * and have a London / Greater London postcode
+ */
+async function generateWeeklyLondonShoppersReport() {
+  const csvStringifier = createObjectCsvStringifier({
+    header: [
+      { id: 'firstName', title: 'First Name' },
+      { id: 'lastName', title: 'Last Name' },
+      { id: 'email', title: 'Email Address' },
+    ],
+  });
+
+  try {
+    const oneWeekAgo = moment().subtract(7, 'days').startOf('day').toDate();
+    const today = moment().endOf('day').toDate();
+
+    // Updated regex pattern
+    const shoppers = await User_.User.find({
+      kind: 'shopper',
+      createdAt: { $gte: oneWeekAgo, $lte: today },
+      'deliveryAddress.postcode': {
+        $regex:
+          /^(E|EC|N|NW|SE|SW|W|WC|BR|CR|DA|EN|HA|IG|KT|RM|SM|TN|TW|UB|WD)\d/i,
+      },
+    }).lean();
+
+    const records = shoppers.map((shopper) => ({
+      firstName: shopper.firstName,
+      lastName: shopper.lastName,
+      email: shopper.email,
+    }));
+
+    const csvData =
+      csvStringifier.getHeaderString() +
+      csvStringifier.stringifyRecords(records);
+
+    return csvData;
+  } catch (error) {
+    console.error(`Error in weekly London shoppers CSV: ${error}`);
+    return null;
+  }
+}
+
 module.exports = {
   generateReport,
   getLatestReportByType,
   generateLatestShoppersReport,
+  generateWeeklyLondonShoppersReport,
 };
