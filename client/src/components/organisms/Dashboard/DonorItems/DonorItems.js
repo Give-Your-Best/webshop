@@ -73,7 +73,7 @@ export const DonorItems = () => {
     //   user.trustedDonor ||
     //     [...shopItems, ...pastItems, ...restItems].length < 5,
     // );
-  }, [user.id, user.trustedDonor]);
+  }, [user.id]);
 
   useEffect(fetchItems, [user, token, fetchItems]);
 
