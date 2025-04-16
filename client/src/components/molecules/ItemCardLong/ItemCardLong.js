@@ -104,7 +104,6 @@ export const ItemCardLong = ({
       // Special case, if the donor is trusted and approved by admin to view any
       // shopper address regardless of shopper delivery preference then show the
       // address on request...
-      shopper.deliveryPreference === 'via-gyb' &&
       shopper.deliveryAddress &&
       user.canViewShopperAddress &&
       user.trustedDonor
@@ -115,11 +114,17 @@ export const ItemCardLong = ({
       shopper.deliveryAddress.name = name(shopper);
       setDeliveryAddress(shopper.deliveryAddress);
     } else if (
-      // If the donor is not yet trusted the package must be sent via gyb
-      // whether the shopper requests it or not - in this case, or in the case
-      // that the shopper requests via gyb and there is a location assigned,
-      // then provide that address...
-      (!user.trustedDonor || shopper.deliveryPreference === 'via-gyb') &&
+      /*
+       * ============================================================
+       *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+       * Commenting out the following code as the team have decided to remove
+       * the untrusted donor constraint to send items via GYB HQ.
+       * To resume, please add !user.trustedDonor to the if statement.
+       * ============================================================
+       */
+      // In the case that the shopper requests via gyb
+      // and there is a location assigned, then provide that address...
+      shopper.deliveryPreference === 'via-gyb' &&
       item.sendVia
     ) {
       const location = await getLocation(item.sendVia, token);
@@ -129,9 +134,8 @@ export const ItemCardLong = ({
       setFAOShopperName(name(shopper));
       setDeliveryAddress(location[0]);
     } else if (
-      // If the donor is trusted and is allowed to see the shopper address,
+      // If the shopper has allowed disclosure of their address to the donor
       // reveal it here...
-      user.trustedDonor &&
       shopper.deliveryPreference !== 'via-gyb' &&
       shopper.deliveryAddress
     ) {

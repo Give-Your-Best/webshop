@@ -7,20 +7,28 @@ const { cloudinary } = require('../utils/cloudinary');
 const BatchItem = require('../models/BatchItem');
 
 const createItem = async (data, bypassImageUpload = false) => {
-  // Donor not yet marked trusted can upload no more than 5 items
-  const donor = await User_.Donor.findById(data.donorId);
-  if (donor.trustedDonor === false) {
-    const userItemsCount = await Item.countDocuments({
-      donorId: donor.id,
-    });
+  /*
+   * ============================================================
+   *               !! DONOR ITEM UPLOAD CONSTRAINT !!
+   * Commenting out the following code as the team have decided to remove
+   * the 5 item constraint. To resume, please uncomment the code directly below.
+   * ============================================================
+   */
 
-    if (userItemsCount >= 5) {
-      throw new Error('Cannot exceed new donor items limit');
-    }
-  }
+  // Donor not yet marked trusted can upload no more than 5 items
+  // const donor = await User_.Donor.findById(data.donorId);
+
+  // if (donor.trustedDonor === false) {
+  //   const userItemsCount = await Item.countDocuments({
+  //     donorId: donor.id,
+  //   });
+
+  //   if (userItemsCount >= 5) {
+  //     throw new Error('Cannot exceed new donor items limit');
+  //   }
+  // }
 
   if (!bypassImageUpload) {
-    console.log('uploading image');
     var new_photos = [];
     var success = true;
     const promises = data.photos.map((photo) => {
@@ -80,11 +88,19 @@ const convertKeys = (input) => {
 };
 
 const createBatchItem = async (data) => {
+  /*
+   * ============================================================
+   *               !! DONOR ITEM UPLOAD CONSTRAINT !!
+   * Commenting out the following code as the team have decided to remove
+   * the 5 item constraint. To resume, please uncomment the code directly below.
+   * ============================================================
+   */
+
   // Donor not yet marked trusted can upload no more than 5 items
-  const donor = await User_.Donor.findById(data.donorId);
-  if (donor.trustedDonor === false || donor.canAddItemInBulk === false) {
-    throw new Error('Donor cannot add items in bulk');
-  }
+  // const donor = await User_.Donor.findById(data.donorId);
+  // if (donor.trustedDonor === false || donor.canAddItemInBulk === false) {
+  //   throw new Error('Donor cannot add items in bulk');
+  // }
 
   let { clothingSizes, shoeSizes, quantity, ...restOfData } = data;
   // Mongoose maps complain about keys with '.' (dots) in them. Therefore, errors when certain sizes (e.g. 2.5) get passed in.

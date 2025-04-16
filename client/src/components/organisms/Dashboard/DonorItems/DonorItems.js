@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useState, useEffect } from 'react';
 import { Formik } from 'formik';
-import { Modal, Tooltip } from 'antd';
+import { Modal } from 'antd';
 import { AppContext } from '../../../../context/app-context';
 import {
   ItemsCollapsedList,
@@ -8,7 +8,6 @@ import {
   ItemCreateForm,
 } from '../../../molecules';
 import {
-  StyledAlert,
   StyledTabListHidden,
   StyledTabs,
   StyledTabPanel,
@@ -33,7 +32,7 @@ import { itemCreateschema } from '../../../../utils/validation';
 export const DonorItems = () => {
   const { token, user } = useContext(AppContext);
   const [items, setItems] = useState([]);
-  const [canAddItems, setCanAddItems] = useState(false);
+  // const [canAddItems, setCanAddItems] = useState(false); // DONOR ITEM UPLOAD CONSTRAINT: uncomment to revert back.
   const [pastItems, setPastItems] = useState([]);
   const [errorMessage, setErrorMessage] = useState([]);
   const [editingKey, setEditingKey] = useState([]);
@@ -51,7 +50,8 @@ export const DonorItems = () => {
   }, [token, user]);
 
   const fetchItems = useCallback(async () => {
-    const [shopItems, pastItems, restItems] = await Promise.all([
+    // const [shopItems, pastItems, restItems] = await Promise.all([ // DONOR ITEM UPLOAD CONSTRAINT: uncomment to revert back.
+    const [shopItems, pastItems] = await Promise.all([
       getDonorItems(user.id, 'in-shop'),
       getDonorItems(user.id, 'received'),
       getDonorItems(user.id),
@@ -60,10 +60,19 @@ export const DonorItems = () => {
     setItems(shopItems);
     setPastItems(pastItems);
 
+    /*
+     * ============================================================
+     *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+     * Commenting out the following code as the team have decided to remove
+     * the 5 item constraint. To resume, please uncomment.
+     * ============================================================
+     */
+
     // Donor not yet marked trusted can upload no more than 5 items
-    setCanAddItems(
-      user.trustedDonor || [...shopItems, ...pastItems, ...restItems].length < 5
-    );
+    // setCanAddItems(
+    //   user.trustedDonor ||
+    //     [...shopItems, ...pastItems, ...restItems].length < 5,
+    // );
   }, [user.id, user.trustedDonor]);
 
   useEffect(fetchItems, [user, token, fetchItems]);
@@ -205,7 +214,14 @@ export const DonorItems = () => {
       <StyledTabPanel>
         <H2>My Available Items</H2>
 
-        {user.trustedDonor && (
+        {/*
+         * ============================================================
+         *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+         * Commenting out the following code as the team have decided to remove
+         * the 5 item constraint. To resume, please uncomment.
+         * ============================================================
+         */}
+        {/* {user.trustedDonor && (
           <>
             <StyledAlert
               description={
@@ -215,7 +231,7 @@ export const DonorItems = () => {
             />
             <br />
           </>
-        )}
+        )} */}
         <ItemsCollapsedList
           data={items}
           expandRow={editForm}
@@ -227,7 +243,18 @@ export const DonorItems = () => {
           View Past Items
         </Button>
 
-        {canAddItems ? (
+        <Button primary small onClick={() => openHiddenTab('item')}>
+          Add Item
+        </Button>
+        {/*
+         * ============================================================
+         *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+         * Commenting out the following code as the team have decided to remove
+         * the 5 item constraint. To resume, please uncomment the canAddItems.
+         * ============================================================
+         */}
+
+        {/* {canAddItems ? (
           <Button primary small onClick={() => openHiddenTab('item')}>
             Add Item
           </Button>
@@ -239,7 +266,7 @@ export const DonorItems = () => {
               </Button>
             </div>
           </Tooltip>
-        )}
+        )} */}
       </StyledTabPanel>
       <StyledTabPanel>
         <H2>Add Item</H2>
