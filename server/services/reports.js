@@ -302,6 +302,7 @@ async function generateWeeklyLondonShoppersReport() {
       { id: 'firstName', title: 'First Name' },
       { id: 'lastName', title: 'Last Name' },
       { id: 'email', title: 'Email Address' },
+      { id: 'postcode', title: 'Post Code' },
     ],
   });
 
@@ -323,6 +324,7 @@ async function generateWeeklyLondonShoppersReport() {
       firstName: shopper.firstName,
       lastName: shopper.lastName,
       email: shopper.email,
+      postcode: shopper.deliveryAddress.postcode,
     }));
 
     const csvData =
