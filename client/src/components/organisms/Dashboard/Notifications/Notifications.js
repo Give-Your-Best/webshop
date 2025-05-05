@@ -139,28 +139,32 @@ export const Notifications = () => {
           return new Promise((resolve, reject) => {
             // First, update the item
             updateItem(itemId, updateData, token)
+              /*
+               * ============================================================
+               *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+               * Commenting out the following code as the team have decided to remove
+               * the auto evaluation of donor after 5 items.
+               * To resume, please re-add the .then() function below.
+               * ============================================================
+               */
+              // .then(() => {
+              // Upon successful update, proceed to evaluate donor trust
+              // evaluateDonorTrust(itemId, token)
               .then(() => {
-                // Upon successful update, proceed to evaluate donor trust
-                evaluateDonorTrust(itemId, token)
-                  .then(() => {
-                    setAccountNotificationsPendingReceive((prevState) => {
-                      return {
-                        ...prevState,
-                        itemsCount: prevState.itemsCount - 1,
-                        items: prevState.items.filter(
-                          (item) => item._id !== itemId
-                        ),
-                      };
-                    });
-                    resolve();
-                  })
-                  .catch((evaluateError) => {
-                    console.error(
-                      'Error evaluating donor trust:',
-                      evaluateError
-                    );
-                    reject(evaluateError); // Reject the promise if evaluating donor trust fails
-                  });
+                setAccountNotificationsPendingReceive((prevState) => {
+                  return {
+                    ...prevState,
+                    itemsCount: prevState.itemsCount - 1,
+                    items: prevState.items.filter(
+                      (item) => item._id !== itemId
+                    ),
+                  };
+                });
+                resolve();
+              })
+              .catch((evaluateError) => {
+                console.error('Error evaluating donor trust:', evaluateError);
+                reject(evaluateError); // Reject the promise if evaluating donor trust fails
               })
               .catch((error) => {
                 console.error('Error updating item:', error);
