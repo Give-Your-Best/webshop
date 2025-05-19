@@ -426,6 +426,18 @@ const getDonorItems = async (userId, itemStatus) => {
             lastName,
           } = doc;
 
+          // If the shopper has selected "direct" delivery, we can show the address.
+          if (donor.trustedDonor === false && deliveryPreference === 'direct') {
+            return {
+              _id,
+              deliveryAddress,
+              deliveryPreference,
+              email,
+              firstName,
+              lastName,
+            };
+          }
+
           // Hide as much as possible in the payload sent to a not yet trusted
           // donor
           if (donor.trustedDonor === false) {

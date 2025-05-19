@@ -121,8 +121,8 @@ export const Basket = () => {
                 //get donor details
                 getUser(item.donorId, token).then((donor) => {
                   if (
-                    user.deliveryPreference === 'direct' &&
-                    donor.trustedDonor === true
+                    user.deliveryPreference === 'direct'
+                    // && donor.trustedDonor === true <-- share regardless if trusted or not, so long as the shopper selected 'direct'.
                   ) {
                     //send address directly in email
                     user.deliveryAddress.name = name(user);
@@ -142,21 +142,30 @@ export const Basket = () => {
                       item,
                     ]);
                     sendAutoEmail('new_item_to_assign_location');
-                  } else if (donor.trustedDonor === false) {
-                    // When donor is not trusted we want to send the item via GYB regardless of the user's delivery preference
-                    // setting 'sendVia' directly to the GYB location ID means that it will by-passes the need for manual location assingment in the [Shop Notifications].
-                    // Upon checking-out this basket, it will notify the donor that they have an item to dispatch (and the address will be the GYB office).
-
-                    let updateData = {
-                      sendVia: '63da693b03ae730016ca7e16', // need to find a better way to get this ID - it's the GYB location ID
-                      'statusUpdateDates.gybAssignedDate': getDate(),
-                    };
-                    updateItem(item._id, updateData, token).then(() => {
-                      sendAutoEmail('item_shopped_auto_send_via_gyb', donor, [
-                        item,
-                      ]);
-                    });
                   }
+                  /*
+                   * ============================================================
+                   *             !! DONOR ITEM UPLOAD CONSTRAINT !!
+                   * Commenting out the following code as the team have decided to remove
+                   * the untrusted donor constraint. The below code was used to automatically assign items
+                   * to be sent via GYB HQ if the donor was not trusted.
+                   * ============================================================
+                   */
+                  // } else if (donor.trustedDonor === false) {
+                  //   // When donor is not trusted we want to send the item via GYB regardless of the user's delivery preference
+                  //   // setting 'sendVia' directly to the GYB location ID means that it will by-passes the need for manual location assingment in the [Shop Notifications].
+                  //   // Upon checking-out this basket, it will notify the donor that they have an item to dispatch (and the address will be the GYB office).
+
+                  //   let updateData = {
+                  //     sendVia: '63da693b03ae730016ca7e16', // need to find a better way to get this ID - it's the GYB location ID
+                  //     'statusUpdateDates.gybAssignedDate': getDate(),
+                  //   };
+                  //   updateItem(item._id, updateData, token).then(() => {
+                  //     sendAutoEmail('item_shopped_auto_send_via_gyb', donor, [
+                  //       item,
+                  //     ]);
+                  //   });
+                  // }
                 });
                 return true;
               });

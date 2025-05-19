@@ -21,7 +21,7 @@ import {
   getItem,
 } from '../../../../services/items';
 import { getAdminLocations } from '../../../../services/locations';
-import { getUser, evaluateDonorTrust } from '../../../../services/user';
+import { getUser } from '../../../../services/user';
 import {
   sendAutoEmail,
   tabList,
