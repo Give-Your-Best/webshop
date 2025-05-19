@@ -56,21 +56,14 @@ export const ShopSettingsEditForm = (data) => {
             <StyledError name="shopItemLimit" component="div" />
           </StyledLabel>
 
-          {/*
-           * ============================================================
-           *             !! DONOR ITEM UPLOAD CONSTRAINT !!
-           * Commenting out the following code as the team have decided to remove
-           * the item constraint. To resume, please uncomment.
-           * ============================================================
-           */}
-          {/* <StyledLabel>
+          <StyledLabel>
             Trusted Donor Limit
             <StyledInputNumber
               name="trustedDonorLimit"
               placeholder="Trusted Donor Limit"
             />
             <StyledError name="trustedDonorLimit" component="div" />
-          </StyledLabel> */}
+          </StyledLabel>
 
           <StyledLabel>
             Shop Email{' '}
