@@ -513,6 +513,31 @@ const getShopperItems = async (userId, itemStatus) => {
   }
 };
 
+// Get any items "recently" shopped by a shopper
+const getRecentItems = async (userId) => {
+  const endOfToday = moment().add(1, 'day').format('YYYY-MM-DD');
+  const sevenDaysAgo = moment().subtract(7, 'days').format('YYYY-MM-DD');
+
+  var conditions = {
+    shopperId: userId,
+    'statusUpdateDates.shoppedDate': {
+      $gte: new Date(sevenDaysAgo),
+      $lte: new Date(endOfToday),
+    },
+  };
+
+  try {
+    var items = await Item.find(conditions).lean();
+    return items;
+  } catch (error) {
+    console.error(`Error in getting shopper recent items: ${error}`);
+    return {
+      success: false,
+      message: `Error in getting shopper recent items: ${error}`,
+    };
+  }
+};
+
 // There is now proper pagination on this endpoint as the quantity of results
 // combined with aggregations is resulting in timeouts...
 const getAdminItems = async ({
@@ -1011,6 +1036,7 @@ module.exports = {
   getAdminItems,
   getAccountNotificationItems,
   getStatusReminderItems,
+  getRecentItems,
   getMarchIwdPromoItemDonors,
   getShopNotificationItems,
   deleteItem,
