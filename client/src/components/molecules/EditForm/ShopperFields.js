@@ -50,12 +50,14 @@ export const ShopperFields = () => {
       <StyledError name="referredBy" component="div" />
 
       <StyledLabel>How many adults are you shopping for?</StyledLabel>
-      <StyledInputNumber name="shoppingFor" max={5} min={1} />
+      <StyledInputNumber disabled name="shoppingFor" max={5} min={1} />
       <StyledError name="shoppingFor" component="div" />
 
       <StyledLabel>How many children are you shopping for?</StyledLabel>
-      <StyledInputNumber name="shoppingForChildren" max={5} min={0} />
+      <StyledInputNumber disabled name="shoppingForChildren" max={5} min={0} />
       <StyledError name="shoppingForChildren" component="div" />
+
+      <InfoNote>{`If you need to amend the number of people you're shopping for please contact us on hello@giveyourbest.uk`}</InfoNote>
 
       <StyledLabel>
         Clothing sizes

@@ -123,7 +123,7 @@ export const ShopperMiniEditForm = ({
         How many adults are you shopping for?
         <StyledInputNumber
           name="shoppingFor"
-          disabled={editingKey !== recordId}
+          disabled // ={editingKey !== recordId}
         />
         <StyledError name="shoppingFor" component="div" />
       </StyledLabel>
@@ -131,10 +131,12 @@ export const ShopperMiniEditForm = ({
         How many children are you shopping for?
         <StyledInputNumber
           name="shoppingForChildren"
-          disabled={editingKey !== recordId}
+          disabled // ={editingKey !== recordId}
         />
         <StyledError name="shoppingForChildren" component="div" />
       </StyledLabel>
+
+      <InfoNote>{`If you need to amend the number of people you're shopping for please contact us on hello@giveyourbest.uk`}</InfoNote>
 
       {editingKey === recordId && !approvalAction && (
         <StyledSubmitButton>Save</StyledSubmitButton>

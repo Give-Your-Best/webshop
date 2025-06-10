@@ -2,11 +2,8 @@ require('dotenv').config();
 const uuidv4 = require('uuid').v4;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const User_ = require('../models/User');
-const Item = require('../models/Item');
 const Mail = require('../services/mail');
-
-const today = new Date();
-var sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
+const ItemService = require('../services/items');
 
 const tokenForUser = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, {
@@ -75,16 +72,7 @@ const login = async (req, res) => {
     });
 
     if (user && user.kind === 'shopper') {
-      const recentItems = await Item.find({
-        shopperId: user._id,
-        'statusUpdateDates.shoppedDate': {
-          $gte: new Date(sevenDaysAgo),
-          $lte: new Date(today),
-        },
-      });
-      if (recentItems) {
-        user.recentItems = recentItems;
-      }
+      user.recentItems = (await ItemService.getRecentItems(user._id)) || [];
     }
 
     if (!user) {
@@ -239,16 +227,7 @@ const authenticate = async (req, res) => {
     req.decoded = decoded;
 
     if (user && user.kind === 'shopper') {
-      const recentItems = await Item.find({
-        shopperId: user._id,
-        'statusUpdateDates.shoppedDate': {
-          $gte: new Date(sevenDaysAgo),
-          $lte: new Date(today),
-        },
-      });
-      if (recentItems) {
-        user.recentItems = recentItems;
-      }
+      user.recentItems = (await ItemService.getRecentItems(user._id)) || [];
     }
 
     return res.json({
