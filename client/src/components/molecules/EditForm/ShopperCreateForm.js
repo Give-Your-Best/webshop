@@ -54,7 +54,7 @@ export const ShopperCreateForm = (data) => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <UserEditForm type="shopper" signUp="shopper" admin="admin" />
+          <UserEditForm type="shopper" admin="admin" />
 
           <StyledSubmitButton>Create</StyledSubmitButton>
           <Button

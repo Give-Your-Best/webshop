@@ -39,7 +39,7 @@ export const UserEditForm = ({ type, signUp, admin }) => {
       {type === 'shopper' && (
         <>
           <AddressFields />
-          <ShopperFields />
+          <ShopperFields signUp={Boolean(signUp)} admin={Boolean(admin)} />
         </>
       )}
 
