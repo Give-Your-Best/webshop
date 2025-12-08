@@ -2,10 +2,10 @@ import { convertHeic } from '../../utils/helpers';
 
 export const createItem = async (values, token, bypassImageUpload = false) => {
   //call api to create item
-  if (!bypassImageUpload && values.photos) {
-    values.photos = await convertHeic(values.photos);
-  }
   try {
+    if (!bypassImageUpload && values.photos) {
+      values.photos = await convertHeic(values.photos);
+    }
     // Construct the URL with the query parameter
     const url = bypassImageUpload
       ? '/api/items/?bypassImageUpload=true'
@@ -23,6 +23,9 @@ export const createItem = async (values, token, bypassImageUpload = false) => {
     return jsonres;
   } catch (error) {
     console.error(`Error in createItem: ${error}`);
-    return error;
+    return {
+      success: false,
+      message: error.message || 'Failed to create item',
+    };
   }
 };
