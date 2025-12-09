@@ -8,13 +8,13 @@ export const deleteBatchItem = async (id, token) => {
         'x-access-token': token,
       },
     });
-    const body = await response.json();
-    if (response.status !== 200) {
+    if (!response.ok) {
       return {
         success: false,
-        message: body.message || 'Failed to delete batch item',
+        message: `HTTP ${response.status}: ${response.statusText}`,
       };
     }
+    const body = await response.json();
     return body;
   } catch (error) {
     console.error(`Error in deleteBatchItem: ${error}`);

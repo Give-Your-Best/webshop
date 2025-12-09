@@ -25,6 +25,12 @@ export const updateBatchItem = async (id, updateData, token) => {
       },
       body: JSON.stringify(updateData),
     });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `HTTP ${response.status}: ${response.statusText}`,
+      };
+    }
     const jsonres = await response.json();
     return jsonres;
   } catch (error) {

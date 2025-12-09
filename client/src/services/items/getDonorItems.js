@@ -10,13 +10,13 @@ export const getDonorItems = async (userId, itemStatus) => {
         },
       }
     );
-    const body = await response.json();
-    if (response.status !== 200) {
+    if (!response.ok) {
       return {
         success: false,
-        message: body.message || 'Failed to fetch donor items',
+        message: `HTTP ${response.status}: ${response.statusText}`,
       };
     }
+    const body = await response.json();
     return body;
   } catch (error) {
     console.error(`Error in getDonorItems: ${error}`);

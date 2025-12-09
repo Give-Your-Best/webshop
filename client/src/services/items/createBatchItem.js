@@ -25,6 +25,12 @@ export const createBatchItem = async (values, token) => {
       },
       body: JSON.stringify(values),
     });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `HTTP ${response.status}: ${response.statusText}`,
+      };
+    }
     const jsonres = await response.json();
     return jsonres;
   } catch (error) {
