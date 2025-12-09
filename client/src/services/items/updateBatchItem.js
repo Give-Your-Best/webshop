@@ -1,11 +1,12 @@
 import { convertHeic } from '../../utils/helpers';
 
 export const updateBatchItem = async (id, updateData, token) => {
-  if (updateData.photos) {
-    updateData.photos = await convertHeic(updateData.photos);
-  }
   //call api to update batch item details
   try {
+    if (updateData.photos) {
+      updateData.photos = await convertHeic(updateData.photos);
+    }
+
     const response = await fetch(`/api/batchItems/${id}`, {
       method: 'put',
       headers: {
@@ -19,6 +20,9 @@ export const updateBatchItem = async (id, updateData, token) => {
     return jsonres;
   } catch (error) {
     console.error(`Error in updateBatchItem: ${error}`);
-    return error;
+    return {
+      success: false,
+      message: error.message || 'Failed to update batch item',
+    };
   }
 };

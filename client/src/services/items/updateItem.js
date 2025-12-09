@@ -1,11 +1,11 @@
 import { convertHeic } from '../../utils/helpers';
 
 export const updateItem = async (id, updateData, token) => {
-  if (updateData.photos) {
-    updateData.photos = await convertHeic(updateData.photos);
-  }
   //call api to update item details
   try {
+    if (updateData.photos) {
+      updateData.photos = await convertHeic(updateData.photos);
+    }
     const response = await fetch(`/api/items/${id}`, {
       method: 'put',
       headers: {
@@ -19,6 +19,9 @@ export const updateItem = async (id, updateData, token) => {
     return jsonres;
   } catch (error) {
     console.error(`Error in updateItem: ${error}`);
-    return error;
+    return {
+      success: false,
+      message: error.message || 'Failed to update item',
+    };
   }
 };
