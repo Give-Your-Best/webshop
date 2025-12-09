@@ -1,5 +1,7 @@
 import { convertHeic } from '../../utils/helpers';
 
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const updateBatchItem = async (id, updateData, token) => {
   // handle image conversion
   if (updateData.photos) {
@@ -26,22 +28,7 @@ export const updateBatchItem = async (id, updateData, token) => {
       body: JSON.stringify(updateData),
     });
     if (!response.ok) {
-      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      try {
-        const errorBody = await response.json();
-        if (errorBody.message) {
-          errorMessage = errorBody.message;
-        }
-      } catch (parseErr) {
-        console.warn(
-          `Failed to parse error response as JSON: ${parseErr.message}`
-        );
-        // If JSON parsing fails (e.g., HTML error page), use the default HTTP error message
-      }
-      return {
-        success: false,
-        message: errorMessage,
-      };
+      return await parseErrorResponse(response);
     }
     const jsonres = await response.json();
     return jsonres;
