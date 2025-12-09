@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getShopNotificationsItems = async (token) => {
   const response = await fetch(`/api/items/shopNotification`, {
     headers: {
@@ -5,9 +7,9 @@ export const getShopNotificationsItems = async (token) => {
       'x-access-token': token,
     },
   });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  if (!response.ok) {
+    return await parseErrorResponse(response);
   }
+  const body = await response.json();
   return body;
 };

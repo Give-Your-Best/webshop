@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getAdminItems = async ({
   isCurrent = true,
   withCount = true,
@@ -39,9 +41,9 @@ export const getAdminItems = async ({
       'Content-Type': 'application/json',
     },
   });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  if (!response.ok) {
+    return await parseErrorResponse(response);
   }
+  const body = await response.json();
   return body;
 };

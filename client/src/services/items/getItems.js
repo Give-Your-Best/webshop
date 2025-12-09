@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getItems = async (
   page,
   limit,
@@ -30,10 +32,7 @@ export const getItems = async (
       },
     });
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
     const body = await response.json();
     return body;

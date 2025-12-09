@@ -1,4 +1,5 @@
 import { convertHeic } from '../../utils/helpers';
+import { parseErrorResponse } from '../../utils/responseHandler';
 
 export const createBatchItem = async (values, token) => {
   // handle image conversion
@@ -26,10 +27,7 @@ export const createBatchItem = async (values, token) => {
       body: JSON.stringify(values),
     });
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
     const jsonres = await response.json();
     return jsonres;

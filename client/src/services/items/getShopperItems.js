@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getShopperItems = async (userId, itemStatus) => {
   try {
     const response = await fetch(
@@ -9,10 +11,7 @@ export const getShopperItems = async (userId, itemStatus) => {
       }
     );
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
     const body = await response.json();
     return body;

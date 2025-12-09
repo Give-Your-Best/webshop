@@ -1,4 +1,5 @@
 import { convertHeic } from '../../utils/helpers';
+import { parseErrorResponse } from '../../utils/responseHandler';
 
 export const createItem = async (values, token, bypassImageUpload = false) => {
   // handle image conversion
@@ -32,10 +33,7 @@ export const createItem = async (values, token, bypassImageUpload = false) => {
 
     // Check if the response is successful before parsing JSON
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
 
     // Safely parse JSON

@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const deleteItem = async (id, token) => {
   try {
     const response = await fetch(`/api/items/${id}`, {
@@ -9,10 +11,7 @@ export const deleteItem = async (id, token) => {
       },
     });
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
     const body = await response.json();
     return body;

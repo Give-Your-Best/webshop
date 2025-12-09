@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getBatchItem = async (id) => {
   try {
     const response = await fetch(`/api/batchItems/${id}`, {
@@ -6,10 +8,7 @@ export const getBatchItem = async (id) => {
       },
     });
     if (!response.ok) {
-      return {
-        success: false,
-        message: `HTTP ${response.status}: ${response.statusText}`,
-      };
+      return await parseErrorResponse(response);
     }
     const body = await response.json();
     return body;

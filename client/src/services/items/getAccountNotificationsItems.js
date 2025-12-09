@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getAccountNotificationsItems = async (adminUserId, token) => {
   const response = await fetch(
     `/api/items/accountNotification?adminUserId=${adminUserId}`,
@@ -8,9 +10,9 @@ export const getAccountNotificationsItems = async (adminUserId, token) => {
       },
     }
   );
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  if (!response.ok) {
+    return await parseErrorResponse(response);
   }
+  const body = await response.json();
   return body;
 };
