@@ -29,6 +29,16 @@ export const createItem = async (values, token, bypassImageUpload = false) => {
       },
       body: JSON.stringify(values),
     });
+
+    // Check if the response is successful before parsing JSON
+    if (!response.ok) {
+      return {
+        success: false,
+        message: `HTTP ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    // Safely parse JSON
     const jsonres = await response.json();
     return jsonres;
   } catch (error) {
