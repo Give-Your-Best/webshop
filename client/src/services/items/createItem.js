@@ -1,11 +1,21 @@
 import { convertHeic } from '../../utils/helpers';
 
 export const createItem = async (values, token, bypassImageUpload = false) => {
+  // handle image conversion
+  if (!bypassImageUpload && values.photos) {
+    try {
+      values.photos = await convertHeic(values.photos);
+    } catch (convErr) {
+      console.error(`Image conversion failed in createItem: ${convErr}`);
+      return {
+        success: false,
+        message: convErr.message || 'Failed to convert images',
+      };
+    }
+  }
+
   //call api to create item
   try {
-    if (!bypassImageUpload && values.photos) {
-      values.photos = await convertHeic(values.photos);
-    }
     // Construct the URL with the query parameter
     const url = bypassImageUpload
       ? '/api/items/?bypassImageUpload=true'

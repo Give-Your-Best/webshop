@@ -1,11 +1,21 @@
 import { convertHeic } from '../../utils/helpers';
 
 export const createBatchItem = async (values, token) => {
+  // handle image conversion
+  if (values.photos) {
+    try {
+      values.photos = await convertHeic(values.photos);
+    } catch (convErr) {
+      console.error(`Image conversion failed in createBatchItem: ${convErr}`);
+      return {
+        success: false,
+        message: convErr.message || 'Failed to convert images',
+      };
+    }
+  }
+
   //call api to create batch item
   try {
-    if (values.photos) {
-      values.photos = await convertHeic(values.photos);
-    }
     const response = await fetch('/api/batchItems/', {
       method: 'post',
       headers: {

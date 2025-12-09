@@ -1,11 +1,21 @@
 import { convertHeic } from '../../utils/helpers';
 
 export const updateItem = async (id, updateData, token) => {
+  // handle image conversion
+  if (updateData.photos) {
+    try {
+      updateData.photos = await convertHeic(updateData.photos);
+    } catch (convErr) {
+      console.error(`Image conversion failed in updateItem: ${convErr}`);
+      return {
+        success: false,
+        message: convErr.message || 'Failed to convert images',
+      };
+    }
+  }
+
   //call api to update item details
   try {
-    if (updateData.photos) {
-      updateData.photos = await convertHeic(updateData.photos);
-    }
     const response = await fetch(`/api/items/${id}`, {
       method: 'put',
       headers: {
