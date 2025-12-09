@@ -1,12 +1,22 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getBatchItem = async (id) => {
-  const response = await fetch(`/api/batchItems/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  try {
+    const response = await fetch(`/api/batchItems/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      return await parseErrorResponse(response);
+    }
+    const body = await response.json();
+    return body;
+  } catch (error) {
+    console.error(`Error in getBatchItem: ${error}`);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch batch item',
+    };
   }
-  return body;
 };

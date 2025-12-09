@@ -1,15 +1,25 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const deleteBatchItem = async (id, token) => {
-  const response = await fetch(`/api/batchItems/${id}`, {
-    method: 'delete',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'x-access-token': token,
-    },
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  try {
+    const response = await fetch(`/api/batchItems/${id}`, {
+      method: 'delete',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    });
+    if (!response.ok) {
+      return await parseErrorResponse(response);
+    }
+    const body = await response.json();
+    return body;
+  } catch (error) {
+    console.error(`Error in deleteBatchItem: ${error}`);
+    return {
+      success: false,
+      message: error.message || 'Failed to delete batch item',
+    };
   }
-  return body;
 };

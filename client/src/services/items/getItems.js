@@ -1,3 +1,5 @@
+import { parseErrorResponse } from '../../utils/responseHandler';
+
 export const getItems = async (
   page,
   limit,
@@ -23,15 +25,22 @@ export const getItems = async (
   if (colours && colours.length)
     fetchString = fetchString + `&colours=${colours}`;
 
-  const response = await fetch(fetchString, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+  try {
+    const response = await fetch(fetchString, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      return await parseErrorResponse(response);
+    }
+    const body = await response.json();
+    return body;
+  } catch (error) {
+    console.error(`Error in getItems: ${error}`);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch items',
+    };
   }
-
-  return body;
 };
