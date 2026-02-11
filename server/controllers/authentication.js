@@ -45,8 +45,8 @@ const setUserDetails = (user) => {
   if (user.kind === 'shopper') {
     UserDetails.deliveryAddress = user.deliveryAddress || {};
     UserDetails.deliveryPreference = user.deliveryPreference || 'direct';
-    UserDetails.shoppingFor = user.shoppingFor || 1;
-    UserDetails.shoppingForChildren = user.shoppingForChildren || 0;
+    UserDetails.shoppingFor = user.shoppingFor ?? 1;
+    UserDetails.shoppingForChildren = user.shoppingForChildren ?? 0;
   }
 
   return UserDetails;
