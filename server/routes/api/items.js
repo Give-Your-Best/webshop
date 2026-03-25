@@ -24,6 +24,7 @@ router.get('/', async (req, res) => {
     shoeSizes = req.query.shoeSizes || null,
     colours = req.query.colours || null,
     page = req.query.page,
+    gender = req.query.gender || null,
     limit = req.query.limit;
 
   const items = await getAllItems(
@@ -36,7 +37,8 @@ router.get('/', async (req, res) => {
     donorId,
     clothingSizes,
     shoeSizes,
-    colours
+    colours,
+    gender
   );
   res.json(items);
 });

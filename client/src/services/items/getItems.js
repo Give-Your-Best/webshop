@@ -10,7 +10,8 @@ export const getItems = async (
   donorId,
   clothingSizes,
   shoeSizes,
-  colours
+  colours,
+  gender
 ) => {
   let fetchString = `/api/items?page=${page}&limit=${limit}&approvedStatus=${approvedStatus}&itemStatus=${itemStatus}`;
 
@@ -24,6 +25,7 @@ export const getItems = async (
     fetchString = fetchString + `&shoeSizes=${shoeSizes}`;
   if (colours && colours.length)
     fetchString = fetchString + `&colours=${colours}`;
+  if (gender) fetchString = fetchString + `&gender=${gender}`;
 
   try {
     const response = await fetch(fetchString, {

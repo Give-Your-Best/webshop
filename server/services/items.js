@@ -674,7 +674,8 @@ const getAllItems = async (
   donorId,
   clothingSizes,
   shoeSizes,
-  colours
+  colours,
+  gender
 ) => {
   let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
   try {
@@ -699,6 +700,7 @@ const getAllItems = async (
     const pagei = parseInt(page);
     const skipIndex = (pagei - 1) * limiti;
 
+    if (gender) conditions.gender = { $in: gender.split(',') };
     if (category) conditions.category = category;
     if (subCategory) conditions.subCategory = subCategory;
     if (donorId) conditions.donorId = donorId;
