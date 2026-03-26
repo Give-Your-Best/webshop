@@ -38,11 +38,11 @@ export const SectionSwitcher = () => {
   const { pathname } = useLocation();
   const isMenswear = pathname.startsWith('/menswear');
   const isChildren = pathname.startsWith('/children');
-  const isWomen = !isMenswear && !isChildren;
+  const isWomen = pathname.startsWith('/womenswear');
 
   return (
     <SwitcherBar>
-      <SectionTab to="/" $active={isWomen ? 1 : 0}>
+      <SectionTab to="/womenswear" $active={isWomen ? 1 : 0}>
         Women
       </SectionTab>
       <SectionTab to="/children" $active={isChildren ? 1 : 0}>
