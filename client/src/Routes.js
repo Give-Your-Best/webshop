@@ -12,6 +12,7 @@ import {
   Basket,
   DonorProducts,
   SizingGuide,
+  Womenswear,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -29,6 +30,15 @@ export const Routes = () => {
       </Route>
       <Route path={`/products/`}>
         <Products />
+      </Route>
+      <Route path="/womenswear/:category/:subCategory">
+        <Womenswear />
+      </Route>
+      <Route path="/womenswear/:category">
+        <Womenswear />
+      </Route>
+      <Route path="/womenswear">
+        <Womenswear />
       </Route>
       <Route path="/menswear/:category/:subCategory">
         <Menswear />
