@@ -49,7 +49,10 @@ export const Routes = () => {
       <Route path="/menswear">
         <Menswear />
       </Route>
-      <Route path="/children/:subCategory">
+      <Route path="/children/:category/:subCategory">
+        <Children />
+      </Route>
+      <Route path="/children/:category">
         <Children />
       </Route>
       <Route path="/children">
