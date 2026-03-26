@@ -5,6 +5,7 @@ import { CategoryMenu } from '../CategoryMenu';
 import { MobileMenu } from '../MobileMenu';
 import { HeaderMenu } from '../HeaderMenu';
 import { BurgerMenu } from '../../atoms/BurgerMenu';
+import { SectionSwitcher } from '../SectionSwitcher/SectionSwitcher';
 import logo from './gyb_logo_2.svg';
 import { HeaderWrapper, LogoWrapper } from './Header.styles';
 
@@ -22,6 +23,7 @@ export const Header = () => {
         <HeaderMenu />
       </HeaderWrapper>
       <Banner />
+      <SectionSwitcher />
       <CategoryMenu />
     </div>
   );

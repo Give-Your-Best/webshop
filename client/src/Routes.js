@@ -7,6 +7,8 @@ import {
   Register,
   Dashboard,
   Products,
+  Menswear,
+  Children,
   Basket,
   DonorProducts,
   SizingGuide,
@@ -27,6 +29,21 @@ export const Routes = () => {
       </Route>
       <Route path={`/products/`}>
         <Products />
+      </Route>
+      <Route path="/menswear/:category/:subCategory">
+        <Menswear />
+      </Route>
+      <Route path="/menswear/:category">
+        <Menswear />
+      </Route>
+      <Route path="/menswear">
+        <Menswear />
+      </Route>
+      <Route path="/children/:subCategory">
+        <Children />
+      </Route>
+      <Route path="/children">
+        <Children />
       </Route>
       <Route path={`/donorproducts/:donorId`}>
         <DonorProducts />

@@ -4,6 +4,8 @@ export { Login } from './Login';
 export { Register } from './Register';
 export { Dashboard } from './Dashboard';
 export { Products } from './Products';
+export { Menswear } from './Menswear';
+export { Children } from './Children';
 export { DonorProducts } from './DonorProducts';
 export { Basket } from './Basket';
 export { SizingGuide } from './SizingGuide';
