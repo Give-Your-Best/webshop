@@ -6,7 +6,8 @@ export const CategoryMenuWrapper = styled.nav`
   width: 100%;
   background: ${({ theme }) => theme.colorMappings.yellow};
   height: 82px;
-  padding: 0 calc((100vw - 80rem) / 2);
+  display: flex;
+  justify-content: center;
   box-shadow: 0px 3px 10px #ef7c9829;
 
   @media (max-width: ${({ theme }) => theme.mobile}) {
@@ -65,10 +66,8 @@ export const MainMenuNav = styled.ul`
   margin: 0;
   list-style: none;
   position: relative;
-  margin: 0 0 0 22px;
-  @media (max-width: ${({ theme }) => theme.mid}) {
-    margin: 0 0 0 0;
-  }
+  display: flex;
+  align-items: center;
 `;
 
 export const SubMenuNav = styled.ul`
