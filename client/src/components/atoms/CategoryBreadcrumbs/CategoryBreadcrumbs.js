@@ -1,56 +1,76 @@
 import * as React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { StyledBreadcrumbs } from './CategoryBreadcrumbs.styles';
-import { categories, subCategories } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
+import { sectionConfigs, subCategories } from '../../../utils/constants';
 
-export const CategoryBreadcrumbs = ({ category, subCategory, donor }) => {
-  let history = useHistory();
+// There are three levels (Section e.g. "Womenswear", Category e.g. "Accessories", subCategory e.g. "Bags")
+const getLabelForSegment = (seg) => {
+  // Is it a section root? e.g. 'menswear', 'womenswear', 'children'
+  if (sectionConfigs[seg]) {
+    return sectionConfigs[seg].label;
+  }
 
-  let categoryName = '';
-  let subCategoryName = '';
+  // Is it a top-level category within a section? e.g. 'accessories', 'shoes'
+  const allTopLevel = Object.values(sectionConfigs).flatMap(
+    (s) => s.topLevelCategories
+  );
 
-  categories.forEach((c) => {
-    if (c.id === category) {
-      categoryName = c.name;
-    }
-  });
+  const topLevel = allTopLevel.find((c) => c.id === seg);
+  if (topLevel) {
+    return topLevel.name;
+  }
 
-  subCategories.forEach((c) => {
-    if (c.id === subCategory) {
-      subCategoryName = c.name;
-    }
-  });
+  // Is it a subcategory? e.g. 'dresses', 'bags', 'men-tops'
+  const sub = subCategories.find((s) => s.id === seg);
+  if (sub) {
+    return sub.name;
+  }
 
-  return category ? (
-    <StyledBreadcrumbs separator=">">
-      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
-        Home
-      </StyledBreadcrumbs.Item>
-      <StyledBreadcrumbs.Item
-        onClick={() => history.push(`/products/${category}`)}
-      >
-        {categoryName}
-      </StyledBreadcrumbs.Item>
-      {subCategoryName ? (
-        <StyledBreadcrumbs.Item
-          onClick={() => history.push(`/products/${category}/${subCategory}`)}
-        >
-          {subCategoryName}
+  return seg; // fallback: show raw segment
+};
+
+export const CategoryBreadcrumbs = ({ crumbs }) => {
+  const history = useHistory();
+  const { pathname } = useLocation();
+
+  // Mode B: caller provides explicit crumbs (Item page, DonorProducts)
+  if (crumbs && crumbs.length) {
+    return (
+      <StyledBreadcrumbs separator=">">
+        <StyledBreadcrumbs.Item onClick={() => history.push('/')}>
+          Home
         </StyledBreadcrumbs.Item>
-      ) : (
-        ''
-      )}
-    </StyledBreadcrumbs>
-  ) : donor ? (
+        {crumbs.map((c, i) => (
+          <StyledBreadcrumbs.Item key={i} onClick={() => history.push(c.path)}>
+            {c.label}
+          </StyledBreadcrumbs.Item>
+        ))}
+      </StyledBreadcrumbs>
+    );
+  }
+
+  // Mode A: derive crumbs from the current URL
+  let builtPath = '';
+  const pathCrumbs = pathname
+    .split('/')
+    .filter(Boolean)
+    .map((seg) => {
+      builtPath += '/' + seg;
+      return { label: getLabelForSegment(seg), path: builtPath };
+    });
+
+  if (!pathCrumbs.length) return null;
+
+  return (
     <StyledBreadcrumbs separator=">">
-      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
+      <StyledBreadcrumbs.Item onClick={() => history.push('/')}>
         Home
       </StyledBreadcrumbs.Item>
-      <StyledBreadcrumbs.Item onClick={() => history.push(`/`)}>
-        Donor Products
-      </StyledBreadcrumbs.Item>
+      {pathCrumbs.map((c, i) => (
+        <StyledBreadcrumbs.Item key={i} onClick={() => history.push(c.path)}>
+          {c.label}
+        </StyledBreadcrumbs.Item>
+      ))}
     </StyledBreadcrumbs>
-  ) : (
-    ''
   );
 };
