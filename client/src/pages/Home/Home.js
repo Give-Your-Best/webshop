@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, ItemCard } from '../../components';
-import { CategoriesCarousel } from '../../components/organisms';
+// import { CategoriesCarousel } from '../../components/organisms';
 import { getItems } from '../../services/items';
 import {
   CoverWrapper,
   ItemsWrapper,
-  CategoriesWrapper,
+  // CategoriesWrapper,
   H1,
   ButtonWrapper,
 } from './Home.styles';
 import logo from './website_cover.png';
-import { subCategories } from '../../utils/constants';
+// import { subCategories } from '../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { getSetting } from '../../services/settings';
 
@@ -51,14 +51,14 @@ export const Home = () => {
         <img alt="give-your-best-cover" src={logo} />
       </CoverWrapper>
 
-      <CategoriesWrapper>
+      {/* <CategoriesWrapper>
         <h1>Browse Categories</h1>
         <CategoriesCarousel
           categories={subCategories.filter((c) => {
             return c.parentCategory === 'women' && c.image;
           })}
         />
-      </CategoriesWrapper>
+      </CategoriesWrapper> */}
       <H1>All Items</H1>
       <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
         {items.length
