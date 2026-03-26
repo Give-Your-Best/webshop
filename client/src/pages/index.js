@@ -5,6 +5,7 @@ export { Register } from './Register';
 export { Dashboard } from './Dashboard';
 export { Products } from './Products';
 export { Menswear } from './Menswear';
+export { Womenswear } from './Womenswear';
 export { Children } from './Children';
 export { DonorProducts } from './DonorProducts';
 export { Basket } from './Basket';
