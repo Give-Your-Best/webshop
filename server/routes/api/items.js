@@ -25,6 +25,7 @@ router.get('/', async (req, res) => {
     colours = req.query.colours || null,
     page = req.query.page,
     gender = req.query.gender || null,
+    includeLegacy = req.query.includeLegacy === 'true',
     limit = req.query.limit;
 
   const items = await getAllItems(
@@ -38,7 +39,8 @@ router.get('/', async (req, res) => {
     clothingSizes,
     shoeSizes,
     colours,
-    gender
+    gender,
+    includeLegacy
   );
   res.json(items);
 });

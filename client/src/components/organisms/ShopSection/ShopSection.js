@@ -72,7 +72,8 @@ export const ShopSection = ({ config }) => {
       clothingSizes,
       shoeSizes,
       colours,
-      config.gender || undefined
+      config.gender || undefined,
+      config.includeLegacy || false
     );
     if (more.length > 0) {
       setItems((prev) => prev.concat(more));
@@ -95,7 +96,8 @@ export const ShopSection = ({ config }) => {
         clothingSizes,
         shoeSizes,
         colours,
-        config.gender || undefined
+        config.gender || undefined,
+        config.includeLegacy || false
       );
       setItems(result);
       setNoItems(result.length === 0);

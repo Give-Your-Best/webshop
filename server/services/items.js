@@ -675,7 +675,8 @@ const getAllItems = async (
   clothingSizes,
   shoeSizes,
   colours,
-  gender
+  gender,
+  includeLegacy
 ) => {
   let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
   try {
@@ -700,7 +701,21 @@ const getAllItems = async (
     const pagei = parseInt(page);
     const skipIndex = (pagei - 1) * limiti;
 
-    if (gender) conditions.gender = { $in: gender.split(',') };
+    if (gender) {
+      const genderValues = gender.split(',');
+      if (!conditions.$and) conditions.$and = [];
+      conditions.$and.push(
+        includeLegacy
+          ? {
+              $or: [
+                { gender: { $in: genderValues } },
+                { gender: { $exists: false } },
+                { gender: null },
+              ],
+            }
+          : { gender: { $in: genderValues } }
+      );
+    }
     if (category) conditions.category = category;
     if (subCategory) conditions.subCategory = subCategory;
     if (donorId) conditions.donorId = donorId;

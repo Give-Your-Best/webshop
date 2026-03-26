@@ -101,6 +101,13 @@ export const categories = [
   },
 ];
 
+export const womenswearCategories = [
+  { id: 'women', name: 'Clothing', path: '/womenswear' },
+  { id: 'accessories', name: 'Accessories', path: '/womenswear/accessories' },
+  { id: 'shoes', name: 'Shoes', path: '/womenswear/shoes' },
+  { id: 'other', name: 'Other', path: '/womenswear/other' },
+];
+
 export const childrenCategories = [
   { id: 'children', name: 'Children & Baby', path: '/children' },
 ];
@@ -300,6 +307,43 @@ export const subCategories = [
     parentCategory: 'other',
   },
 ];
+
+export const sectionConfigs = {
+  womenswear: {
+    label: 'Women',
+    basePath: '/womenswear',
+    gender: 'women,unisex',
+    includeLegacy: true,
+    primaryApiCategory: 'women',
+    clothingParentCategory: 'women',
+    topLevelCategories: womenswearCategories,
+    defaultHeading: "Women's Clothing",
+  },
+  menswear: {
+    label: 'Men',
+    basePath: '/menswear',
+    gender: 'men,unisex',
+    primaryApiCategory: 'menswear',
+    clothingParentCategory: 'menswear',
+    topLevelCategories: menswearCategories,
+    defaultHeading: "Men's Clothing",
+  },
+  children: {
+    label: 'Kids',
+    basePath: '/children',
+    gender: null,
+    primaryApiCategory: 'children',
+    clothingParentCategory: 'children',
+    topLevelCategories: [],
+    navGroups: childrenNavGroups.map((group) => ({
+      ...group,
+      subCats: group.subCatIds
+        .map((rawId) => subCategories.find((s) => s.id === rawId))
+        .filter(Boolean),
+    })),
+    defaultHeading: 'Children & Baby',
+  },
+};
 
 export const permissions = [
   'Message',
