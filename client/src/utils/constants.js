@@ -102,7 +102,7 @@ export const categories = [
 ];
 
 export const womenswearCategories = [
-  { id: 'women', name: 'Clothing', path: '/womenswear' },
+  { id: 'women', name: 'Clothing', path: '/womenswear/clothing' },
   { id: 'accessories', name: 'Accessories', path: '/womenswear/accessories' },
   { id: 'shoes', name: 'Shoes', path: '/womenswear/shoes' },
   { id: 'other', name: 'Other', path: '/womenswear/other' },
@@ -120,7 +120,7 @@ export const childrenNavGroups = [
   },
   {
     id: 'kids',
-    name: 'Kids',
+    name: 'Ages 4 - 16',
     subCatIds: ['4/5', '46/9', '10/12', '13/16'],
   },
   {
@@ -131,7 +131,7 @@ export const childrenNavGroups = [
 ];
 
 export const menswearCategories = [
-  { id: 'menswear', name: 'Clothing', path: '/menswear' },
+  { id: 'menswear', name: 'Clothing', path: '/menswear/clothing' },
   { id: 'accessories', name: 'Accessories', path: '/menswear/accessories' },
   { id: 'shoes', name: 'Shoes', path: '/menswear/shoes' },
   { id: 'other', name: 'Other', path: '/menswear/other' },
@@ -317,7 +317,8 @@ export const sectionConfigs = {
     primaryApiCategory: 'women',
     clothingParentCategory: 'women',
     topLevelCategories: womenswearCategories,
-    defaultHeading: "Women's Clothing",
+    defaultHeading: "All Women's Items",
+    clothingHeading: 'Clothing',
   },
   menswear: {
     label: 'Men',
@@ -326,22 +327,24 @@ export const sectionConfigs = {
     primaryApiCategory: 'menswear',
     clothingParentCategory: 'menswear',
     topLevelCategories: menswearCategories,
-    defaultHeading: "Men's Clothing",
+    defaultHeading: "All Men's Items",
+    clothingHeading: 'Clothing',
   },
   children: {
-    label: 'Kids',
+    label: 'Children & Baby',
     basePath: '/children',
     gender: null,
     primaryApiCategory: 'children',
     clothingParentCategory: 'children',
     topLevelCategories: [],
+    navGroupsById: Object.fromEntries(childrenNavGroups.map((g) => [g.id, g])),
     navGroups: childrenNavGroups.map((group) => ({
       ...group,
       subCats: group.subCatIds
         .map((rawId) => subCategories.find((s) => s.id === rawId))
         .filter(Boolean),
     })),
-    defaultHeading: 'Children & Baby',
+    defaultHeading: 'All Children & Baby Items',
   },
 };
 
