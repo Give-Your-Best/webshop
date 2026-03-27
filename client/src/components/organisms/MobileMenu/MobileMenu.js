@@ -107,14 +107,14 @@ export const MobileMenu = () => {
                 </CategoryMenuLink>
                 <SubMenuNav>
                   {subCategories.map((d) => {
-                    d.id = d.id.replace('/', '-');
+                    const urlId = d.id.replace('/', '-');
                     if (d.parentCategory === c.id && c.id !== 'other') {
                       return (
-                        <li key={d.id}>
+                        <li key={urlId}>
                           <SubMenuItem
-                            key={d.id}
+                            key={urlId}
                             onClick={() => {
-                              history.push('/products/' + c.id + '/' + d.id);
+                              history.push('/products/' + c.id + '/' + urlId);
                               hideMobileMenu();
                             }}
                           >
