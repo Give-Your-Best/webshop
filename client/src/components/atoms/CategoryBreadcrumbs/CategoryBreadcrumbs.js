@@ -20,8 +20,19 @@ const getLabelForSegment = (seg) => {
     return topLevel.name;
   }
 
-  // Is it a subcategory? e.g. 'dresses', 'bags', 'men-tops'
-  const sub = subCategories.find((s) => s.id === seg);
+  // Is it a navGroup? e.g. 'baby-toddler', 'kids', 'toys'
+  const allNavGroups = Object.values(sectionConfigs)
+    .filter((s) => s.navGroups)
+    .flatMap((s) => s.navGroups);
+  const navGroup = allNavGroups.find((g) => g.id === seg);
+  if (navGroup) {
+    return navGroup.name;
+  }
+
+  // Is it a subcategory? e.g. 'dresses', 'bags', 'men-tops', '12-36-month'
+  const sub = subCategories.find(
+    (s) => s.id === seg || s.id.replace('/', '-') === seg
+  );
   if (sub) {
     return sub.name;
   }
