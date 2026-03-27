@@ -717,7 +717,11 @@ const getAllItems = async (
       );
     }
     if (category) conditions.category = category;
-    if (subCategory) conditions.subCategory = subCategory;
+    if (subCategory) {
+      const subCats = subCategory.split(',');
+      conditions.subCategory =
+        subCats.length > 1 ? { $in: subCats } : subCats[0];
+    }
     if (donorId) conditions.donorId = donorId;
     if (clothingSizes)
       conditions.clothingSize = { $in: clothingSizes.split(',') };
