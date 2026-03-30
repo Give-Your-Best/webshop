@@ -46,8 +46,12 @@ export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
     onCategoryChange(cat, formikProps.values.subCategory);
   };
 
-  const handleGenderChange = () => {
-    formikProps.setFieldValue('subCategory', '');
+  const handleGenderChange = (e) => {
+    formikProps.setValues((prev) => ({
+      ...prev,
+      gender: e.target.value,
+      subCategory: '',
+    }));
   };
 
   const handleSubCategoryChange = (subCategory) => {
