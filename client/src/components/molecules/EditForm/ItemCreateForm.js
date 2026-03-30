@@ -81,6 +81,7 @@ export const ItemCreateForm = (data) => {
           subCategory: '',
           brand: '',
           photos: [],
+          gender: '',
           donorId: user.id,
         }}
         validationSchema={itemCreateschema}

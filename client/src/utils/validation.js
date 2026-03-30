@@ -99,4 +99,9 @@ export const itemCreateschema = yup.object().shape({
   category: yup.string().required('Please enter a category'),
   subCategory: yup.string().required('Please enter a sub-category'),
   photos: yup.array().min(2, 'Please upload a front and back image'),
+  gender: yup.string().when('category', {
+    is: (cat) => ['accessories', 'shoes', 'other'].includes(cat),
+    then: (schema) => schema.required('Please select who this item is for'),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });

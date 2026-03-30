@@ -105,7 +105,6 @@ itemSchema.pre('save', async function (next) {
   // Auto-assign gender from category
   if (item.category === 'menswear') item.gender = 'men';
   else if (item.category === 'women') item.gender = 'women';
-  else if (item.category === 'children') item.gender = 'children';
   // shoes/accessories: left as explicit donor choice (null by default)
 
   var donor = await User_.User.findOne({

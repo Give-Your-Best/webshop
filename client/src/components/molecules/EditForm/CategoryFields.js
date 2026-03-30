@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { categories, subCategories } from '../../../utils/constants';
 import { StyledSelect } from '../../atoms';
-import { StyledError, StyledLabel } from './EditForm.styles';
+import { StyledError, StyledLabel, StyledRadio } from './EditForm.styles';
 import { useFormikContext } from 'formik';
 
 export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const [subs, setSubs] = useState([]);
   const formikProps = useFormikContext();
+  const GENDER_REQUIRED_CATEGORIES = ['accessories', 'shoes', 'other'];
 
   //intialise subcategory
   if (!subs.length && formikProps.values.category) {
@@ -20,6 +21,7 @@ export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const handleChange = (cat) => {
     //update subcategory based on parent category value
     formikProps.setFieldValue('subCategory', '');
+    formikProps.setFieldValue('gender', '');
     setSubs(
       subCategories.filter((sub) => {
         return sub.parentCategory === cat;
@@ -65,6 +67,18 @@ export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
         })}
       </StyledSelect>
       <StyledError name="subCategory" component="div" />
+
+      {GENDER_REQUIRED_CATEGORIES.includes(formikProps.values.category) && (
+        <div>
+          <StyledLabel>Who is this for?</StyledLabel>
+          <StyledRadio.Group name="gender" disabled={editingKey !== recordId}>
+            <StyledRadio value="women">Women</StyledRadio>
+            <StyledRadio value="men">Men</StyledRadio>
+            <StyledRadio value="unisex">Unisex</StyledRadio>
+          </StyledRadio.Group>
+          <StyledError name="gender" component="div" />
+        </div>
+      )}
     </div>
   );
 };

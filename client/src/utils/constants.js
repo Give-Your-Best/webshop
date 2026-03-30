@@ -76,7 +76,7 @@ export const currentStatus = [
 
 export const categories = [
   {
-    name: 'Clothing',
+    name: 'Womenswear',
     id: 'women',
   },
   {
