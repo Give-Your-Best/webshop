@@ -14,6 +14,86 @@ import { Form } from 'formik-antd';
 import { Formik } from 'formik';
 import { convertUnderscoreToDot } from '../../utils/convertUnderscoreToDot';
 import RemoveFromBasketButton from '../../components/molecules/Button/RemoveFromBasketButton';
+import { sectionConfigs, subCategories } from '../../utils/constants';
+
+const buildItemCrumbs = (item) => {
+  if (!item || !item.category) return [];
+
+  const { category, subCategory, gender, name } = item;
+
+  let sectionKey;
+  if (category === 'women') {
+    sectionKey = 'womenswear';
+  } else if (category === 'menswear') {
+    sectionKey = 'menswear';
+  } else if (category === 'children') {
+    sectionKey = 'children';
+  } else if (gender === 'unisex') {
+    sectionKey = null;
+  } else {
+    sectionKey = gender === 'men' ? 'menswear' : 'womenswear';
+  }
+
+  const config = sectionKey ? sectionConfigs[sectionKey] : null;
+
+  const sectionLabels = {
+    womenswear: 'women',
+    menswear: 'men',
+    children: 'children',
+  };
+  const sectionLabel = sectionKey
+    ? sectionLabels[sectionKey] || config.label
+    : null;
+
+  const crumbs = config ? [{ label: sectionLabel, path: config.basePath }] : [];
+
+  if (category === 'children') {
+    if (subCategory) {
+      const group = config.navGroups.find((g) =>
+        g.subCatIds.includes(subCategory)
+      );
+      if (group) {
+        const shortGroupNames = {
+          'baby-toddler': 'baby',
+          kids: 'kids',
+          toys: 'toys & books',
+        };
+        crumbs.push({
+          label: shortGroupNames[group.id] || group.name,
+          path: `${config.basePath}/${group.id}`,
+        });
+      }
+    }
+  } else {
+    const allTopLevel = Object.values(sectionConfigs).flatMap(
+      (s) => s.topLevelCategories
+    );
+    const topLevel = config
+      ? config.topLevelCategories.find((c) => c.id === category)
+      : allTopLevel.find((c) => c.id === category);
+
+    if (topLevel) {
+      crumbs.push({ label: topLevel.name, path: topLevel.path });
+    }
+
+    if (subCategory && category !== 'other') {
+      const sub = subCategories.find((s) => s.id === subCategory);
+      if (sub) {
+        const isClothing = config && category === config.clothingParentCategory;
+        const subPath = isClothing
+          ? `${config.basePath}/clothing/${subCategory}`
+          : `${config.basePath}/${category}/${subCategory}`;
+        crumbs.push({ label: sub.name, path: subPath });
+      }
+    }
+  }
+
+  if (name) {
+    crumbs.push({ label: name, path: null });
+  }
+
+  return crumbs;
+};
 
 export const Item = () => {
   const { token, basket } = useContext(AppContext);
@@ -140,10 +220,7 @@ export const Item = () => {
     <Container>
       <Formik initialValues={{ size: '', quantity: 1 }}>
         <Form>
-          <CategoryBreadcrumbs
-            category={itemDetails.category}
-            subCategory={itemDetails.subCategory}
-          />
+          <CategoryBreadcrumbs crumbs={buildItemCrumbs(itemDetails)} />
           <ItemWrapper>
             <ImageGallery
               changeMainImage={changeMainImage}
