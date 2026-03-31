@@ -44,6 +44,7 @@ export const formatDate = (date) => {
 export const hideMobileMenu = () => {
   document.getElementById('mobileMenu').style.display = 'none';
   document.getElementById('cross').style.display = 'none';
+  document.getElementById('menuOverlay').style.display = 'none';
   document.querySelectorAll('#mobileMenu li.open').forEach((i) => {
     i.classList.remove('open');
   });
@@ -53,6 +54,7 @@ export const hideMobileMenu = () => {
 export const showMobileMenu = () => {
   document.getElementById('mobileMenu').style.display = 'block';
   document.getElementById('cross').style.display = 'block';
+  document.getElementById('menuOverlay').style.display = 'block';
   return;
 };
 
