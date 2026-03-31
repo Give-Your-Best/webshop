@@ -51,11 +51,18 @@ export const CategoryBreadcrumbs = ({ crumbs }) => {
         <StyledBreadcrumbs.Item onClick={() => history.push('/')}>
           Home
         </StyledBreadcrumbs.Item>
-        {crumbs.map((c, i) => (
-          <StyledBreadcrumbs.Item key={i} onClick={() => history.push(c.path)}>
-            {c.label}
-          </StyledBreadcrumbs.Item>
-        ))}
+        {crumbs.map((c, i) =>
+          c.path ? (
+            <StyledBreadcrumbs.Item
+              key={i}
+              onClick={() => history.push(c.path)}
+            >
+              {c.label}
+            </StyledBreadcrumbs.Item>
+          ) : (
+            <StyledBreadcrumbs.Item key={i}>{c.label}</StyledBreadcrumbs.Item>
+          )
+        )}
       </StyledBreadcrumbs>
     );
   }
