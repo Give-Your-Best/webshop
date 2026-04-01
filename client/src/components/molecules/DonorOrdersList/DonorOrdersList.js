@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AppContext } from '../../../context/app-context';
 import { AccountContext } from '../../../context/account-context';
-import { Modal, Tooltip } from 'antd';
+import { Modal } from 'antd';
 import {
   ListWrapper,
   HiddenStyledTab,
@@ -13,7 +13,7 @@ import {
   ShopperWrapperSmall,
 } from './DonorOrdersList.styles';
 import { getDonorItems, updateItem } from '../../../services/items';
-import { H2, Button } from '../../atoms';
+import { H2 } from '../../atoms';
 import { getUser } from '../../../services/user';
 import { getLocation } from '../../../services/locations';
 import {
@@ -29,62 +29,68 @@ export const DonorOrdersList = () => {
   const { allTags } = useContext(AccountContext);
   const [itemsToSend, setItemsToSend] = useState([]);
   const [itemsAwaitingReceived, setItemsAwaitingReceived] = useState([]);
-  const [isAddressVisible, setIsAddressVisible] = useState(false);
+  const [addressVisibleItems, setAddressVisibleItems] = useState({});
   const mountedRef = useRef(true);
   const { confirm } = Modal;
 
-  const handleAddressVisibilityChange = (isVisible) => {
-    setIsAddressVisible(isVisible);
+  const handleAddressVisibilityChange = (itemId, isVisible) => {
+    setAddressVisibleItems((prev) => ({ ...prev, [itemId]: isVisible }));
   };
 
-  const markAsSent = (itemsList) => {
+  const markAsSent = (itemId) => {
+    const l = itemsToSend
+      .flatMap((group) => group.items)
+      .find((i) => i._id === itemId);
+    if (!l) return;
+
     confirm({
-      title: `Are you sure you want to mark your items as sent?`,
+      title: `Are you sure you want to mark this item as sent?`,
       className: 'modalStyle',
       onOk() {
         const uuid = Date.now();
 
-        itemsList.forEach((l) => {
-          setItemsToSend(
-            itemsToSend.filter((j) => {
-              return j.shopperId !== l.shopperId._id;
-            })
+        setItemsToSend((prev) =>
+          prev
+            .map((group) => ({
+              ...group,
+              items: group.items.filter((i) => i._id !== itemId),
+            }))
+            .filter((group) => group.items.length > 0)
+        );
+
+        if (typeof l.sendVia === 'string') {
+          // send via exists (location assigned)
+
+          //get location assigned and associated admin user to send them an email
+          getLocation(l.sendVia, token).then((location) => {
+            if (location.length && location[0].adminUser) {
+              getUser(location[0].adminUser, token).then((admin) => {
+                sendAutoEmail('item_on_the_way_admin', admin);
+              });
+            }
+          });
+          return updateItem(
+            l._id,
+            {
+              status: 'shipped-to-gyb',
+              'statusUpdateDates.gybShippedDate': getDate(),
+              packageId: uuid,
+            },
+            token
           );
-
-          if (typeof l.sendVia === 'string') {
-            // send via exists (location assigned)
-
-            //get location assigned and associated admin user to send them an email
-            getLocation(l.sendVia, token).then((location) => {
-              if (location.length && location[0].adminUser) {
-                getUser(location[0].adminUser, token).then((admin) => {
-                  sendAutoEmail('item_on_the_way_admin', admin);
-                });
-              }
-            });
-            return updateItem(
-              l._id,
-              {
-                status: 'shipped-to-gyb',
-                'statusUpdateDates.gybShippedDate': getDate(),
-                packageId: uuid,
-              },
-              token
-            );
-          } else {
-            //send via does not exist (location not assigned or shopper has shared address
-            sendAutoEmail('item_on_the_way', l.shopperId, [l]);
-            return updateItem(
-              l._id,
-              {
-                status: 'shipped-to-shopper',
-                'statusUpdateDates.shopperShippedDate': getDate(),
-                packageId: uuid,
-              },
-              token
-            );
-          }
-        });
+        } else {
+          //send via does not exist (location not assigned or shopper has shared address)
+          sendAutoEmail('item_on_the_way', l.shopperId, [l]);
+          return updateItem(
+            l._id,
+            {
+              status: 'shipped-to-shopper',
+              'statusUpdateDates.shopperShippedDate': getDate(),
+              packageId: uuid,
+            },
+            token
+          );
+        }
       },
     });
   };
@@ -142,39 +148,24 @@ export const DonorOrdersList = () => {
                               <ItemCardLong
                                 item={i}
                                 type={user.type}
-                                actionText={''}
-                                action={null}
+                                actionText={
+                                  addressVisibleItems[i._id]
+                                    ? 'Mark as Sent'
+                                    : ''
+                                }
+                                action={markAsSent}
                                 allTags={allTags}
-                                onAddressVisibilityChange={
-                                  handleAddressVisibilityChange
+                                onAddressVisibilityChange={(isVisible) =>
+                                  handleAddressVisibilityChange(
+                                    i._id,
+                                    isVisible
+                                  )
                                 }
                               />
                             </div>
                           );
                         })
                       : ''}
-                    {item.items && item.items.length && (
-                      <Tooltip
-                        placement="topRight"
-                        title={
-                          !isAddressVisible
-                            ? 'This button is enabled only whenever the address has been set on the item. Please click `View delivery address` to check if an address has been set.'
-                            : ''
-                        }
-                      >
-                        <div>
-                          <Button
-                            primary
-                            right
-                            small
-                            disabled={!isAddressVisible}
-                            onClick={() => markAsSent(item.items)}
-                          >
-                            Mark as Sent
-                          </Button>
-                        </div>
-                      </Tooltip>
-                    )}
                   </ShopperWrapper>
                 );
               })}
