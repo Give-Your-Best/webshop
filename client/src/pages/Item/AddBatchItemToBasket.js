@@ -136,7 +136,7 @@ const AddBatchItemToBasketButton = ({
     // create items per quantity
     const items = [];
     // eslint-disable-next-line
-    const { _id, ...itemWithoutId } = item;
+    const { _id, createdAt, statusUpdateDates, ...itemWithoutId } = item;
     const categoryKey = category === 'shoes' ? 'shoeSize' : 'clothingSize';
     // Construct data for each item in the quantity (based on the templateItem: re-use photos that have already been uploaded)
     const itemDetails = {
