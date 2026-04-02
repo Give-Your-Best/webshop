@@ -68,4 +68,5 @@ export const CoverWrapper = styled.div`
 
 export const H1 = styled.h1`
   text-align: center;
+  margin-top: 2rem;
 `;
