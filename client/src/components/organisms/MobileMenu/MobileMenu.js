@@ -32,6 +32,13 @@ export const MobileMenu = () => {
 
   const showStyle = { display: 'block' };
 
+  const closeMenu = () => {
+    setOpenSection(null);
+    setOpenCategory(null);
+    setOpenAccount(false);
+    hideMobileMenu();
+  };
+
   const toggleSection = (key) => {
     setOpenSection(openSection === key ? null : key);
     setOpenCategory(null);
@@ -44,7 +51,7 @@ export const MobileMenu = () => {
   const basketCheck = () => {
     if (user && user.type === 'shopper') {
       history.push(`/basket`);
-      hideMobileMenu();
+      closeMenu();
     } else {
       confirm({
         className: 'modalStyle',
@@ -55,12 +62,12 @@ export const MobileMenu = () => {
 
   const navigate = (path) => {
     history.push(path);
-    hideMobileMenu();
+    closeMenu();
   };
 
   return (
     <>
-      <MenuOverlay id="menuOverlay" onClick={hideMobileMenu} />
+      <MenuOverlay id="menuOverlay" onClick={closeMenu} />
       <CategoryMenuWrapper id="mobileMenu">
         <MainMenuNav>
           <CategoryMenuItem key={'account icon'}>
@@ -246,7 +253,7 @@ export const MobileMenu = () => {
           })}
         </MainMenuNav>
       </CategoryMenuWrapper>
-      <Cross id="cross" onClick={hideMobileMenu} />
+      <Cross id="cross" onClick={closeMenu} />
     </>
   );
 };
