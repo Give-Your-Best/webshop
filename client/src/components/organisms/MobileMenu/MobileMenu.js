@@ -189,7 +189,10 @@ export const MobileMenu = () => {
                         c.id === 'other'
                           ? []
                           : subCategories.filter(
-                              (s) => s.parentCategory === c.id
+                              (s) =>
+                                s.parentCategory === c.id &&
+                                (!s.genderRestriction ||
+                                  config.gender?.includes(s.genderRestriction))
                             );
                       const isCatOpen =
                         openCategory === sectionKey + '-' + c.id;

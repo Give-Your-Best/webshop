@@ -66,7 +66,12 @@ export const CategoryMenu = () => {
           const catSubItems =
             c.id === 'other'
               ? []
-              : subCategories.filter((s) => s.parentCategory === c.id);
+              : subCategories.filter(
+                  (s) =>
+                    s.parentCategory === c.id &&
+                    (!s.genderRestriction ||
+                      activeConfig.gender?.includes(s.genderRestriction))
+                );
           return (
             <CategoryMenuItem key={c.id}>
               <CategoryMenuLink to={c.path}>{c.name}</CategoryMenuLink>
