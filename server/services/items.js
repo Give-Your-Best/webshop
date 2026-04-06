@@ -69,6 +69,7 @@ const createItem = async (data, bypassImageUpload = false) => {
     data.photos = new_photos;
   }
   try {
+    if (data.gender === '') data.gender = null;
     const item = new Item(data);
     await item.save();
     return { success: true, message: 'Item created', item: item };

@@ -115,7 +115,7 @@ export const childrenCategories = [
 export const childrenNavGroups = [
   {
     id: 'baby-toddler',
-    name: 'Baby & Toddler',
+    name: 'Baby',
     subCatIds: ['baby', '12/35-month'],
   },
   {
@@ -338,7 +338,7 @@ export const sectionConfigs = {
     clothingHeading: 'Clothing',
   },
   children: {
-    label: 'Children & Baby',
+    label: 'Children',
     basePath: '/children',
     gender: null,
     primaryApiCategory: 'children',

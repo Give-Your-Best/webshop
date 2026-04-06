@@ -46,7 +46,7 @@ export const SectionSwitcher = () => {
         Women
       </SectionTab>
       <SectionTab to="/children" $active={isChildren ? 1 : 0}>
-        Kids
+        Children
       </SectionTab>
       <SectionTab to="/menswear" $active={isMenswear ? 1 : 0}>
         Men
