@@ -80,9 +80,17 @@ const buildItemCrumbs = (item) => {
       const sub = subCategories.find((s) => s.id === subCategory);
       if (sub) {
         const isClothing = config && category === config.clothingParentCategory;
-        const subPath = isClothing
-          ? `${config.basePath}/clothing/${subCategory}`
-          : `${config.basePath}/${category}/${subCategory}`;
+        let subPath = null;
+        if (isClothing) {
+          // Clothing subcategory (e.g. womenswear/clothing/dresses)
+          subPath = `${config.basePath}/clothing/${subCategory}`;
+        } else if (config) {
+          // Non-clothing with a known section (e.g. womenswear/shoes/boots)
+          subPath = `${config.basePath}/${category}/${subCategory}`;
+        } else if (topLevel) {
+          // Unisex item with no single section — derive from the top-level category path (e.g. /womenswear/accessories/bags)
+          subPath = `${topLevel.path}/${subCategory}`;
+        }
         crumbs.push({ label: sub.name, path: subPath });
       }
     }
