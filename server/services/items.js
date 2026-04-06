@@ -710,8 +710,8 @@ const getAllItems = async (
           ? {
               $or: [
                 { gender: { $in: genderValues } },
-                { gender: { $exists: false } },
-                { gender: null },
+                { gender: { $exists: false }, category: { $ne: 'children' } },
+                { gender: null, category: { $ne: 'children' } },
               ],
             }
           : { gender: { $in: genderValues } }
