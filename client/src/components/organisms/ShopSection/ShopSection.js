@@ -183,8 +183,11 @@ export const ShopSection = ({ config }) => {
         config.gender || undefined,
         config.includeLegacy || false
       );
+      if (!Array.isArray(result)) {
+        setNoItems(true);
+        return;
+      }
       setItems(result);
-      setNoItems(result.length === 0);
       setNoMoreLoad(false);
       setPage(1);
     };
