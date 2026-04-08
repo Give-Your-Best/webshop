@@ -14,7 +14,6 @@ const SizeSelector = ({
   editingKey,
   recordId,
   category,
-  subcategory,
 }) => {
   const { setFieldValue, ...formikProps } = useFormikContext();
 
@@ -22,7 +21,8 @@ const SizeSelector = ({
     // clear quantity values when category is changed
     setFieldValue(`shoeSizes`, {});
     setFieldValue('clothingSizes', {});
-  }, [category, subcategory, setFieldValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, setFieldValue]);
 
   const handleQuantityChange = (size, quantity) => {
     let updatedQuantities = {
