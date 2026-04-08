@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { categories, subCategories } from '../../../utils/constants';
 import { StyledSelect } from '../../atoms';
@@ -9,19 +9,22 @@ const GenderPickerWrapper = styled.div`
   margin: 12px 0;
 `;
 
+const GENDER_REQUIRED_CATEGORIES = ['accessories', 'shoes', 'other'];
+
 export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const [subs, setSubs] = useState([]);
   const formikProps = useFormikContext();
-  const GENDER_REQUIRED_CATEGORIES = ['accessories', 'shoes', 'other'];
 
-  //intialise subcategory
-  if (!subs.length && formikProps.values.category) {
-    setSubs(
-      subCategories.filter((sub) => {
-        return sub.parentCategory === formikProps.values.category;
-      })
-    );
-  }
+  // Initialise subcategories when editing an existing item that already has a category set
+  useEffect(() => {
+    if (formikProps.values.category) {
+      setSubs(
+        subCategories.filter(
+          (sub) => sub.parentCategory === formikProps.values.category
+        )
+      );
+    }
+  }, [formikProps.values.category]);
 
   const selectedGender = formikProps.values.gender;
 
@@ -47,10 +50,23 @@ export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   };
 
   const handleGenderChange = (e) => {
+    const newGender = e.target.value;
+    const currentSubCategory = formikProps.values.subCategory;
+    const validForNewGender = subs.filter((sub) => {
+      if (!sub.genderRestriction) return true;
+      if (sub.genderRestriction === 'women')
+        return newGender === 'women' || newGender === 'unisex';
+      if (sub.genderRestriction === 'men')
+        return newGender === 'men' || newGender === 'unisex';
+      return true;
+    });
+    const subCategoryStillValid = validForNewGender.some(
+      (sub) => sub.id === currentSubCategory
+    );
     formikProps.setValues((prev) => ({
       ...prev,
-      gender: e.target.value,
-      subCategory: '',
+      gender: newGender,
+      subCategory: subCategoryStillValid ? prev.subCategory : '',
     }));
   };
 
