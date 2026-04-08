@@ -58,8 +58,8 @@ export const Products = () => {
       setNoItems(items.length > 0 ? false : true);
       setNoMoreLoad(false);
     };
-
     fetchItems();
+    // eslint-disable-next-line
   }, [filters]);
 
   return (
