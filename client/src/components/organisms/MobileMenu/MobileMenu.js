@@ -24,7 +24,7 @@ export const MobileMenu = () => {
   let history = useHistory();
   const { confirm } = Modal;
 
-  var tabs = tabList(user);
+  const tabs = tabList(user);
 
   const [openSection, setOpenSection] = React.useState(null);
   const [openCategory, setOpenCategory] = React.useState(null);
@@ -83,7 +83,7 @@ export const MobileMenu = () => {
               <Icon src="/GYB-account.svg" alt="account icon" />
               Account {tabs.length ? <Down $expanded={openAccount} /> : ''}
             </CategoryMenuLink>
-            {tabs.length && openAccount ? (
+            {tabs.length > 0 && openAccount ? (
               <SubMenuNav style={showStyle}>
                 {tabs.map((d) => {
                   return d.name === 'Dashboard' ? (
