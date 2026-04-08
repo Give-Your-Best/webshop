@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { GenderPickerWrapper } from './EditForm.styles';
 import { categories, subCategories } from '../../../utils/constants';
 import { StyledSelect } from '../../atoms';
 import { StyledError, StyledLabel, StyledRadio } from './EditForm.styles';
 import { useFormikContext } from 'formik';
-
-const GenderPickerWrapper = styled.div`
-  margin: 12px 0;
-`;
 
 const GENDER_REQUIRED_CATEGORIES = ['accessories', 'shoes', 'other'];
 
