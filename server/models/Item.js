@@ -90,6 +90,7 @@ const itemSchema = new Schema(
 );
 
 itemSchema.index({ gender: 1 });
+itemSchema.index({ category: 1 });
 itemSchema.index({ batchId: 1 });
 itemSchema.index({ isTemplateBatchItem: 1 });
 itemSchema.index({ tags: 1 });
