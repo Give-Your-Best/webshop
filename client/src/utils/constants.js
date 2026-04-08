@@ -1,122 +1,5 @@
 const homeLink = 'https://shop.giveyourbest.uk';
 
-/* 
-These are the updated sizes, we are stashing them for a bit,
-whilst we revert back to old sizing and then address the sizing update properly
-*/
-
-// export const clothingSizeOptions = [
-//   '4',
-//   '6',
-//   '8',
-//   '10',
-//   '12',
-//   '14',
-//   '16',
-//   '18',
-//   '20',
-//   '22',
-//   '24',
-//   '26',
-//   '28',
-//   '30',
-//   'XXS',
-//   'XS',
-//   'S',
-//   'M',
-//   'L',
-//   'XL',
-//   'XXL',
-//   '3XL',
-//   '4XL',
-//   'One Size',
-// ];
-
-// export const childrenClothingSizeOptions = [
-//   '0-4 Months',
-//   '3-6 Months',
-//   '6-9 Months',
-//   '9-12 Months',
-//   '12-18 Months',
-//   '18-24 Months',
-//   '2-3 Years',
-//   '3-4 Years',
-//   '4-5 Years',
-//   '5-6 Years',
-//   '6-7 Years',
-//   '7-8 Years',
-//   '10 Years',
-//   '12 Years',
-//   '14 Years',
-//   '16 Years',
-//   'One Size',
-// ];
-
-// export const shoeSizeOptions = [
-//   'UK 1',
-//   'UK 2',
-//   'UK 2.5',
-//   'UK 3',
-//   'UK 3.5',
-//   'UK 4',
-//   'UK 4.5',
-//   'UK 5',
-//   'UK 5.5',
-//   'UK 6',
-//   'UK 6.5',
-//   'UK 7',
-//   'UK 7.5',
-//   'UK 8',
-//   'UK 9',
-//   'UK 10',
-//   'UK 11',
-//   'UK 11.5',
-//   'UK 12',
-//   'UK 12.5',
-//   'UK 13',
-//   'UK 13.5',
-//   'UK 14',
-// ];
-
-// export const childrensShoeSizeOptions = [
-//   'Kids 0',
-//   'Kids 1',
-//   'Kids 1.5',
-//   'Kids 2',
-//   'Kids 2.5',
-//   'Kids 3',
-//   'Kids 3.5',
-//   'Kids 4',
-//   'Kids 4.5',
-//   'Kids 5',
-//   'Kids 5.5',
-//   'Kids 6',
-//   'Kids 6.5',
-//   'Kids 7',
-//   'Kids 7.5',
-//   'Kids 8',
-//   'Kids 8.5',
-//   'Kids 9',
-//   'Kids 9.5',
-//   'Kids 10',
-//   'Kids 10.5',
-//   'Kids 11',
-//   'Kids 11.5',
-//   'Kids 12',
-//   'Kids 12.5',
-//   'Kids 13',
-//   'Kids 13.5',
-//   'UK 1',
-//   'UK 1.5',
-//   'UK 2',
-//   'UK 2.5',
-//   'UK 3',
-//   'UK 3.5',
-//   'UK 4',
-//   'UK 4.5',
-//   'UK 5',
-// ];
-
 export const clothingSizeOptions = [
   '6',
   '8',
@@ -191,230 +74,14 @@ export const currentStatus = [
   'Other',
 ];
 
-/* 
-These are the updated categories & subcategories, we are stashing them for a bit,
-whilst we revert back to old sizing & options, and then address the sizing update properly
-*/
-
-// export const categories = [
-//   {
-//     name: 'Women',
-//     id: 'women',
-//   },
-//   {
-//     name: 'Children & Baby',
-//     id: 'children',
-//   },
-//   {
-//     name: 'Accessories',
-//     id: 'accessories',
-//   },
-//   {
-//     name: 'Shoes',
-//     id: 'shoes',
-//   },
-//   {
-//     name: 'Other',
-//     id: 'other',
-//   },
-// ];
-
-// export const subCategories = [
-//   {
-//     name: 'Coats, Jackets & Outerwear',
-//     id: 'coats',
-//     image: 'GYB-coats-and-jackets.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Dresses & Jumpsuits',
-//     id: 'dresses',
-//     image: 'GYB-dresses.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Jumpers & Cardigans',
-//     id: 'sweaters',
-//     image: 'GYB-sweaters-and-cardigans.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Shirts & Blouses',
-//     id: 'shirts',
-//     image: 'GYB-shirts-and-blouses.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Skirts & Shorts',
-//     id: 'skirts',
-//     image: 'GYB-skirts.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Sleepwear & Loungewear',
-//     id: 'sleepwear',
-//     image: 'GYB-sleepwear-and-loungewear.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Sportswear',
-//     id: 'sportswear',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Swimwear',
-//     id: 'swimwear',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Tops & T-Shirts',
-//     id: 'tops',
-//     image: 'GYB-tops-and-tshirts.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Trousers & Leggings',
-//     id: 'trousers',
-//     image: 'GYB-trousers.svg',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Underwear',
-//     id: 'underwear',
-//     parentCategory: 'women',
-//   },
-//   {
-//     name: 'Maternity',
-//     id: 'maternity',
-//     parentCategory: 'women',
-//     image: 'GYB-maternity.svg',
-//   },
-//   {
-//     name: 'Baby Bundles',
-//     id: 'baby',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Bodysuits',
-//     id: 'bodysuits',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Coats, Jackets & Outerwear',
-//     id: 'children-coats',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Dresses & Jumpsuits',
-//     id: 'children-dresses',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Dungarees & All-in-ones',
-//     id: 'children-dungarees',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Jumpers & Cardigans',
-//     id: 'children-jumpers',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Pyjamas & Sleepwear',
-//     id: 'children-sleepwear',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Shoes & Slippers',
-//     id: 'children-shoes',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Skirts & Shorts',
-//     id: 'children-skirts',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Swimwear',
-//     id: 'children-swimwear',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Tops & T-shirts',
-//     id: 'children-tops',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Trousers & Leggings',
-//     id: 'children-bottoms',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Toys & Books',
-//     id: 'toys',
-//     parentCategory: 'children',
-//   },
-//   {
-//     name: 'Bags',
-//     id: 'bags',
-//     parentCategory: 'accessories',
-//   },
-//   {
-//     name: 'Hats, Scarves & Gloves',
-//     id: 'winter',
-//     parentCategory: 'accessories',
-//   },
-//   {
-//     name: 'Jewellery',
-//     id: 'jewellery',
-//     parentCategory: 'accessories',
-//   },
-//   {
-//     name: 'Other',
-//     id: 'other',
-//     parentCategory: 'accessories',
-//   },
-//   {
-//     name: 'Boots',
-//     id: 'boots',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Flats',
-//     id: 'flats',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Heels',
-//     id: 'heels',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Sandals',
-//     id: 'sandals',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Slippers',
-//     id: 'slippers',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Trainers / Sneakers',
-//     id: 'trainers',
-//     parentCategory: 'shoes',
-//   },
-//   {
-//     name: 'Other',
-//     id: 'other',
-//     parentCategory: 'other',
-//   },
-// ];
-
 export const categories = [
   {
-    name: 'Women',
+    name: 'Womenswear',
     id: 'women',
+  },
+  {
+    name: 'Menswear',
+    id: 'menswear',
   },
   {
     name: 'Children & Baby',
@@ -432,6 +99,38 @@ export const categories = [
     name: 'Other',
     id: 'other',
   },
+];
+
+export const womenswearCategories = [
+  { id: 'women', name: 'Clothing', path: '/womenswear/clothing' },
+  { id: 'accessories', name: 'Accessories', path: '/womenswear/accessories' },
+  { id: 'shoes', name: 'Shoes', path: '/womenswear/shoes' },
+  { id: 'other', name: 'Other', path: '/womenswear/other' },
+];
+
+export const childrenNavGroups = [
+  {
+    id: 'baby-toddler',
+    name: 'Baby',
+    subCatIds: ['baby', '12/35-month'],
+  },
+  {
+    id: 'kids',
+    name: 'Ages 4 - 16',
+    subCatIds: ['4/5', '46/9', '10/12', '13/16'],
+  },
+  {
+    id: 'toys',
+    name: 'Toys & Books',
+    subCatIds: ['toys'],
+  },
+];
+
+export const menswearCategories = [
+  { id: 'menswear', name: 'Clothing', path: '/menswear/clothing' },
+  { id: 'accessories', name: 'Accessories', path: '/menswear/accessories' },
+  { id: 'shoes', name: 'Shoes', path: '/menswear/shoes' },
+  { id: 'other', name: 'Other', path: '/menswear/other' },
 ];
 
 export const subCategories = [
@@ -494,6 +193,25 @@ export const subCategories = [
     parentCategory: 'women',
     image: 'GYB-maternity.svg',
   },
+  { name: 'Tops & Shirts', id: 'men-tops', parentCategory: 'menswear' },
+  {
+    name: 'Sweaters & Cardigans',
+    id: 'men-sweaters',
+    parentCategory: 'menswear',
+  },
+  {
+    name: 'Trousers, Jeans & Shorts',
+    id: 'men-trousers',
+    parentCategory: 'menswear',
+  },
+  { name: 'Coats & Jackets', id: 'men-coats', parentCategory: 'menswear' },
+  {
+    name: 'Sleepwear & Loungewear',
+    id: 'men-sleepwear',
+    parentCategory: 'menswear',
+  },
+  { name: 'Underwear', id: 'men-underwear', parentCategory: 'menswear' },
+  { name: 'Swimwear', id: 'men-swimwear', parentCategory: 'menswear' },
   {
     name: 'Aged 4 - 5',
     id: '4/5',
@@ -549,6 +267,9 @@ export const subCategories = [
     id: 'swimwear',
     parentCategory: 'accessories',
   },
+  // Note: both subCategories entries below share id 'other' (one for parentCategory 'accessories',
+  // one for parentCategory 'other'). Changing either ID would require a DB migration for existing
+  // items. The display name is 'Other' in both cases, so the breadcrumb label is unaffected.
   {
     name: 'Other',
     id: 'other',
@@ -573,11 +294,19 @@ export const subCategories = [
     name: 'Heels',
     id: 'heels',
     parentCategory: 'shoes',
+    genderRestriction: 'women',
   },
   {
     name: 'Flats',
     id: 'flats',
     parentCategory: 'shoes',
+    genderRestriction: 'women',
+  },
+  {
+    name: 'Smart & Formal',
+    id: 'formal-shoes',
+    parentCategory: 'shoes',
+    genderRestriction: 'men',
   },
   {
     name: 'Other',
@@ -585,6 +314,48 @@ export const subCategories = [
     parentCategory: 'other',
   },
 ];
+
+export const sectionConfigs = {
+  womenswear: {
+    label: 'Women',
+    basePath: '/womenswear',
+    gender: 'women,unisex',
+    // includeLegacy: legacy items (gender: null) pre-date the gender field and are assumed
+    // to be women's items by default. Menswear intentionally excludes them.
+    includeLegacy: true,
+    primaryApiCategory: 'women',
+    clothingParentCategory: 'women',
+    topLevelCategories: womenswearCategories,
+    defaultHeading: "All Women's Items",
+    clothingHeading: 'Clothing',
+  },
+  menswear: {
+    label: 'Men',
+    basePath: '/menswear',
+    gender: 'men,unisex',
+    primaryApiCategory: 'menswear',
+    clothingParentCategory: 'menswear',
+    topLevelCategories: menswearCategories,
+    defaultHeading: "All Men's Items",
+    clothingHeading: 'Clothing',
+  },
+  children: {
+    label: 'Children',
+    basePath: '/children',
+    gender: null,
+    primaryApiCategory: 'children',
+    clothingParentCategory: 'children',
+    topLevelCategories: [],
+    navGroupsById: Object.fromEntries(childrenNavGroups.map((g) => [g.id, g])),
+    navGroups: childrenNavGroups.map((group) => ({
+      ...group,
+      subCats: group.subCatIds
+        .map((rawId) => subCategories.find((s) => s.id === rawId))
+        .filter(Boolean),
+    })),
+    defaultHeading: 'All Children & Baby Items',
+  },
+};
 
 export const permissions = [
   'Message',

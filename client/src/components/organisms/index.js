@@ -5,3 +5,4 @@ export { Tabs } from './Dashboard/Tabs';
 export { CategoriesCarousel } from './CategoriesCarousel';
 export { ImageGallery } from './ImageGallery';
 export { Tags } from './Tags';
+export { ShopSection } from './ShopSection/ShopSection';

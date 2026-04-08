@@ -382,6 +382,10 @@ const StyledSwitch = styled(Switch)`
   margin-bottom: 15px;
 `;
 
+const GenderPickerWrapper = styled.div`
+  margin: 12px 0;
+`;
+
 export {
   StyledInput,
   StyledSubmitButton,
@@ -406,4 +410,5 @@ export {
   SizeQuantityContainer,
   SizeQuantityPair,
   StyledSwitch,
+  GenderPickerWrapper,
 };

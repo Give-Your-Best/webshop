@@ -7,9 +7,12 @@ import {
   Register,
   Dashboard,
   Products,
+  Menswear,
+  Children,
   Basket,
   DonorProducts,
   SizingGuide,
+  Womenswear,
 } from './pages';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -19,14 +22,35 @@ export const Routes = () => {
       <Route path={`/item/:itemId`}>
         <Item />
       </Route>
-      <Route path={`/products/:category/:subCategory`}>
+      <Route exact path="/products">
         <Products />
       </Route>
-      <Route path={`/products/:category`}>
-        <Products />
+      <Route path="/womenswear/:category/:subCategory">
+        <Womenswear />
       </Route>
-      <Route path={`/products/`}>
-        <Products />
+      <Route path="/womenswear/:category">
+        <Womenswear />
+      </Route>
+      <Route path="/womenswear">
+        <Womenswear />
+      </Route>
+      <Route path="/menswear/:category/:subCategory">
+        <Menswear />
+      </Route>
+      <Route path="/menswear/:category">
+        <Menswear />
+      </Route>
+      <Route path="/menswear">
+        <Menswear />
+      </Route>
+      <Route path="/children/:category/:subCategory">
+        <Children />
+      </Route>
+      <Route path="/children/:category">
+        <Children />
+      </Route>
+      <Route path="/children">
+        <Children />
       </Route>
       <Route path={`/donorproducts/:donorId`}>
         <DonorProducts />

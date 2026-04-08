@@ -69,6 +69,7 @@ const createItem = async (data, bypassImageUpload = false) => {
     data.photos = new_photos;
   }
   try {
+    if (data.gender === '') data.gender = null;
     const item = new Item(data);
     await item.save();
     return { success: true, message: 'Item created', item: item };
@@ -152,6 +153,17 @@ const createBatchItem = async (data) => {
 
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
+  // Normalise gender: empty string is not a valid enum value; convert to null
+  if (updateData.gender === '') updateData.gender = null;
+
+  // Mirror the pre('save') hook: derive gender from category when the category
+  // is being updated to a gendered clothing category, unless gender is already
+  // explicitly provided in the update payload.
+  if (updateData.category && updateData.gender === undefined) {
+    if (updateData.category === 'menswear') updateData.gender = 'men';
+    else if (updateData.category === 'women') updateData.gender = 'women';
+  }
+
   var results = {};
   var new_photos = [];
   if (updateData.photos) {
@@ -199,6 +211,7 @@ const updateItem = async (id, updateData) => {
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
         new: true,
+        runValidators: true,
       });
 
       if (item) {
@@ -216,6 +229,7 @@ const updateItem = async (id, updateData) => {
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
         new: true,
+        runValidators: true,
       });
 
       if (item) {
@@ -674,7 +688,9 @@ const getAllItems = async (
   donorId,
   clothingSizes,
   shoeSizes,
-  colours
+  colours,
+  gender,
+  includeLegacy
 ) => {
   let anHourAgo = new Date(new Date().getTime() - 1000 * 60 * 60);
   try {
@@ -699,8 +715,32 @@ const getAllItems = async (
     const pagei = parseInt(page);
     const skipIndex = (pagei - 1) * limiti;
 
+    if (gender) {
+      const allowedGenders = ['women', 'men', 'unisex'];
+      const genderValues = gender
+        .split(',')
+        .filter((v) => allowedGenders.includes(v));
+      if (genderValues.length > 0) {
+        if (!conditions.$and) conditions.$and = [];
+        conditions.$and.push(
+          includeLegacy
+            ? {
+                $or: [
+                  { gender: { $in: genderValues } },
+                  { gender: { $exists: false }, category: { $ne: 'children' } },
+                  { gender: null, category: { $ne: 'children' } },
+                ],
+              }
+            : { gender: { $in: genderValues } }
+        );
+      }
+    }
     if (category) conditions.category = category;
-    if (subCategory) conditions.subCategory = subCategory;
+    if (subCategory) {
+      const subCats = subCategory.split(',');
+      conditions.subCategory =
+        subCats.length > 1 ? { $in: subCats } : subCats[0];
+    }
     if (donorId) conditions.donorId = donorId;
     if (clothingSizes)
       conditions.clothingSize = { $in: clothingSizes.split(',') };

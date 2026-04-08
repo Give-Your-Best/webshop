@@ -10,20 +10,23 @@ export const getItems = async (
   donorId,
   clothingSizes,
   shoeSizes,
-  colours
+  colours,
+  gender,
+  includeLegacy
 ) => {
   let fetchString = `/api/items?page=${page}&limit=${limit}&approvedStatus=${approvedStatus}&itemStatus=${itemStatus}`;
 
   if (category) fetchString = fetchString + `&category=${category}`;
   if (subCategory) fetchString = fetchString + `&subCategory=${subCategory}`;
-  if (donorId && clothingSizes !== '')
-    fetchString = fetchString + `&donorId=${donorId}`;
+  if (donorId) fetchString = fetchString + `&donorId=${donorId}`;
   if (clothingSizes && clothingSizes.length)
     fetchString = fetchString + `&clothingSizes=${clothingSizes}`;
   if (shoeSizes && shoeSizes.length)
     fetchString = fetchString + `&shoeSizes=${shoeSizes}`;
   if (colours && colours.length)
     fetchString = fetchString + `&colours=${colours}`;
+  if (gender) fetchString = fetchString + `&gender=${gender}`;
+  if (includeLegacy) fetchString = fetchString + `&includeLegacy=true`;
 
   try {
     const response = await fetch(fetchString, {

@@ -24,6 +24,8 @@ router.get('/', async (req, res) => {
     shoeSizes = req.query.shoeSizes || null,
     colours = req.query.colours || null,
     page = req.query.page,
+    gender = req.query.gender || null,
+    includeLegacy = req.query.includeLegacy === 'true',
     limit = req.query.limit;
 
   const items = await getAllItems(
@@ -36,7 +38,9 @@ router.get('/', async (req, res) => {
     donorId,
     clothingSizes,
     shoeSizes,
-    colours
+    colours,
+    gender,
+    includeLegacy
   );
   res.json(items);
 });
@@ -110,11 +114,6 @@ router.put('/:id', Items.updateItem);
 
 // create item endpoint post to api/items
 router.post('/', Items.createItem);
-
-// get items endpoint api/items
-router.post('/dummy', async (req, res) => {
-  res.json({ success: true });
-});
 
 // delete item endoint delete to api/items/:id
 router.delete('/:id', async (req, res) => {

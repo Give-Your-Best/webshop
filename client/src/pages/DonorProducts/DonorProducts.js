@@ -52,7 +52,7 @@ export const DonorProducts = () => {
 
   return (
     <Container>
-      <CategoryBreadcrumbs donor={true} />
+      <CategoryBreadcrumbs crumbs={[{ label: 'Donor Products' }]} />
       {items.length > 0 ? (
         <PageWrapper>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">

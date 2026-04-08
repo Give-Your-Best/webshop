@@ -35,6 +35,7 @@ export const CategoryMenuLink = styled.div`
   padding: 2.5px 20px;
   position: relative;
   cursor: pointer;
+  ${({ $marginTop }) => $marginTop && `margin-top: ${$marginTop};`}
 
   :hover {
     color: ${({ theme }) => theme.colorMappings.primary};
@@ -51,8 +52,10 @@ export const CategoryMenuLink = styled.div`
 
 export const SubMenuItem = styled.div`
   color: ${({ theme }) => theme.colorMappings.primary}; !important;
-  padding: 0 20px;
-  display: inline-block;
+  padding: 12.5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 20px;
   line-height: 1;
   cursor: pointer;
@@ -62,6 +65,16 @@ export const SubMenuItem = styled.div`
   }
   @media (max-width:${({ theme }) => theme.mid}) {
     font-size: 18px;
+  }
+`;
+
+export const SubCategoryItem = styled(SubMenuItem)`
+  border-left: 3px solid ${({ theme }) => theme.colorMappings.primary};
+  padding-left: 16px;
+  font-size: 17px;
+  font-weight: normal;
+  @media (max-width: ${({ theme }) => theme.mid}) {
+    font-size: 15px;
   }
 `;
 
@@ -96,6 +109,38 @@ export const Down = styled.span`
   border-top: 12px solid ${({ theme }) => theme.colorMappings.primary};
   width: 25px;
   cursor: pointer;
+  transform: ${({ $expanded }) =>
+    $expanded ? 'rotate(0deg)' : 'rotate(-90deg)'};
+  transition: transform 0.25s ease;
+`;
+
+export const CategoryRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // padding: 15px 0;
+`;
+
+export const ExpandArrow = styled.span`
+  flex-shrink: 0;
+  margin-right: 20px;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 12px solid ${({ theme }) => theme.colorMappings.primary};
+  width: 25px;
+  cursor: pointer;
+  transform: ${({ $expanded }) =>
+    $expanded ? 'rotate(0deg)' : 'rotate(-90deg)'};
+  transition: transform 0.25s ease;
+`;
+
+export const MenuOverlay = styled.div`
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 499;
+  background: transparent;
 `;
 
 export const Cross = styled.span`

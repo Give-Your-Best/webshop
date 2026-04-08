@@ -15,7 +15,7 @@ export const CategoryBlock = ({ category }) => {
           <img alt={`category ${category.name}`} src={category.image} />
         ) : null
       }
-      onClick={() => history.push(`/products/women/${category.id}`)}
+      onClick={() => history.push(`/womenswear/${category.id}`)}
     >
       <Meta title={category.name} />
     </Card>

@@ -11,6 +11,7 @@ export const sizeOptions = (category, subcategory) => {
 
   switch (category) {
     case 'women':
+    case 'menswear':
       sizeOptions = [
         {
           sizeOption: clothingSizeOptions,
