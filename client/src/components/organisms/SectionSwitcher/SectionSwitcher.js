@@ -42,13 +42,13 @@ export const SectionSwitcher = () => {
 
   return (
     <SwitcherBar>
-      <SectionTab to="/womenswear" $active={isWomen ? 1 : 0}>
+      <SectionTab to="/womenswear" $active={isWomen}>
         Women
       </SectionTab>
-      <SectionTab to="/children" $active={isChildren ? 1 : 0}>
+      <SectionTab to="/children" $active={isChildren}>
         Children
       </SectionTab>
-      <SectionTab to="/menswear" $active={isMenswear ? 1 : 0}>
+      <SectionTab to="/menswear" $active={isMenswear}>
         Men
       </SectionTab>
     </SwitcherBar>
