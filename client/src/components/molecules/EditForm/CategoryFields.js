@@ -7,6 +7,12 @@ import { useFormikContext } from 'formik';
 
 const GENDER_REQUIRED_CATEGORIES = ['accessories', 'shoes', 'other'];
 
+// Categories where gender is implicit and should be auto-derived
+const DERIVED_GENDER = {
+  women: 'women',
+  menswear: 'men',
+};
+
 export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const [subs, setSubs] = useState([]);
   const formikProps = useFormikContext();
@@ -36,7 +42,15 @@ export const CategoryFields = ({ editingKey, recordId, onCategoryChange }) => {
   const handleChange = (cat) => {
     //update subcategory based on parent category value
     formikProps.setFieldValue('subCategory', '');
-    formikProps.setFieldValue('gender', '');
+
+    // Auto-derive gender for gendered clothing categories; clear it for
+    // gender-required categories so the user must pick; leave it alone otherwise.
+    if (DERIVED_GENDER[cat] !== undefined) {
+      formikProps.setFieldValue('gender', DERIVED_GENDER[cat]);
+    } else if (GENDER_REQUIRED_CATEGORIES.includes(cat)) {
+      formikProps.setFieldValue('gender', '');
+    }
+
     setSubs(
       subCategories.filter((sub) => {
         return sub.parentCategory === cat;
