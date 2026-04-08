@@ -18,8 +18,7 @@ export const getItems = async (
 
   if (category) fetchString = fetchString + `&category=${category}`;
   if (subCategory) fetchString = fetchString + `&subCategory=${subCategory}`;
-  if (donorId && clothingSizes !== '')
-    fetchString = fetchString + `&donorId=${donorId}`;
+  if (donorId) fetchString = fetchString + `&donorId=${donorId}`;
   if (clothingSizes && clothingSizes.length)
     fetchString = fetchString + `&clothingSizes=${clothingSizes}`;
   if (shoeSizes && shoeSizes.length)
