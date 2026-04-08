@@ -22,7 +22,7 @@ export const Routes = () => {
       <Route path={`/item/:itemId`}>
         <Item />
       </Route>
-      <Route path={`/products/`}>
+      <Route exact path="/products">
         <Products />
       </Route>
       <Route path="/womenswear/:category/:subCategory">
