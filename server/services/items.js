@@ -720,18 +720,20 @@ const getAllItems = async (
       const genderValues = gender
         .split(',')
         .filter((v) => allowedGenders.includes(v));
-      if (!conditions.$and) conditions.$and = [];
-      conditions.$and.push(
-        includeLegacy
-          ? {
-              $or: [
-                { gender: { $in: genderValues } },
-                { gender: { $exists: false }, category: { $ne: 'children' } },
-                { gender: null, category: { $ne: 'children' } },
-              ],
-            }
-          : { gender: { $in: genderValues } }
-      );
+      if (genderValues.length > 0) {
+        if (!conditions.$and) conditions.$and = [];
+        conditions.$and.push(
+          includeLegacy
+            ? {
+                $or: [
+                  { gender: { $in: genderValues } },
+                  { gender: { $exists: false }, category: { $ne: 'children' } },
+                  { gender: null, category: { $ne: 'children' } },
+                ],
+              }
+            : { gender: { $in: genderValues } }
+        );
+      }
     }
     if (category) conditions.category = category;
     if (subCategory) {
