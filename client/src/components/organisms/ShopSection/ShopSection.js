@@ -183,6 +183,7 @@ export const ShopSection = ({ config }) => {
         return;
       }
       setItems(result);
+      setNoItems(result.length === 0);
       setNoMoreLoad(false);
       setPage(1);
     };
