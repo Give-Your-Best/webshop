@@ -43,7 +43,7 @@ export const Products = () => {
   useEffect(() => {
     const fetchItems = async () => {
       const items = await getItems(
-        page,
+        1,
         12,
         'approved',
         'in-shop',
