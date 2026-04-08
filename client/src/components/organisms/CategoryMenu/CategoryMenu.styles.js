@@ -47,7 +47,7 @@ export const CategoryMenuLink = styled(Link)`
 `;
 
 export const SubMenuItem = styled(Link)`
-  color: ${({ theme }) => theme.colorMappings.buttonBorder}; !important;
+  color: ${({ theme }) => theme.colorMappings.buttonBorder} !important;
   padding: 5px 1em;
   display: block;
   font-size: 20px;
@@ -55,7 +55,7 @@ export const SubMenuItem = styled(Link)`
     text-decoration: underline;
     font-weight: bold;
   }
-  @media (max-width:${({ theme }) => theme.mid}) {
+  @media (max-width: ${({ theme }) => theme.mid}) {
     padding: 0 0.75rem;
     font-size: 18px;
   }
