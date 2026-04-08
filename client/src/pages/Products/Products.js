@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { categories, subCategories } from '../../utils/constants';
 import {
   Container,
   ItemCard,
@@ -12,7 +10,6 @@ import { getItems } from '../../services/items';
 import { ItemsWrapper, PageWrapper, Heading } from './Products.styles';
 
 export const Products = () => {
-  const { category, subCategory } = useParams();
   const [items, setItems] = useState([]);
   const [noItems, setNoItems] = useState(false);
   const [page, setPage] = useState(1);
@@ -22,28 +19,14 @@ export const Products = () => {
   const [colours, setColours] = useState([]);
   const [filters, setFilters] = useState(false);
 
-  let categoryName = '';
-
-  categories.forEach((c) => {
-    if (c.id === category) {
-      categoryName = c.name;
-    }
-  });
-
-  subCategories.forEach((c) => {
-    if (c.id === subCategory) {
-      categoryName = c.name;
-    }
-  });
-
   const handleLoadMore = async () => {
     const more = await getItems(
       page + 1,
       12,
       'approved',
       'in-shop',
-      category,
-      subCategory,
+      undefined,
+      undefined,
       '',
       clothingSizes,
       shoeSizes,
@@ -64,8 +47,8 @@ export const Products = () => {
         12,
         'approved',
         'in-shop',
-        category,
-        subCategory,
+        undefined,
+        undefined,
         '',
         clothingSizes,
         shoeSizes,
@@ -77,13 +60,12 @@ export const Products = () => {
     };
 
     fetchItems();
-    // eslint-disable-next-line
-  }, [category, subCategory, filters]);
+  }, [filters]);
 
   return (
     <Container>
-      <CategoryBreadcrumbs category={category} subCategory={subCategory} />
-      <Heading>{categoryName ? categoryName : 'All Items'}</Heading>
+      <CategoryBreadcrumbs />
+      <Heading>{'All Items'}</Heading>
       <Filters
         setClothingSizes={setClothingSizes}
         setShoeSizes={setShoeSizes}

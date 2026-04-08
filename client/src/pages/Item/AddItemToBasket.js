@@ -151,7 +151,7 @@ const AddToBasketButton = ({ item, limit }) => {
       },
       okText: 'View Basket',
       onCancel() {
-        history.push(`/products`);
+        history.push(`/`);
       },
       cancelText: 'Continue Shopping',
     });

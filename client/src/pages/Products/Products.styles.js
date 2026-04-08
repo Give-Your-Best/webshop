@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Box } from '../../components';
+import { Box } from '../../components/atoms';
 
 export const ItemsWrapper = styled(Box)`
   margin: 0.5rem auto 2rem auto;
