@@ -199,7 +199,9 @@ export const MobileMenu = () => {
                               (s) =>
                                 s.parentCategory === c.id &&
                                 (!s.genderRestriction ||
-                                  config.gender?.includes(s.genderRestriction))
+                                  config.gender
+                                    ?.split(',')
+                                    .includes(s.genderRestriction))
                             );
                       const isCatOpen =
                         openCategory === sectionKey + '-' + c.id;

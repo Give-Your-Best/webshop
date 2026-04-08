@@ -70,7 +70,9 @@ export const CategoryMenu = () => {
                   (s) =>
                     s.parentCategory === c.id &&
                     (!s.genderRestriction ||
-                      activeConfig.gender?.includes(s.genderRestriction))
+                      activeConfig.gender
+                        ?.split(',')
+                        .includes(s.genderRestriction))
                 );
           return (
             <CategoryMenuItem key={c.id}>

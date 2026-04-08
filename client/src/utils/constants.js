@@ -307,6 +307,7 @@ export const subCategories = [
     name: 'Smart & Formal',
     id: 'formal-shoes',
     parentCategory: 'shoes',
+    genderRestriction: 'men',
   },
   {
     name: 'Other',
