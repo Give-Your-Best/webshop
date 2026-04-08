@@ -153,6 +153,9 @@ const createBatchItem = async (data) => {
 
 //messages text and timestamp in the messages table . Use sendgrid.
 const updateItem = async (id, updateData) => {
+  // Normalise gender: empty string is not a valid enum value; convert to null
+  if (updateData.gender === '') updateData.gender = null;
+
   var results = {};
   var new_photos = [];
   if (updateData.photos) {
@@ -703,7 +706,10 @@ const getAllItems = async (
     const skipIndex = (pagei - 1) * limiti;
 
     if (gender) {
-      const genderValues = gender.split(',');
+      const allowedGenders = ['women', 'men', 'unisex'];
+      const genderValues = gender
+        .split(',')
+        .filter((v) => allowedGenders.includes(v));
       if (!conditions.$and) conditions.$and = [];
       conditions.$and.push(
         includeLegacy
