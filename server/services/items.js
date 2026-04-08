@@ -156,6 +156,14 @@ const updateItem = async (id, updateData) => {
   // Normalise gender: empty string is not a valid enum value; convert to null
   if (updateData.gender === '') updateData.gender = null;
 
+  // Mirror the pre('save') hook: derive gender from category when the category
+  // is being updated to a gendered clothing category, unless gender is already
+  // explicitly provided in the update payload.
+  if (updateData.category && updateData.gender === undefined) {
+    if (updateData.category === 'menswear') updateData.gender = 'men';
+    else if (updateData.category === 'women') updateData.gender = 'women';
+  }
+
   var results = {};
   var new_photos = [];
   if (updateData.photos) {
@@ -203,6 +211,7 @@ const updateItem = async (id, updateData) => {
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
         new: true,
+        runValidators: true,
       });
 
       if (item) {
@@ -220,6 +229,7 @@ const updateItem = async (id, updateData) => {
     try {
       const item = await Item.findOneAndUpdate({ _id: id }, updateData, {
         new: true,
+        runValidators: true,
       });
 
       if (item) {
