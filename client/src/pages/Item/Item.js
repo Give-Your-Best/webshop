@@ -63,9 +63,10 @@ const buildItemCrumbs = (item) => {
           path: `${config.basePath}/${group.id}`,
         });
 
-        // Add the specific subcategory crumb (e.g. "12 - 36 months")
+        // Add the specific subcategory crumb only when it differs from the
+        // navGroup (e.g. skip for toys->toys, but keep for baby-toddler->12-36-month)
         const sub = subCategories.find((s) => s.id === subCategory);
-        if (sub) {
+        if (sub && subCategory !== group.id) {
           crumbs.push({
             label: sub.name,
             path: `${config.basePath}/${group.id}/${subCategory.replace(
