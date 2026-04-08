@@ -62,6 +62,18 @@ const buildItemCrumbs = (item) => {
           label: shortGroupNames[group.id] || group.name,
           path: `${config.basePath}/${group.id}`,
         });
+
+        // Add the specific subcategory crumb (e.g. "12 - 36 months")
+        const sub = subCategories.find((s) => s.id === subCategory);
+        if (sub) {
+          crumbs.push({
+            label: sub.name,
+            path: `${config.basePath}/${group.id}/${subCategory.replace(
+              '/',
+              '-'
+            )}`,
+          });
+        }
       }
     }
   } else {
