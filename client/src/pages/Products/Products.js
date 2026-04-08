@@ -57,6 +57,7 @@ export const Products = () => {
       setItems(items);
       setNoItems(items.length > 0 ? false : true);
       setNoMoreLoad(false);
+      setPage(1);
     };
     fetchItems();
     // eslint-disable-next-line
