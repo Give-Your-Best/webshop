@@ -89,9 +89,6 @@ const itemSchema = new Schema(
   options
 );
 
-itemSchema.post('update', function () {
-  this.getUpdate().$set;
-});
 itemSchema.index({ gender: 1 });
 itemSchema.index({ batchId: 1 });
 itemSchema.index({ isTemplateBatchItem: 1 });
@@ -110,6 +107,7 @@ itemSchema.pre('save', async function (next) {
   var donor = await User_.User.findOne({
     _id: item.donorId,
   });
+  if (!donor) return next(new Error('Donor not found'));
   if (donor.trustedDonor) {
     this.approvedStatus = 'approved';
   }
