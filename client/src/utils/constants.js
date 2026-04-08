@@ -108,10 +108,6 @@ export const womenswearCategories = [
   { id: 'other', name: 'Other', path: '/womenswear/other' },
 ];
 
-export const childrenCategories = [
-  { id: 'children', name: 'Children & Baby', path: '/children' },
-];
-
 export const childrenNavGroups = [
   {
     id: 'baby-toddler',
@@ -271,6 +267,9 @@ export const subCategories = [
     id: 'swimwear',
     parentCategory: 'accessories',
   },
+  // Note: both subCategories entries below share id 'other' (one for parentCategory 'accessories',
+  // one for parentCategory 'other'). Changing either ID would require a DB migration for existing
+  // items. The display name is 'Other' in both cases, so the breadcrumb label is unaffected.
   {
     name: 'Other',
     id: 'other',
@@ -321,6 +320,8 @@ export const sectionConfigs = {
     label: 'Women',
     basePath: '/womenswear',
     gender: 'women,unisex',
+    // includeLegacy: legacy items (gender: null) pre-date the gender field and are assumed
+    // to be women's items by default. Menswear intentionally excludes them.
     includeLegacy: true,
     primaryApiCategory: 'women',
     clothingParentCategory: 'women',
