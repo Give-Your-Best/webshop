@@ -9,12 +9,14 @@ const { Meta } = AntCard;
 
 export const ItemCard = ({ item }) => {
   let history = useHistory();
-  let imageUrl = getFrontImageUrl(item.photos);
+  let imageUrl = getFrontImageUrl(item.photos, 500);
   //some of the olf cloudinary images are not secure urls so forcing the change here
   return (
     <Card
       hoverable
-      cover={<img alt={`front of ${item.name}`} src={imageUrl} />}
+      cover={
+        <img alt={`front of ${item.name}`} src={imageUrl} loading="lazy" />
+      }
       onClick={() => history.push(`/item/${item._id}`)}
     >
       <Meta title={item.name} description={trunc(item.description)} />

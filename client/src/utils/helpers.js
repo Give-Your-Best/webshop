@@ -350,17 +350,19 @@ export const checkUnread = (type, userId, messages = []) => {
   return [unread.length, unread];
 };
 
-export const setImageSrc = (data) =>
-  data && data.url
-    ? data.url.replace('http://', 'https://')
-    : '/product-placeholder.jpeg';
+export const setImageSrc = (data, width = 800) => {
+  if (!data || !data.url) return '/product-placeholder.jpeg';
+  const secure = data.url.replace('http://', 'https://');
+  // Inject Cloudinary transformations: resize, auto quality, auto format (WebP where supported)
+  return secure.replace('/upload/', `/upload/w_${width},q_auto,f_auto/`);
+};
 
-export const getFrontImageUrl = (images) => {
+export const getFrontImageUrl = (images, width) => {
   let imagesList = images.length ? images.filter((i) => i.front === true) : [];
   let image_url = imagesList.length
-    ? setImageSrc(imagesList[0])
+    ? setImageSrc(imagesList[0], width)
     : images.length
-    ? setImageSrc(images[0])
+    ? setImageSrc(images[0], width)
     : '';
 
   return image_url;
