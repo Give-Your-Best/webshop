@@ -2,15 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { subCategories } from '../../../utils/constants';
 import { Container, Button } from '../../atoms';
-import { ItemCard } from '../../molecules';
-import { Filters } from '../../molecules';
+import { ItemCard, Filters } from '../../molecules';
 import { CategoryBreadcrumbs } from '../../atoms';
 import { getItems } from '../../../services/items';
-import {
-  ItemsWrapper,
-  PageWrapper,
-  Heading,
-} from '../../../pages/Products/Products.styles';
+import { ItemsWrapper, PageWrapper, Heading } from './ShopSection.styles';
 
 // --- Helper functions for subcategory lookup and canonicalization ---
 // Finds the canonical subCategory object by id or dash/slash variant
