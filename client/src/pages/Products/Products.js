@@ -93,8 +93,8 @@ export const Products = () => {
         </PageWrapper>
       ) : noItems ? (
         <>
-          <h2>Sorry for the inconvenience</h2>
-          <h3>There are no items here!</h3>
+          <h2>Looks like there are no items uploaded here at the moment</h2>
+          <h3>Check back soon as new items are uploaded regularly!</h3>
         </>
       ) : (
         ''
