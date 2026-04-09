@@ -52,7 +52,7 @@ export const DonorProducts = () => {
 
   return (
     <Container>
-      <CategoryBreadcrumbs donor={true} />
+      <CategoryBreadcrumbs crumbs={[{ label: 'Donor Products' }]} />
       {items.length > 0 ? (
         <PageWrapper>
           <ItemsWrapper my={1} mx={-1} display="flex" flexWrap="wrap">
@@ -70,8 +70,8 @@ export const DonorProducts = () => {
         </PageWrapper>
       ) : noItems ? (
         <>
-          <h2>Sorry for the inconvenience</h2>
-          <h3>There are no items here!</h3>
+          <h2>Looks like there are no items uploaded here at the moment</h2>
+          <h3>Check back soon as new items are uploaded regularly!</h3>
         </>
       ) : (
         ''

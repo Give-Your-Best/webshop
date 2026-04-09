@@ -39,6 +39,11 @@ const itemSchema = new Schema(
     ],
     moreInfo: String,
     colors: [String],
+    gender: {
+      type: String,
+      enum: ['women', 'men', 'unisex'],
+      default: null,
+    },
     status: {
       type: String,
       enum: [
@@ -84,10 +89,8 @@ const itemSchema = new Schema(
   options
 );
 
-itemSchema.post('update', function () {
-  this.getUpdate().$set;
-});
-
+itemSchema.index({ gender: 1 });
+itemSchema.index({ category: 1 });
 itemSchema.index({ batchId: 1 });
 itemSchema.index({ isTemplateBatchItem: 1 });
 itemSchema.index({ tags: 1 });
@@ -96,9 +99,16 @@ itemSchema.index({ shopperId: 1 });
 // Before saving set approved status to approved if donor is a trusted donor (default is in-progress)
 itemSchema.pre('save', async function (next) {
   const item = this;
+
+  // Auto-assign gender from category
+  if (item.category === 'menswear') item.gender = 'men';
+  else if (item.category === 'women') item.gender = 'women';
+  // shoes/accessories: left as explicit donor choice (null by default)
+
   var donor = await User_.User.findOne({
     _id: item.donorId,
   });
+  if (!donor) return next(new Error('Donor not found'));
   if (donor.trustedDonor) {
     this.approvedStatus = 'approved';
   }

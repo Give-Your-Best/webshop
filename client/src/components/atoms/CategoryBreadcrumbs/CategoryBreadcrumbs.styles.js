@@ -27,5 +27,8 @@ export const StyledBreadcrumbs = styled(Breadcrumb)`
 
   li:last-child {
     color: ${({ theme }) => theme.colorMappings.primary};
+    span {
+      cursor: default;
+    }
   }
 `;

@@ -13,7 +13,7 @@ export const Images = (data) => {
   const checkFileType = (file) => {
     //do not upload if not in accepted file types
     const acceptedFormats = ['jpeg', 'jpg', 'png', 'heic'];
-    if (!acceptedFormats.includes(file.name.split('.')[1])) {
+    if (!acceptedFormats.includes(file.name.split('.').pop().toLowerCase())) {
       Notification(
         'Error!',
         'Error uploading image. Please make sure your file is an image type',

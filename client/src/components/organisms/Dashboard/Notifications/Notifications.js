@@ -242,8 +242,8 @@ export const Notifications = () => {
         key: 1,
         name: 'Item coming to you!', //individual account holder is the sendVia admin on the item and status shopped or shipped to gyb (i.e not received by gyb)
         message: 'Waiting for received notification',
-        itemsCount: items[0].length || 0,
-        items: items[0] || [],
+        itemsCount: items[0] ? items[0].length : 0,
+        items: items[0] ? items[0] : [],
         action: markReceived,
         actionDesc: 'Mark received',
       });
@@ -251,8 +251,8 @@ export const Notifications = () => {
         key: 2,
         name: 'Item coming to you!', //individual account holder is the sendVia admin on the item and status received by gyb (i.e not sent to shopper yet)
         message: 'Received, waiting for sent notification',
-        itemsCount: items[1].length || 0,
-        items: items[1] || [],
+        itemsCount: items[1] ? items[1].length : 0,
+        items: items[1] ? items[1] : [],
         action: markSent,
         actionDesc: 'Mark sent',
       });
@@ -260,8 +260,8 @@ export const Notifications = () => {
         key: 3,
         name: 'Item sent!',
         message: 'Waiting for shopped received notification',
-        itemsCount: items[2].length || 0,
-        items: items[2] || [],
+        itemsCount: items[2] ? items[2].length : 0,
+        items: items[2] ? items[2] : [],
       });
     };
 

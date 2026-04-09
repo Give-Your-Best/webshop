@@ -199,7 +199,7 @@ export const Basket = () => {
             primary
             left
             onClick={() => {
-              history.push(`/products`);
+              history.push(`/`);
             }}
           >
             Keep Shopping
