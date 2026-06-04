@@ -202,15 +202,25 @@ export const OrdersList = () => {
 
     const fetchSetting = async () => {
       if (!token) return null;
-      const settingValue = await getSetting('shopItemLimit', token);
+      let settingValue = 0;
+      try {
+        settingValue = await getSetting('shopItemLimit', token);
+      } catch (error) {
+        console.error(`Error in OrdersList.fetchSetting: ${error}`);
+      }
+
+      const numericSettingValue = Number(settingValue);
+      const safeSettingValue = Number.isFinite(numericSettingValue)
+        ? numericSettingValue
+        : 0;
 
       if (user) {
         let countAdults =
-          settingValue * user.shoppingFor -
+          safeSettingValue * user.shoppingFor -
           user.recentItems.filter((i) => i.category !== 'children').length -
           (basket ? basket.filter((i) => i.category !== 'children').length : 0);
         let countChildren =
-          settingValue * user.shoppingForChildren -
+          safeSettingValue * user.shoppingForChildren -
           user.recentItems.filter((i) => i.category === 'children').length -
           (basket ? basket.filter((i) => i.category === 'children').length : 0);
 

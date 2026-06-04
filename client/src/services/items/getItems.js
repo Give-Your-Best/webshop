@@ -14,19 +14,29 @@ export const getItems = async (
   gender,
   includeLegacy
 ) => {
-  let fetchString = `/api/items?page=${page}&limit=${limit}&approvedStatus=${approvedStatus}&itemStatus=${itemStatus}`;
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+    approvedStatus,
+    itemStatus,
+  });
 
-  if (category) fetchString = fetchString + `&category=${category}`;
-  if (subCategory) fetchString = fetchString + `&subCategory=${subCategory}`;
-  if (donorId) fetchString = fetchString + `&donorId=${donorId}`;
-  if (clothingSizes && clothingSizes.length)
-    fetchString = fetchString + `&clothingSizes=${clothingSizes}`;
-  if (shoeSizes && shoeSizes.length)
-    fetchString = fetchString + `&shoeSizes=${shoeSizes}`;
-  if (colours && colours.length)
-    fetchString = fetchString + `&colours=${colours}`;
-  if (gender) fetchString = fetchString + `&gender=${gender}`;
-  if (includeLegacy) fetchString = fetchString + `&includeLegacy=true`;
+  if (category) params.set('category', category);
+  if (subCategory) params.set('subCategory', subCategory);
+  if (donorId) params.set('donorId', donorId);
+  if (clothingSizes && clothingSizes.length) {
+    params.set('clothingSizes', clothingSizes.join(','));
+  }
+  if (shoeSizes && shoeSizes.length) {
+    params.set('shoeSizes', shoeSizes.join(','));
+  }
+  if (colours && colours.length) {
+    params.set('colours', colours.join(','));
+  }
+  if (gender) params.set('gender', gender);
+  if (includeLegacy) params.set('includeLegacy', 'true');
+
+  const fetchString = `/api/items?${params.toString()}`;
 
   try {
     const response = await fetch(fetchString, {
