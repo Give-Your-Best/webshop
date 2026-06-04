@@ -32,7 +32,7 @@ export const Products = () => {
       shoeSizes,
       colours
     );
-    if (more.length > 0) {
+    if (Array.isArray(more) && more.length > 0) {
       setItems(items.concat(more));
       setPage(page + 1);
     } else {
@@ -42,7 +42,7 @@ export const Products = () => {
 
   useEffect(() => {
     const fetchItems = async () => {
-      const items = await getItems(
+      const result = await getItems(
         1,
         12,
         'approved',
@@ -54,8 +54,14 @@ export const Products = () => {
         shoeSizes,
         colours
       );
-      setItems(items);
-      setNoItems(items.length > 0 ? false : true);
+      if (!Array.isArray(result)) {
+        setItems([]);
+        setNoItems(true);
+        setNoMoreLoad(true);
+        return;
+      }
+      setItems(result);
+      setNoItems(result.length > 0 ? false : true);
       setNoMoreLoad(false);
       setPage(1);
     };
