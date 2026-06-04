@@ -160,9 +160,15 @@ export const Item = () => {
     };
     const fetchSetting = async () => {
       if (!token) return null;
-      const settingValue = await getSetting('shopItemLimit', token);
+      let settingValue = 0;
+      try {
+        settingValue = await getSetting('shopItemLimit', token);
+      } catch (error) {
+        console.error(`Error in Item.fetchSetting: ${error}`);
+      }
       if (!mountedRef.current) return null;
-      setLimit(settingValue);
+      const numericSettingValue = Number(settingValue);
+      setLimit(Number.isFinite(numericSettingValue) ? numericSettingValue : 0);
     };
 
     fetchItemDetails();
