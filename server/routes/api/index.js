@@ -26,6 +26,9 @@ router.post('/register', Users.registerUser);
 router.get('/settings/:name', async (req, res) => {
   const name = req.params.name;
   const setting = await getSetting(name);
+  if (setting && typeof setting === 'object' && setting.success === false) {
+    return res.status(500).json(setting);
+  }
   res.json(setting);
 });
 
