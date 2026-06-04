@@ -167,7 +167,8 @@ export const Item = () => {
         console.error(`Error in Item.fetchSetting: ${error}`);
       }
       if (!mountedRef.current) return null;
-      setLimit(Number.isFinite(settingValue) ? settingValue : 0);
+      const numericSettingValue = Number(settingValue);
+      setLimit(Number.isFinite(numericSettingValue) ? numericSettingValue : 0);
     };
 
     fetchItemDetails();

@@ -209,13 +209,18 @@ export const OrdersList = () => {
         console.error(`Error in OrdersList.fetchSetting: ${error}`);
       }
 
+      const numericSettingValue = Number(settingValue);
+      const safeSettingValue = Number.isFinite(numericSettingValue)
+        ? numericSettingValue
+        : 0;
+
       if (user) {
         let countAdults =
-          settingValue * user.shoppingFor -
+          safeSettingValue * user.shoppingFor -
           user.recentItems.filter((i) => i.category !== 'children').length -
           (basket ? basket.filter((i) => i.category !== 'children').length : 0);
         let countChildren =
-          settingValue * user.shoppingForChildren -
+          safeSettingValue * user.shoppingForChildren -
           user.recentItems.filter((i) => i.category === 'children').length -
           (basket ? basket.filter((i) => i.category === 'children').length : 0);
 

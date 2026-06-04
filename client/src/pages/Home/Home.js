@@ -28,7 +28,10 @@ export const Home = () => {
         console.error(`Error in Home.fetchSetting: ${error}`);
       }
       if (!mountedRef.current) return null;
-      setShopItemLimit(Number.isFinite(settingValue) ? settingValue : 0);
+      const numericSettingValue = Number(settingValue);
+      setShopItemLimit(
+        Number.isFinite(numericSettingValue) ? numericSettingValue : 0
+      );
     };
 
     fetchItems();
