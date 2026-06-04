@@ -202,7 +202,12 @@ export const OrdersList = () => {
 
     const fetchSetting = async () => {
       if (!token) return null;
-      const settingValue = await getSetting('shopItemLimit', token);
+      let settingValue = 0;
+      try {
+        settingValue = await getSetting('shopItemLimit', token);
+      } catch (error) {
+        console.error(`Error in OrdersList.fetchSetting: ${error}`);
+      }
 
       if (user) {
         let countAdults =
