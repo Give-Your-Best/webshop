@@ -4,9 +4,16 @@ export const getSetting = async (name) => {
       'Content-Type': 'application/json',
     },
   });
+
   const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
+
+  if (!response.ok) {
+    throw Error(body?.message || `Failed to fetch setting: ${name}`);
   }
+
+  if (body && typeof body === 'object' && body.success === false) {
+    throw Error(body.message || `Failed to fetch setting: ${name}`);
+  }
+
   return body;
 };
