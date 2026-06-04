@@ -21,9 +21,14 @@ export const Home = () => {
     };
 
     const fetchSetting = async () => {
-      const settingValue = await getSetting('shopItemLimit');
+      let settingValue = 0;
+      try {
+        settingValue = await getSetting('shopItemLimit');
+      } catch (error) {
+        console.error(`Error in Home.fetchSetting: ${error}`);
+      }
       if (!mountedRef.current) return null;
-      setShopItemLimit(settingValue);
+      setShopItemLimit(Number.isFinite(settingValue) ? settingValue : 0);
     };
 
     fetchItems();
